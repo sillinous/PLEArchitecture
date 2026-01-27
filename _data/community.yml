@@ -1,0 +1,210 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Community Enterprise Architecture - Core Identity
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# IDENTITY
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: "Post-Labor Economics"
+short_name: "PLE"
+tagline: "Liberating Humanity from Obligatory Labor"
+
+# Movement identifier
+movement_symbol: "L/0"
+movement_name: "Labor Zero"
+
+# Organizational details
+entity_type: "Movement / Think Tank / Community"
+founded: 2024
+founder: "David Shapiro"
+
+# Contact & presence
+website: "https://daveshap.substack.com/t/post-labor-economics"
+community_platform: "https://www.skool.com/postlaboreconomics"
+youtube: "https://www.youtube.com/@DaveShap"
+substack: "https://daveshap.substack.com"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MISSION
+# ─────────────────────────────────────────────────────────────────────────────
+
+mission:
+  statement: |
+    To navigate humanity through the transition from labor-based economics 
+    to a post-labor society where AI, automation, and robotics perform most 
+    work, enabling every human to reach their maximum potential free from 
+    obligatory drudgery.
+    
+  activities:
+    - action: "Educate"
+      through: "Publishing research, videos, and articles on post-labor economics, the Economic Agency Paradox, and transition mechanisms"
+      
+    - action: "Organize"
+      through: "Building a coalition of workers, technologists, economists, and forward-thinking capitalists who recognize labor's sunset"
+      
+    - action: "Design"
+      through: "Developing the Pyramids of Prosperity and Power as actionable frameworks for economic and civic transition"
+      
+    - action: "Advocate"
+      through: "Challenging laborism across the political spectrum and proposing concrete policy mechanisms"
+      
+    - action: "Connect"
+      through: "Creating community spaces for dialogue, collaboration, and collective action toward L/0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VISION
+# ─────────────────────────────────────────────────────────────────────────────
+
+vision:
+  statement: |
+    A world where no one has to work to survive. Where contribution is voluntary 
+    and intrinsic rather than extracted through economic desperation. Where the 
+    gains from automation are distributed broadly through universal ownership, 
+    and every human is free to pursue meaning, creativity, and connection.
+    
+  time_horizon: "2035-2045"
+  
+  elements:
+    - aspect: "Economic Liberation"
+      future_state: "Labor is no longer the primary mechanism for distributing resources to households; ownership of automated production replaces wages"
+      
+    - aspect: "Universal Prosperity"
+      future_state: "Every citizen holds a diversified portfolio of capital assets through public trusts, cooperatives, and individual investments"
+      
+    - aspect: "Algorithmic Power"
+      future_state: "Blockchain-based civic infrastructure ensures democratic participation and accountability without reliance on traditional labor leverage"
+      
+    - aspect: "Human Flourishing"
+      future_state: "With survival decoupled from work, humans pursue meaning, creativity, relationships, and self-actualization"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VALUES
+# ─────────────────────────────────────────────────────────────────────────────
+
+values:
+  - name: "Human Dignity"
+    description: "Every person deserves to live free from coerced labor and economic desperation, regardless of their 'productivity'"
+    behaviors:
+      - "Reject the fetishization of work as moral virtue"
+      - "Recognize 'useless eater' rhetoric as dangerous"
+      - "Center human flourishing over economic output"
+      
+  - name: "Pragmatic Idealism"
+    description: "We pursue transformative change through practical, incremental mechanisms that already exist or can be built"
+    behaviors:
+      - "Study proven models: Norway's sovereign wealth fund, Alaska dividends, India's UPI"
+      - "Design implementable policies, not utopian fantasies"
+      - "Build coalitions across traditional political divides"
+      
+  - name: "Intellectual Honesty"
+    description: "We name uncomfortable truths clearly, including the convergent interests of capital and labor in ending obligatory work"
+    behaviors:
+      - "Acknowledge automation's inevitability rather than resist it"
+      - "Recognize both left and right laborism as obstacles"
+      - "Speak plainly about power dynamics and economic realities"
+      
+  - name: "Broad Coalition"
+    description: "The path to L/0 requires alignment between groups traditionally seen as adversaries"
+    behaviors:
+      - "Engage capitalists who understand they need consumers with income"
+      - "Engage workers who are exhausted by the treadmill"
+      - "Build bridges rather than ideological purity tests"
+      
+  - name: "Systems Thinking"
+    description: "Understanding the interconnected nature of economic, technological, and social systems"
+    behaviors:
+      - "Analyze feedback loops and emergent effects"
+      - "Design holistic frameworks like the Pyramids"
+      - "Consider second and third-order consequences"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRINCIPLES
+# ─────────────────────────────────────────────────────────────────────────────
+
+principles:
+  - name: "Labor is Not Sacred"
+    statement: "The belief that work is morally necessary is a historical artifact, not a natural law"
+    application: "Challenge Protestant work ethic and bootstrap mythology wherever it appears"
+    source: "Core thesis"
+    
+  - name: "Automation is Inevitable"
+    statement: "Market forces guarantee that AI, automation, and robotics will displace most human labor"
+    application: "Stop debating whether automation will happen; focus on designing the transition"
+    source: "Economic analysis"
+    
+  - name: "Ownership Replaces Wages"
+    statement: "When labor income disappears, capital ownership must become the primary distribution mechanism"
+    application: "Design policies that broaden capital participation at every level"
+    source: "Pyramid of Prosperity"
+    
+  - name: "Power Requires New Foundations"
+    statement: "As labor power sunsets, algorithmic power through blockchain and decentralized systems must replace it"
+    application: "Build civic infrastructure that doesn't depend on labor leverage"
+    source: "Pyramid of Power"
+    
+  - name: "Capital and Labor Can Align"
+    statement: "Both sides want this marriage to end; the fight is over transition terms, not the destination"
+    application: "Frame negotiations as positive-sum rather than zero-sum"
+    source: "Coalition building"
+    
+  - name: "Incremental Implementation"
+    statement: "The Pyramids can be built layer by layer using mechanisms that already exist"
+    application: "Start with universals and public assets; build toward full post-labor transition"
+    source: "Implementation strategy"
+    
+  - name: "Global Exhaustion is Real"
+    statement: "Tang ping, karoshi, quiet quitting, deaths of despair—these are symptoms of a system at its breaking point"
+    application: "Validate worker exhaustion as rational response, not moral failing"
+    source: "Empirical observation"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KEY CONCEPTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+key_concepts:
+  - term: "L/0 (Labor Zero)"
+    definition: "The elimination of obligatory human labor; work becomes voluntary and intrinsic"
+    
+  - term: "Laborism"
+    definition: "The belief that human labor must be preserved as economic necessity, moral virtue, or identity foundation—spans left and right"
+    
+  - term: "Economic Agency Paradox"
+    definition: "Technology lowers costs but destroys jobs, so you get no dollars to buy cheaper goods; automating more makes it worse"
+    
+  - term: "Pyramid of Prosperity"
+    definition: "Five-layer framework for household income after labor: Universals → Public Assets → Private Collective Assets → Individual Assets → Residual Wages"
+    
+  - term: "Pyramid of Power"
+    definition: "Five-layer framework for civic leverage after labor: Immutable Bedrock → Open Rails → Radical Transparency → Direct Democracy → Metagovernance"
+    
+  - term: "Algorithmic Power"
+    definition: "Blockchain-based civic infrastructure that replaces labor as the foundation of democratic leverage"
+    
+  - term: "Post-Labor Enterprise"
+    definition: "Corporations that operate with minimal or zero human employees, run entirely by AI and automation"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SOCIAL MEDIA
+# ─────────────────────────────────────────────────────────────────────────────
+
+social_media:
+  - platform: "youtube"
+    url: "https://www.youtube.com/@DaveShap"
+    handle: "@DaveShap"
+    
+  - platform: "substack"
+    url: "https://daveshap.substack.com"
+    
+  - platform: "skool"
+    url: "https://www.skool.com/postlaboreconomics"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  last_updated: "2026-01-27"
+  version: "1.0.0"
+  author: "Post-Labor Economics Community"

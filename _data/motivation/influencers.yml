@@ -1,0 +1,324 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Motivation Architecture - INFLUENCERS (Environmental Factors)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INTERNAL INFLUENCERS
+# Factors within the movement's control
+# ─────────────────────────────────────────────────────────────────────────────
+
+internal_influencers:
+
+  resources:
+    - name: "Founder Expertise"
+      type: "human_capital"
+      description: "David Shapiro's background in AI, systems thinking, and economics"
+      current_state:
+        status: strong
+        details: "Deep technical knowledge, proven content creation ability, growing platform"
+      trend: improving
+      strategic_value: "Core thought leadership and content engine"
+      
+    - name: "Content Production Capacity"
+      type: "operational"
+      description: "Ability to produce videos, articles, and educational content"
+      current_state:
+        status: strong
+        details: "Regular YouTube uploads, Substack essays, book in progress"
+      trend: improving
+      strategic_value: "Primary mechanism for education and growth"
+      
+    - name: "Community Platform"
+      type: "infrastructure"
+      description: "Skool membership community for engaged supporters"
+      current_state:
+        status: developing
+        details: "152 members, $5/month, growing engagement"
+      trend: improving
+      strategic_value: "Revenue, collaboration, and core activist base"
+      
+    - name: "Financial Resources"
+      type: "financial"
+      description: "Funding for operations and growth"
+      current_state:
+        status: limited
+        details: "Primarily content creator revenue; not yet externally funded"
+      trend: stable
+      strategic_value: "Constrains hiring and program expansion"
+
+  organization:
+    - name: "Leadership"
+      type: "governance"
+      description: "Movement leadership and decision-making"
+      current_state:
+        status: strong
+        details: "Clear vision from founder; growing team of admins"
+      trend: stable
+      
+    - name: "Network Effects"
+      type: "social_capital"
+      description: "Connections to influencers, academics, and policymakers"
+      current_state:
+        status: developing
+        details: "Growing through content engagement and podcast appearances"
+      trend: improving
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EXTERNAL INFLUENCERS
+# Factors outside the movement's control
+# ─────────────────────────────────────────────────────────────────────────────
+
+external_influencers:
+
+  technology:
+    - name: "AI Capability Acceleration"
+      type: "technology"
+      description: "Rapid improvement in AI systems' ability to replace human labor"
+      current_state:
+        status: accelerating
+        details: "LLMs reaching human-level on many tasks; agents automating workflows"
+      potential_impact: opportunity
+      implications: "Validates core thesis; increases urgency; grows audience"
+      
+    - name: "Robotics Progress"
+      type: "technology"
+      description: "Physical automation advancing toward general-purpose robots"
+      current_state:
+        status: advancing
+        details: "Tesla Optimus, Figure, 1X; humanoid robots entering production"
+      potential_impact: opportunity
+      implications: "Expands automation beyond white-collar to physical labor"
+      
+    - name: "Blockchain Maturity"
+      type: "technology"
+      description: "Decentralized systems for governance and finance"
+      current_state:
+        status: maturing
+        details: "Beyond speculation toward real applications"
+      potential_impact: opportunity
+      implications: "Enables Pyramid of Power implementation"
+
+  economy:
+    - name: "Labor Market Conditions"
+      type: "economic"
+      description: "Employment rates, wage trends, job quality"
+      current_state:
+        status: mixed
+        details: "Low unemployment masks underemployment, wage stagnation, gig precarity"
+      potential_impact: mixed
+      implications: "Full employment narrative slows urgency; quality decline supports thesis"
+      
+    - name: "Wealth Inequality"
+      type: "economic"
+      description: "Concentration of capital ownership"
+      current_state:
+        status: worsening
+        details: "Productivity-wage gap widening; capital share of income rising"
+      potential_impact: opportunity
+      implications: "Demonstrates need for capital distribution mechanisms"
+      
+    - name: "Inflation & Cost of Living"
+      type: "economic"
+      description: "Purchasing power and economic anxiety"
+      current_state:
+        status: elevated
+        details: "Housing, healthcare, education costs outpacing wages"
+      potential_impact: opportunity
+      implications: "Increases receptivity to new economic thinking"
+
+  social:
+    - name: "Worker Exhaustion"
+      type: "social"
+      description: "Global phenomenon of burnout and disengagement"
+      current_state:
+        status: severe
+        details: "Tang ping, quiet quitting, Great Resignation; deaths of despair"
+      potential_impact: opportunity
+      implications: "Large audience receptive to post-labor message"
+      
+    - name: "Generational Attitudes"
+      type: "social"
+      description: "Younger generations' relationship to work"
+      current_state:
+        status: favorable
+        details: "'I do not dream of labor' as mainstream sentiment"
+      potential_impact: opportunity
+      implications: "Core demographic already questioning laborism"
+      
+    - name: "Population Decline"
+      type: "social"
+      description: "Fertility collapse in developed nations"
+      current_state:
+        status: accelerating
+        details: "Below replacement in most wealthy countries; Korea lowest on earth"
+      potential_impact: mixed
+      implications: "Demonstrates unsustainability of current system; creates labor arguments"
+
+  political:
+    - name: "Laborist Consensus"
+      type: "political"
+      description: "Cross-spectrum commitment to preserving work as central to society"
+      current_state:
+        status: strong
+        details: "Both left (dignified work) and right (work ethic) defend labor"
+      potential_impact: threat
+      implications: "Primary ideological obstacle to movement"
+      
+    - name: "UBI Mainstreaming"
+      type: "political"
+      description: "Basic income moving from fringe to serious policy discussion"
+      current_state:
+        status: improving
+        details: "Pilot programs, serious policy proposals, tech sector support"
+      potential_impact: opportunity
+      implications: "Pyramid Layer 1 gaining political feasibility"
+      
+    - name: "AI Regulation Discourse"
+      type: "political"
+      description: "Government attention to AI impacts"
+      current_state:
+        status: growing
+        details: "EU AI Act, US executive orders, congressional hearings"
+      potential_impact: mixed
+      implications: "Window for shaping policy; risk of wrong approaches"
+      
+    - name: "Techno-Populist Backlash"
+      type: "political"
+      description: "Anti-tech sentiment and neo-Luddite movements"
+      current_state:
+        status: emerging
+        details: "AI anxiety, calls to pause AI development, job protection demands"
+      potential_impact: threat
+      implications: "Could derail productive transition toward resistance"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SWOT ANALYSIS
+# ─────────────────────────────────────────────────────────────────────────────
+
+assessments:
+
+  strengths:
+    - description: "Clear, differentiated intellectual framework (Pyramids, L/0)"
+      strategic_value: "Provides concrete vision beyond vague futures"
+      
+    - description: "Thought leader with technical credibility and communication skill"
+      strategic_value: "Can explain complex ideas accessibly"
+      
+    - description: "Growing audience already engaged with the message"
+      strategic_value: "Organic demand for post-labor thinking"
+      
+    - description: "Evidence-based approach citing existing programs"
+      strategic_value: "Credibility with serious audiences"
+      
+    - description: "Politically non-aligned; can build cross-partisan coalition"
+      strategic_value: "Avoids being dismissed as partisan project"
+
+  weaknesses:
+    - description: "Small team; dependent on founder"
+      strategic_implication: "Scaling limited; key person risk"
+      mitigation: "Build community leaders; delegate; document frameworks"
+      
+    - description: "Limited financial resources"
+      strategic_implication: "Cannot hire staff or run large programs"
+      mitigation: "Grow membership; seek aligned funders; leverage volunteer contributors"
+      
+    - description: "No institutional credibility yet"
+      strategic_implication: "Harder to influence policymakers directly"
+      mitigation: "Academic partnerships; policy org alliances; build track record"
+      
+    - description: "Message can seem threatening to current workers"
+      strategic_implication: "Risk of being seen as celebrating job loss"
+      mitigation: "Emphasize transition mechanisms; validate exhaustion; frame as liberation"
+
+  opportunities:
+    - description: "AI acceleration making thesis undeniable"
+      strategic_potential: "Events validating message; growing audience seeking answers"
+      
+    - description: "Global worker exhaustion creating receptive audience"
+      strategic_potential: "Millions ready to hear that the system is broken"
+      
+    - description: "Existing models to point to (Norway, Alaska, India UPI)"
+      strategic_potential: "Not proposing untested ideas; scaling proven mechanisms"
+      
+    - description: "Tech sector voices beginning to call for transition planning"
+      strategic_potential: "Potential allies with resources and platform"
+      
+    - description: "Generational shift in attitudes toward work"
+      strategic_potential: "Younger cohorts already questioning laborism"
+
+  threats:
+    - description: "Laborism deeply entrenched across political spectrum"
+      strategic_risk: "Message dismissed as lazy or unrealistic"
+      mitigation: "Name laborism explicitly; show it spans left-right"
+      
+    - description: "Economic collapse before transition mechanisms in place"
+      strategic_risk: "Mass unemployment without safety nets causing crisis"
+      mitigation: "Advocate urgency; prepare crisis response frameworks"
+      
+    - description: "Techno-populist backlash leading to resistance rather than transition"
+      strategic_risk: "Energy channeled into fighting automation rather than shaping it"
+      mitigation: "Position as pro-worker, pro-liberation; distinguish from tech utopians"
+      
+    - description: "Capture by elites who implement automation without distribution"
+      strategic_risk: "Productivity gains flow to capital; 'useless eaters' abandoned"
+      mitigation: "Pyramid of Power as equal priority to Prosperity; maintain leverage"
+      
+    - description: "Movement co-optation or dilution"
+      strategic_risk: "L/0 becomes meaningless buzzword"
+      mitigation: "Clear framework definitions; quality over growth"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RISK REGISTER
+# ─────────────────────────────────────────────────────────────────────────────
+
+risks:
+
+  - id: risk-timing
+    name: "Timing Mismatch"
+    description: "Automation accelerates before political will for transition mechanisms"
+    category: strategic
+    likelihood: medium
+    impact: high
+    current_status: monitoring
+    mitigation_strategy: "Advocate for proactive policy; prepare crisis response messaging"
+    owner: "Core Team"
+    
+  - id: risk-backlash
+    name: "Anti-Automation Backlash"
+    description: "Public opinion turns against AI/automation, making transition harder"
+    category: political
+    likelihood: medium
+    impact: medium
+    current_status: monitoring
+    mitigation_strategy: "Position as pro-worker liberation; distinguish from tech accelerationism"
+    owner: "Communications"
+    
+  - id: risk-cooptation
+    name: "Elite Capture"
+    description: "Automation deployed without wealth distribution; dystopian outcome"
+    category: strategic
+    likelihood: medium
+    impact: critical
+    current_status: monitoring
+    mitigation_strategy: "Pyramid of Power as equal priority; maintain leverage mechanisms"
+    owner: "Core Team"
+    
+  - id: risk-founder
+    name: "Key Person Dependency"
+    description: "Movement overly dependent on single founder"
+    category: operational
+    likelihood: medium
+    impact: high
+    current_status: active
+    mitigation_strategy: "Document frameworks; build leadership team; decentralize"
+    owner: "David Shapiro"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  last_updated: "2026-01-27"
+  version: "1.0.0"
+  review_cycle: "quarterly"

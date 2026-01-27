@@ -1,0 +1,329 @@
+---
+layout: default
+title: Stakeholders
+description: Our stakeholder ecosystem - who we serve and work with.
+permalink: /stakeholders/
+---
+
+<div class="page-header" style="--header-color: var(--color-societal);">
+  <div class="container">
+    <span class="page-label">Stakeholder Ecosystem</span>
+    <h1>Our Stakeholders</h1>
+    <p class="page-description">Understanding who we serve, work with, and are accountable to.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    
+    <!-- Overview -->
+    <section class="content-section">
+      <h2>Stakeholder Categories</h2>
+      <p>Our community interacts with diverse stakeholders across multiple categories:</p>
+      
+      <div class="category-grid">
+        {% for category in site.data.stakeholders.categories %}
+        <div class="category-card" style="--category-color: {{ category.color }}">
+          <div class="category-badge" style="background: {{ category.color }}">{{ category.id | slice: 0 | upcase }}</div>
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    
+    <!-- Stakeholder Profiles -->
+    <section class="content-section">
+      <h2>Stakeholder Profiles</h2>
+      
+      {% for stakeholder in site.data.stakeholders.stakeholders %}
+      <div class="stakeholder-card" id="{{ stakeholder.id }}">
+        <div class="stakeholder-header">
+          <div class="stakeholder-title">
+            <h3>{{ stakeholder.name }}</h3>
+            <span class="stakeholder-category">{{ stakeholder.category | capitalize }}</span>
+          </div>
+          <div class="stakeholder-meta">
+            <span class="influence-level">Influence: {{ stakeholder.influence_level | capitalize }}</span>
+            <span class="engagement-level">Engagement: {{ stakeholder.engagement_level | capitalize }}</span>
+          </div>
+        </div>
+        
+        <p class="stakeholder-description">{{ stakeholder.description }}</p>
+        
+        <div class="stakeholder-details">
+          {% if stakeholder.interests %}
+          <div class="detail-section">
+            <h4><i data-lucide="heart"></i> Interests</h4>
+            <ul>
+              {% for interest in stakeholder.interests %}
+              <li>{{ interest }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+          
+          {% if stakeholder.expectations %}
+          <div class="detail-section">
+            <h4><i data-lucide="check-square"></i> Expectations</h4>
+            <ul>
+              {% for expectation in stakeholder.expectations %}
+              <li>{{ expectation }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+          
+          {% if stakeholder.value_proposition %}
+          <div class="detail-section value-prop">
+            <h4><i data-lucide="gift"></i> Our Value Proposition</h4>
+            <p>{{ stakeholder.value_proposition }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+    
+    <!-- Engagement Matrix -->
+    <section class="content-section">
+      <h2>Stakeholder Engagement Matrix</h2>
+      <p>How we prioritize and engage different stakeholder groups:</p>
+      
+      <div class="engagement-matrix">
+        <div class="matrix-quadrant high-power-high-interest">
+          <h4>Manage Closely</h4>
+          <p class="quadrant-label">High Power / High Interest</p>
+          <ul>
+            {% for id in site.data.stakeholders.engagement_matrix.high_power_high_interest %}
+            {% assign sh = site.data.stakeholders.stakeholders | where: "id", id | first %}
+            <li>{{ sh.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="matrix-quadrant high-power-low-interest">
+          <h4>Keep Satisfied</h4>
+          <p class="quadrant-label">High Power / Low Interest</p>
+          <ul>
+            {% for id in site.data.stakeholders.engagement_matrix.high_power_low_interest %}
+            {% assign sh = site.data.stakeholders.stakeholders | where: "id", id | first %}
+            <li>{{ sh.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="matrix-quadrant low-power-high-interest">
+          <h4>Keep Informed</h4>
+          <p class="quadrant-label">Low Power / High Interest</p>
+          <ul>
+            {% for id in site.data.stakeholders.engagement_matrix.low_power_high_interest %}
+            {% assign sh = site.data.stakeholders.stakeholders | where: "id", id | first %}
+            <li>{{ sh.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="matrix-quadrant low-power-low-interest">
+          <h4>Monitor</h4>
+          <p class="quadrant-label">Low Power / Low Interest</p>
+          <ul>
+            {% for id in site.data.stakeholders.engagement_matrix.low_power_low_interest %}
+            {% assign sh = site.data.stakeholders.stakeholders | where: "id", id | first %}
+            <li>{{ sh.name }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+</div>
+
+<style>
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+}
+
+.category-card {
+  padding: var(--space-5);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--category-color);
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+}
+
+.category-card h3 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-2);
+}
+
+.category-card p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.stakeholder-card {
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+}
+
+.stakeholder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.stakeholder-title h3 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2);
+}
+
+.stakeholder-category {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary-light);
+}
+
+.stakeholder-meta {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.stakeholder-meta span {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.stakeholder-description {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+}
+
+.stakeholder-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-6);
+}
+
+.detail-section h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.detail-section h4 svg {
+  width: 16px;
+  height: 16px;
+}
+
+.detail-section ul {
+  padding-left: var(--space-4);
+  list-style: disc;
+}
+
+.detail-section li {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: var(--space-2) 0;
+}
+
+.value-prop {
+  grid-column: 1 / -1;
+  padding: var(--space-4);
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: var(--radius-md);
+}
+
+.value-prop p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.engagement-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+}
+
+.matrix-quadrant {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+}
+
+.matrix-quadrant h4 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.quadrant-label {
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.6);
+  margin-bottom: var(--space-4);
+}
+
+.matrix-quadrant ul {
+  padding-left: var(--space-4);
+  list-style: disc;
+}
+
+.matrix-quadrant li {
+  font-size: var(--text-sm);
+  margin: var(--space-2) 0;
+}
+
+.high-power-high-interest {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.high-power-low-interest {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.low-power-high-interest {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.low-power-low-interest {
+  background: linear-gradient(135deg, rgba(100, 116, 139, 0.2), rgba(100, 116, 139, 0.05));
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+@media (max-width: 768px) {
+  .engagement-matrix {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

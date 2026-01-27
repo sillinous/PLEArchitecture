@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Mermaid for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  
+  {% seo %}
+</head>
+<body>
+  <!-- Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ '/' | relative_url }}" class="site-logo">
+        <span class="logo-icon">
+          <i data-lucide="hexagon"></i>
+        </span>
+        <span class="logo-text">
+          <span class="logo-name">{{ site.data.community.short_name | default: "CEAS" }}</span>
+          <span class="logo-tagline">Community Architecture</span>
+        </span>
+      </a>
+      
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">
+          <i data-lucide="menu"></i>
+          <span class="sr-only">Menu</span>
+        </button>
+        
+        <ul id="nav-menu" class="nav-menu">
+          {% for item in site.navigation.main %}
+          <li class="nav-item {% if item.children %}has-dropdown{% endif %}">
+            <a href="{{ item.url | relative_url }}" {% if page.url == item.url %}aria-current="page"{% endif %}>
+              {{ item.title }}
+              {% if item.children %}<i data-lucide="chevron-down" class="dropdown-icon"></i>{% endif %}
+            </a>
+            {% if item.children %}
+            <ul class="dropdown-menu">
+              {% for child in item.children %}
+              <li>
+                <a href="{{ child.url | relative_url }}" {% if page.url == child.url %}aria-current="page"{% endif %}>
+                  {{ child.title }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </div>
+  </header>
+  
+  <!-- Main Content -->
+  <main id="main-content" class="site-main">
+    {{ content }}
+  </main>
+  
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>{{ site.data.community.name | default: "Community Enterprise Architecture System" }}</h3>
+          <p>{{ site.data.community.tagline | default: "Building Tomorrow Together" }}</p>
+          
+          {% if site.data.community.social_media %}
+          <div class="social-links">
+            {% for social in site.data.community.social_media %}
+            <a href="{{ social.url }}" aria-label="{{ social.platform }}" target="_blank" rel="noopener">
+              <i data-lucide="{{ social.platform }}"></i>
+            </a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        
+        <div class="footer-nav">
+          <h4>Architecture</h4>
+          <ul>
+            <li><a href="{{ '/architecture/motivation/' | relative_url }}">Motivation</a></li>
+            <li><a href="{{ '/architecture/business/' | relative_url }}">Business</a></li>
+            <li><a href="{{ '/architecture/societal/' | relative_url }}">Societal</a></li>
+            <li><a href="{{ '/architecture/governance/' | relative_url }}">Governance</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-nav">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="{{ '/stakeholders/' | relative_url }}">Stakeholders</a></li>
+            <li><a href="{{ '/capabilities/' | relative_url }}">Capabilities</a></li>
+            <li><a href="{{ '/impact/' | relative_url }}">Impact</a></li>
+            <li><a href="{{ '/initiatives/' | relative_url }}">Initiatives</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-nav">
+          <h4>About</h4>
+          <ul>
+            {% for link in site.footer.links %}
+            <li><a href="{{ link.url | relative_url }}">{{ link.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="copyright">
+          &copy; {{ 'now' | date: "%Y" }} {{ site.data.community.name | default: "Community" }}. 
+          Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+        </p>
+        <p class="powered-by">
+          Powered by <a href="https://github.com/ceas-framework/ceas">CEAS Framework</a> v{{ site.ceas.version }}
+        </p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- Scripts -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Initialize Mermaid
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#3b82f6',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#64748b',
+        lineColor: '#64748b',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#0f172a'
+      }
+    });
+    
+    // Mobile nav toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    
+    // Dropdown handling
+    const dropdownItems = document.querySelectorAll('.has-dropdown');
+    dropdownItems.forEach(item => {
+      const link = item.querySelector('a');
+      link.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+  
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

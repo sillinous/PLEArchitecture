@@ -1,0 +1,336 @@
+---
+layout: default
+title: Architecture Overview
+description: Comprehensive view of our community's enterprise architecture across all domains.
+permalink: /architecture/
+---
+
+<div class="page-header">
+  <div class="container">
+    <span class="page-label">Enterprise Architecture</span>
+    <h1>Architecture Overview</h1>
+    <p class="page-description">A comprehensive view of how our community operates, creates value, and achieves impact.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    
+    <!-- Architecture Framework Introduction -->
+    <section class="content-section">
+      <h2>Our Architecture Framework</h2>
+      <p>
+        We use the <strong>Community Enterprise Architecture System (CEAS)</strong> to document and 
+        communicate our strategic architecture. This extends traditional enterprise architecture 
+        frameworks to include societal, economic, and environmental dimensions that are critical 
+        for community-focused organizations.
+      </p>
+      
+      <div class="architecture-layers">
+        <div class="layer-diagram">
+          <div class="layer layer-motivation">
+            <h3><i data-lucide="target"></i> Motivation Layer</h3>
+            <p>Why we exist and what we're trying to achieve</p>
+            <div class="layer-elements">
+              <span>Vision</span>
+              <span>Mission</span>
+              <span>Goals</span>
+              <span>Objectives</span>
+              <span>Strategies</span>
+              <span>Tactics</span>
+            </div>
+          </div>
+          
+          <div class="layer layer-business">
+            <h3><i data-lucide="briefcase"></i> Business Layer</h3>
+            <p>How we organize and operate</p>
+            <div class="layer-elements">
+              <span>Capabilities</span>
+              <span>Processes</span>
+              <span>Services</span>
+              <span>Stakeholders</span>
+            </div>
+          </div>
+          
+          <div class="layer layer-impact">
+            <h3><i data-lucide="trending-up"></i> Impact Layer</h3>
+            <p>The outcomes we create</p>
+            <div class="layer-elements">
+              <span>Economic</span>
+              <span>Social</span>
+              <span>Environmental</span>
+              <span>Governance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Architecture Domains -->
+    <section class="content-section">
+      <h2>Architecture Domains</h2>
+      <p>Our architecture is organized into interconnected domains:</p>
+      
+      <div class="domains-detailed">
+        {% for domain in site.ceas.domains %}
+        <a href="{{ '/architecture/' | append: domain.id | append: '/' | relative_url }}" 
+           class="domain-detail-card" 
+           style="--domain-color: {{ domain.color }}">
+          <div class="domain-icon">
+            <i data-lucide="{{ domain.icon }}"></i>
+          </div>
+          <div class="domain-info">
+            <h3>{{ domain.name }}</h3>
+            <p>
+              {% case domain.id %}
+              {% when 'motivation' %}
+              Vision, mission, goals, objectives, strategies, and tactics that drive our community.
+              {% when 'business' %}
+              Capabilities, processes, and organizational structure that deliver our services.
+              {% when 'information' %}
+              Data, knowledge management, and information flows across our community.
+              {% when 'application' %}
+              Systems, platforms, and digital tools that support our operations.
+              {% when 'technology' %}
+              Infrastructure, security, and technical foundations.
+              {% when 'societal' %}
+              Community impact, social cohesion, equity, and wellbeing outcomes.
+              {% when 'economic' %}
+              Value creation, distribution, wealth building, and economic sustainability.
+              {% when 'environmental' %}
+              Ecological footprint, regeneration, and environmental stewardship.
+              {% when 'governance' %}
+              Decision-making structures, accountability, and democratic participation.
+              {% endcase %}
+            </p>
+          </div>
+          <div class="domain-arrow">
+            <i data-lucide="arrow-right"></i>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    
+    <!-- Quick Links -->
+    <section class="content-section">
+      <h2>Explore the Architecture</h2>
+      
+      <div class="quick-links-grid">
+        <a href="{{ '/architecture/motivation/' | relative_url }}" class="quick-link-card">
+          <i data-lucide="target"></i>
+          <h3>Motivation</h3>
+          <p>Goals, strategies, and what drives us</p>
+        </a>
+        
+        <a href="{{ '/stakeholders/' | relative_url }}" class="quick-link-card">
+          <i data-lucide="users"></i>
+          <h3>Stakeholders</h3>
+          <p>Who we serve and work with</p>
+        </a>
+        
+        <a href="{{ '/capabilities/' | relative_url }}" class="quick-link-card">
+          <i data-lucide="zap"></i>
+          <h3>Capabilities</h3>
+          <p>What we can do</p>
+        </a>
+        
+        <a href="{{ '/impact/' | relative_url }}" class="quick-link-card">
+          <i data-lucide="bar-chart-2"></i>
+          <h3>Impact</h3>
+          <p>Outcomes and metrics</p>
+        </a>
+        
+        <a href="{{ '/initiatives/' | relative_url }}" class="quick-link-card">
+          <i data-lucide="rocket"></i>
+          <h3>Initiatives</h3>
+          <p>Active projects and programs</p>
+        </a>
+        
+        <a href="{{ '/docs/' | relative_url }}" class="quick-link-card">
+          <i data-lucide="book-open"></i>
+          <h3>Documentation</h3>
+          <p>Full schema and guides</p>
+        </a>
+      </div>
+    </section>
+    
+  </div>
+</div>
+
+<style>
+.architecture-layers {
+  margin: var(--space-10) 0;
+}
+
+.layer-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.layer {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 2px solid;
+}
+
+.layer h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.layer h3 svg {
+  width: 20px;
+  height: 20px;
+}
+
+.layer > p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+
+.layer-elements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.layer-elements span {
+  padding: var(--space-2) var(--space-3);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.layer-motivation {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--color-motivation);
+}
+
+.layer-motivation h3 { color: var(--color-motivation); }
+
+.layer-business {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--color-business);
+}
+
+.layer-business h3 { color: var(--color-business); }
+
+.layer-impact {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-accent);
+}
+
+.layer-impact h3 { color: var(--color-accent); }
+
+.domains-detailed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.domain-detail-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.domain-detail-card:hover {
+  border-color: var(--domain-color);
+  transform: translateX(8px);
+}
+
+.domain-detail-card .domain-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--domain-color), transparent);
+  border-radius: var(--radius-lg);
+}
+
+.domain-detail-card .domain-icon svg {
+  width: 28px;
+  height: 28px;
+  color: white;
+}
+
+.domain-info {
+  flex: 1;
+}
+
+.domain-info h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.domain-info p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.domain-arrow {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+}
+
+.domain-detail-card:hover .domain-arrow {
+  color: var(--domain-color);
+  transform: translateX(4px);
+}
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.quick-link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-8);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.quick-link-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-4px);
+}
+
+.quick-link-card svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary-light);
+  margin-bottom: var(--space-4);
+}
+
+.quick-link-card h3 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.quick-link-card p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+</style>

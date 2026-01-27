@@ -1,0 +1,401 @@
+---
+layout: default
+title: Impact Dashboard
+description: Measuring our economic, social, environmental, and governance outcomes.
+permalink: /impact/
+---
+
+<div class="page-header" style="--header-color: var(--color-accent);">
+  <div class="container">
+    <span class="page-label">Impact Framework</span>
+    <h1>Impact Dashboard</h1>
+    <p class="page-description">Transparent reporting on our outcomes across all impact dimensions.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    
+    <!-- Impact Dimensions -->
+    <section class="content-section">
+      <h2>Impact Dimensions</h2>
+      <p>We measure impact across four interconnected dimensions:</p>
+      
+      <div class="dimensions-grid">
+        {% for dim in site.data.impact.metrics.dimensions %}
+        <div class="dimension-card" style="--dim-color: {{ dim.color }}">
+          <div class="dimension-icon">
+            <i data-lucide="{{ dim.icon }}"></i>
+          </div>
+          <h3>{{ dim.name }}</h3>
+          <p>{{ dim.description }}</p>
+          
+          {% if dim.sdg_alignment %}
+          <div class="sdg-tags">
+            {% for sdg in dim.sdg_alignment %}
+            <span class="sdg-tag" title="{{ sdg.name }}">SDG {{ sdg.goal }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    
+    <!-- Metrics Dashboard -->
+    <section class="content-section">
+      <h2>Key Metrics</h2>
+      
+      {% for category in site.data.impact.metrics.metrics %}
+      {% assign cat_name = category[0] %}
+      {% assign cat_metrics = category[1] %}
+      
+      <div class="metrics-category">
+        <h3 class="category-{{ cat_name }}">
+          {% case cat_name %}
+          {% when 'economic' %}<i data-lucide="trending-up"></i>
+          {% when 'social' %}<i data-lucide="heart"></i>
+          {% when 'environmental' %}<i data-lucide="leaf"></i>
+          {% when 'governance' %}<i data-lucide="vote"></i>
+          {% endcase %}
+          {{ cat_name | capitalize }} Metrics
+        </h3>
+        
+        <div class="metrics-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Current</th>
+                <th>Target</th>
+                <th>Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for metric in cat_metrics %}
+              <tr>
+                <td>
+                  <strong>{{ metric.name }}</strong>
+                  <small>{{ metric.description }}</small>
+                </td>
+                <td>
+                  {% assign latest = metric.values | first %}
+                  {{ latest.value }} {{ metric.unit }}
+                </td>
+                <td>
+                  {{ metric.target.value }} {{ metric.unit }}
+                  <small>by {{ metric.target.by }}</small>
+                </td>
+                <td>
+                  {% if metric.baseline %}
+                  {% assign progress = latest.value | minus: metric.baseline.value | times: 100.0 | divided_by: metric.target.value | minus: metric.baseline.value %}
+                  {% if progress > 100 %}{% assign progress = 100 %}{% endif %}
+                  {% if progress < 0 %}{% assign progress = 0 %}{% endif %}
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress | round }}%"></div>
+                  </div>
+                  <span class="progress-text">{{ progress | round }}%</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+    
+    <!-- Theory of Change -->
+    <section class="content-section">
+      <h2>Theory of Change</h2>
+      <p>How our activities lead to lasting impact:</p>
+      
+      <div class="toc-flow">
+        <div class="toc-stage">
+          <h4><i data-lucide="package"></i> Inputs</h4>
+          <ul>
+            {% for input in site.data.impact.metrics.theory_of_change.inputs %}
+            <li>{{ input }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="toc-arrow"><i data-lucide="arrow-right"></i></div>
+        
+        <div class="toc-stage">
+          <h4><i data-lucide="activity"></i> Activities</h4>
+          <ul>
+            {% for activity in site.data.impact.metrics.theory_of_change.activities %}
+            <li>{{ activity }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="toc-arrow"><i data-lucide="arrow-right"></i></div>
+        
+        <div class="toc-stage">
+          <h4><i data-lucide="box"></i> Outputs</h4>
+          <ul>
+            {% for output in site.data.impact.metrics.theory_of_change.outputs %}
+            <li>{{ output }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="toc-arrow"><i data-lucide="arrow-right"></i></div>
+        
+        <div class="toc-stage">
+          <h4><i data-lucide="target"></i> Outcomes</h4>
+          <div class="outcome-timeline">
+            <div class="outcome-period">
+              <span>Short-term</span>
+              <ul>
+                {% for outcome in site.data.impact.metrics.theory_of_change.outcomes.short_term %}
+                <li>{{ outcome }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="outcome-period">
+              <span>Medium-term</span>
+              <ul>
+                {% for outcome in site.data.impact.metrics.theory_of_change.outcomes.medium_term %}
+                <li>{{ outcome }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <div class="toc-arrow"><i data-lucide="arrow-right"></i></div>
+        
+        <div class="toc-stage toc-impact">
+          <h4><i data-lucide="star"></i> Impact</h4>
+          <p>{{ site.data.impact.metrics.theory_of_change.impact.statement }}</p>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+</div>
+
+<style>
+.dimensions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-6);
+  margin: var(--space-8) 0;
+}
+
+.dimension-card {
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  border-top: 4px solid var(--dim-color);
+}
+
+.dimension-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--dim-color), transparent);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.dimension-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.dimension-card h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.dimension-card p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.sdg-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.sdg-tag {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+.metrics-category {
+  margin: var(--space-10) 0;
+}
+
+.metrics-category h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-6);
+}
+
+.metrics-category h3 svg {
+  width: 24px;
+  height: 24px;
+}
+
+.category-economic h3 { color: var(--color-economic); }
+.category-social h3 { color: var(--color-societal); }
+.category-environmental h3 { color: var(--color-environmental); }
+.category-governance h3 { color: var(--color-governance); }
+
+.metrics-table {
+  overflow-x: auto;
+}
+
+.metrics-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.metrics-table th,
+.metrics-table td {
+  padding: var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.metrics-table th {
+  background: var(--color-bg-secondary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.metrics-table td strong {
+  display: block;
+}
+
+.metrics-table td small {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.progress-bar {
+  width: 100px;
+  height: 8px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-left: var(--space-2);
+}
+
+.toc-flow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+  overflow-x: auto;
+  padding: var(--space-4) 0;
+}
+
+.toc-stage {
+  flex: 1;
+  min-width: 180px;
+  padding: var(--space-5);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.toc-stage h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-primary-light);
+  margin-bottom: var(--space-4);
+}
+
+.toc-stage h4 svg {
+  width: 16px;
+  height: 16px;
+}
+
+.toc-stage ul {
+  padding-left: var(--space-4);
+  list-style: disc;
+}
+
+.toc-stage li {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: var(--space-2) 0;
+}
+
+.toc-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  padding-top: var(--space-10);
+}
+
+.toc-impact {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+  border-color: var(--color-accent);
+}
+
+.toc-impact p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.outcome-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.outcome-period span {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+@media (max-width: 1024px) {
+  .toc-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .toc-arrow {
+    padding: 0;
+    justify-content: center;
+    transform: rotate(90deg);
+  }
+}
+</style>

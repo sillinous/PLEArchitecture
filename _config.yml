@@ -1,0 +1,206 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Community Enterprise Architecture System
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Site Settings
+title: "Post-Labor Economics"
+tagline: "L/0 — Liberating Humanity from Obligatory Labor"
+description: "The L/0 Movement: Navigating the transition to a post-labor economy through the Pyramids of Prosperity and Power."
+baseurl: "" # Update for GitHub Pages: "/repository-name"
+url: "" # Update with your GitHub Pages URL
+logo: "/assets/images/ple-logo.svg"
+
+# Founder & Leadership
+founder: "David Shapiro"
+founder_url: "https://daveshap.substack.com"
+
+# Community Links
+community_links:
+  skool: "https://www.skool.com/postlaboreconomics"
+  substack: "https://daveshap.substack.com"
+  youtube: "https://www.youtube.com/@DaveShap"
+
+# Build Settings
+markdown: kramdown
+highlighter: rouge
+permalink: /:categories/:title/
+
+# Collections
+collections:
+  domains:
+    output: true
+    permalink: /domains/:name/
+  capabilities:
+    output: true
+    permalink: /capabilities/:name/
+  initiatives:
+    output: true
+    permalink: /initiatives/:name/
+
+# Default Front Matter
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: ""
+      type: "domains"
+    values:
+      layout: "domain"
+  - scope:
+      path: ""
+      type: "capabilities"
+    values:
+      layout: "capability"
+  - scope:
+      path: ""
+      type: "initiatives"
+    values:
+      layout: "initiative"
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - README.md
+  - CONTRIBUTING.md
+  - LICENSE
+  - "*.sh"
+  - docs/development
+
+# CEAS Custom Settings
+ceas:
+  version: "1.0.0"
+  
+  # Architecture Domain Definitions
+  # Customized for Post-Labor Economics frameworks
+  domains:
+    - id: motivation
+      name: Motivation Layer
+      icon: target
+      color: "#8b5cf6"
+      description: "Vision, mission, goals, and the L/0 thesis"
+    - id: prosperity
+      name: Pyramid of Prosperity
+      icon: trending-up
+      color: "#10b981"
+      description: "Five layers for income distribution after labor"
+    - id: power
+      name: Pyramid of Power
+      icon: shield
+      color: "#6366f1"
+      description: "Five layers for democratic leverage via algorithmic systems"
+    - id: coalition
+      name: Coalition Building
+      icon: users
+      color: "#ec4899"
+      description: "Uniting workers, capitalists, and technologists"
+    - id: research
+      name: Research & Evidence
+      icon: search
+      color: "#f59e0b"
+      description: "Labor displacement tracking and policy analysis"
+    - id: policy
+      name: Policy Framework
+      icon: landmark
+      color: "#3b82f6"
+      description: "Concrete mechanisms for transition"
+      
+  # Key Frameworks
+  frameworks:
+    pyramid_of_prosperity:
+      layers:
+        - level: 1
+          name: "Universals"
+          description: "UBI, UHC, Universal Basic Services"
+        - level: 2
+          name: "Collectively Owned Public Assets"
+          description: "Sovereign wealth funds, resource trusts"
+        - level: 3
+          name: "Collectively Owned Private Assets"
+          description: "Cooperatives, ESOPs, DAOs"
+        - level: 4
+          name: "Individual Private Assets"
+          description: "Personal investment portfolios"
+        - level: 5
+          name: "Residual Wages"
+          description: "Protected jobs in meaning economy"
+          
+    pyramid_of_power:
+      layers:
+        - level: 1
+          name: "Immutable Civic Bedrock"
+          description: "Blockchain identity, records, property"
+        - level: 2
+          name: "Open Payment Rails"
+          description: "UPI, Pix, CBDC"
+        - level: 3
+          name: "Radical Transparency"
+          description: "Open procurement, transparent budgets"
+        - level: 4
+          name: "Direct Democracy"
+          description: "Participatory budgeting, liquid democracy"
+        - level: 5
+          name: "Metagovernance"
+          description: "Rules for changing the rules"
+  
+  # Stakeholder Categories
+  stakeholder_types:
+    - workers
+    - capital
+    - technologists
+    - policymakers
+    - academics
+    - media
+    - community
+    - organizations
+
+# Navigation
+navigation:
+  main:
+    - title: Home
+      url: /
+    - title: About
+      url: /about/
+    - title: Architecture
+      url: /architecture/
+      children:
+        - title: Overview
+          url: /architecture/
+        - title: Motivation & L/0
+          url: /architecture/motivation/
+        - title: Pyramid of Prosperity
+          url: /architecture/prosperity/
+        - title: Pyramid of Power
+          url: /architecture/power/
+    - title: Stakeholders
+      url: /stakeholders/
+    - title: Capabilities
+      url: /capabilities/
+    - title: Impact
+      url: /impact/
+    - title: Docs
+      url: /docs/
+
+# Footer Links
+footer:
+  links:
+    - title: Skool Community
+      url: https://www.skool.com/postlaboreconomics
+    - title: YouTube
+      url: https://www.youtube.com/@DaveShap
+    - title: Substack
+      url: https://daveshap.substack.com
+    - title: GitHub
+      url: https://github.com/postlaboreconomics/architecture

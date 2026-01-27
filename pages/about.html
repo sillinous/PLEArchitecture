@@ -1,0 +1,189 @@
+---
+layout: default
+title: About
+description: Learn about our community, our mission, and our approach to transparent architecture.
+permalink: /about/
+---
+
+<div class="page-header">
+  <div class="container">
+    <span class="page-label">About Us</span>
+    <h1>{{ site.data.community.name }}</h1>
+    <p class="page-description">{{ site.data.community.tagline }}</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    
+    <!-- Mission Section -->
+    <section class="content-section">
+      <div class="section-icon">
+        <i data-lucide="target"></i>
+      </div>
+      <h2>Our Mission</h2>
+      <div class="mission-statement">
+        <p>{{ site.data.community.mission.statement }}</p>
+      </div>
+    </section>
+    
+    <!-- Vision Section -->
+    <section class="content-section">
+      <div class="section-icon">
+        <i data-lucide="eye"></i>
+      </div>
+      <h2>Our Vision</h2>
+      <div class="vision-statement">
+        <p>{{ site.data.community.vision.statement }}</p>
+        <span class="vision-target">Target: {{ site.data.community.vision.time_horizon }}</span>
+      </div>
+    </section>
+    
+    <!-- Values Section -->
+    <section class="content-section">
+      <div class="section-icon">
+        <i data-lucide="heart"></i>
+      </div>
+      <h2>Our Values</h2>
+      
+      <div class="values-list">
+        {% for value in site.data.community.values %}
+        <div class="value-item">
+          <h3>{{ value.name }}</h3>
+          <p>{{ value.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    
+    <!-- Principles Section -->
+    <section class="content-section">
+      <div class="section-icon">
+        <i data-lucide="compass"></i>
+      </div>
+      <h2>Our Principles</h2>
+      
+      <div class="principles-list">
+        {% for principle in site.data.community.principles %}
+        <div class="principle-item">
+          <h3>{{ principle.name }}</h3>
+          <p>{{ principle.statement }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    
+  </div>
+</div>
+
+<style>
+.page-header {
+  background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-primary));
+  padding: var(--space-16) 0;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-label {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-primary-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: var(--space-4);
+}
+
+.page-header h1 {
+  font-size: var(--text-4xl);
+  margin-bottom: var(--space-4);
+}
+
+.page-description {
+  font-size: var(--text-xl);
+  color: var(--color-text-secondary);
+}
+
+.page-content {
+  padding: var(--space-16) 0;
+}
+
+.content-section {
+  margin-bottom: var(--space-16);
+  padding-bottom: var(--space-16);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+}
+
+.section-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.content-section h2 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-4);
+}
+
+.mission-statement,
+.vision-statement {
+  padding: var(--space-8);
+  background: var(--color-bg-secondary);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-md);
+}
+
+.mission-statement p,
+.vision-statement p {
+  font-size: var(--text-lg);
+  line-height: 1.8;
+}
+
+.vision-target {
+  display: inline-block;
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+}
+
+.values-list,
+.principles-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+.value-item,
+.principle-item {
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.value-item h3,
+.principle-item h3 {
+  font-size: var(--text-lg);
+  color: var(--color-accent);
+  margin-bottom: var(--space-3);
+}
+
+.value-item p,
+.principle-item p {
+  color: var(--color-text-secondary);
+}
+</style>

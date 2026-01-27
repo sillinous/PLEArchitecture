@@ -1,0 +1,381 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Impact Framework & Metrics
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# IMPACT DIMENSIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+dimensions:
+  - id: movement
+    name: "Movement Building"
+    description: "Growing the coalition for post-labor economic transition"
+    icon: users
+    color: "#10b981"
+    
+  - id: intellectual
+    name: "Intellectual Impact"
+    description: "Shifting discourse and frameworks around labor, automation, and economics"
+    icon: lightbulb
+    color: "#8b5cf6"
+    
+  - id: policy
+    name: "Policy Influence"
+    description: "Advancing concrete policy mechanisms for economic transition"
+    icon: landmark
+    color: "#6366f1"
+    
+  - id: cultural
+    name: "Cultural Shift"
+    description: "Changing attitudes toward work, labor, and human value"
+    icon: heart
+    color: "#ec4899"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KEY PERFORMANCE INDICATORS
+# ─────────────────────────────────────────────────────────────────────────────
+
+metrics:
+
+  # MOVEMENT METRICS
+  movement:
+    - id: met-community-size
+      name: "Community Size"
+      description: "Total members across all platforms"
+      dimension: movement
+      type: count
+      unit: "members"
+      direction: higher_is_better
+      data_source: "Platform analytics"
+      frequency: monthly
+      values:
+        - period: "2026-01"
+          value: 1500
+        - period: "2025-12"
+          value: 1200
+        - period: "2025-06"
+          value: 500
+      target:
+        value: 50000
+        by: "2028"
+        
+    - id: met-paying-members
+      name: "Paying Members"
+      description: "Active Skool community members"
+      dimension: movement
+      type: count
+      unit: "members"
+      direction: higher_is_better
+      data_source: "Skool platform"
+      frequency: monthly
+      values:
+        - period: "2026-01"
+          value: 152
+        - period: "2025-12"
+          value: 120
+        - period: "2025-06"
+          value: 50
+      target:
+        value: 5000
+        by: "2028"
+        
+    - id: met-youtube-subs
+      name: "YouTube Subscribers"
+      description: "Followers on primary video platform"
+      dimension: movement
+      type: count
+      unit: "subscribers"
+      direction: higher_is_better
+      data_source: "YouTube analytics"
+      frequency: monthly
+      values:
+        - period: "2026-01"
+          value: 150000
+        - period: "2025-06"
+          value: 80000
+      target:
+        value: 1000000
+        by: "2028"
+
+    - id: met-chapters
+      name: "Active Chapters"
+      description: "Local Post-Labor Economics groups worldwide"
+      dimension: movement
+      type: count
+      unit: "chapters"
+      direction: higher_is_better
+      data_source: "Internal tracking"
+      frequency: quarterly
+      values:
+        - period: "2026-01"
+          value: 2
+        - period: "2025-06"
+          value: 0
+      target:
+        value: 100
+        by: "2028"
+
+  # INTELLECTUAL METRICS
+  intellectual:
+    - id: met-monthly-views
+      name: "Monthly Content Views"
+      description: "Total views across YouTube and Substack"
+      dimension: intellectual
+      type: count
+      unit: "views"
+      direction: higher_is_better
+      data_source: "Platform analytics"
+      frequency: monthly
+      values:
+        - period: "2026-01"
+          value: 500000
+        - period: "2025-06"
+          value: 200000
+      target:
+        value: 5000000
+        by: "2028"
+        
+    - id: met-research-papers
+      name: "Research Publications"
+      description: "Published research and policy papers"
+      dimension: intellectual
+      type: count
+      unit: "papers"
+      direction: higher_is_better
+      data_source: "Internal tracking"
+      frequency: quarterly
+      values:
+        - period: "2026-01"
+          value: 5
+        - period: "2025-06"
+          value: 2
+      target:
+        value: 30
+        by: "2028"
+        
+    - id: met-book-progress
+      name: "Book Completion"
+      description: "Progress toward post-labor economics book publication"
+      dimension: intellectual
+      type: percentage
+      unit: "%"
+      direction: higher_is_better
+      data_source: "Author tracking"
+      frequency: monthly
+      values:
+        - period: "2026-01"
+          value: 60
+        - period: "2025-06"
+          value: 20
+      target:
+        value: 100
+        by: "2026-06"
+
+  # POLICY METRICS
+  policy:
+    - id: met-policy-briefs
+      name: "Policy Briefings"
+      description: "Briefings delivered to policymakers"
+      dimension: policy
+      type: count
+      unit: "briefings"
+      direction: higher_is_better
+      data_source: "Internal tracking"
+      frequency: quarterly
+      values:
+        - period: "2026-01"
+          value: 3
+        - period: "2025-06"
+          value: 0
+      target:
+        value: 50
+        by: "2028"
+        
+    - id: met-partner-orgs
+      name: "Partner Organizations"
+      description: "Formal alliances with aligned organizations"
+      dimension: policy
+      type: count
+      unit: "organizations"
+      direction: higher_is_better
+      data_source: "Internal tracking"
+      frequency: quarterly
+      values:
+        - period: "2026-01"
+          value: 5
+        - period: "2025-06"
+          value: 1
+      target:
+        value: 100
+        by: "2028"
+
+  # CULTURAL METRICS
+  cultural:
+    - id: met-media-mentions
+      name: "Media Mentions"
+      description: "Coverage in mainstream and tech media"
+      dimension: cultural
+      type: count
+      unit: "mentions"
+      direction: higher_is_better
+      data_source: "Media monitoring"
+      frequency: quarterly
+      values:
+        - period: "2026-01"
+          value: 25
+        - period: "2025-06"
+          value: 5
+      target:
+        value: 500
+        by: "2028"
+        
+    - id: met-term-adoption
+      name: "Framework Term Adoption"
+      description: "Usage of L/0, Pyramid concepts in discourse beyond PLE"
+      dimension: cultural
+      type: score
+      unit: "qualitative"
+      direction: higher_is_better
+      data_source: "Manual tracking"
+      frequency: quarterly
+      values:
+        - period: "2026-01"
+          value: 2
+          note: "Emerging usage in tech commentary"
+      target:
+        value: 5
+        note: "Mainstream discourse adoption"
+        by: "2030"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# THEORY OF CHANGE
+# ─────────────────────────────────────────────────────────────────────────────
+
+theory_of_change:
+  
+  problem_statement: |
+    AI, automation, and robotics are rapidly displacing human labor, but our 
+    economic systems still assume wages as the primary distribution mechanism. 
+    This creates an "Economic Agency Paradox" where technological deflation 
+    should increase prosperity but instead causes destitution. Meanwhile, 
+    "laborism" across the political spectrum prevents honest discussion of 
+    alternatives.
+    
+  inputs:
+    - "Intellectual frameworks (Pyramids, L/0, Economic Agency Paradox)"
+    - "Founder expertise in AI, systems thinking, and communication"
+    - "Content production capacity (YouTube, Substack, book)"
+    - "Community platform (Skool membership)"
+    - "Network connections to technologists, economists, media"
+    
+  activities:
+    - "Produce educational content explaining post-labor economics"
+    - "Build community of engaged supporters"
+    - "Research and document labor displacement"
+    - "Develop detailed policy frameworks"
+    - "Engage policymakers and media"
+    - "Form coalitions with aligned organizations"
+    
+  outputs:
+    - "Videos, articles, and book reaching millions"
+    - "Active community of L/0 advocates"
+    - "Published research on AI displacement"
+    - "Policy proposals for Pyramid implementation"
+    - "Media coverage of post-labor economics"
+    - "Partner organizations amplifying message"
+    
+  outcomes:
+    short_term:
+      timeframe: "1-3 years"
+      outcomes:
+        - "Growing public awareness of post-labor economics concepts"
+        - "Laborism recognized as ideology, not common sense"
+        - "Policy discussions include L/0 frameworks"
+        - "Coalition of workers, capitalists, technologists aligned"
+        
+    medium_term:
+      timeframe: "3-7 years"
+      outcomes:
+        - "Pyramid Layer 1 (Universals) advancing in policy debates"
+        - "Sovereign wealth fund proposals gaining traction"
+        - "Algorithmic power infrastructure pilots underway"
+        - "Post-labor economics mainstream concept"
+        
+    long_term:
+      timeframe: "7-20 years"
+      outcomes:
+        - "Multiple Pyramid layers implemented in jurisdictions"
+        - "Capital ownership broadly distributed"
+        - "Labor no longer primary income distribution mechanism"
+        - "Human flourishing decoupled from obligatory work"
+        
+  ultimate_impact:
+    statement: |
+      A world where AI, automation, and robotics perform most labor while 
+      broadly distributed ownership ensures universal prosperity and 
+      algorithmic power maintains democratic accountability. Every human 
+      is free to pursue meaning, creativity, and connection without 
+      coerced labor for survival.
+      
+  assumptions:
+    - "AI and automation will continue advancing rapidly"
+    - "Jobs will be displaced faster than new ones emerge"
+    - "Existing programs (Norway, Alaska, India) can be scaled"
+    - "Coalition of workers and capital is possible"
+    - "Policy change is achievable with sufficient pressure"
+    
+  risks_to_theory:
+    - "Automation slower than expected, reducing urgency"
+    - "Laborism proves too entrenched to challenge"
+    - "Economic collapse before mechanisms in place"
+    - "Elite capture of automation benefits"
+    - "Techno-populist backlash derails productive transition"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DASHBOARD SUMMARY
+# ─────────────────────────────────────────────────────────────────────────────
+
+dashboard_summary:
+  reporting_period: "2026-01"
+  
+  headline_metrics:
+    - metric: met-paying-members
+      label: "Community Members"
+      value: 152
+      trend: up
+      
+    - metric: met-youtube-subs
+      label: "YouTube Subscribers"
+      value: "150K"
+      trend: up
+      
+    - metric: met-monthly-views
+      label: "Monthly Views"
+      value: "500K"
+      trend: up
+      
+    - metric: met-book-progress
+      label: "Book Progress"
+      value: "60%"
+      trend: up
+
+  movement_health:
+    community_growth: "Strong"
+    engagement: "High"
+    content_velocity: "Consistent"
+    
+  next_milestones:
+    - "Book publication Q2 2026"
+    - "1M YouTube subscribers by 2028"
+    - "First policy briefing to Congress 2026"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  last_updated: "2026-01-27"
+  version: "1.0.0"
+  reporting_framework: "Custom movement metrics"
+  next_report: "2026-04-01"

@@ -1,0 +1,290 @@
+---
+layout: default
+title: Documentation
+description: Complete documentation for the Community Enterprise Architecture System.
+permalink: /docs/
+---
+
+<div class="page-header">
+  <div class="container">
+    <span class="page-label">Documentation</span>
+    <h1>CEAS Documentation</h1>
+    <p class="page-description">Everything you need to understand, customize, and extend the Community Enterprise Architecture System.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    
+    <section class="content-section">
+      <div class="docs-grid">
+        
+        <a href="{{ '/docs/getting-started/' | relative_url }}" class="doc-card">
+          <div class="doc-icon">
+            <i data-lucide="rocket"></i>
+          </div>
+          <h3>Getting Started</h3>
+          <p>Quick setup guide to deploy your own community architecture site.</p>
+        </a>
+        
+        <a href="{{ '/docs/schema-reference/' | relative_url }}" class="doc-card">
+          <div class="doc-icon">
+            <i data-lucide="database"></i>
+          </div>
+          <h3>Data Schema Reference</h3>
+          <p>Complete reference for all YAML data file structures.</p>
+        </a>
+        
+        <a href="{{ '/docs/customization/' | relative_url }}" class="doc-card">
+          <div class="doc-icon">
+            <i data-lucide="palette"></i>
+          </div>
+          <h3>Customization</h3>
+          <p>Theming, branding, and extending the framework.</p>
+        </a>
+        
+        <a href="{{ '/docs/frameworks/' | relative_url }}" class="doc-card">
+          <div class="doc-icon">
+            <i data-lucide="layers"></i>
+          </div>
+          <h3>Framework Alignment</h3>
+          <p>How CEAS aligns with BMM, ArchiMate, TOGAF, and other standards.</p>
+        </a>
+        
+        <a href="{{ '/docs/api/' | relative_url }}" class="doc-card">
+          <div class="doc-icon">
+            <i data-lucide="code"></i>
+          </div>
+          <h3>API Reference</h3>
+          <p>Programmatic access to architecture data via JSON endpoints.</p>
+        </a>
+        
+        <a href="{{ '/docs/best-practices/' | relative_url }}" class="doc-card">
+          <div class="doc-icon">
+            <i data-lucide="award"></i>
+          </div>
+          <h3>Best Practices</h3>
+          <p>Guidelines for effective community architecture documentation.</p>
+        </a>
+        
+      </div>
+    </section>
+    
+    <section class="content-section">
+      <h2>Quick Reference</h2>
+      
+      <div class="reference-tables">
+        <div class="reference-section">
+          <h3>Key Data Files</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>_data/community.yml</code></td>
+                <td>Core identity: name, mission, vision, values, principles</td>
+              </tr>
+              <tr>
+                <td><code>_data/motivation/ends.yml</code></td>
+                <td>Goals and objectives (what you want to achieve)</td>
+              </tr>
+              <tr>
+                <td><code>_data/motivation/means.yml</code></td>
+                <td>Strategies and tactics (how you'll achieve it)</td>
+              </tr>
+              <tr>
+                <td><code>_data/motivation/influencers.yml</code></td>
+                <td>Internal/external factors, SWOT, risks</td>
+              </tr>
+              <tr>
+                <td><code>_data/stakeholders.yml</code></td>
+                <td>Stakeholder ecosystem definitions</td>
+              </tr>
+              <tr>
+                <td><code>_data/capabilities.yml</code></td>
+                <td>Capability map with maturity levels</td>
+              </tr>
+              <tr>
+                <td><code>_data/impact/metrics.yml</code></td>
+                <td>Impact metrics and theory of change</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="reference-section">
+          <h3>Configuration</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Setting</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Site title & URL</td>
+                <td><code>_config.yml</code></td>
+              </tr>
+              <tr>
+                <td>Navigation menus</td>
+                <td><code>_config.yml</code> (navigation section)</td>
+              </tr>
+              <tr>
+                <td>Theme colors</td>
+                <td><code>assets/css/main.css</code> (CSS variables)</td>
+              </tr>
+              <tr>
+                <td>Domain definitions</td>
+                <td><code>_config.yml</code> (ceas.domains)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    
+    <section class="content-section">
+      <h2>External Resources</h2>
+      <ul class="resource-list">
+        <li>
+          <a href="https://www.omg.org/spec/BMM/" target="_blank" rel="noopener">
+            <i data-lucide="external-link"></i>
+            OMG Business Motivation Model Specification
+          </a>
+        </li>
+        <li>
+          <a href="https://pubs.opengroup.org/architecture/archimate3-doc/" target="_blank" rel="noopener">
+            <i data-lucide="external-link"></i>
+            ArchiMate 3.1 Specification
+          </a>
+        </li>
+        <li>
+          <a href="https://pubs.opengroup.org/architecture/togaf92-doc/arch/" target="_blank" rel="noopener">
+            <i data-lucide="external-link"></i>
+            TOGAF 9.2 Documentation
+          </a>
+        </li>
+        <li>
+          <a href="https://sdgs.un.org/goals" target="_blank" rel="noopener">
+            <i data-lucide="external-link"></i>
+            UN Sustainable Development Goals
+          </a>
+        </li>
+      </ul>
+    </section>
+    
+  </div>
+</div>
+
+<style>
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6);
+}
+
+.doc-card {
+  display: block;
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.doc-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-4px);
+}
+
+.doc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.doc-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.doc-card h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+  color: var(--color-text-primary);
+}
+
+.doc-card p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.reference-tables {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--space-8);
+}
+
+.reference-section h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+}
+
+.reference-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.reference-section th,
+.reference-section td {
+  padding: var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+}
+
+.reference-section th {
+  background: var(--color-bg-secondary);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.reference-section code {
+  background: var(--color-bg-tertiary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  color: var(--color-primary-light);
+}
+
+.resource-list {
+  list-style: none;
+}
+
+.resource-list li {
+  margin: var(--space-3) 0;
+}
+
+.resource-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-primary-light);
+}
+
+.resource-list svg {
+  width: 16px;
+  height: 16px;
+}
+</style>

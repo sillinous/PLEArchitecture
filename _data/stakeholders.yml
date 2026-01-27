@@ -1,0 +1,371 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Stakeholder Ecosystem
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STAKEHOLDER CATEGORIES
+# ─────────────────────────────────────────────────────────────────────────────
+
+categories:
+  - id: workers
+    name: "Workers"
+    description: "Employees experiencing or anticipating labor disruption"
+    color: "#ec4899"
+    
+  - id: capital
+    name: "Capital Owners"
+    description: "Investors, founders, and business owners"
+    color: "#f59e0b"
+    
+  - id: technologists
+    name: "Technologists"
+    description: "AI researchers, engineers, and builders"
+    color: "#3b82f6"
+    
+  - id: policymakers
+    name: "Policymakers"
+    description: "Government officials and political actors"
+    color: "#6366f1"
+    
+  - id: academics
+    name: "Academics & Researchers"
+    description: "Economists, sociologists, and policy researchers"
+    color: "#8b5cf6"
+    
+  - id: media
+    name: "Media & Influencers"
+    description: "Journalists, podcasters, and thought leaders"
+    color: "#06b6d4"
+    
+  - id: community
+    name: "Community Members"
+    description: "Active participants in Post-Labor Economics community"
+    color: "#10b981"
+    
+  - id: organizations
+    name: "Organizations"
+    description: "NGOs, think tanks, and advocacy groups"
+    color: "#64748b"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STAKEHOLDER PROFILES
+# ─────────────────────────────────────────────────────────────────────────────
+
+stakeholders:
+
+  # WORKERS
+  - id: sh-exhausted-workers
+    name: "Exhausted Workers"
+    category: workers
+    description: "Employees burned out by the modern labor treadmill, experiencing quiet quitting, 'lying flat,' or contemplating exit"
+    demographic:
+      size: "Millions globally"
+      characteristics: "All ages, increasingly young; all sectors; global phenomenon"
+    interests:
+      - "Escape from obligatory drudgery"
+      - "Economic security without exploitation"
+      - "Meaning and purpose beyond productivity"
+      - "Validation that exhaustion is systemic, not personal failure"
+    expectations:
+      - "Honest acknowledgment that the system is broken"
+      - "Concrete alternatives, not just critique"
+      - "Path to liberation, not just coping"
+    influence_level: high
+    engagement_level: high
+    engagement_strategy: "Validate experience; provide framework; offer community"
+    value_proposition: "You're not lazy. The system is broken. Here's what comes next."
+    
+  - id: sh-displaced-workers
+    name: "AI-Displaced Workers"
+    category: workers
+    description: "Workers who have lost jobs or seen roles diminished due to AI and automation"
+    demographic:
+      size: "Growing rapidly"
+      characteristics: "White-collar first; creative and knowledge workers; increasingly all sectors"
+    interests:
+      - "Understanding why this happened"
+      - "Economic survival during transition"
+      - "New income sources beyond employment"
+    expectations:
+      - "Honest analysis of displacement"
+      - "Actionable transition strategies"
+      - "Policy advocacy for safety nets"
+    influence_level: medium
+    engagement_level: high
+    engagement_strategy: "Document displacement; advocate for transition mechanisms; provide community"
+    value_proposition: "Your job loss isn't personal failure—it's the system transforming. Here's how we navigate it together."
+
+  # CAPITAL
+  - id: sh-forward-capitalists
+    name: "Forward-Thinking Capitalists"
+    category: capital
+    description: "Business leaders who understand they need consumers with income even after jobs disappear"
+    demographic:
+      size: "Growing minority"
+      characteristics: "Tech founders, VCs, economists; long-term thinkers"
+    interests:
+      - "Sustainable consumer markets"
+      - "Avoiding social collapse that threatens assets"
+      - "Orderly transition to automated economy"
+      - "Reputation as responsible actors"
+    expectations:
+      - "Non-threatening framing"
+      - "Business case for transition mechanisms"
+      - "Engagement without demonization"
+    influence_level: high
+    engagement_level: low
+    engagement_strategy: "Frame as positive-sum; show consumer market collapse risk; provide thought partnership"
+    value_proposition: "Your automated businesses need customers with money. Let's design the transition together."
+    
+  - id: sh-extractive-capital
+    name: "Extractive Capital"
+    category: capital
+    description: "Business interests focused on short-term extraction without regard for transition"
+    demographic:
+      size: "Significant portion"
+      characteristics: "Short-term focused; resistant to change"
+    interests:
+      - "Maximum profit extraction"
+      - "Minimal regulation"
+      - "Maintaining labor power imbalance"
+    expectations:
+      - "Will resist transition mechanisms"
+      - "May support automation without distribution"
+    influence_level: high
+    engagement_level: adversarial
+    engagement_strategy: "Apply pressure through coalition; counter narratives; support regulation"
+    value_proposition: "N/A - adversarial stakeholder"
+
+  # TECHNOLOGISTS
+  - id: sh-ai-builders
+    name: "AI Researchers & Engineers"
+    category: technologists
+    description: "People building the systems that will transform labor"
+    demographic:
+      size: "Hundreds of thousands"
+      characteristics: "Technical; often politically disengaged; motivated by innovation"
+    interests:
+      - "Technical progress"
+      - "Responsible development"
+      - "Understanding social implications"
+    expectations:
+      - "Technical sophistication"
+      - "Non-Luddite framing"
+      - "Constructive engagement"
+    influence_level: high
+    engagement_level: medium
+    engagement_strategy: "Engage on technical merits; frame as designing beneficial futures; avoid blame"
+    value_proposition: "You're building the future. Let's make sure it works for everyone."
+    
+  - id: sh-ai-ethics
+    name: "AI Ethics Community"
+    category: technologists
+    description: "Researchers and advocates focused on responsible AI development"
+    interests:
+      - "Mitigating AI harms"
+      - "Fair distribution of AI benefits"
+      - "Worker protection"
+    influence_level: medium
+    engagement_level: medium
+    engagement_strategy: "Align on shared goals; provide economic framework complement to ethical framework"
+    value_proposition: "Post-labor economics provides the distributional framework AI ethics needs."
+
+  # POLICYMAKERS
+  - id: sh-progressive-pols
+    name: "Progressive Politicians"
+    category: policymakers
+    description: "Elected officials interested in worker protection and economic justice"
+    interests:
+      - "Worker wellbeing"
+      - "Economic security"
+      - "Political viability"
+    expectations:
+      - "Concrete policy proposals"
+      - "Political framing guidance"
+      - "Constituent support"
+    influence_level: high
+    engagement_level: low
+    engagement_strategy: "Provide policy frameworks; build constituent pressure; offer testimony"
+    value_proposition: "L/0 policies protect your constituents and provide leadership opportunity."
+    
+  - id: sh-techno-realists
+    name: "Techno-Realist Politicians"
+    category: policymakers
+    description: "Officials who understand AI's transformative potential and seek rational policy"
+    interests:
+      - "Competent policy-making"
+      - "Economic competitiveness"
+      - "Managing disruption"
+    influence_level: high
+    engagement_level: low
+    engagement_strategy: "Evidence-based briefings; international comparisons; bipartisan framing"
+    value_proposition: "Proactive transition policy is better than crisis response."
+
+  # ACADEMICS
+  - id: sh-economists
+    name: "Heterodox Economists"
+    category: academics
+    description: "Economists open to post-Keynesian, MMT, or other alternative frameworks"
+    interests:
+      - "Understanding new economic dynamics"
+      - "Policy innovation"
+      - "Academic credibility"
+    expectations:
+      - "Rigorous analysis"
+      - "Citation of existing literature"
+      - "Engagement with critiques"
+    influence_level: medium
+    engagement_level: medium
+    engagement_strategy: "Academic papers; conference presentations; collaborative research"
+    value_proposition: "Post-labor economics is the next frontier of economic thinking."
+    
+  - id: sh-labor-researchers
+    name: "Labor Market Researchers"
+    category: academics
+    description: "Academics studying employment, automation, and labor markets"
+    interests:
+      - "Empirical documentation of changes"
+      - "Policy implications"
+      - "Theoretical frameworks"
+    influence_level: medium
+    engagement_level: medium
+    engagement_strategy: "Share data; collaborate on research; cite their work"
+    value_proposition: "L/0 framework organizes findings on automation and labor."
+
+  # MEDIA
+  - id: sh-tech-journalists
+    name: "Tech Journalists"
+    category: media
+    description: "Reporters covering AI, automation, and technology impacts"
+    interests:
+      - "Breaking stories"
+      - "Expert sources"
+      - "Narrative frameworks"
+    expectations:
+      - "Quotable insights"
+      - "Data and evidence"
+      - "Availability for comment"
+    influence_level: medium
+    engagement_level: medium
+    engagement_strategy: "Provide exclusive data; be available; build relationships"
+    value_proposition: "Post-Labor Economics provides framework for covering AI's economic impact."
+    
+  - id: sh-podcasters
+    name: "Podcast Hosts & YouTubers"
+    category: media
+    description: "Long-form content creators exploring economics, technology, and society"
+    interests:
+      - "Interesting guests and ideas"
+      - "Audience engagement"
+      - "Differentiated content"
+    influence_level: medium
+    engagement_level: high
+    engagement_strategy: "Guest appearances; cross-promotion; collaborative content"
+    value_proposition: "David Shapiro brings unique framework and engaging communication style."
+
+  # COMMUNITY
+  - id: sh-core-members
+    name: "Skool Community Members"
+    category: community
+    description: "Paid members of the Post-Labor Economics community"
+    demographic:
+      size: "152 members"
+      characteristics: "Highly engaged; willing to pay; seeking depth"
+    interests:
+      - "Deep understanding of L/0 framework"
+      - "Community and discussion"
+      - "Contributing to the movement"
+      - "Personal application of concepts"
+    expectations:
+      - "Regular engagement from leadership"
+      - "Exclusive content and access"
+      - "Meaningful community"
+    influence_level: medium
+    engagement_level: critical
+    engagement_strategy: "Regular posts; live sessions; community cultivation; recognize contributions"
+    value_proposition: "Be part of designing humanity's post-labor future."
+    
+  - id: sh-youtube-audience
+    name: "YouTube Subscribers"
+    category: community
+    description: "Followers of David Shapiro's YouTube channel"
+    demographic:
+      size: "Growing"
+      characteristics: "Broad interest in AI, economics; varying depth of engagement"
+    interests:
+      - "Understanding AI developments"
+      - "Economic implications"
+      - "Accessible explanation"
+    engagement_level: medium
+    engagement_strategy: "Regular uploads; call to deeper engagement; clear value path"
+    value_proposition: "Understand what's happening and what it means for your future."
+
+  # ORGANIZATIONS
+  - id: sh-ubi-orgs
+    name: "Basic Income Advocacy Organizations"
+    category: organizations
+    description: "Groups advocating for UBI and related policies"
+    examples:
+      - "Economic Security Project"
+      - "Basic Income Earth Network"
+      - "GiveDirectly"
+    interests:
+      - "Advancing UBI policy"
+      - "Building coalition"
+      - "Research and evidence"
+    influence_level: medium
+    engagement_level: medium
+    engagement_strategy: "Align on Layer 1; share research; mutual amplification"
+    value_proposition: "L/0 places UBI in broader capital ownership framework."
+    
+  - id: sh-labor-orgs
+    name: "Labor Organizations"
+    category: organizations
+    description: "Unions and worker advocacy groups"
+    interests:
+      - "Worker protection"
+      - "Wages and benefits"
+      - "Job preservation"
+    expectations:
+      - "May resist automation narrative"
+      - "Potential allies on transition mechanisms"
+    influence_level: medium
+    engagement_level: low
+    engagement_strategy: "Frame as worker liberation, not job destruction; emphasize Layer 5 protections"
+    value_proposition: "Post-labor economics is the ultimate worker victory."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ENGAGEMENT MATRIX
+# ─────────────────────────────────────────────────────────────────────────────
+
+engagement_matrix:
+  high_power_high_interest:
+    - sh-exhausted-workers
+    - sh-core-members
+    strategy: "Manage closely - core constituency"
+    
+  high_power_low_interest:
+    - sh-forward-capitalists
+    - sh-progressive-pols
+    - sh-techno-realists
+    strategy: "Keep satisfied - potential allies with influence"
+    
+  low_power_high_interest:
+    - sh-youtube-audience
+    - sh-displaced-workers
+    - sh-economists
+    strategy: "Keep informed - engaged supporters"
+    
+  low_power_low_interest:
+    - sh-extractive-capital
+    strategy: "Monitor - adversarial or indifferent"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  last_updated: "2026-01-27"
+  version: "1.0.0"
+  review_cycle: "quarterly"

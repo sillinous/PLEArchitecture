@@ -1,0 +1,341 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Capability Map
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPABILITY DOMAINS
+# ─────────────────────────────────────────────────────────────────────────────
+
+capability_domains:
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # THOUGHT LEADERSHIP
+  # ─────────────────────────────────────────────────────────────────────────────
+  - id: thought-leadership
+    name: "Thought Leadership"
+    description: "Developing and articulating the intellectual framework for post-labor economics"
+    icon: lightbulb
+    color: "#8b5cf6"
+    
+    capabilities:
+      - id: cap-framework-dev
+        name: "Framework Development"
+        description: "Creating coherent intellectual frameworks (Pyramids, L/0, etc.)"
+        level:
+          current: 5
+          target: 5
+          scale: "1-5"
+        maturity: "World-class"
+        components:
+          - "Pyramid of Prosperity"
+          - "Pyramid of Power"
+          - "L/0 (Labor Zero) concept"
+          - "Economic Agency Paradox"
+          - "Laborism critique"
+        supports_objectives:
+          - obj-content-1
+          
+      - id: cap-synthesis
+        name: "Cross-Domain Synthesis"
+        description: "Connecting AI, economics, politics, and philosophy coherently"
+        level:
+          current: 5
+          target: 5
+          scale: "1-5"
+        maturity: "World-class"
+        supports_objectives:
+          - obj-content-1
+          
+      - id: cap-scenario
+        name: "Scenario Planning"
+        description: "Modeling potential futures and transition paths"
+        level:
+          current: 4
+          target: 5
+          scale: "1-5"
+        maturity: "Established"
+        supports_objectives:
+          - obj-research-1
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # CONTENT PRODUCTION
+  # ─────────────────────────────────────────────────────────────────────────────
+  - id: content-production
+    name: "Content Production"
+    description: "Creating educational and advocacy content across formats"
+    icon: video
+    color: "#3b82f6"
+    
+    capabilities:
+      - id: cap-video
+        name: "Video Production"
+        description: "Creating YouTube video essays and educational content"
+        level:
+          current: 4
+          target: 5
+          scale: "1-5"
+        maturity: "Established"
+        components:
+          - "Scripting and research"
+          - "Recording and editing"
+          - "Thumbnail and titles"
+          - "YouTube optimization"
+        supports_objectives:
+          - obj-content-1
+          
+      - id: cap-writing
+        name: "Long-Form Writing"
+        description: "Producing articles, essays, and books"
+        level:
+          current: 4
+          target: 5
+          scale: "1-5"
+        maturity: "Established"
+        components:
+          - "Substack essays"
+          - "Book manuscript"
+          - "Policy papers"
+        supports_objectives:
+          - obj-content-1
+          - obj-content-2
+          
+      - id: cap-speaking
+        name: "Public Speaking"
+        description: "Podcast appearances, presentations, and talks"
+        level:
+          current: 4
+          target: 5
+          scale: "1-5"
+        maturity: "Established"
+        supports_objectives:
+          - obj-coalition-2
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # COMMUNITY BUILDING
+  # ─────────────────────────────────────────────────────────────────────────────
+  - id: community-building
+    name: "Community Building"
+    description: "Growing and nurturing the L/0 movement community"
+    icon: users
+    color: "#10b981"
+    
+    capabilities:
+      - id: cap-community-mgmt
+        name: "Community Management"
+        description: "Running and engaging the Skool community"
+        level:
+          current: 3
+          target: 5
+          scale: "1-5"
+        maturity: "Developing"
+        components:
+          - "Discussion facilitation"
+          - "Member onboarding"
+          - "Event organization"
+          - "Conflict resolution"
+        supports_objectives:
+          - obj-community-1
+          - obj-community-2
+          
+      - id: cap-audience-growth
+        name: "Audience Growth"
+        description: "Expanding reach across platforms"
+        level:
+          current: 3
+          target: 5
+          scale: "1-5"
+        maturity: "Developing"
+        supports_objectives:
+          - obj-community-1
+          
+      - id: cap-chapter-support
+        name: "Local Chapter Support"
+        description: "Enabling formation of local L/0 groups"
+        level:
+          current: 1
+          target: 4
+          scale: "1-5"
+        maturity: "Planned"
+        supports_objectives:
+          - obj-global-1
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # RESEARCH & ANALYSIS
+  # ─────────────────────────────────────────────────────────────────────────────
+  - id: research
+    name: "Research & Analysis"
+    description: "Producing evidence-based analysis and documentation"
+    icon: search
+    color: "#f59e0b"
+    
+    capabilities:
+      - id: cap-labor-research
+        name: "Labor Market Research"
+        description: "Tracking and analyzing AI-driven job displacement"
+        level:
+          current: 3
+          target: 4
+          scale: "1-5"
+        maturity: "Developing"
+        components:
+          - "BLS data analysis"
+          - "Industry surveys"
+          - "Corporate announcement tracking"
+        supports_objectives:
+          - obj-research-1
+          
+      - id: cap-policy-analysis
+        name: "Policy Analysis"
+        description: "Analyzing existing programs and designing new mechanisms"
+        level:
+          current: 3
+          target: 5
+          scale: "1-5"
+        maturity: "Developing"
+        components:
+          - "Case studies (Norway, Alaska, India)"
+          - "Policy design"
+          - "Implementation analysis"
+        supports_objectives:
+          - obj-policy-1
+          
+      - id: cap-economic-modeling
+        name: "Economic Modeling"
+        description: "Modeling transition scenarios and impacts"
+        level:
+          current: 2
+          target: 4
+          scale: "1-5"
+        maturity: "Emerging"
+        supports_objectives:
+          - obj-research-1
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # POLICY & ADVOCACY
+  # ─────────────────────────────────────────────────────────────────────────────
+  - id: advocacy
+    name: "Policy & Advocacy"
+    description: "Influencing policy and building political will"
+    icon: megaphone
+    color: "#6366f1"
+    
+    capabilities:
+      - id: cap-policy-dev
+        name: "Policy Development"
+        description: "Creating detailed policy proposals"
+        level:
+          current: 2
+          target: 4
+          scale: "1-5"
+        maturity: "Emerging"
+        supports_objectives:
+          - obj-policy-1
+          
+      - id: cap-policymaker-engage
+        name: "Policymaker Engagement"
+        description: "Building relationships with government officials"
+        level:
+          current: 1
+          target: 4
+          scale: "1-5"
+        maturity: "Planned"
+        supports_objectives:
+          - obj-policy-2
+          
+      - id: cap-coalition-build
+        name: "Coalition Building"
+        description: "Uniting diverse groups around L/0 goals"
+        level:
+          current: 2
+          target: 5
+          scale: "1-5"
+        maturity: "Emerging"
+        supports_objectives:
+          - obj-coalition-1
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # OPERATIONS
+  # ─────────────────────────────────────────────────────────────────────────────
+  - id: operations
+    name: "Operations"
+    description: "Running the movement's organizational infrastructure"
+    icon: settings
+    color: "#64748b"
+    
+    capabilities:
+      - id: cap-platform-mgmt
+        name: "Platform Management"
+        description: "Managing Skool, Substack, YouTube, and other platforms"
+        level:
+          current: 3
+          target: 4
+          scale: "1-5"
+        maturity: "Developing"
+        
+      - id: cap-finance
+        name: "Financial Management"
+        description: "Managing membership revenue and expenses"
+        level:
+          current: 2
+          target: 4
+          scale: "1-5"
+        maturity: "Emerging"
+        
+      - id: cap-team-building
+        name: "Team Building"
+        description: "Growing volunteer and staff capacity"
+        level:
+          current: 2
+          target: 4
+          scale: "1-5"
+        maturity: "Emerging"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPABILITY SUMMARY
+# ─────────────────────────────────────────────────────────────────────────────
+
+capability_summary:
+  total_capabilities: 17
+  
+  by_maturity:
+    world_class: 2
+    established: 4
+    developing: 6
+    emerging: 4
+    planned: 1
+    
+  priority_gaps:
+    - capability: cap-chapter-support
+      current: 1
+      target: 4
+      gap: 3
+      strategic_importance: high
+      
+    - capability: cap-policymaker-engage
+      current: 1
+      target: 4
+      gap: 3
+      strategic_importance: high
+      
+    - capability: cap-economic-modeling
+      current: 2
+      target: 4
+      gap: 2
+      strategic_importance: medium
+      
+    - capability: cap-coalition-build
+      current: 2
+      target: 5
+      gap: 3
+      strategic_importance: critical
+
+# ─────────────────────────────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  last_updated: "2026-01-27"
+  version: "1.0.0"
+  assessment_date: "2026-01-15"
+  next_review: "2026-07-01"

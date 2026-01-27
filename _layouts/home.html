@@ -1,0 +1,185 @@
+---
+layout: default
+---
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i data-lucide="shield-check"></i>
+      <span>Community Architecture</span>
+    </div>
+    
+    <h1 class="hero-title">{{ site.data.community.name }}</h1>
+    
+    <p class="hero-tagline">{{ site.data.community.tagline }}</p>
+    
+    <p class="hero-mission">{{ site.data.community.mission.statement | truncate: 200 }}</p>
+    
+    <div class="hero-actions">
+      <a href="{{ '/architecture/' | relative_url }}" class="btn btn-primary">
+        <i data-lucide="layers"></i>
+        Explore Architecture
+      </a>
+      <a href="{{ '/about/' | relative_url }}" class="btn btn-secondary">
+        <i data-lucide="info"></i>
+        About Us
+      </a>
+    </div>
+  </div>
+  
+  <div class="hero-visual">
+    {% include motivation-diagram.html %}
+  </div>
+</div>
+
+<!-- Vision Section -->
+<section class="section section-vision">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Our Vision</span>
+      <h2>{{ site.data.community.vision.statement | truncate: 150 }}</h2>
+      <p class="vision-horizon">Target: {{ site.data.community.vision.time_horizon }}</p>
+    </div>
+    
+    <div class="vision-elements">
+      {% for element in site.data.community.vision.elements %}
+      <div class="vision-card">
+        <h3>{{ element.aspect }}</h3>
+        <p>{{ element.future_state }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Architecture Domains -->
+<section class="section section-domains">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Architecture Domains</span>
+      <h2>Comprehensive View of Our Community</h2>
+      <p>We model our community across multiple interconnected domains</p>
+    </div>
+    
+    <div class="domains-grid">
+      {% for domain in site.ceas.domains %}
+      <a href="{{ '/architecture/' | append: domain.id | append: '/' | relative_url }}" class="domain-card" style="--domain-color: {{ domain.color }}">
+        <div class="domain-icon">
+          <i data-lucide="{{ domain.icon }}"></i>
+        </div>
+        <h3>{{ domain.name }}</h3>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Goals Overview -->
+<section class="section section-goals">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Strategic Goals</span>
+      <h2>What We're Working Toward</h2>
+    </div>
+    
+    <div class="goals-grid">
+      {% for goal in site.data.motivation.ends.goals limit:4 %}
+      <div class="goal-card" data-category="{{ goal.category }}">
+        <div class="goal-header">
+          <span class="goal-category">{{ goal.category | capitalize }}</span>
+          <span class="goal-priority priority-{{ goal.priority }}">{{ goal.priority }}</span>
+        </div>
+        <h3>{{ goal.name }}</h3>
+        <p>{{ goal.description | truncate: 120 }}</p>
+        <a href="{{ '/architecture/motivation/#' | append: goal.id | relative_url }}" class="goal-link">
+          View Details <i data-lucide="arrow-right"></i>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="section-action">
+      <a href="{{ '/architecture/motivation/' | relative_url }}" class="btn btn-outline">
+        View All Goals & Objectives
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Impact Dashboard -->
+<section class="section section-impact">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Impact Dashboard</span>
+      <h2>Measuring What Matters</h2>
+    </div>
+    
+    <div class="metrics-grid">
+      {% for item in site.data.impact.metrics.dashboard_summary.headline_metrics %}
+      {% assign metric = site.data.impact.metrics.metrics[item.metric.dimension] | where: "id", item.metric | first %}
+      <div class="metric-card">
+        <div class="metric-value">
+          {{ item.value }}
+          <span class="metric-trend trend-{{ item.trend }}">
+            {% if item.trend == 'up' %}
+            <i data-lucide="trending-up"></i>
+            {% elsif item.trend == 'down' %}
+            <i data-lucide="trending-down"></i>
+            {% else %}
+            <i data-lucide="minus"></i>
+            {% endif %}
+          </span>
+        </div>
+        <div class="metric-label">{{ item.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <div class="section-action">
+      <a href="{{ '/impact/' | relative_url }}" class="btn btn-outline">
+        Full Impact Report
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Values Section -->
+<section class="section section-values">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Our Values</span>
+      <h2>What Guides Us</h2>
+    </div>
+    
+    <div class="values-grid">
+      {% for value in site.data.community.values %}
+      <div class="value-card">
+        <h3>{{ value.name }}</h3>
+        <p>{{ value.description }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section section-cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Explore Our Full Architecture</h2>
+      <p>Dive deep into our mission, strategies, capabilities, and impact framework.</p>
+      <div class="cta-actions">
+        <a href="{{ '/architecture/' | relative_url }}" class="btn btn-primary btn-lg">
+          <i data-lucide="map"></i>
+          View Architecture Map
+        </a>
+        <a href="{{ '/docs/' | relative_url }}" class="btn btn-secondary btn-lg">
+          <i data-lucide="book-open"></i>
+          Documentation
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ content }}

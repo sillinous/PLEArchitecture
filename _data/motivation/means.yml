@@ -1,0 +1,387 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# POST-LABOR ECONOMICS
+# Motivation Architecture - MEANS (Strategies & Tactics)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STRATEGIES
+# Major approaches to achieving goals
+# ─────────────────────────────────────────────────────────────────────────────
+
+strategies:
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PYRAMID OF PROSPERITY - Income Distribution Strategy
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: strat-prosperity
+    name: "Pyramid of Prosperity Implementation"
+    description: |
+      A five-layer framework for distributing income to households after 
+      labor-based wages decline. Each layer builds on the previous, creating
+      a diversified portfolio of income sources for every citizen.
+    supports_goals:
+      - goal-econ-1
+      - goal-econ-2
+    priority: critical
+    status: active
+    owner: "Core Team"
+    
+    layers:
+      - level: 1
+        name: "Universals"
+        description: "Government-provided floor of prosperity for all citizens"
+        mechanisms:
+          - "Universal Basic Income (UBI)"
+          - "Universal Healthcare (UHC)"
+          - "Universal Basic Services (education, housing, transit)"
+        examples:
+          - "Alaska Permanent Fund Dividend"
+          - "GiveDirectly cash transfer programs"
+          - "NHS (UK), Medicare for All proposals"
+        status: "Advocating - some existing programs"
+        
+      - level: 2
+        name: "Collectively Owned Public Assets"
+        description: "Capital we all own by virtue of citizenship, packaged as trusts and funds"
+        mechanisms:
+          - "Sovereign Wealth Funds with citizen dividends"
+          - "Public Resource Trusts (data, spectrum, carbon)"
+          - "National Investment Authorities"
+        examples:
+          - "Norway Government Pension Fund ($1.7T)"
+          - "Alaska Permanent Fund"
+          - "Singapore's sovereign wealth funds"
+        status: "Advocating - proven models exist"
+        
+      - level: 3
+        name: "Collectively Owned Private Assets"
+        description: "Shared ownership of private sector capital through cooperatives and DAOs"
+        mechanisms:
+          - "Employee Stock Ownership Plans (ESOPs)"
+          - "Community Land Trusts"
+          - "Decentralized Autonomous Organizations (DAOs)"
+          - "Cooperative federations"
+        examples:
+          - "Mondragon Corporation"
+          - "Community solar cooperatives"
+          - "Data cooperatives"
+        status: "Advocating - expanding models"
+        
+      - level: 4
+        name: "Individual Private Assets"
+        description: "Personal investment portfolios - everyone becomes a venture capitalist"
+        mechanisms:
+          - "Universal Capital Grants (baby bonds)"
+          - "Tax-advantaged savings vehicles"
+          - "Automated investment platforms"
+          - "Equity crowdfunding"
+        examples:
+          - "UK Child Trust Fund"
+          - "Robinhood, Acorns democratizing investment"
+          - "Baby Bonds proposals"
+        status: "Advocating - infrastructure exists"
+        
+      - level: 5
+        name: "Residual Wages"
+        description: "Strong protections for remaining human jobs in meaning-authenticity-experience economy"
+        mechanisms:
+          - "High minimum wage floors"
+          - "Guaranteed benefits for all workers"
+          - "Portable benefits not tied to employers"
+          - "Strong labor protections"
+        examples:
+          - "Fight for $15 and beyond"
+          - "Portable benefits proposals"
+        status: "Advocating - ongoing labor movement"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PYRAMID OF POWER - Civic Leverage Strategy
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: strat-power
+    name: "Pyramid of Power Implementation"
+    description: |
+      A five-layer framework for maintaining democratic leverage and civic 
+      power after labor power sunsets. Blockchain and algorithmic systems 
+      replace labor as the foundation of citizen power.
+    supports_goals:
+      - goal-power-1
+      - goal-power-2
+    priority: high
+    status: active
+    owner: "Core Team"
+    
+    layers:
+      - level: 1
+        name: "Immutable Civic Bedrock"
+        description: "Blockchain-based identity, records, and property that cannot be tampered with"
+        mechanisms:
+          - "Decentralized identity systems"
+          - "Blockchain property registries"
+          - "Immutable civic records"
+        examples:
+          - "Estonia e-Residency"
+          - "Georgia blockchain land registry"
+          - "Self-sovereign identity projects"
+        status: "Emerging - early implementations"
+        
+      - level: 2
+        name: "Open Payment Rails"
+        description: "Democratic access to financial transactions, breaking banking hegemony"
+        mechanisms:
+          - "Government-backed instant payment systems"
+          - "Cryptocurrency rails"
+          - "Central Bank Digital Currencies"
+        examples:
+          - "India's UPI (1 billion users)"
+          - "Brazil's Pix"
+          - "China's digital yuan"
+        status: "Proven - global adoption underway"
+        
+      - level: 3
+        name: "Radical Transparency"
+        description: "Sunlight as democratic disinfectant through open government and procurement"
+        mechanisms:
+          - "Open procurement platforms"
+          - "Transparent budgeting"
+          - "Public AI audit trails"
+        examples:
+          - "Ukraine's ProZorro"
+          - "Open Contracting Data Standard"
+          - "Taiwan's vTaiwan"
+        status: "Emerging - successful pilots"
+        
+      - level: 4
+        name: "Direct Democracy"
+        description: "Citizen participation beyond just voting for representatives"
+        mechanisms:
+          - "Participatory budgeting"
+          - "Quadratic voting"
+          - "Liquid democracy"
+          - "Citizens assemblies"
+        examples:
+          - "Porto Alegre participatory budgeting"
+          - "Taiwan digital democracy"
+          - "Irish Citizens Assembly"
+        status: "Emerging - growing adoption"
+        
+      - level: 5
+        name: "Metagovernance"
+        description: "Rules for changing the rules - updating constitutions and frameworks for AI age"
+        mechanisms:
+          - "Constitutional conventions"
+          - "Algorithmic governance frameworks"
+          - "AI-assisted policy evaluation"
+        examples:
+          - "Iceland constitutional crowdsourcing"
+          - "Estonia's algorithmic governance experiments"
+        status: "Theoretical - early experiments"
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # MOVEMENT BUILDING STRATEGIES
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  - id: strat-education
+    name: "Mass Education & Narrative Change"
+    description: "Change public understanding of work, automation, and economic possibility"
+    supports_goals:
+      - goal-culture-1
+      - goal-culture-2
+    priority: critical
+    status: active
+    owner: "David Shapiro"
+    key_components:
+      - "YouTube video essays reaching broad audiences"
+      - "Substack deep dives for committed learners"
+      - "Book publication for mainstream credibility"
+      - "Podcast appearances and media engagement"
+      - "Academic and policy paper publication"
+
+  - id: strat-coalition
+    name: "Strange Bedfellows Coalition"
+    description: "Unite groups traditionally opposed around shared interest in ending obligatory labor"
+    supports_goals:
+      - goal-culture-2
+    priority: high
+    status: active
+    owner: "Core Team"
+    key_components:
+      - "Engage tech founders and VCs who see consumer market collapse"
+      - "Engage burned-out workers who see the exhaustion is systemic"
+      - "Engage economists who understand capital distribution is the answer"
+      - "Bridge left (dignity) and right (efficiency) framings"
+
+  - id: strat-research
+    name: "Evidence-Based Advocacy"
+    description: "Document automation's impact and model transition mechanisms rigorously"
+    supports_goals:
+      - goal-econ-2
+    priority: medium
+    status: active
+    owner: "Research Team"
+    key_components:
+      - "Track job displacement in real-time"
+      - "Model economic impacts of Pyramid implementation"
+      - "Study existing programs (Norway, Alaska, India)"
+      - "Publish findings openly"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TACTICS
+# Specific actions and initiatives
+# ─────────────────────────────────────────────────────────────────────────────
+
+tactics:
+
+  # CONTENT & EDUCATION
+  - id: tactic-youtube
+    name: "YouTube Channel Growth"
+    description: "Regular video essays on post-labor economics, AI, and economic transition"
+    strategy_id: strat-education
+    timeline:
+      start: "2024-01-01"
+      end: "Ongoing"
+    status: in_progress
+    owner: "David Shapiro"
+    milestones:
+      - date: "2025-12-31"
+        target: "500K subscribers"
+      - date: "2026-12-31"
+        target: "1M subscribers"
+    resources:
+      - "Video production equipment"
+      - "Editing tools/support"
+      
+  - id: tactic-substack
+    name: "Substack Deep Dives"
+    description: "Long-form written analysis of post-labor economics concepts"
+    strategy_id: strat-education
+    timeline:
+      start: "2024-01-01"
+      end: "Ongoing"
+    status: in_progress
+    owner: "David Shapiro"
+    frequency: "Weekly"
+    
+  - id: tactic-book
+    name: "Post-Labor Economics Book"
+    description: "Comprehensive book presenting the full L/0 framework for mainstream audiences"
+    strategy_id: strat-education
+    timeline:
+      start: "2025-01-01"
+      end: "2026-06-30"
+    status: in_progress
+    owner: "David Shapiro"
+    milestones:
+      - date: "2025-06-01"
+        target: "First draft complete"
+      - date: "2025-12-01"
+        target: "Final draft"
+      - date: "2026-06-30"
+        target: "Publication"
+
+  # COMMUNITY BUILDING
+  - id: tactic-skool
+    name: "Skool Community"
+    description: "Paid membership community for deep engagement and collaboration"
+    strategy_id: strat-coalition
+    timeline:
+      start: "2025-01-01"
+      end: "Ongoing"
+    status: active
+    owner: "Community Team"
+    current_members: 152
+    target_members: 5000
+    price: "$5/month"
+    
+  - id: tactic-chapters
+    name: "Local Chapter Program"
+    description: "Support formation of local Post-Labor Economics discussion and action groups"
+    strategy_id: strat-coalition
+    timeline:
+      start: "2026-01-01"
+      end: "Ongoing"
+    status: planning
+    owner: "Community Team"
+    milestones:
+      - date: "2026-12-31"
+        target: "10 active chapters"
+      - date: "2028-12-31"
+        target: "100 active chapters"
+
+  # POLICY DEVELOPMENT
+  - id: tactic-policy-papers
+    name: "Policy Framework Papers"
+    description: "Detailed policy proposals for implementing Pyramid layers"
+    strategy_id: strat-research
+    timeline:
+      start: "2025-06-01"
+      end: "Ongoing"
+    status: in_progress
+    owner: "Research Team"
+    deliverables:
+      - "Universal Basic Income design paper"
+      - "Sovereign Wealth Fund creation guide"
+      - "DAO governance framework"
+      - "Open payment rails analysis"
+      
+  - id: tactic-briefings
+    name: "Policymaker Briefings"
+    description: "Direct engagement with government officials on post-labor transition"
+    strategy_id: strat-research
+    timeline:
+      start: "2026-01-01"
+      end: "Ongoing"
+    status: planning
+    owner: "Policy Team"
+
+  # RESEARCH
+  - id: tactic-displacement-tracker
+    name: "AI Job Displacement Tracker"
+    description: "Ongoing research documenting job losses attributable to AI and automation"
+    strategy_id: strat-research
+    timeline:
+      start: "2025-01-01"
+      end: "Ongoing"
+    status: active
+    owner: "Research Team"
+    methodology: "BLS data analysis, industry surveys, corporate reports"
+    findings:
+      - date: "2025-08-01"
+        finding: "300,000-500,000 jobs shed in 2025 due to AI"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POLICIES (Internal Operational Policies)
+# ─────────────────────────────────────────────────────────────────────────────
+
+policies:
+
+  - id: policy-open-access
+    name: "Open Access Knowledge"
+    description: "All core research and frameworks freely available"
+    derived_from: "Value: Pragmatic Idealism"
+    scope: "All content production"
+    statement: "Primary frameworks, research, and educational content remain free. Premium access covers community features and direct support, not core knowledge."
+    
+  - id: policy-nonpartisan
+    name: "Cross-Partisan Engagement"
+    description: "Engage across political spectrum without partisan alignment"
+    derived_from: "Value: Broad Coalition"
+    scope: "All political engagement"
+    statement: "Post-Labor Economics challenges laborism on both left and right. We engage anyone who accepts the premise that automation will displace labor."
+    
+  - id: policy-evidence
+    name: "Evidence-Based Advocacy"
+    description: "Ground all claims in empirical research and proven models"
+    derived_from: "Value: Intellectual Honesty"
+    scope: "All public claims"
+    statement: "We cite existing programs (Norway, Alaska, India) and peer-reviewed research. We distinguish between proven mechanisms and theoretical proposals."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  last_updated: "2026-01-27"
+  version: "1.0.0"
+  review_cycle: "quarterly"
