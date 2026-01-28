@@ -1,0 +1,783 @@
+---
+layout: default
+title: Motivation Architecture
+description: Our vision, mission, goals, objectives, strategies, and tactics - the Business Motivation Model.
+permalink: /architecture/motivation/
+---
+
+<div class="page-header" style="--header-color: var(--color-motivation);">
+  <div class="container">
+    <span class="page-label">Architecture / Motivation</span>
+    <h1>Motivation Architecture</h1>
+    <p class="page-description">Why we exist, what we want to achieve, and how we plan to get there.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    
+    <!-- Navigation Tabs -->
+    <nav class="section-tabs">
+      <a href="#ends" class="tab active">Ends</a>
+      <a href="#means" class="tab">Means</a>
+      <a href="#influencers" class="tab">Influencers</a>
+      <a href="#assessments" class="tab">Assessments</a>
+    </nav>
+    
+    <!-- ENDS Section -->
+    <section id="ends" class="content-section">
+      <h2><i data-lucide="flag"></i> Ends - What We Want to Achieve</h2>
+      <p class="section-intro">
+        Ends describe the desired future state. They include our Vision (the ultimate aspiration),
+        Goals (broad outcomes), and Objectives (specific, measurable targets).
+      </p>
+      
+      <!-- Vision -->
+      <div class="subsection">
+        <h3>Vision</h3>
+        <div class="vision-box">
+          <blockquote>{{ site.data.community.vision.statement }}</blockquote>
+          <div class="vision-meta">
+            <span class="vision-horizon">
+              <i data-lucide="calendar"></i>
+              Horizon: {{ site.data.community.vision.time_horizon }}
+            </span>
+          </div>
+        </div>
+        
+        {% if site.data.community.vision.elements %}
+        <div class="vision-elements-grid">
+          {% for element in site.data.community.vision.elements %}
+          <div class="vision-element-card">
+            <span class="element-label">{{ element.aspect }}</span>
+            <p>{{ element.future_state }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      
+      <!-- Goals -->
+      <div class="subsection">
+        <h3>Strategic Goals</h3>
+        <div class="goals-grid">
+          {% for goal in site.data.motivation.ends.goals %}
+          <div class="goal-card" id="{{ goal.id }}" data-category="{{ goal.category }}">
+            <div class="goal-header">
+              <span class="goal-category category-{{ goal.category }}">{{ goal.category }}</span>
+              <span class="goal-status status-{{ goal.status }}">{{ goal.status }}</span>
+            </div>
+            <h4>{{ goal.name }}</h4>
+            <p>{{ goal.description }}</p>
+            <div class="goal-meta">
+              <span class="priority priority-{{ goal.priority }}">
+                <i data-lucide="alert-circle"></i>
+                {{ goal.priority | capitalize }}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <!-- Objectives -->
+      <div class="subsection">
+        <h3>Measurable Objectives</h3>
+        <div class="objectives-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Objective</th>
+                <th>Metric</th>
+                <th>Baseline</th>
+                <th>Current</th>
+                <th>Target</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for obj in site.data.motivation.ends.objectives %}
+              <tr id="{{ obj.id }}">
+                <td>
+                  <strong>{{ obj.name }}</strong>
+                  <small>{{ obj.description }}</small>
+                </td>
+                <td>{{ obj.metric }}</td>
+                <td>{{ obj.baseline.value }} {{ obj.unit }}</td>
+                <td>{{ obj.current.value }} {{ obj.unit }}</td>
+                <td>{{ obj.target.value }} {{ obj.unit }}<br><small>by {{ obj.target.date | date: "%Y" }}</small></td>
+                <td>
+                  <span class="status-badge status-{{ obj.status }}">
+                    {% if obj.status == 'on_track' %}
+                    <i data-lucide="check-circle"></i>
+                    {% elsif obj.status == 'at_risk' %}
+                    <i data-lucide="alert-triangle"></i>
+                    {% else %}
+                    <i data-lucide="x-circle"></i>
+                    {% endif %}
+                    {{ obj.status | replace: '_', ' ' }}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    
+    <!-- MEANS Section -->
+    <section id="means" class="content-section">
+      <h2><i data-lucide="map"></i> Means - How We'll Get There</h2>
+      <p class="section-intro">
+        Means describe how we will achieve our Ends. They include our Mission (ongoing purpose),
+        Strategies (approaches to goals), and Tactics (specific actions).
+      </p>
+      
+      <!-- Mission -->
+      <div class="subsection">
+        <h3>Mission</h3>
+        <div class="mission-box">
+          <blockquote>{{ site.data.community.mission.statement }}</blockquote>
+        </div>
+      </div>
+      
+      <!-- Strategies -->
+      <div class="subsection">
+        <h3>Strategies</h3>
+        <div class="strategies-list">
+          {% for strategy in site.data.motivation.means.strategies %}
+          <div class="strategy-card" id="{{ strategy.id }}">
+            <div class="strategy-header">
+              <span class="strategy-status status-{{ strategy.status }}">{{ strategy.status }}</span>
+              <span class="strategy-priority priority-{{ strategy.priority }}">{{ strategy.priority }}</span>
+            </div>
+            <h4>{{ strategy.name }}</h4>
+            <p>{{ strategy.description }}</p>
+            
+            {% if strategy.key_components %}
+            <div class="strategy-components">
+              <strong>Key Components:</strong>
+              <ul>
+                {% for component in strategy.key_components %}
+                <li>{{ component }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            
+            <div class="strategy-meta">
+              <span><i data-lucide="user"></i> {{ strategy.owner }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <!-- Tactics -->
+      <div class="subsection">
+        <h3>Tactics & Actions</h3>
+        <div class="tactics-timeline">
+          {% for tactic in site.data.motivation.means.tactics %}
+          <div class="tactic-card" id="{{ tactic.id }}">
+            <div class="tactic-timeline-marker status-{{ tactic.status }}"></div>
+            <div class="tactic-content">
+              <div class="tactic-header">
+                <h4>{{ tactic.name }}</h4>
+                <span class="tactic-status status-{{ tactic.status }}">{{ tactic.status | replace: '_', ' ' }}</span>
+              </div>
+              <p>{{ tactic.description }}</p>
+              <div class="tactic-meta">
+                <span><i data-lucide="clock"></i> {{ tactic.timeline.start }} - {{ tactic.timeline.end }}</span>
+                <span><i data-lucide="user"></i> {{ tactic.owner }}</span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    
+    <!-- INFLUENCERS Section -->
+    <section id="influencers" class="content-section">
+      <h2><i data-lucide="wind"></i> Influencers - What Affects Us</h2>
+      <p class="section-intro">
+        Influencers are factors that can affect our ability to achieve our Ends or execute our Means.
+        They include both internal factors (within our control) and external factors (outside our control).
+      </p>
+      
+      <div class="influencers-grid">
+        <div class="influencer-column">
+          <h3><i data-lucide="home"></i> Internal Influencers</h3>
+          
+          <h4>Resources</h4>
+          {% for resource in site.data.motivation.influencers.internal_influencers.resources %}
+          <div class="influencer-card">
+            <div class="influencer-header">
+              <span class="influencer-name">{{ resource.name }}</span>
+              <span class="influencer-status status-{{ resource.current_state.status }}">
+                {{ resource.current_state.status | replace: '_', ' ' }}
+              </span>
+            </div>
+            <p>{{ resource.current_state.details }}</p>
+            <span class="influencer-trend trend-{{ resource.trend }}">
+              {% if resource.trend == 'improving' %}↑{% elsif resource.trend == 'declining' %}↓{% else %}→{% endif %}
+              {{ resource.trend }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <div class="influencer-column">
+          <h3><i data-lucide="globe"></i> External Influencers</h3>
+          
+          <h4>Market & Economy</h4>
+          {% for item in site.data.motivation.influencers.external_influencers.market %}
+          <div class="influencer-card">
+            <div class="influencer-header">
+              <span class="influencer-name">{{ item.name }}</span>
+              <span class="influencer-status status-{{ item.current_state.status }}">
+                {{ item.current_state.status | replace: '_', ' ' }}
+              </span>
+            </div>
+            <p>{{ item.current_state.details }}</p>
+            <span class="influencer-impact impact-{{ item.potential_impact }}">
+              Impact: {{ item.potential_impact }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    
+    <!-- ASSESSMENTS Section -->
+    <section id="assessments" class="content-section">
+      <h2><i data-lucide="clipboard-check"></i> Assessments - SWOT Analysis</h2>
+      
+      <div class="swot-grid">
+        <div class="swot-card swot-strengths">
+          <h3><i data-lucide="thumbs-up"></i> Strengths</h3>
+          <ul>
+            {% for item in site.data.motivation.influencers.assessments.strengths %}
+            <li>
+              <strong>{{ item.description }}</strong>
+              <small>{{ item.strategic_value }}</small>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="swot-card swot-weaknesses">
+          <h3><i data-lucide="thumbs-down"></i> Weaknesses</h3>
+          <ul>
+            {% for item in site.data.motivation.influencers.assessments.weaknesses %}
+            <li>
+              <strong>{{ item.description }}</strong>
+              <small>{{ item.strategic_implication }}</small>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="swot-card swot-opportunities">
+          <h3><i data-lucide="sunrise"></i> Opportunities</h3>
+          <ul>
+            {% for item in site.data.motivation.influencers.assessments.opportunities %}
+            <li>
+              <strong>{{ item.description }}</strong>
+              <small>{{ item.strategic_potential }}</small>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="swot-card swot-threats">
+          <h3><i data-lucide="cloud-lightning"></i> Threats</h3>
+          <ul>
+            {% for item in site.data.motivation.influencers.assessments.threats %}
+            <li>
+              <strong>{{ item.description }}</strong>
+              <small>{{ item.strategic_risk }}</small>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+  </div>
+</div>
+
+<style>
+.page-header {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), var(--color-bg-primary));
+}
+
+.section-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-4);
+}
+
+.tab {
+  padding: var(--space-3) var(--space-6);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: all var(--transition-fast);
+}
+
+.tab:hover, .tab.active {
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+}
+
+.content-section h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.content-section h2 svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-motivation);
+}
+
+.subsection {
+  margin: var(--space-10) 0;
+}
+
+.subsection h3 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.vision-box, .mission-box {
+  padding: var(--space-8);
+  background: var(--color-bg-secondary);
+  border-left: 4px solid var(--color-motivation);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+}
+
+.vision-box blockquote, .mission-box blockquote {
+  font-size: var(--text-xl);
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+}
+
+.vision-meta {
+  margin-top: var(--space-4);
+}
+
+.vision-horizon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+}
+
+.vision-elements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.vision-element-card {
+  padding: var(--space-5);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.element-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-primary-light);
+  letter-spacing: 0.05em;
+}
+
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
+
+.goal-card {
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.goal-category {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.category-economic { background: rgba(245, 158, 11, 0.2); color: var(--color-economic); }
+.category-societal { background: rgba(236, 72, 153, 0.2); color: var(--color-societal); }
+.category-environmental { background: rgba(34, 197, 94, 0.2); color: var(--color-environmental); }
+.category-governance { background: rgba(100, 116, 139, 0.2); color: var(--color-governance); }
+
+.goal-card h4 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-3);
+}
+
+.goal-card p {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.goal-meta {
+  margin-top: var(--space-4);
+}
+
+.priority {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.priority-critical { color: var(--color-error); }
+.priority-high { color: var(--color-warning); }
+
+.objectives-table {
+  overflow-x: auto;
+}
+
+.objectives-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.objectives-table th,
+.objectives-table td {
+  padding: var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.objectives-table th {
+  background: var(--color-bg-secondary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.objectives-table td small {
+  display: block;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.status-on_track { background: rgba(34, 197, 94, 0.2); color: var(--color-success); }
+.status-at_risk { background: rgba(245, 158, 11, 0.2); color: var(--color-warning); }
+.status-off_track { background: rgba(239, 68, 68, 0.2); color: var(--color-error); }
+.status-active { background: rgba(59, 130, 246, 0.2); color: var(--color-primary-light); }
+.status-planning { background: rgba(139, 92, 246, 0.2); color: var(--color-secondary); }
+
+.strategies-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.strategy-card {
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.strategy-header {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.strategy-card h4 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-3);
+}
+
+.strategy-components {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+}
+
+.strategy-components ul {
+  margin-top: var(--space-2);
+  padding-left: var(--space-6);
+  list-style: disc;
+}
+
+.strategy-components li {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  margin: var(--space-1) 0;
+}
+
+.strategy-meta {
+  margin-top: var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.strategy-meta span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.tactics-timeline {
+  position: relative;
+  padding-left: var(--space-8);
+}
+
+.tactics-timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.tactic-card {
+  position: relative;
+  margin-bottom: var(--space-6);
+}
+
+.tactic-timeline-marker {
+  position: absolute;
+  left: calc(-1 * var(--space-8) + 4px);
+  top: var(--space-6);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid var(--color-bg-primary);
+}
+
+.tactic-timeline-marker.status-complete { background: var(--color-success); }
+.tactic-timeline-marker.status-in_progress { background: var(--color-primary); }
+.tactic-timeline-marker.status-planned { background: var(--color-text-muted); }
+
+.tactic-content {
+  padding: var(--space-6);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.tactic-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.tactic-header h4 {
+  font-size: var(--text-base);
+}
+
+.tactic-meta {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.influencers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
+}
+
+.influencer-column h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.influencer-column h4 {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.influencer-card {
+  padding: var(--space-4);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+.influencer-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.influencer-name {
+  font-weight: 500;
+}
+
+.influencer-status {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.influencer-card p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.influencer-trend, .influencer-impact {
+  display: inline-block;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.trend-improving { color: var(--color-success); }
+.trend-stable { color: var(--color-info); }
+.trend-declining { color: var(--color-error); }
+
+.impact-opportunity { color: var(--color-success); }
+.impact-threat { color: var(--color-error); }
+.impact-mixed { color: var(--color-warning); }
+
+.swot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.swot-card {
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+}
+
+.swot-card h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.swot-card ul {
+  list-style: none;
+}
+
+.swot-card li {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.swot-card li:last-child {
+  border-bottom: none;
+}
+
+.swot-card li strong {
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.swot-card li small {
+  color: rgba(255,255,255,0.7);
+  font-size: var(--text-sm);
+}
+
+.swot-strengths {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.swot-strengths h3 { color: var(--color-success); }
+
+.swot-weaknesses {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.swot-weaknesses h3 { color: var(--color-error); }
+
+.swot-opportunities {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.swot-opportunities h3 { color: var(--color-primary-light); }
+
+.swot-threats {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.swot-threats h3 { color: var(--color-warning); }
+
+@media (max-width: 768px) {
+  .influencers-grid,
+  .swot-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}
+</style>
+
+<script>
+// Tab navigation
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    
+    const target = tab.getAttribute('href');
+    document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>

@@ -1,0 +1,777 @@
+---
+layout: default
+title: Get Involved
+permalink: /get-involved/
+---
+
+<style>
+.involve-hero {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(99, 102, 241, 0.15) 100%);
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.involve-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.involve-hero p {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.quick-action {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--border);
+}
+
+.quick-action:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.quick-action-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-action-icon i {
+  width: 32px;
+  height: 32px;
+  color: white;
+}
+
+.quick-action-icon.community { background: linear-gradient(135deg, #ec4899, #db2777); }
+.quick-action-icon.subscribe { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.quick-action-icon.watch { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.quick-action-icon.share { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
+.quick-action h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.quick-action p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.quick-action .btn {
+  width: 100%;
+}
+
+/* Stakeholder Paths */
+.paths-section {
+  margin: 4rem 0;
+}
+
+.paths-section > h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.paths-section > p {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.path-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.path-tab {
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.path-tab:hover {
+  background: var(--bg-tertiary);
+}
+
+.path-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.path-tab i {
+  width: 18px;
+  height: 18px;
+}
+
+.path-content {
+  display: none;
+}
+
+.path-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.path-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.path-header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.path-header h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.path-header p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.path-body {
+  padding: 2rem;
+}
+
+.action-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.action-step {
+  display: flex;
+  gap: 1rem;
+}
+
+.step-number {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  margin: 0 0 0.25rem 0;
+}
+
+.step-content p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.step-content .btn-sm {
+  margin-top: 0.5rem;
+}
+
+/* Commitment Levels */
+.commitment-section {
+  margin: 4rem 0;
+}
+
+.commitment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.commitment-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  border-top: 4px solid;
+  position: relative;
+}
+
+.commitment-card.casual { border-color: #3b82f6; }
+.commitment-card.engaged { border-color: #8b5cf6; }
+.commitment-card.committed { border-color: #10b981; }
+.commitment-card.leader { border-color: #f59e0b; }
+
+.commitment-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  background: var(--bg-tertiary);
+}
+
+.commitment-card h3 {
+  margin: 0 0 0.25rem 0;
+}
+
+.commitment-time {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.commitment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.commitment-list li {
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.commitment-list li i {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+/* Skills Section */
+.skills-section {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 3rem 0;
+}
+
+.skills-section h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.skill-item {
+  background: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.skill-item i {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.skill-item span {
+  display: block;
+  font-size: 0.875rem;
+}
+
+/* Contact CTA */
+.contact-cta {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+  padding: 3rem;
+  border-radius: 1rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.contact-cta h3 {
+  margin-bottom: 1rem;
+}
+
+.contact-cta p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<div class="page-header">
+  <span class="page-label">Join the Movement</span>
+  <h1>Get Involved</h1>
+  <p class="page-description">Multiple ways to contribute to the post-labor transition</p>
+</div>
+
+<div class="involve-hero">
+  <h1>The Transition Needs You</h1>
+  <p>
+    Whether you have 5 minutes or 5 hours a week, there's a way to contribute 
+    to building the post-labor future. Find your path.
+  </p>
+</div>
+
+<!-- Quick Actions -->
+<h2 style="text-align: center; margin-bottom: 1rem;">Start Here</h2>
+<p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Four ways to engage right now</p>
+
+<div class="quick-actions">
+  <div class="quick-action">
+    <div class="quick-action-icon community">
+      <i data-lucide="users"></i>
+    </div>
+    <h3>Join the Community</h3>
+    <p>Connect with 150+ members exploring post-labor economics together.</p>
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+      Join Skool ($5/mo)
+    </a>
+  </div>
+  
+  <div class="quick-action">
+    <div class="quick-action-icon subscribe">
+      <i data-lucide="mail"></i>
+    </div>
+    <h3>Subscribe</h3>
+    <p>Weekly essays on L/0 thesis, frameworks, and developments. Free.</p>
+    <a href="https://daveshap.substack.com" target="_blank" class="btn btn-outline">
+      Subscribe Free
+    </a>
+  </div>
+  
+  <div class="quick-action">
+    <div class="quick-action-icon watch">
+      <i data-lucide="play-circle"></i>
+    </div>
+    <h3>Watch & Learn</h3>
+    <p>Video content exploring AI, automation, and post-labor economics.</p>
+    <a href="https://www.youtube.com/@DaveShap" target="_blank" class="btn btn-outline">
+      YouTube Channel
+    </a>
+  </div>
+  
+  <div class="quick-action">
+    <div class="quick-action-icon share">
+      <i data-lucide="share-2"></i>
+    </div>
+    <h3>Spread the Word</h3>
+    <p>Share the L/0 message with your network. Ideas spread through people.</p>
+    <a href="https://twitter.com/intent/tweet?text=Exploring%20Post-Labor%20Economics%20and%20the%20L/0%20thesis%20-%20how%20do%20we%20build%20a%20world%20where%20no%20one%20has%20to%20work%20to%20survive?%20https://postlaboreconomics.com" target="_blank" class="btn btn-outline">
+      Share on X
+    </a>
+  </div>
+</div>
+
+<!-- Stakeholder Paths -->
+<div class="paths-section">
+  <h2>Find Your Path</h2>
+  <p>Different backgrounds bring different contributions. Select yours:</p>
+  
+  <div class="path-tabs">
+    <button class="path-tab active" data-path="worker" onclick="showPath('worker')">
+      <i data-lucide="user"></i>
+      Worker
+    </button>
+    <button class="path-tab" data-path="tech" onclick="showPath('tech')">
+      <i data-lucide="cpu"></i>
+      Technologist
+    </button>
+    <button class="path-tab" data-path="business" onclick="showPath('business')">
+      <i data-lucide="briefcase"></i>
+      Business Leader
+    </button>
+    <button class="path-tab" data-path="policy" onclick="showPath('policy')">
+      <i data-lucide="landmark"></i>
+      Policy/Academic
+    </button>
+    <button class="path-tab" data-path="creator" onclick="showPath('creator')">
+      <i data-lucide="pen-tool"></i>
+      Creator/Writer
+    </button>
+  </div>
+
+  <!-- Worker Path -->
+  <div class="path-content active" id="path-worker">
+    <div class="path-card">
+      <div class="path-header">
+        <h3>🔧 For Workers & Employees</h3>
+        <p>You're experiencing the system firsthand. Your perspective is invaluable.</p>
+      </div>
+      <div class="path-body">
+        <div class="action-steps">
+          <div class="action-step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Validate Your Experience</h4>
+              <p>You're not lazy. The system is broken. Read the L/0 manifesto to understand why exhaustion is rational.</p>
+              <a href="https://daveshap.substack.com/p/im-starting-a-movement" target="_blank" class="btn btn-outline btn-sm">Read the Manifesto</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Share Your Story</h4>
+              <p>Join the community and share your experiences with work, burnout, and the labor market.</p>
+              <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline btn-sm">Join Discussion</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Learn the Frameworks</h4>
+              <p>Understand the Pyramids so you can explain them to others in your life.</p>
+              <a href="{{ '/architecture/prosperity/' | relative_url }}" class="btn btn-outline btn-sm">Explore Pyramids</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <h4>Talk to Coworkers</h4>
+              <p>Many others feel the same way. Start conversations about what comes after jobs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technologist Path -->
+  <div class="path-content" id="path-tech">
+    <div class="path-card">
+      <div class="path-header">
+        <h3>💻 For Technologists & AI Builders</h3>
+        <p>You're building the future. Help ensure it works for everyone.</p>
+      </div>
+      <div class="path-body">
+        <div class="action-steps">
+          <div class="action-step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Understand the Impact</h4>
+              <p>Review our research on AI job displacement and the Economic Agency Paradox.</p>
+              <a href="{{ '/architecture/research/' | relative_url }}" class="btn btn-outline btn-sm">View Research</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Contribute Technical Skills</h4>
+              <p>Help build tools, analysis, and infrastructure for the movement.</p>
+              <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline btn-sm">Join & Volunteer</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Influence Your Org</h4>
+              <p>Advocate for responsible automation policies and worker transition support at your company.</p>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <h4>Bridge Communities</h4>
+              <p>Connect AI/tech communities with post-labor economics thinking. You speak both languages.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Business Path -->
+  <div class="path-content" id="path-business">
+    <div class="path-card">
+      <div class="path-header">
+        <h3>📊 For Business Leaders & Entrepreneurs</h3>
+        <p>Your automated businesses need customers with money. Let's design the transition together.</p>
+      </div>
+      <div class="path-body">
+        <div class="action-steps">
+          <div class="action-step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Understand the Stakes</h4>
+              <p>Without broad income distribution, your markets collapse. This is enlightened self-interest.</p>
+              <a href="{{ '/concepts/#economic-agency-paradox' | relative_url }}" class="btn btn-outline btn-sm">Learn Why</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Explore Ownership Models</h4>
+              <p>Consider ESOPs, profit-sharing, and cooperative structures. The Pyramid shows the options.</p>
+              <a href="{{ '/architecture/prosperity/' | relative_url }}" class="btn btn-outline btn-sm">Prosperity Framework</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Join the Coalition</h4>
+              <p>Connect with other forward-thinking business leaders planning for post-labor transition.</p>
+              <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline btn-sm">Join Community</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <h4>Advocate for Policy</h4>
+              <p>Support sovereign wealth funds, universal services, and open payment infrastructure.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Policy Path -->
+  <div class="path-content" id="path-policy">
+    <div class="path-card">
+      <div class="path-header">
+        <h3>🏛️ For Policymakers & Academics</h3>
+        <p>Proactive transition policy is better than crisis response. We have the frameworks.</p>
+      </div>
+      <div class="path-body">
+        <div class="action-steps">
+          <div class="action-step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Review the Evidence</h4>
+              <p>Examine our research on job displacement trends and proven policy mechanisms.</p>
+              <a href="{{ '/architecture/research/' | relative_url }}" class="btn btn-outline btn-sm">Research Base</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Study the Frameworks</h4>
+              <p>The Pyramids organize hundreds of proven interventions into coherent policy tracks.</p>
+              <a href="{{ '/architecture/policy/' | relative_url }}" class="btn btn-outline btn-sm">Policy Framework</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Request a Briefing</h4>
+              <p>We provide briefings to legislators, policy advisors, and academic institutions.</p>
+              <a href="mailto:contact@postlaboreconomics.com" class="btn btn-outline btn-sm">Request Briefing</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <h4>Collaborate on Research</h4>
+              <p>Partner with us on academic papers, policy analysis, and implementation studies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creator Path -->
+  <div class="path-content" id="path-creator">
+    <div class="path-card">
+      <div class="path-header">
+        <h3>✍️ For Creators & Writers</h3>
+        <p>Ideas spread through stories. Help us reach new audiences.</p>
+      </div>
+      <div class="path-body">
+        <div class="action-steps">
+          <div class="action-step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Learn the Language</h4>
+              <p>Master the key concepts so you can explain them in your own voice.</p>
+              <a href="{{ '/concepts/' | relative_url }}" class="btn btn-outline btn-sm">Key Concepts</a>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Create Content</h4>
+              <p>Write articles, make videos, create art exploring post-labor themes. All formats welcome.</p>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Share in Your Niche</h4>
+              <p>Every audience needs to hear this message. Translate it for your community.</p>
+            </div>
+          </div>
+          <div class="action-step">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <h4>Join Creator Network</h4>
+              <p>Connect with other creators amplifying post-labor economics ideas.</p>
+              <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline btn-sm">Join Community</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Commitment Levels -->
+<div class="commitment-section">
+  <h2 style="text-align: center; margin-bottom: 2rem;">Choose Your Commitment Level</h2>
+  
+  <div class="commitment-grid">
+    <div class="commitment-card casual">
+      <span class="commitment-badge">Most Common</span>
+      <h3>Casual Supporter</h3>
+      <div class="commitment-time">~1 hour/month</div>
+      <ul class="commitment-list">
+        <li><i data-lucide="check"></i> Subscribe to Substack (free)</li>
+        <li><i data-lucide="check"></i> Watch occasional videos</li>
+        <li><i data-lucide="check"></i> Share content you like</li>
+        <li><i data-lucide="check"></i> Stay informed</li>
+      </ul>
+      <a href="https://daveshap.substack.com" target="_blank" class="btn btn-outline" style="width: 100%;">Subscribe Free</a>
+    </div>
+    
+    <div class="commitment-card engaged">
+      <h3>Engaged Member</h3>
+      <div class="commitment-time">~2-4 hours/month</div>
+      <ul class="commitment-list">
+        <li><i data-lucide="check"></i> Join Skool community</li>
+        <li><i data-lucide="check"></i> Participate in discussions</li>
+        <li><i data-lucide="check"></i> Share ideas with network</li>
+        <li><i data-lucide="check"></i> Attend community calls</li>
+      </ul>
+      <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary" style="width: 100%;">Join ($5/mo)</a>
+    </div>
+    
+    <div class="commitment-card committed">
+      <h3>Active Contributor</h3>
+      <div class="commitment-time">~5-10 hours/month</div>
+      <ul class="commitment-list">
+        <li><i data-lucide="check"></i> Create original content</li>
+        <li><i data-lucide="check"></i> Contribute research/skills</li>
+        <li><i data-lucide="check"></i> Help with community building</li>
+        <li><i data-lucide="check"></i> Local advocacy work</li>
+      </ul>
+      <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline" style="width: 100%;">Get Started</a>
+    </div>
+    
+    <div class="commitment-card leader">
+      <h3>Movement Leader</h3>
+      <div class="commitment-time">~10+ hours/month</div>
+      <ul class="commitment-list">
+        <li><i data-lucide="check"></i> Lead local chapter</li>
+        <li><i data-lucide="check"></i> Develop policy proposals</li>
+        <li><i data-lucide="check"></i> Engage policymakers</li>
+        <li><i data-lucide="check"></i> Build coalition partnerships</li>
+      </ul>
+      <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline" style="width: 100%;">Apply to Lead</a>
+    </div>
+  </div>
+</div>
+
+<!-- Skills We Need -->
+<div class="skills-section">
+  <h3>Skills We're Looking For</h3>
+  <div class="skills-grid">
+    <div class="skill-item">
+      <i data-lucide="pen-tool"></i>
+      <span>Writing</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="video"></i>
+      <span>Video Production</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="code"></i>
+      <span>Development</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="bar-chart-2"></i>
+      <span>Data Analysis</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="palette"></i>
+      <span>Design</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="megaphone"></i>
+      <span>Marketing</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="globe"></i>
+      <span>Translation</span>
+    </div>
+    <div class="skill-item">
+      <i data-lucide="users"></i>
+      <span>Community Mgmt</span>
+    </div>
+  </div>
+</div>
+
+<div class="contact-cta">
+  <h3>Questions? Ideas? Partnerships?</h3>
+  <p>
+    We're always looking for new collaborations. Reach out if you have ideas 
+    for how we can work together.
+  </p>
+  <div class="cta-actions">
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+      <i data-lucide="message-circle"></i>
+      Message in Community
+    </a>
+  </div>
+</div>
+
+<script>
+function showPath(pathId) {
+  // Update tabs
+  document.querySelectorAll('.path-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelector(`[data-path="${pathId}"]`).classList.add('active');
+  
+  // Update content
+  document.querySelectorAll('.path-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(`path-${pathId}`).classList.add('active');
+}
+</script>

@@ -1,0 +1,647 @@
+---
+layout: default
+title: Key Concepts
+permalink: /concepts/
+---
+
+<style>
+.concepts-hero {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.concepts-hero h1 {
+  margin-bottom: 1rem;
+}
+
+.concepts-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+  position: sticky;
+  top: 72px;
+  z-index: 100;
+}
+
+.concepts-nav a {
+  padding: 0.5rem 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.concepts-nav a:hover,
+.concepts-nav a.active {
+  background: var(--accent);
+  color: white;
+}
+
+.concept-section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 150px;
+}
+
+.concept-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.concept-section h2 i {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+
+.concept-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--accent);
+}
+
+.concept-card.primary {
+  border-left-color: #8b5cf6;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(99, 102, 241, 0.08) 100%);
+}
+
+.concept-card.framework {
+  border-left-color: #10b981;
+}
+
+.concept-card.problem {
+  border-left-color: #ef4444;
+}
+
+.concept-card.solution {
+  border-left-color: #3b82f6;
+}
+
+.concept-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.concept-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.concept-tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.concept-definition {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.concept-quote {
+  background: var(--bg-tertiary);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  font-style: italic;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.concept-quote::before {
+  content: '"';
+  font-size: 3rem;
+  color: var(--accent);
+  opacity: 0.3;
+  position: absolute;
+  top: -0.5rem;
+  left: 0.5rem;
+}
+
+.concept-examples {
+  margin-top: 1rem;
+}
+
+.concept-examples h4 {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.example-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.example-item {
+  background: var(--bg-tertiary);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.concept-links {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.concept-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--accent);
+}
+
+.concept-links a i {
+  width: 16px;
+  height: 16px;
+}
+
+/* Visual Explainers */
+.visual-explainer {
+  background: var(--bg-tertiary);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.paradox-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.paradox-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.step-num {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-arrow {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+}
+
+.cta-section {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .concepts-nav {
+    position: static;
+  }
+}
+</style>
+
+<div class="page-header">
+  <span class="page-label">Education</span>
+  <h1>Key Concepts & Glossary</h1>
+  <p class="page-description">Understanding the vocabulary and frameworks of Post-Labor Economics</p>
+</div>
+
+<div class="concepts-hero">
+  <h1>The Language of L/0</h1>
+  <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+    New ideas require new language. This glossary defines the key concepts, frameworks, 
+    and terminology used in the Post-Labor Economics movement.
+  </p>
+</div>
+
+<nav class="concepts-nav">
+  <a href="#core">Core Thesis</a>
+  <a href="#problems">Problems</a>
+  <a href="#frameworks">Frameworks</a>
+  <a href="#mechanisms">Mechanisms</a>
+  <a href="#movements">Movements</a>
+</nav>
+
+<!-- Core Thesis -->
+<section class="concept-section" id="core">
+  <h2><i data-lucide="zap"></i> Core Thesis</h2>
+  
+  <div class="concept-card primary">
+    <div class="concept-header">
+      <h3>L/0 (Labor Zero)</h3>
+      <span class="concept-tag">Central Concept</span>
+    </div>
+    <p class="concept-definition">
+      The elimination of <strong>obligatory</strong> human labor through AI, automation, and robotics. 
+      L/0 is not about banning work—it's about making work <em>voluntary</em> rather than <em>coerced</em>.
+    </p>
+    <div class="concept-quote">
+      "L/0 is the thesis that human labor, as an obligation, is coming to an end. 
+      Not that humans will stop doing things, but that the economic compulsion to work will dissolve."
+    </div>
+    <div class="concept-examples">
+      <h4>Key Distinctions</h4>
+      <div class="example-list">
+        <span class="example-item">Work ≠ Labor (work can be meaningful, labor is obligatory)</span>
+        <span class="example-item">Automation ≠ Unemployment (ownership replaces wages)</span>
+        <span class="example-item">Post-Labor ≠ Post-Work (creative work persists)</span>
+      </div>
+    </div>
+    <div class="concept-links">
+      <a href="https://daveshap.substack.com/p/im-starting-a-movement" target="_blank">
+        <i data-lucide="external-link"></i>
+        Original L/0 Manifesto
+      </a>
+    </div>
+  </div>
+
+  <div class="concept-card primary">
+    <div class="concept-header">
+      <h3>Post-Labor Economics</h3>
+      <span class="concept-tag">Movement Name</span>
+    </div>
+    <p class="concept-definition">
+      The field of study and advocacy focused on navigating humanity's transition from a 
+      labor-based economy to one where AI, automation, and robotics perform most productive work. 
+      It addresses how to distribute income, maintain social cohesion, and preserve democratic 
+      power when wages are no longer the primary distribution mechanism.
+    </p>
+    <div class="concept-examples">
+      <h4>Related Fields</h4>
+      <div class="example-list">
+        <span class="example-item">Heterodox Economics</span>
+        <span class="example-item">Political Economy</span>
+        <span class="example-item">AI Policy</span>
+        <span class="example-item">Future of Work</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problems -->
+<section class="concept-section" id="problems">
+  <h2><i data-lucide="alert-triangle"></i> Problems We're Solving</h2>
+  
+  <div class="concept-card problem">
+    <div class="concept-header">
+      <h3>Laborism</h3>
+      <span class="concept-tag">Ideology</span>
+    </div>
+    <p class="concept-definition">
+      The pervasive belief that work is morally necessary—that people <em>should</em> work regardless 
+      of whether they <em>need</em> to. Laborism spans the political spectrum: the right sees it as 
+      moral duty (Protestant work ethic), the left sees it as worker dignity. Both treat labor as sacred.
+    </p>
+    <div class="concept-quote">
+      "Laborism is the water we swim in. It's so embedded in our culture that questioning 
+      whether people should have to work feels heretical."
+    </div>
+    <div class="concept-examples">
+      <h4>Manifestations</h4>
+      <div class="example-list">
+        <span class="example-item">"Everyone should work"</span>
+        <span class="example-item">"Jobs give life meaning"</span>
+        <span class="example-item">"Idle hands are the devil's workshop"</span>
+        <span class="example-item">"Work requirements" for benefits</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-card problem">
+    <div class="concept-header">
+      <h3>Economic Agency Paradox</h3>
+      <span class="concept-tag">Market Failure</span>
+    </div>
+    <p class="concept-definition">
+      The contradiction where technology both increases and destroys economic agency: 
+      automation lowers prices (dollars go further), but destroys jobs (you get no dollars). 
+      The more we automate to lower costs, the worse it gets.
+    </p>
+    
+    <div class="visual-explainer">
+      <div class="paradox-flow">
+        <div class="paradox-step">
+          <span class="step-num">1</span>
+          <div>Technology is <strong>deflationary</strong> — it lowers costs, increasing economic agency</div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="paradox-step">
+          <span class="step-num">2</span>
+          <div>BUT this technological progress <strong>destroys jobs</strong> — you get no dollars in the first place</div>
+        </div>
+        <div class="step-arrow">↓</div>
+        <div class="paradox-step">
+          <span class="step-num">3</span>
+          <div>Automating MORE to lower costs further makes it <strong>WORSE</strong> — hiring humans becomes irrational</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="concept-links">
+      <a href="{{ '/architecture/power/' | relative_url }}">
+        <i data-lucide="arrow-right"></i>
+        How Pyramid of Power addresses this
+      </a>
+    </div>
+  </div>
+
+  <div class="concept-card problem">
+    <div class="concept-header">
+      <h3>Global Exhaustion</h3>
+      <span class="concept-tag">Social Crisis</span>
+    </div>
+    <p class="concept-definition">
+      The worldwide epidemic of worker burnout, disengagement, and despair. Manifesting as 
+      declining birth rates, "deaths of despair," quiet quitting, and cultural movements 
+      rejecting work as central to identity.
+    </p>
+    <div class="concept-examples">
+      <h4>Global Manifestations</h4>
+      <div class="example-list">
+        <span class="example-item">躺平 Tang Ping (China) — "lying flat"</span>
+        <span class="example-item">過労死 Karoshi (Japan) — death by overwork</span>
+        <span class="example-item">Quiet Quitting (US)</span>
+        <span class="example-item">Great Resignation</span>
+        <span class="example-item">0.72 fertility rate (South Korea)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Frameworks -->
+<section class="concept-section" id="frameworks">
+  <h2><i data-lucide="layers"></i> Strategic Frameworks</h2>
+  
+  <div class="concept-card framework">
+    <div class="concept-header">
+      <h3>Pyramid of Prosperity</h3>
+      <span class="concept-tag">Income Distribution</span>
+    </div>
+    <p class="concept-definition">
+      A five-layer framework for how households will receive income after jobs go away. 
+      Built from the bottom up: Universals → Public Assets → Private Collective Assets → 
+      Individual Assets → Residual Wages. The key insight: ownership replaces wages.
+    </p>
+    <div class="concept-examples">
+      <h4>The Five Layers</h4>
+      <div class="example-list">
+        <span class="example-item">1. Universals (UBI, UHC)</span>
+        <span class="example-item">2. Public Assets (Sovereign Wealth Funds)</span>
+        <span class="example-item">3. Collective Private (Cooperatives, DAOs)</span>
+        <span class="example-item">4. Individual Private (Personal portfolios)</span>
+        <span class="example-item">5. Residual Wages (Protected work)</span>
+      </div>
+    </div>
+    <div class="concept-links">
+      <a href="{{ '/architecture/prosperity/' | relative_url }}">
+        <i data-lucide="arrow-right"></i>
+        Explore the full Pyramid of Prosperity
+      </a>
+    </div>
+  </div>
+
+  <div class="concept-card framework">
+    <div class="concept-header">
+      <h3>Pyramid of Power</h3>
+      <span class="concept-tag">Democratic Leverage</span>
+    </div>
+    <p class="concept-definition">
+      A five-layer framework for maintaining citizen power when labor leverage disappears. 
+      Replaces labor power with algorithmic power: immutable civic infrastructure, 
+      open payment rails, radical transparency, direct democracy, and metagovernance.
+    </p>
+    <div class="concept-examples">
+      <h4>The Five Layers</h4>
+      <div class="example-list">
+        <span class="example-item">1. Immutable Civic Bedrock (Blockchain ID)</span>
+        <span class="example-item">2. Open Payment Rails (UPI, Pix)</span>
+        <span class="example-item">3. Radical Transparency (Open procurement)</span>
+        <span class="example-item">4. Direct Democracy (Participatory budgeting)</span>
+        <span class="example-item">5. Metagovernance (Rules for rules)</span>
+      </div>
+    </div>
+    <div class="concept-links">
+      <a href="{{ '/architecture/power/' | relative_url }}">
+        <i data-lucide="arrow-right"></i>
+        Explore the full Pyramid of Power
+      </a>
+    </div>
+  </div>
+
+  <div class="concept-card framework">
+    <div class="concept-header">
+      <h3>Algorithmic Power</h3>
+      <span class="concept-tag">Replacement for Labor Power</span>
+    </div>
+    <p class="concept-definition">
+      The new source of citizen leverage in a post-labor world. Unlike labor power (which 
+      derives from being able to withhold work), algorithmic power derives from decentralized, 
+      immutable, permissionless systems that cannot be controlled by states or corporations.
+    </p>
+    <div class="concept-examples">
+      <h4>Properties of Algorithmic Power</h4>
+      <div class="example-list">
+        <span class="example-item">Decentralized — no single point of control</span>
+        <span class="example-item">Immutable — cannot be erased or tampered</span>
+        <span class="example-item">Permissionless — operate without approval</span>
+        <span class="example-item">Enforceable — smart contracts execute automatically</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mechanisms -->
+<section class="concept-section" id="mechanisms">
+  <h2><i data-lucide="settings"></i> Policy Mechanisms</h2>
+  
+  <div class="concept-card solution">
+    <div class="concept-header">
+      <h3>Universal Basic Income (UBI)</h3>
+      <span class="concept-tag">Prosperity Layer 1</span>
+    </div>
+    <p class="concept-definition">
+      Regular cash payments to all citizens with no strings attached. In the L/0 framework, 
+      UBI is important but not sufficient—it's just Layer 1. Over-reliance on government 
+      payments concentrates power dangerously.
+    </p>
+    <div class="concept-examples">
+      <h4>Real-World Examples</h4>
+      <div class="example-list">
+        <span class="example-item">Alaska Permanent Fund Dividend</span>
+        <span class="example-item">GiveDirectly (Kenya, Liberia)</span>
+        <span class="example-item">Stockton SEED</span>
+        <span class="example-item">Finland Pilot</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-card solution">
+    <div class="concept-header">
+      <h3>Sovereign Wealth Fund (SWF)</h3>
+      <span class="concept-tag">Prosperity Layer 2</span>
+    </div>
+    <p class="concept-definition">
+      State-owned investment funds that generate returns for citizens. The model: government 
+      invests in diversified assets, citizens receive dividends. Norway's $1.7T fund is the 
+      gold standard—every Norwegian benefits from national oil wealth.
+    </p>
+    <div class="concept-examples">
+      <h4>Real-World Examples</h4>
+      <div class="example-list">
+        <span class="example-item">Norway Government Pension Fund ($1.7T)</span>
+        <span class="example-item">Alaska Permanent Fund</span>
+        <span class="example-item">Singapore GIC & Temasek</span>
+        <span class="example-item">Abu Dhabi Investment Authority</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-card solution">
+    <div class="concept-header">
+      <h3>Open Payment Rails</h3>
+      <span class="concept-tag">Power Layer 2</span>
+    </div>
+    <p class="concept-definition">
+      Public infrastructure for instant, free, universal digital payments that breaks 
+      banking monopolies. India's UPI system has 1 billion+ users—proving this works at 
+      national scale. Gives citizens financial freedom independent of private banks.
+    </p>
+    <div class="concept-examples">
+      <h4>Real-World Examples</h4>
+      <div class="example-list">
+        <span class="example-item">India UPI (1B+ users)</span>
+        <span class="example-item">Brazil Pix (150M+ users)</span>
+        <span class="example-item">China Digital Yuan</span>
+        <span class="example-item">Nigeria eNaira</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cultural Movements -->
+<section class="concept-section" id="movements">
+  <h2><i data-lucide="globe"></i> Related Movements</h2>
+  
+  <div class="concept-card">
+    <div class="concept-header">
+      <h3>FIRE Movement</h3>
+      <span class="concept-tag">Individual Strategy</span>
+    </div>
+    <p class="concept-definition">
+      Financial Independence, Retire Early. Individual-level post-labor achieved through 
+      aggressive saving and investment. FIRE practitioners are early adopters of L/0 
+      principles—they've figured out that ownership income can replace labor income.
+    </p>
+    <div class="concept-examples">
+      <h4>Connection to L/0</h4>
+      <div class="example-list">
+        <span class="example-item">Proves ownership can replace wages</span>
+        <span class="example-item">Currently requires high income (not scalable)</span>
+        <span class="example-item">L/0 frameworks democratize FIRE principles</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <h3>Degrowth</h3>
+      <span class="concept-tag">Related Movement</span>
+    </div>
+    <p class="concept-definition">
+      Movement advocating for reduced economic production to address ecological limits. 
+      Shares some goals with L/0 (less compulsory work) but differs on mechanism: degrowth 
+      constrains production, L/0 automates it. L/0 is abundance-oriented.
+    </p>
+  </div>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <h3>Effective Accelerationism (e/acc)</h3>
+      <span class="concept-tag">Related Movement</span>
+    </div>
+    <p class="concept-definition">
+      Movement advocating rapid technological progress without restraint. Shares L/0's 
+      embrace of automation but often ignores distribution questions. L/0 is "accelerationism 
+      with a plan"—pushing forward on tech while building the infrastructure for broad benefit.
+    </p>
+  </div>
+</section>
+
+<div class="cta-section">
+  <h3>Still Have Questions?</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+    Join the community to discuss these concepts with others exploring post-labor economics.
+  </p>
+  <div class="cta-actions">
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+      <i data-lucide="users"></i>
+      Join the Discussion
+    </a>
+    <a href="https://daveshap.substack.com" target="_blank" class="btn btn-secondary">
+      <i data-lucide="mail"></i>
+      Read More Essays
+    </a>
+  </div>
+</div>
+
+<script>
+// Highlight nav item on scroll
+document.addEventListener('DOMContentLoaded', function() {
+  const sections = document.querySelectorAll('.concept-section');
+  const navLinks = document.querySelectorAll('.concepts-nav a');
+  
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      if (scrollY >= sectionTop - 200) {
+        current = section.getAttribute('id');
+      }
+    });
+    
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+});
+</script>

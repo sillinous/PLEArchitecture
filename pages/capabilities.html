@@ -1,0 +1,443 @@
+---
+layout: default
+title: Capabilities
+permalink: /capabilities/
+---
+
+<style>
+.capabilities-hero {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(91, 33, 182, 0.2) 100%);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.capabilities-hero h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.maturity-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.level-5 { background: #10b981; }
+.legend-dot.level-4 { background: #22c55e; }
+.legend-dot.level-3 { background: #f59e0b; }
+.legend-dot.level-2 { background: #f97316; }
+.legend-dot.level-1 { background: #ef4444; }
+
+.capability-domains {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.domain-section {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.domain-header {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.domain-header:hover {
+  background: var(--bg-tertiary);
+}
+
+.domain-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.domain-icon i {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.domain-info {
+  flex: 1;
+}
+
+.domain-info h3 {
+  margin: 0 0 0.25rem 0;
+}
+
+.domain-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.domain-toggle {
+  color: var(--text-secondary);
+  transition: transform 0.3s;
+}
+
+.domain-section.expanded .domain-toggle {
+  transform: rotate(180deg);
+}
+
+.domain-capabilities {
+  display: none;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.domain-section.expanded .domain-capabilities {
+  display: block;
+}
+
+.capability-card {
+  background: var(--bg-tertiary);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.capability-card:last-child {
+  margin-bottom: 0;
+}
+
+.capability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.capability-header h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.maturity-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.maturity-badge.world-class { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.maturity-badge.established { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+.maturity-badge.developing { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.maturity-badge.emerging { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+.maturity-badge.planned { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+.capability-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.capability-meter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  width: 100%;
+}
+
+.meter-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.meter-fill.current { background: var(--accent); }
+
+.meter-target {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: #10b981;
+}
+
+.meter-values {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.meter-values span {
+  color: var(--text-secondary);
+}
+
+.meter-values .current-val { color: var(--accent); font-weight: 600; }
+.meter-values .target-val { color: #10b981; font-weight: 600; }
+
+/* Summary Section */
+.summary-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.summary-card {
+  background: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  text-align: center;
+}
+
+.summary-card .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.summary-card .label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Priority Gaps */
+.gaps-section {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(239, 68, 68, 0.05) 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+.gap-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.gap-item:last-child {
+  margin-bottom: 0;
+}
+
+.gap-priority {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.gap-priority.critical { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.gap-priority.high { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.gap-priority.medium { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+.gap-info {
+  flex: 1;
+}
+
+.gap-info h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.gap-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.gap-levels {
+  text-align: right;
+  font-size: 0.875rem;
+}
+
+.gap-levels .current { color: #f59e0b; }
+.gap-levels .target { color: #10b981; }
+</style>
+
+<div class="page-header">
+  <span class="page-label">Architecture</span>
+  <h1>Movement Capabilities</h1>
+  <p class="page-description">Assessing and developing the capabilities needed to achieve L/0</p>
+</div>
+
+<div class="capabilities-hero">
+  <h1>What Can We Do?</h1>
+  <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+    A movement is only as strong as its capabilities. Here's an honest assessment of 
+    where we're strong, where we're developing, and where we need to grow.
+  </p>
+</div>
+
+<div class="summary-section">
+  <div class="summary-card">
+    <div class="value">{{ site.data.capabilities.capability_summary.total_capabilities }}</div>
+    <div class="label">Total Capabilities</div>
+  </div>
+  <div class="summary-card">
+    <div class="value">{{ site.data.capabilities.capability_summary.by_maturity.world_class }}</div>
+    <div class="label">World-Class</div>
+  </div>
+  <div class="summary-card">
+    <div class="value">{{ site.data.capabilities.capability_summary.by_maturity.established }}</div>
+    <div class="label">Established</div>
+  </div>
+  <div class="summary-card">
+    <div class="value">{{ site.data.capabilities.capability_summary.by_maturity.developing }}</div>
+    <div class="label">Developing</div>
+  </div>
+  <div class="summary-card">
+    <div class="value">{{ site.data.capabilities.capability_summary.by_maturity.emerging | plus: site.data.capabilities.capability_summary.by_maturity.planned }}</div>
+    <div class="label">Emerging/Planned</div>
+  </div>
+</div>
+
+<div class="maturity-legend">
+  <div class="legend-item">
+    <span class="legend-dot level-5"></span>
+    <span>World-Class (5)</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot level-4"></span>
+    <span>Established (4)</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot level-3"></span>
+    <span>Developing (3)</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot level-2"></span>
+    <span>Emerging (2)</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot level-1"></span>
+    <span>Planned (1)</span>
+  </div>
+</div>
+
+<div class="capability-domains">
+  {% for domain in site.data.capabilities.capability_domains %}
+  <div class="domain-section" data-domain="{{ domain.id }}">
+    <div class="domain-header" onclick="toggleDomain('{{ domain.id }}')">
+      <div class="domain-icon" style="background: {{ domain.color }};">
+        <i data-lucide="{{ domain.icon }}"></i>
+      </div>
+      <div class="domain-info">
+        <h3>{{ domain.name }}</h3>
+        <p>{{ domain.description }}</p>
+      </div>
+      <i data-lucide="chevron-down" class="domain-toggle"></i>
+    </div>
+    
+    <div class="domain-capabilities">
+      {% for cap in domain.capabilities %}
+      <div class="capability-card">
+        <div class="capability-header">
+          <h4>{{ cap.name }}</h4>
+          <span class="maturity-badge {{ cap.maturity | downcase | replace: ' ', '-' | replace: '-class', '-class' }}">
+            {{ cap.maturity }}
+          </span>
+        </div>
+        <p class="capability-description">{{ cap.description }}</p>
+        
+        <div class="capability-meter">
+          <div style="flex: 1;">
+            <div class="meter-bar">
+              <div class="meter-fill current" style="width: {{ cap.level.current | times: 20 }}%;"></div>
+              <div class="meter-target" style="left: {{ cap.level.target | times: 20 }}%;"></div>
+            </div>
+            <div class="meter-values">
+              <span>Current: <span class="current-val">{{ cap.level.current }}/5</span></span>
+              <span>Target: <span class="target-val">{{ cap.level.target }}/5</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="gaps-section">
+  <h3 style="margin-bottom: 1rem;">Priority Capability Gaps</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+    These are the capabilities where we have the biggest gaps between current state and target.
+  </p>
+  
+  {% for gap in site.data.capabilities.capability_summary.priority_gaps %}
+  <div class="gap-item">
+    <span class="gap-priority {{ gap.strategic_importance }}">{{ gap.strategic_importance | upcase }}</span>
+    <div class="gap-info">
+      <h4>{{ gap.capability | replace: 'cap-', '' | replace: '-', ' ' | capitalize }}</h4>
+      <p>Gap of {{ gap.gap }} levels to close</p>
+    </div>
+    <div class="gap-levels">
+      <span class="current">{{ gap.current }}</span> → <span class="target">{{ gap.target }}</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+function toggleDomain(domainId) {
+  const section = document.querySelector(`[data-domain="${domainId}"]`);
+  section.classList.toggle('expanded');
+  
+  // Re-initialize Lucide icons for newly visible content
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+}
+
+// Expand first domain by default
+document.addEventListener('DOMContentLoaded', function() {
+  const firstDomain = document.querySelector('.domain-section');
+  if (firstDomain) {
+    firstDomain.classList.add('expanded');
+  }
+});
+</script>

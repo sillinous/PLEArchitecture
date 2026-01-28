@@ -1,0 +1,742 @@
+---
+layout: default
+title: Live Dashboard
+permalink: /dashboard/
+---
+
+<style>
+.dashboard-hero {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(59, 130, 246, 0.15) 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-hero h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.dashboard-hero p {
+  margin: 0.25rem 0 0 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.last-updated {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+}
+
+.last-updated .pulse {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Metric Cards */
+.metrics-section {
+  margin-bottom: 3rem;
+}
+
+.metrics-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.metrics-section h2 i {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.metric-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--metric-color, var(--accent));
+}
+
+.metric-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.metric-icon i {
+  width: 20px;
+  height: 20px;
+  color: var(--metric-color, var(--accent));
+}
+
+.metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.metric-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.metric-change {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.metric-change.positive { color: #10b981; }
+.metric-change.negative { color: #ef4444; }
+.metric-change.neutral { color: var(--text-secondary); }
+
+.metric-change i {
+  width: 14px;
+  height: 14px;
+}
+
+/* Progress Bars */
+.progress-section {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.progress-section h3 {
+  margin: 0 0 1.5rem 0;
+}
+
+.progress-item {
+  margin-bottom: 1.5rem;
+}
+
+.progress-item:last-child {
+  margin-bottom: 0;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progress-label {
+  font-weight: 500;
+}
+
+.progress-values {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.progress-values .current {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.progress-bar {
+  height: 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 1s ease;
+  position: relative;
+}
+
+.progress-fill.community { background: linear-gradient(90deg, #ec4899, #db2777); }
+.progress-fill.youtube { background: linear-gradient(90deg, #ef4444, #dc2626); }
+.progress-fill.book { background: linear-gradient(90deg, #10b981, #059669); }
+.progress-fill.coalition { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+
+/* Chart Section */
+.chart-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.chart-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.chart-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+}
+
+.mini-chart {
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.chart-bar {
+  flex: 1;
+  background: linear-gradient(180deg, var(--accent), rgba(16, 185, 129, 0.3));
+  border-radius: 4px 4px 0 0;
+  transition: height 0.5s ease;
+  position: relative;
+}
+
+.chart-bar:hover {
+  background: linear-gradient(180deg, #10b981, rgba(16, 185, 129, 0.5));
+}
+
+.chart-bar::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: 0.5rem;
+}
+
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-icon.video { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.activity-icon.article { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+.activity-icon.community { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
+
+.activity-icon i {
+  width: 16px;
+  height: 16px;
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.activity-content h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-content p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Milestones */
+.milestones-section {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.milestone-card {
+  background: var(--bg-tertiary);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.milestone-card.achieved {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.milestone-card.upcoming {
+  opacity: 0.7;
+}
+
+.milestone-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.milestone-card h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.milestone-card p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.milestone-status {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  display: inline-block;
+}
+
+.milestone-status.done {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.milestone-status.progress {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.milestone-status.planned {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+/* CTA */
+.dashboard-cta {
+  text-align: center;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-radius: 1rem;
+}
+
+@media (max-width: 768px) {
+  .chart-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-hero {
+    text-align: center;
+    justify-content: center;
+  }
+}
+</style>
+
+<div class="page-header">
+  <span class="page-label">Movement Metrics</span>
+  <h1>Live Dashboard</h1>
+  <p class="page-description">Real-time progress tracking for the L/0 movement</p>
+</div>
+
+<div class="dashboard-hero">
+  <div>
+    <h1>Movement Vital Signs</h1>
+    <p>Tracking our progress toward a post-labor world</p>
+  </div>
+  <div class="last-updated">
+    <span class="pulse"></span>
+    <span>Updated <span id="update-time">just now</span></span>
+  </div>
+</div>
+
+<!-- Primary Metrics -->
+<div class="metrics-section">
+  <h2><i data-lucide="activity"></i> Key Metrics</h2>
+  
+  <div class="metrics-grid">
+    <div class="metric-card" style="--metric-color: #ec4899;">
+      <div class="metric-icon" style="background: rgba(236, 72, 153, 0.1);">
+        <i data-lucide="users"></i>
+      </div>
+      <div class="metric-value" id="community-count">152</div>
+      <div class="metric-label">Skool Community Members</div>
+      <div class="metric-change positive">
+        <i data-lucide="trending-up"></i>
+        <span>+12 this month</span>
+      </div>
+    </div>
+    
+    <div class="metric-card" style="--metric-color: #ef4444;">
+      <div class="metric-icon" style="background: rgba(239, 68, 68, 0.1);">
+        <i data-lucide="youtube"></i>
+      </div>
+      <div class="metric-value" id="youtube-subs">150K</div>
+      <div class="metric-label">YouTube Subscribers</div>
+      <div class="metric-change positive">
+        <i data-lucide="trending-up"></i>
+        <span>+2.3K this month</span>
+      </div>
+    </div>
+    
+    <div class="metric-card" style="--metric-color: #f59e0b;">
+      <div class="metric-icon" style="background: rgba(245, 158, 11, 0.1);">
+        <i data-lucide="mail"></i>
+      </div>
+      <div class="metric-value" id="substack-subs">8.5K</div>
+      <div class="metric-label">Substack Subscribers</div>
+      <div class="metric-change positive">
+        <i data-lucide="trending-up"></i>
+        <span>+450 this month</span>
+      </div>
+    </div>
+    
+    <div class="metric-card" style="--metric-color: #3b82f6;">
+      <div class="metric-icon" style="background: rgba(59, 130, 246, 0.1);">
+        <i data-lucide="eye"></i>
+      </div>
+      <div class="metric-value" id="monthly-views">520K</div>
+      <div class="metric-label">Monthly Video Views</div>
+      <div class="metric-change positive">
+        <i data-lucide="trending-up"></i>
+        <span>+8% vs last month</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress Toward Goals -->
+<div class="progress-section">
+  <h3>📊 Progress Toward 2028 Goals</h3>
+  
+  <div class="progress-item">
+    <div class="progress-header">
+      <span class="progress-label">Community Size</span>
+      <span class="progress-values"><span class="current">152</span> / 50,000 members</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill community" style="width: 0.3%;"></div>
+    </div>
+  </div>
+  
+  <div class="progress-item">
+    <div class="progress-header">
+      <span class="progress-label">YouTube Subscribers</span>
+      <span class="progress-values"><span class="current">150K</span> / 1M subscribers</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill youtube" style="width: 15%;"></div>
+    </div>
+  </div>
+  
+  <div class="progress-item">
+    <div class="progress-header">
+      <span class="progress-label">Book Completion</span>
+      <span class="progress-values"><span class="current">60%</span> complete (Target: Q2 2026)</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill book" style="width: 60%;"></div>
+    </div>
+  </div>
+  
+  <div class="progress-item">
+    <div class="progress-header">
+      <span class="progress-label">Coalition Partners</span>
+      <span class="progress-values"><span class="current">5</span> / 100 organizations</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill coalition" style="width: 5%;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts & Activity -->
+<div class="chart-section">
+  <div class="chart-card">
+    <h3>📈 Monthly Growth Trend</h3>
+    <div class="mini-chart">
+      <div class="chart-bar" style="height: 45%;" data-label="Aug"></div>
+      <div class="chart-bar" style="height: 52%;" data-label="Sep"></div>
+      <div class="chart-bar" style="height: 48%;" data-label="Oct"></div>
+      <div class="chart-bar" style="height: 65%;" data-label="Nov"></div>
+      <div class="chart-bar" style="height: 72%;" data-label="Dec"></div>
+      <div class="chart-bar" style="height: 85%;" data-label="Jan"></div>
+    </div>
+    <p style="text-align: center; font-size: 0.8rem; color: var(--text-secondary); margin-top: 2rem;">
+      Combined audience growth (normalized)
+    </p>
+  </div>
+  
+  <div class="chart-card">
+    <h3>🔥 Recent Activity</h3>
+    <div class="activity-list">
+      <a href="https://www.youtube.com/@DaveShap" target="_blank" class="activity-item">
+        <div class="activity-icon video">
+          <i data-lucide="play-circle"></i>
+        </div>
+        <div class="activity-content">
+          <h4>New Video Published</h4>
+          <p>2 days ago</p>
+        </div>
+      </a>
+      
+      <a href="https://daveshap.substack.com" target="_blank" class="activity-item">
+        <div class="activity-icon article">
+          <i data-lucide="file-text"></i>
+        </div>
+        <div class="activity-content">
+          <h4>New Substack Essay</h4>
+          <p>4 days ago</p>
+        </div>
+      </a>
+      
+      <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="activity-item">
+        <div class="activity-icon community">
+          <i data-lucide="message-circle"></i>
+        </div>
+        <div class="activity-content">
+          <h4>Community Discussion</h4>
+          <p>Active now</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Milestones -->
+<div class="milestones-section">
+  <h3>🏆 Movement Milestones</h3>
+  
+  <div class="milestones-grid">
+    <div class="milestone-card achieved">
+      <div class="milestone-icon">✅</div>
+      <h4>L/0 Manifesto Published</h4>
+      <p>Movement founding document</p>
+      <span class="milestone-status done">Achieved</span>
+    </div>
+    
+    <div class="milestone-card achieved">
+      <div class="milestone-icon">✅</div>
+      <h4>100K YouTube Subs</h4>
+      <p>Major audience milestone</p>
+      <span class="milestone-status done">Achieved</span>
+    </div>
+    
+    <div class="milestone-card achieved">
+      <div class="milestone-icon">✅</div>
+      <h4>Skool Community Launch</h4>
+      <p>Paid community established</p>
+      <span class="milestone-status done">Achieved</span>
+    </div>
+    
+    <div class="milestone-card">
+      <div class="milestone-icon">📝</div>
+      <h4>Book Manuscript Complete</h4>
+      <p>Full draft finished</p>
+      <span class="milestone-status progress">60% Complete</span>
+    </div>
+    
+    <div class="milestone-card upcoming">
+      <div class="milestone-icon">📚</div>
+      <h4>Book Publication</h4>
+      <p>Target Q2 2026</p>
+      <span class="milestone-status planned">Planned</span>
+    </div>
+    
+    <div class="milestone-card upcoming">
+      <div class="milestone-icon">🏛️</div>
+      <h4>First Policy Briefing</h4>
+      <p>Congressional presentation</p>
+      <span class="milestone-status planned">Planned</span>
+    </div>
+    
+    <div class="milestone-card upcoming">
+      <div class="milestone-icon">🌍</div>
+      <h4>International Chapters</h4>
+      <p>5+ country presence</p>
+      <span class="milestone-status planned">Planned</span>
+    </div>
+    
+    <div class="milestone-card upcoming">
+      <div class="milestone-icon">🎯</div>
+      <h4>1M YouTube Subs</h4>
+      <p>Target by 2028</p>
+      <span class="milestone-status planned">Planned</span>
+    </div>
+  </div>
+</div>
+
+<!-- Impact Indicators -->
+<div class="metrics-section">
+  <h2><i data-lucide="globe"></i> Impact Indicators</h2>
+  
+  <div class="metrics-grid">
+    <div class="metric-card" style="--metric-color: #8b5cf6;">
+      <div class="metric-icon" style="background: rgba(139, 92, 246, 0.1);">
+        <i data-lucide="file-text"></i>
+      </div>
+      <div class="metric-value">25+</div>
+      <div class="metric-label">Published Essays</div>
+      <div class="metric-change neutral">
+        <span>On Post-Labor Economics</span>
+      </div>
+    </div>
+    
+    <div class="metric-card" style="--metric-color: #10b981;">
+      <div class="metric-icon" style="background: rgba(16, 185, 129, 0.1);">
+        <i data-lucide="globe"></i>
+      </div>
+      <div class="metric-value">40+</div>
+      <div class="metric-label">Countries Reached</div>
+      <div class="metric-change neutral">
+        <span>Audience geography</span>
+      </div>
+    </div>
+    
+    <div class="metric-card" style="--metric-color: #06b6d4;">
+      <div class="metric-icon" style="background: rgba(6, 182, 212, 0.1);">
+        <i data-lucide="message-square"></i>
+      </div>
+      <div class="metric-value">5K+</div>
+      <div class="metric-label">Comments & Discussions</div>
+      <div class="metric-change neutral">
+        <span>Across all platforms</span>
+      </div>
+    </div>
+    
+    <div class="metric-card" style="--metric-color: #f59e0b;">
+      <div class="metric-icon" style="background: rgba(245, 158, 11, 0.1);">
+        <i data-lucide="share-2"></i>
+      </div>
+      <div class="metric-value">10K+</div>
+      <div class="metric-label">Content Shares</div>
+      <div class="metric-change neutral">
+        <span>Social media shares</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-cta">
+  <h3>Help Us Hit These Goals</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+    Every subscriber, member, and share moves the needle toward a post-labor world.
+  </p>
+  <div class="cta-actions">
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+      <i data-lucide="users"></i>
+      Join Community
+    </a>
+    <a href="https://www.youtube.com/@DaveShap?sub_confirmation=1" target="_blank" class="btn btn-secondary">
+      <i data-lucide="youtube"></i>
+      Subscribe on YouTube
+    </a>
+  </div>
+</div>
+
+<script>
+// Animate numbers on load
+document.addEventListener('DOMContentLoaded', function() {
+  // Update timestamp
+  const now = new Date();
+  document.getElementById('update-time').textContent = now.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  // Animate metric values
+  const metrics = document.querySelectorAll('.metric-value');
+  metrics.forEach(metric => {
+    const finalValue = metric.textContent;
+    metric.style.opacity = '0';
+    setTimeout(() => {
+      metric.style.transition = 'opacity 0.5s';
+      metric.style.opacity = '1';
+    }, 300);
+  });
+  
+  // Animate progress bars
+  const progressFills = document.querySelectorAll('.progress-fill');
+  progressFills.forEach(fill => {
+    const width = fill.style.width;
+    fill.style.width = '0';
+    setTimeout(() => {
+      fill.style.width = width;
+    }, 500);
+  });
+  
+  // Animate chart bars
+  const chartBars = document.querySelectorAll('.chart-bar');
+  chartBars.forEach((bar, index) => {
+    const height = bar.style.height;
+    bar.style.height = '0';
+    setTimeout(() => {
+      bar.style.height = height;
+    }, 300 + (index * 100));
+  });
+});
+</script>

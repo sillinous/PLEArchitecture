@@ -171,27 +171,53 @@ navigation:
   main:
     - title: Home
       url: /
-    - title: About
-      url: /about/
-    - title: Architecture
+    - title: Learn
+      url: /concepts/
+      children:
+        - title: Key Concepts
+          url: /concepts/
+        - title: FAQ & Objections
+          url: /faq/
+        - title: Resource Hub
+          url: /resources/
+        - title: Theory of Change
+          url: /theory-of-change/
+        - title: News & Updates
+          url: /news/
+    - title: Frameworks
       url: /architecture/
       children:
         - title: Overview
           url: /architecture/
-        - title: Motivation & L/0
-          url: /architecture/motivation/
         - title: Pyramid of Prosperity
           url: /architecture/prosperity/
         - title: Pyramid of Power
           url: /architecture/power/
-    - title: Stakeholders
-      url: /stakeholders/
-    - title: Capabilities
-      url: /capabilities/
-    - title: Impact
-      url: /impact/
-    - title: Docs
-      url: /docs/
+        - title: Pyramid Builder
+          url: /pyramid-builder/
+        - title: Coalition Building
+          url: /architecture/coalition/
+        - title: Research & Evidence
+          url: /architecture/research/
+        - title: Policy Framework
+          url: /architecture/policy/
+    - title: Movement
+      url: /about/
+      children:
+        - title: About L/0
+          url: /about/
+        - title: Live Dashboard
+          url: /dashboard/
+        - title: The Book
+          url: /book/
+        - title: Press Kit
+          url: /press/
+        - title: Stakeholders
+          url: /stakeholders/
+        - title: Impact
+          url: /impact/
+    - title: Get Involved
+      url: /get-involved/
 
 # Footer Links
 footer:

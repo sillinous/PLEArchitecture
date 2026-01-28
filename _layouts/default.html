@@ -31,12 +31,12 @@
   <header class="site-header">
     <div class="header-container">
       <a href="{{ '/' | relative_url }}" class="site-logo">
-        <span class="logo-icon">
-          <i data-lucide="hexagon"></i>
+        <span class="logo-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); padding: 0.5rem; border-radius: 0.5rem;">
+          <span style="color: white; font-weight: 700; font-size: 1rem;">L/0</span>
         </span>
         <span class="logo-text">
-          <span class="logo-name">{{ site.data.community.short_name | default: "CEAS" }}</span>
-          <span class="logo-tagline">Community Architecture</span>
+          <span class="logo-name">{{ site.data.community.name | default: "Post-Labor Economics" }}</span>
+          <span class="logo-tagline">{{ site.tagline | default: "Liberating Humanity" }}</span>
         </span>
       </a>
       
@@ -66,6 +66,15 @@
             {% endif %}
           </li>
           {% endfor %}
+          <li class="nav-item nav-cta">
+            <a href="{{ '/search/' | relative_url }}" class="nav-search-btn" aria-label="Search">
+              <i data-lucide="search"></i>
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i>
+              Join
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -81,57 +90,61 @@
     <div class="footer-container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <h3>{{ site.data.community.name | default: "Community Enterprise Architecture System" }}</h3>
-          <p>{{ site.data.community.tagline | default: "Building Tomorrow Together" }}</p>
+          <h3>{{ site.data.community.name | default: "Post-Labor Economics" }}</h3>
+          <p>{{ site.data.community.tagline | default: "Liberating Humanity from Obligatory Labor" }}</p>
           
-          {% if site.data.community.social_media %}
           <div class="social-links">
-            {% for social in site.data.community.social_media %}
-            <a href="{{ social.url }}" aria-label="{{ social.platform }}" target="_blank" rel="noopener">
-              <i data-lucide="{{ social.platform }}"></i>
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank" rel="noopener">
+              <i data-lucide="youtube"></i>
             </a>
-            {% endfor %}
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank" rel="noopener">
+              <i data-lucide="mail"></i>
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank" rel="noopener">
+              <i data-lucide="users"></i>
+            </a>
           </div>
-          {% endif %}
         </div>
         
         <div class="footer-nav">
-          <h4>Architecture</h4>
+          <h4>Frameworks</h4>
           <ul>
-            <li><a href="{{ '/architecture/motivation/' | relative_url }}">Motivation</a></li>
-            <li><a href="{{ '/architecture/business/' | relative_url }}">Business</a></li>
-            <li><a href="{{ '/architecture/societal/' | relative_url }}">Societal</a></li>
-            <li><a href="{{ '/architecture/governance/' | relative_url }}">Governance</a></li>
+            <li><a href="{{ '/architecture/prosperity/' | relative_url }}">Pyramid of Prosperity</a></li>
+            <li><a href="{{ '/architecture/power/' | relative_url }}">Pyramid of Power</a></li>
+            <li><a href="{{ '/pyramid-builder/' | relative_url }}">Pyramid Builder</a></li>
+            <li><a href="{{ '/architecture/coalition/' | relative_url }}">Coalition</a></li>
           </ul>
         </div>
         
         <div class="footer-nav">
-          <h4>Resources</h4>
+          <h4>Learn</h4>
           <ul>
-            <li><a href="{{ '/stakeholders/' | relative_url }}">Stakeholders</a></li>
-            <li><a href="{{ '/capabilities/' | relative_url }}">Capabilities</a></li>
-            <li><a href="{{ '/impact/' | relative_url }}">Impact</a></li>
-            <li><a href="{{ '/initiatives/' | relative_url }}">Initiatives</a></li>
+            <li><a href="{{ '/concepts/' | relative_url }}">Key Concepts</a></li>
+            <li><a href="{{ '/faq/' | relative_url }}">FAQ & Objections</a></li>
+            <li><a href="{{ '/resources/' | relative_url }}">Resources</a></li>
+            <li><a href="{{ '/book/' | relative_url }}">The Book</a></li>
           </ul>
         </div>
         
         <div class="footer-nav">
-          <h4>About</h4>
+          <h4>Join Us</h4>
           <ul>
-            {% for link in site.footer.links %}
-            <li><a href="{{ link.url | relative_url }}">{{ link.title }}</a></li>
-            {% endfor %}
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="https://daveshap.substack.com" target="_blank">Subscribe (Free)</a></li>
+            <li><a href="https://www.youtube.com/@DaveShap" target="_blank">YouTube</a></li>
+            <li><a href="{{ '/press/' | relative_url }}">Press Kit</a></li>
           </ul>
         </div>
       </div>
       
       <div class="footer-bottom">
         <p class="copyright">
-          &copy; {{ 'now' | date: "%Y" }} {{ site.data.community.name | default: "Community" }}. 
+          &copy; {{ 'now' | date: "%Y" }} {{ site.data.community.name | default: "Post-Labor Economics" }}. 
+          Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>.
           Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
         </p>
         <p class="powered-by">
-          Powered by <a href="https://github.com/ceas-framework/ceas">CEAS Framework</a> v{{ site.ceas.version }}
+          Architecture powered by <a href="https://github.com/ceas-framework/ceas">CEAS Framework</a>
         </p>
       </div>
     </div>
