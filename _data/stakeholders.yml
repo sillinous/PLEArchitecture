@@ -341,24 +341,28 @@ stakeholders:
 
 engagement_matrix:
   high_power_high_interest:
-    - sh-exhausted-workers
-    - sh-core-members
+    stakeholders:
+      - sh-exhausted-workers
+      - sh-core-members
     strategy: "Manage closely - core constituency"
     
   high_power_low_interest:
-    - sh-forward-capitalists
-    - sh-progressive-pols
-    - sh-techno-realists
+    stakeholders:
+      - sh-forward-capitalists
+      - sh-progressive-pols
+      - sh-techno-realists
     strategy: "Keep satisfied - potential allies with influence"
     
   low_power_high_interest:
-    - sh-youtube-audience
-    - sh-displaced-workers
-    - sh-economists
+    stakeholders:
+      - sh-youtube-audience
+      - sh-displaced-workers
+      - sh-economists
     strategy: "Keep informed - engaged supporters"
     
   low_power_low_interest:
-    - sh-extractive-capital
+    stakeholders:
+      - sh-extractive-capital
     strategy: "Monitor - adversarial or indifferent"
 
 # ─────────────────────────────────────────────────────────────────────────────
