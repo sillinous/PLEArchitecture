@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborate | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Join working groups, participate in discussions, and collaborate on architecture development with the Post-Labor Economics community.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Collaborate Page Styles */
+    .collab-hero {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.15) 100%);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .collab-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    /* Role Cards */
+    .roles-section {
+      margin-bottom: 3rem;
+    }
+    
+    .roles-section h2 {
+      margin-bottom: 1.5rem;
+    }
+    
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .role-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+    
+    .role-card:hover {
+      border-color: var(--role-color);
+      transform: translateY(-2px);
+    }
+    
+    .role-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .role-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--role-bg);
+    }
+    
+    .role-icon i {
+      width: 24px;
+      height: 24px;
+      color: var(--role-color);
+    }
+    
+    .role-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .role-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    .role-permissions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .permission-tag {
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Working Groups */
+    .working-groups-section {
+      margin-bottom: 3rem;
+    }
+    
+    .working-groups-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .wg-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    
+    .wg-card:hover {
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .wg-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .wg-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .wg-icon i {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .wg-info {
+      flex: 1;
+    }
+    
+    .wg-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .wg-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .wg-status.active { color: #10b981; }
+    .wg-status.forming { color: #fbbf24; }
+    
+    .wg-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    
+    .wg-body {
+      padding: 1.5rem;
+    }
+    
+    .wg-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    .wg-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .wg-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .wg-meta-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .wg-members {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .member-avatars {
+      display: flex;
+    }
+    
+    .member-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: white;
+      margin-left: -8px;
+    }
+    
+    .member-avatar:first-child {
+      margin-left: 0;
+    }
+    
+    .member-avatar.more {
+      background: var(--color-bg-primary);
+      color: var(--color-text-muted);
+      font-size: 0.6875rem;
+    }
+    
+    .wg-footer {
+      padding: 1rem 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .wg-footer .btn {
+      flex: 1;
+      justify-content: center;
+    }
+    
+    /* Activity Feed */
+    .activity-section {
+      margin-bottom: 3rem;
+    }
+    
+    .activity-feed {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .activity-header h3 {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .activity-header h3 i {
+      width: 18px;
+      height: 18px;
+      color: var(--color-primary);
+    }
+    
+    .activity-filter {
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      color: var(--color-text-secondary);
+      font-size: 0.8125rem;
+      cursor: pointer;
+    }
+    
+    .activity-list {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .activity-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      transition: background 0.15s;
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .activity-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .activity-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .activity-text {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+    
+    .activity-text strong {
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+    
+    .activity-text a {
+      color: var(--color-primary);
+    }
+    
+    .activity-time {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Leaderboard */
+    .leaderboard-section {
+      margin-bottom: 3rem;
+    }
+    
+    .leaderboard {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .leaderboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .leaderboard-header h3 {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .leaderboard-tabs {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .leaderboard-tab {
+      padding: 0.375rem 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 0.375rem;
+      transition: all 0.15s;
+    }
+    
+    .leaderboard-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .leaderboard-tab.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .leaderboard-list {
+      padding: 0.5rem 0;
+    }
+    
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1.5rem;
+      transition: background 0.15s;
+    }
+    
+    .leaderboard-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .leaderboard-rank {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      background: var(--color-bg-primary);
+      color: var(--color-text-muted);
+    }
+    
+    .leaderboard-item:nth-child(1) .leaderboard-rank { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .leaderboard-item:nth-child(2) .leaderboard-rank { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+    .leaderboard-item:nth-child(3) .leaderboard-rank { background: rgba(180, 83, 9, 0.2); color: #d97706; }
+    
+    .leaderboard-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .leaderboard-info {
+      flex: 1;
+    }
+    
+    .leaderboard-name {
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    
+    .leaderboard-role {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .leaderboard-stats {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .leaderboard-stat {
+      text-align: right;
+    }
+    
+    .leaderboard-stat-value {
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    
+    .leaderboard-stat-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+    
+    /* Discussion Forums */
+    .forums-section {
+      margin-bottom: 3rem;
+    }
+    
+    .forums-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    
+    .forum-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .forum-card:hover {
+      border-color: var(--color-primary);
+      transform: translateX(4px);
+    }
+    
+    .forum-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .forum-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .forum-info {
+      flex: 1;
+    }
+    
+    .forum-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .forum-stats {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .forum-arrow {
+      color: var(--color-text-muted);
+      transition: transform 0.2s;
+    }
+    
+    .forum-card:hover .forum-arrow {
+      transform: translateX(4px);
+      color: var(--color-primary);
+    }
+    
+    /* Collaboration Tools */
+    .tools-section {
+      margin-bottom: 3rem;
+    }
+    
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .tool-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .tool-card:hover {
+      border-color: var(--tool-color);
+      transform: translateY(-2px);
+    }
+    
+    .tool-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--tool-bg);
+    }
+    
+    .tool-icon i {
+      width: 32px;
+      height: 32px;
+      color: var(--tool-color);
+    }
+    
+    .tool-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tool-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    
+    /* Quick Start */
+    .quick-start-section {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      text-align: center;
+    }
+    
+    .quick-start-section h2 {
+      margin-bottom: 1rem;
+    }
+    
+    .quick-start-section p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .quick-start-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    @media (max-width: 768px) {
+      .collab-hero {
+        padding: 2rem 1.5rem;
+      }
+      
+      .collab-hero h1 {
+        font-size: 1.75rem;
+      }
+      
+      .roles-grid,
+      .working-groups-grid,
+      .forums-grid,
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .leaderboard-stats {
+        display: none;
+      }
+      
+      .quick-start-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/governance.html">Governance <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/governance.html">Overview</a></li>
+              <li><a href="/arch-artifacts.html">Artifacts</a></li>
+              <li><a href="/arch-review.html">Review</a></li>
+              <li><a href="/arch-collaborate.html">Collaborate</a></li>
+              <li><a href="/arch-create.html">Create</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem);">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="separator">/</span>
+      <a href="/governance.html">Governance</a>
+      <span class="separator">/</span>
+      <span class="current">Collaborate</span>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="collab-hero">
+      <h1>Collaborate</h1>
+      <p style="color: var(--color-text-secondary); font-size: 1.125rem; max-width: 600px;">
+        Join working groups, participate in discussions, and help shape the architecture of post-labor economics with contributors worldwide.
+      </p>
+    </section>
+    
+    <!-- Roles -->
+    <section class="roles-section">
+      <h2>Governance Roles</h2>
+      <div class="roles-grid">
+        <div class="role-card" style="--role-bg: rgba(148, 163, 184, 0.15); --role-color: #94a3b8;">
+          <div class="role-header">
+            <div class="role-icon"><i data-lucide="eye"></i></div>
+            <h3 class="role-title">Observer</h3>
+          </div>
+          <p class="role-desc">Browse and learn from existing artifacts, discussions, and governance processes.</p>
+          <div class="role-permissions">
+            <span class="permission-tag">View artifacts</span>
+            <span class="permission-tag">Read discussions</span>
+          </div>
+        </div>
+        
+        <div class="role-card" style="--role-bg: rgba(16, 185, 129, 0.15); --role-color: #10b981;">
+          <div class="role-header">
+            <div class="role-icon"><i data-lucide="message-circle"></i></div>
+            <h3 class="role-title">Contributor</h3>
+          </div>
+          <p class="role-desc">Participate in discussions, submit proposals, and vote on architecture decisions.</p>
+          <div class="role-permissions">
+            <span class="permission-tag">Comment</span>
+            <span class="permission-tag">Propose</span>
+            <span class="permission-tag">Vote</span>
+          </div>
+        </div>
+        
+        <div class="role-card" style="--role-bg: rgba(99, 102, 241, 0.15); --role-color: #818cf8;">
+          <div class="role-header">
+            <div class="role-icon"><i data-lucide="shield"></i></div>
+            <h3 class="role-title">Steward</h3>
+          </div>
+          <p class="role-desc">Review and approve proposals, mentor contributors, and maintain governance quality.</p>
+          <div class="role-permissions">
+            <span class="permission-tag">Review</span>
+            <span class="permission-tag">Approve</span>
+            <span class="permission-tag">Mentor</span>
+          </div>
+        </div>
+        
+        <div class="role-card" style="--role-bg: rgba(139, 92, 246, 0.15); --role-color: #a78bfa;">
+          <div class="role-header">
+            <div class="role-icon"><i data-lucide="crown"></i></div>
+            <h3 class="role-title">Council Member</h3>
+          </div>
+          <p class="role-desc">Set strategic direction, resolve disputes, and make final decisions on core architecture.</p>
+          <div class="role-permissions">
+            <span class="permission-tag">Decide</span>
+            <span class="permission-tag">Veto</span>
+            <span class="permission-tag">Govern</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Working Groups -->
+    <section class="working-groups-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="margin: 0;">Working Groups</h2>
+        <a href="/arch-create.html?type=working-group" class="btn btn-outline btn-sm">
+          <i data-lucide="plus"></i> Start a Group
+        </a>
+      </div>
+      
+      <div class="working-groups-grid">
+        <!-- Prosperity Framework WG -->
+        <div class="wg-card">
+          <div class="wg-header">
+            <div class="wg-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+              <i data-lucide="triangle"></i>
+            </div>
+            <div class="wg-info">
+              <h3 class="wg-name">Prosperity Framework</h3>
+              <span class="wg-status active">Active</span>
+            </div>
+          </div>
+          <div class="wg-body">
+            <p class="wg-desc">Developing and refining the Pyramid of Prosperity layers, income mechanisms, and implementation pathways.</p>
+            <div class="wg-meta">
+              <span class="wg-meta-item"><i data-lucide="users"></i> 24 members</span>
+              <span class="wg-meta-item"><i data-lucide="calendar"></i> Meets Thursdays</span>
+              <span class="wg-meta-item"><i data-lucide="file-text"></i> 12 artifacts</span>
+            </div>
+            <div class="wg-members">
+              <div class="member-avatars">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">JR</div>
+                <div class="member-avatar more">+21</div>
+              </div>
+            </div>
+          </div>
+          <div class="wg-footer">
+            <button class="btn btn-outline btn-sm"><i data-lucide="eye"></i> View</button>
+            <button class="btn btn-primary btn-sm"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+        
+        <!-- Power & Governance WG -->
+        <div class="wg-card">
+          <div class="wg-header">
+            <div class="wg-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+              <i data-lucide="vote"></i>
+            </div>
+            <div class="wg-info">
+              <h3 class="wg-name">Power & Governance</h3>
+              <span class="wg-status active">Active</span>
+            </div>
+          </div>
+          <div class="wg-body">
+            <p class="wg-desc">Building the Pyramid of Power democratic infrastructure, blockchain identity, and algorithmic governance systems.</p>
+            <div class="wg-meta">
+              <span class="wg-meta-item"><i data-lucide="users"></i> 18 members</span>
+              <span class="wg-meta-item"><i data-lucide="calendar"></i> Meets Tuesdays</span>
+              <span class="wg-meta-item"><i data-lucide="file-text"></i> 8 artifacts</span>
+            </div>
+            <div class="wg-members">
+              <div class="member-avatars">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">AL</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">RW</div>
+                <div class="member-avatar more">+15</div>
+              </div>
+            </div>
+          </div>
+          <div class="wg-footer">
+            <button class="btn btn-outline btn-sm"><i data-lucide="eye"></i> View</button>
+            <button class="btn btn-primary btn-sm"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+        
+        <!-- Coalition Building WG -->
+        <div class="wg-card">
+          <div class="wg-header">
+            <div class="wg-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+              <i data-lucide="handshake"></i>
+            </div>
+            <div class="wg-info">
+              <h3 class="wg-name">Coalition Building</h3>
+              <span class="wg-status active">Active</span>
+            </div>
+          </div>
+          <div class="wg-body">
+            <p class="wg-desc">Bridging unlikely alliances between exhausted workers, forward-thinking capitalists, researchers, and policymakers.</p>
+            <div class="wg-meta">
+              <span class="wg-meta-item"><i data-lucide="users"></i> 31 members</span>
+              <span class="wg-meta-item"><i data-lucide="calendar"></i> Meets Wednesdays</span>
+              <span class="wg-meta-item"><i data-lucide="file-text"></i> 6 artifacts</span>
+            </div>
+            <div class="wg-members">
+              <div class="member-avatars">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">PL</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">KN</div>
+                <div class="member-avatar more">+28</div>
+              </div>
+            </div>
+          </div>
+          <div class="wg-footer">
+            <button class="btn btn-outline btn-sm"><i data-lucide="eye"></i> View</button>
+            <button class="btn btn-primary btn-sm"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+        
+        <!-- Research & Evidence WG -->
+        <div class="wg-card">
+          <div class="wg-header">
+            <div class="wg-icon" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">
+              <i data-lucide="microscope"></i>
+            </div>
+            <div class="wg-info">
+              <h3 class="wg-name">Research & Evidence</h3>
+              <span class="wg-status forming">Forming</span>
+            </div>
+          </div>
+          <div class="wg-body">
+            <p class="wg-desc">Gathering and validating evidence for post-labor economic policies through academic partnerships and data analysis.</p>
+            <div class="wg-meta">
+              <span class="wg-meta-item"><i data-lucide="users"></i> 9 members</span>
+              <span class="wg-meta-item"><i data-lucide="calendar"></i> TBD</span>
+              <span class="wg-meta-item"><i data-lucide="file-text"></i> 2 artifacts</span>
+            </div>
+            <div class="wg-members">
+              <div class="member-avatars">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">DR</div>
+                <div class="member-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">EJ</div>
+                <div class="member-avatar more">+7</div>
+              </div>
+            </div>
+          </div>
+          <div class="wg-footer">
+            <button class="btn btn-outline btn-sm"><i data-lucide="eye"></i> View</button>
+            <button class="btn btn-primary btn-sm"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Activity & Leaderboard Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+      <!-- Activity Feed -->
+      <section class="activity-section" style="margin-bottom: 0;">
+        <div class="activity-feed">
+          <div class="activity-header">
+            <h3><i data-lucide="activity"></i> Recent Activity</h3>
+            <select class="activity-filter">
+              <option>All Activity</option>
+              <option>Proposals</option>
+              <option>Comments</option>
+              <option>Votes</option>
+            </select>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="check"></i>
+              </div>
+              <div class="activity-content">
+                <p class="activity-text"><strong>David S.</strong> approved <a href="#">ADR-007</a></p>
+                <span class="activity-time">2 hours ago</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="message-square"></i>
+              </div>
+              <div class="activity-content">
+                <p class="activity-text"><strong>Maria K.</strong> commented on <a href="#">Data Dividends Proposal</a></p>
+                <span class="activity-time">4 hours ago</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+                <i data-lucide="lightbulb"></i>
+              </div>
+              <div class="activity-content">
+                <p class="activity-text"><strong>James R.</strong> submitted <a href="#">Caregiver Recognition Framework</a></p>
+                <span class="activity-time">6 hours ago</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                <i data-lucide="thumbs-up"></i>
+              </div>
+              <div class="activity-content">
+                <p class="activity-text"><strong>15 members</strong> voted on <a href="#">Stakeholder Expansion</a></p>
+                <span class="activity-time">1 day ago</span>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">
+                <i data-lucide="user-plus"></i>
+              </div>
+              <div class="activity-content">
+                <p class="activity-text"><strong>Sarah M.</strong> joined <a href="#">Prosperity Framework WG</a></p>
+                <span class="activity-time">1 day ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Leaderboard -->
+      <section class="leaderboard-section" style="margin-bottom: 0;">
+        <div class="leaderboard">
+          <div class="leaderboard-header">
+            <h3><i data-lucide="trophy" style="color: #fbbf24;"></i> Top Contributors</h3>
+            <div class="leaderboard-tabs">
+              <button class="leaderboard-tab active">This Month</button>
+              <button class="leaderboard-tab">All Time</button>
+            </div>
+          </div>
+          <div class="leaderboard-list">
+            <div class="leaderboard-item">
+              <div class="leaderboard-rank">1</div>
+              <div class="leaderboard-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+              <div class="leaderboard-info">
+                <div class="leaderboard-name">David Shapiro</div>
+                <div class="leaderboard-role">Council Member</div>
+              </div>
+              <div class="leaderboard-stats">
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">47</div>
+                  <div class="leaderboard-stat-label">Contributions</div>
+                </div>
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">89</div>
+                  <div class="leaderboard-stat-label">Reviews</div>
+                </div>
+              </div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="leaderboard-rank">2</div>
+              <div class="leaderboard-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</div>
+              <div class="leaderboard-info">
+                <div class="leaderboard-name">Maria Kowalski</div>
+                <div class="leaderboard-role">Steward</div>
+              </div>
+              <div class="leaderboard-stats">
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">38</div>
+                  <div class="leaderboard-stat-label">Contributions</div>
+                </div>
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">62</div>
+                  <div class="leaderboard-stat-label">Reviews</div>
+                </div>
+              </div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="leaderboard-rank">3</div>
+              <div class="leaderboard-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</div>
+              <div class="leaderboard-info">
+                <div class="leaderboard-name">Sarah Mitchell</div>
+                <div class="leaderboard-role">Contributor</div>
+              </div>
+              <div class="leaderboard-stats">
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">31</div>
+                  <div class="leaderboard-stat-label">Contributions</div>
+                </div>
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">45</div>
+                  <div class="leaderboard-stat-label">Reviews</div>
+                </div>
+              </div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="leaderboard-rank">4</div>
+              <div class="leaderboard-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">JR</div>
+              <div class="leaderboard-info">
+                <div class="leaderboard-name">James Rodriguez</div>
+                <div class="leaderboard-role">Contributor</div>
+              </div>
+              <div class="leaderboard-stats">
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">28</div>
+                  <div class="leaderboard-stat-label">Contributions</div>
+                </div>
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">34</div>
+                  <div class="leaderboard-stat-label">Reviews</div>
+                </div>
+              </div>
+            </div>
+            <div class="leaderboard-item">
+              <div class="leaderboard-rank">5</div>
+              <div class="leaderboard-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">AL</div>
+              <div class="leaderboard-info">
+                <div class="leaderboard-name">Alex Lee</div>
+                <div class="leaderboard-role">Steward</div>
+              </div>
+              <div class="leaderboard-stats">
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">24</div>
+                  <div class="leaderboard-stat-label">Contributions</div>
+                </div>
+                <div class="leaderboard-stat">
+                  <div class="leaderboard-stat-value">51</div>
+                  <div class="leaderboard-stat-label">Reviews</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- Discussion Forums -->
+    <section class="forums-section">
+      <h2 style="margin-bottom: 1.5rem;">Discussion Forums</h2>
+      <div class="forums-grid">
+        <div class="forum-card">
+          <div class="forum-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+            <i data-lucide="messages-square"></i>
+          </div>
+          <div class="forum-info">
+            <div class="forum-name">General Discussion</div>
+            <div class="forum-stats">1,247 topics • 8,432 posts</div>
+          </div>
+          <div class="forum-arrow"><i data-lucide="chevron-right"></i></div>
+        </div>
+        
+        <div class="forum-card">
+          <div class="forum-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+            <i data-lucide="lightbulb"></i>
+          </div>
+          <div class="forum-info">
+            <div class="forum-name">Proposal Drafts</div>
+            <div class="forum-stats">156 topics • 2,891 posts</div>
+          </div>
+          <div class="forum-arrow"><i data-lucide="chevron-right"></i></div>
+        </div>
+        
+        <div class="forum-card">
+          <div class="forum-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+            <i data-lucide="help-circle"></i>
+          </div>
+          <div class="forum-info">
+            <div class="forum-name">Questions & Help</div>
+            <div class="forum-stats">423 topics • 1,567 posts</div>
+          </div>
+          <div class="forum-arrow"><i data-lucide="chevron-right"></i></div>
+        </div>
+        
+        <div class="forum-card">
+          <div class="forum-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+            <i data-lucide="megaphone"></i>
+          </div>
+          <div class="forum-info">
+            <div class="forum-name">Announcements</div>
+            <div class="forum-stats">89 topics • 542 posts</div>
+          </div>
+          <div class="forum-arrow"><i data-lucide="chevron-right"></i></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Collaboration Tools -->
+    <section class="tools-section">
+      <h2 style="margin-bottom: 1.5rem;">Collaboration Tools</h2>
+      <div class="tools-grid">
+        <div class="tool-card" style="--tool-bg: rgba(16, 185, 129, 0.15); --tool-color: #10b981;">
+          <div class="tool-icon"><i data-lucide="pen-tool"></i></div>
+          <h3 class="tool-name">Collaborative Editor</h3>
+          <p class="tool-desc">Real-time document editing with version control and commenting.</p>
+        </div>
+        
+        <div class="tool-card" style="--tool-bg: rgba(99, 102, 241, 0.15); --tool-color: #818cf8;">
+          <div class="tool-icon"><i data-lucide="git-branch"></i></div>
+          <h3 class="tool-name">Version Control</h3>
+          <p class="tool-desc">Track changes, compare versions, and manage artifact history.</p>
+        </div>
+        
+        <div class="tool-card" style="--tool-bg: rgba(251, 191, 36, 0.15); --tool-color: #fbbf24;">
+          <div class="tool-icon"><i data-lucide="bar-chart-3"></i></div>
+          <h3 class="tool-name">Polling & Surveys</h3>
+          <p class="tool-desc">Gather community feedback through structured polls and surveys.</p>
+        </div>
+        
+        <div class="tool-card" style="--tool-bg: rgba(236, 72, 153, 0.15); --tool-color: #f472b6;">
+          <div class="tool-icon"><i data-lucide="video"></i></div>
+          <h3 class="tool-name">Virtual Meetings</h3>
+          <p class="tool-desc">Schedule and join working group meetings and community calls.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Quick Start -->
+    <section class="quick-start-section">
+      <h2>Ready to Contribute?</h2>
+      <p>Join our community of architects, researchers, and advocates building the frameworks for a post-labor future.</p>
+      <div class="quick-start-actions">
+        <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-lg">
+          <i data-lucide="users"></i>
+          Join the Community
+        </a>
+        <a href="/arch-create.html" class="btn btn-outline btn-lg">
+          <i data-lucide="plus"></i>
+          Create Your First Proposal
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" style="margin-top: 3rem;">
+    <div class="container">
+      <div class="footer-bottom">
+        <p class="copyright">© 2026 Post-Labor Economics. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // Leaderboard tabs
+    document.querySelectorAll('.leaderboard-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.leaderboard-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

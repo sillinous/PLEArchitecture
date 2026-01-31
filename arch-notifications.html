@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Stay updated with governance activities, mentions, and important deadlines.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Notifications Layout */
+    .notifications-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - var(--header-height) - 4rem);
+    }
+    
+    /* Sidebar */
+    .notifications-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .sidebar-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .sidebar-section-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .filter-list {
+      padding: 0.5rem;
+    }
+    
+    .filter-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.625rem 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .filter-item:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .filter-item.active {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-primary);
+    }
+    
+    .filter-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .filter-item i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .filter-item-label {
+      font-size: 0.9375rem;
+    }
+    
+    .filter-item-count {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .filter-item.active .filter-item-count {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem;
+    }
+    
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    
+    .quick-action:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .quick-action i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Main Content */
+    .notifications-main {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .notifications-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .notifications-header h1 {
+      font-size: 1.75rem;
+    }
+    
+    .notifications-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Time Grouping */
+    .time-group {
+      margin-bottom: 2rem;
+    }
+    
+    .time-group-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .time-group-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+    }
+    
+    .time-group-line {
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+    
+    /* Notification Card */
+    .notification-card {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    
+    .notification-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .notification-card.unread {
+      background: rgba(99, 102, 241, 0.05);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+    
+    .notification-card.unread::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 3px 0 0 3px;
+    }
+    
+    .notification-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .notification-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .notification-icon.mention {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+    
+    .notification-icon.vote {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .notification-icon.comment {
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+    }
+    
+    .notification-icon.review {
+      background: rgba(244, 114, 182, 0.15);
+      color: #f472b6;
+    }
+    
+    .notification-icon.deadline {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    
+    .notification-icon.update {
+      background: rgba(6, 182, 212, 0.15);
+      color: #22d3ee;
+    }
+    
+    .notification-icon.achievement {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+    }
+    
+    .notification-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .notification-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      line-height: 1.4;
+    }
+    
+    .notification-title strong {
+      color: var(--color-text-primary);
+    }
+    
+    .notification-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .notification-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .notification-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .notification-meta-item i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .notification-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+    
+    .notification-time {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .notification-dismiss {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.15s;
+    }
+    
+    .notification-card:hover .notification-dismiss {
+      opacity: 1;
+    }
+    
+    .notification-dismiss:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .notification-dismiss i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Notification Badge */
+    .notification-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .notification-badge.urgent {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    
+    .notification-badge.new {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+    
+    /* Preferences Panel */
+    .preferences-panel {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .preferences-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .preferences-header h3 {
+      font-size: 1.125rem;
+    }
+    
+    .preferences-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    
+    .preference-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+    }
+    
+    .preference-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .preference-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .preference-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .preference-label {
+      font-weight: 500;
+      font-size: 0.9375rem;
+    }
+    
+    .preference-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--color-border);
+      border-radius: 26px;
+      transition: all 0.2s;
+    }
+    
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--color-primary);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(22px);
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .empty-state-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .empty-state-icon i {
+      width: 40px;
+      height: 40px;
+      color: var(--color-text-muted);
+    }
+    
+    .empty-state h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1024px) {
+      .notifications-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .notifications-sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/governance.html">← Governance</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="notifications-container">
+      <!-- Sidebar -->
+      <aside class="notifications-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-section-header">Filter by Type</div>
+          <div class="filter-list">
+            <div class="filter-item active">
+              <div class="filter-item-left">
+                <i data-lucide="inbox"></i>
+                <span class="filter-item-label">All</span>
+              </div>
+              <span class="filter-item-count">23</span>
+            </div>
+            <div class="filter-item">
+              <div class="filter-item-left">
+                <i data-lucide="at-sign"></i>
+                <span class="filter-item-label">Mentions</span>
+              </div>
+              <span class="filter-item-count">5</span>
+            </div>
+            <div class="filter-item">
+              <div class="filter-item-left">
+                <i data-lucide="vote"></i>
+                <span class="filter-item-label">Votes</span>
+              </div>
+              <span class="filter-item-count">3</span>
+            </div>
+            <div class="filter-item">
+              <div class="filter-item-left">
+                <i data-lucide="message-square"></i>
+                <span class="filter-item-label">Comments</span>
+              </div>
+              <span class="filter-item-count">8</span>
+            </div>
+            <div class="filter-item">
+              <div class="filter-item-left">
+                <i data-lucide="scan-search"></i>
+                <span class="filter-item-label">Reviews</span>
+              </div>
+              <span class="filter-item-count">4</span>
+            </div>
+            <div class="filter-item">
+              <div class="filter-item-left">
+                <i data-lucide="bell-ring"></i>
+                <span class="filter-item-label">Deadlines</span>
+              </div>
+              <span class="filter-item-count">3</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-section-header">Quick Actions</div>
+          <div class="quick-actions">
+            <button class="quick-action">
+              <i data-lucide="check-check"></i>
+              Mark all as read
+            </button>
+            <button class="quick-action">
+              <i data-lucide="archive"></i>
+              Archive all read
+            </button>
+            <button class="quick-action">
+              <i data-lucide="settings"></i>
+              Notification settings
+            </button>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="notifications-main">
+        <div class="notifications-header">
+          <h1>Notifications</h1>
+          <div class="notifications-actions">
+            <button class="btn btn-outline btn-sm">
+              <i data-lucide="filter"></i> Filter
+            </button>
+            <button class="btn btn-outline btn-sm">
+              <i data-lucide="check-check"></i> Mark all read
+            </button>
+          </div>
+        </div>
+        
+        <!-- Today -->
+        <div class="time-group">
+          <div class="time-group-header">
+            <span class="time-group-label">Today</span>
+            <div class="time-group-line"></div>
+          </div>
+          
+          <div class="notification-card unread" style="position: relative;">
+            <div class="notification-icon mention">
+              <i data-lucide="at-sign"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title"><strong>David Shapiro</strong> mentioned you in a comment</div>
+              <div class="notification-desc">"@Sarah great point about the data valuation methodology..."</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="file-text"></i> PROP-015</span>
+                <span class="notification-meta-item"><i data-lucide="message-square"></i> 3 replies</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">2 hours ago</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          
+          <div class="notification-card unread" style="position: relative;">
+            <div class="notification-icon deadline">
+              <i data-lucide="alert-circle"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title"><strong>Vote ending soon:</strong> Priority Ranking Q1 2026</div>
+              <div class="notification-desc">You have 6 hours left to submit your ranking</div>
+              <div class="notification-meta">
+                <span class="notification-badge urgent"><i data-lucide="clock" style="width: 10px; height: 10px;"></i> Urgent</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">3 hours ago</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon vote">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">Your vote was recorded on <strong>PROP-015</strong></div>
+              <div class="notification-desc">You voted "Approve" - Current consensus: 62% approve</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="users"></i> 89 total votes</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">5 hours ago</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon comment">
+              <i data-lucide="message-square"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title"><strong>Maria Kowalski</strong> replied to your comment</div>
+              <div class="notification-desc">"I'll add a reference to the Jaron Lanier research on data valuation."</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="file-text"></i> ADR-007</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">6 hours ago</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Yesterday -->
+        <div class="time-group">
+          <div class="time-group-header">
+            <span class="time-group-label">Yesterday</span>
+            <div class="time-group-line"></div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon review">
+              <i data-lucide="scan-search"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">Review requested on <strong>ADR-009: Expand Stakeholder Categories</strong></div>
+              <div class="notification-desc">Alexandra Lee requested your architectural review</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="git-branch"></i> 2 other reviewers</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">Yesterday</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon update">
+              <i data-lucide="refresh-cw"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title"><strong>ADR-007</strong> was updated to version 2.3</div>
+              <div class="notification-desc">David Shapiro added Data Dividends to Layer 3 section</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="plus"></i> 12 additions</span>
+                <span class="notification-meta-item"><i data-lucide="minus"></i> 3 deletions</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">Yesterday</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon achievement">
+              <i data-lucide="award"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">You earned the <strong>Thoughtful Reviewer</strong> badge!</div>
+              <div class="notification-desc">Completed 25 constructive reviews with helpful feedback</div>
+              <div class="notification-meta">
+                <span class="notification-badge new">New Badge</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">Yesterday</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- This Week -->
+        <div class="time-group">
+          <div class="time-group-header">
+            <span class="time-group-label">This Week</span>
+            <div class="time-group-line"></div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon vote">
+              <i data-lucide="vote"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title">New vote open: <strong>PROP-015: Data Dividends Integration</strong></div>
+              <div class="notification-desc">A proposal you commented on is now open for voting</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="clock"></i> 3 days remaining</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">3 days ago</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+          
+          <div class="notification-card">
+            <div class="notification-icon comment">
+              <i data-lucide="message-square"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-title"><strong>Thomas Chen</strong> started a discussion thread</div>
+              <div class="notification-desc">"Implementation complexity concerns for Data Dividends"</div>
+              <div class="notification-meta">
+                <span class="notification-meta-item"><i data-lucide="users"></i> 12 participants</span>
+              </div>
+            </div>
+            <div class="notification-actions">
+              <span class="notification-time">4 days ago</span>
+              <button class="notification-dismiss"><i data-lucide="x"></i></button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Preferences -->
+        <div class="preferences-panel">
+          <div class="preferences-header">
+            <h3>Notification Preferences</h3>
+            <button class="btn btn-outline btn-sm">
+              <i data-lucide="settings"></i> All Settings
+            </button>
+          </div>
+          <div class="preferences-grid">
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                  <i data-lucide="at-sign"></i>
+                </div>
+                <div>
+                  <div class="preference-label">Mentions</div>
+                  <div class="preference-desc">When someone mentions you</div>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                  <i data-lucide="vote"></i>
+                </div>
+                <div>
+                  <div class="preference-label">Vote Updates</div>
+                  <div class="preference-desc">New votes and results</div>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                  <i data-lucide="message-square"></i>
+                </div>
+                <div>
+                  <div class="preference-label">Comments</div>
+                  <div class="preference-desc">Replies and new comments</div>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="preference-item">
+              <div class="preference-info">
+                <div class="preference-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                  <i data-lucide="bell-ring"></i>
+                </div>
+                <div>
+                  <div class="preference-label">Deadlines</div>
+                  <div class="preference-desc">Upcoming vote deadlines</div>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    // Filter selection
+    document.querySelectorAll('.filter-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.filter-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    
+    // Dismiss notification
+    document.querySelectorAll('.notification-dismiss').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.notification-card');
+        card.style.opacity = '0';
+        card.style.transform = 'translateX(20px)';
+        setTimeout(() => card.remove(), 200);
+      });
+    });
+    
+    // Mark as read on click
+    document.querySelectorAll('.notification-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.remove('unread');
+      });
+    });
+  </script>
+</body>
+</html>

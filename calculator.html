@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Impact Calculator | Post-Labor Economics</title>
+  <meta name="description" content="Explore what post-labor economics could mean for your personal financial situation. Interactive calculator showing potential benefits.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/calculator.html">
+  <meta property="og:title" content="Personal Impact Calculator | Post-Labor Economics">
+  <meta property="og:description" content="What would L/0 mean for you? Calculate your potential benefits from UBI, sovereign wealth dividends, and more.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-calculator.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/calculator.html">
+  <meta name="twitter:title" content="Personal Impact Calculator | Post-Labor Economics">
+  <meta name="twitter:description" content="What would L/0 mean for you? Calculate your potential benefits from UBI, sovereign wealth dividends, and more.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-calculator.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .calc-hero {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(99, 102, 241, 0.15) 100%);
+      padding: 3rem 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .calc-hero h1 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .calc-hero p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Calculator Layout */
+    .calculator-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    /* Input Panel */
+    .calc-input-panel {
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+    
+    .calc-input-panel h2 {
+      margin: 0 0 1.5rem 0;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .calc-input-panel h2 i {
+      width: 24px;
+      height: 24px;
+      color: var(--color-accent);
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .form-group .hint {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    
+    .input-with-prefix {
+      display: flex;
+      align-items: stretch;
+    }
+    
+    .input-prefix {
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-right: none;
+      border-radius: 0.5rem 0 0 0.5rem;
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+    
+    .input-with-prefix .form-input {
+      border-radius: 0 0.5rem 0.5rem 0;
+    }
+    
+    .form-select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    
+    .range-container {
+      position: relative;
+    }
+    
+    .range-value {
+      position: absolute;
+      right: 0;
+      top: -0.25rem;
+      font-size: 0.875rem;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+    
+    .form-range {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      background: var(--color-bg-tertiary);
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+    
+    .form-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    /* Results Panel */
+    .calc-results-panel {
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      position: sticky;
+      top: 100px;
+    }
+    
+    .calc-results-panel h2 {
+      margin: 0 0 1.5rem 0;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .calc-results-panel h2 i {
+      width: 24px;
+      height: 24px;
+      color: var(--color-accent);
+    }
+    
+    /* Result Cards */
+    .result-card {
+      background: var(--color-bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--color-accent);
+    }
+    
+    .result-card.highlight {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+      border-left-color: #10b981;
+    }
+    
+    .result-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .result-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+    
+    .result-value.negative {
+      color: #ef4444;
+    }
+    
+    .result-value.positive {
+      color: #10b981;
+    }
+    
+    .result-detail {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 0.5rem;
+    }
+    
+    /* Breakdown */
+    .breakdown-section {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .breakdown-section h3 {
+      margin: 0 0 1rem 0;
+      font-size: 0.9rem;
+    }
+    
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+    
+    .breakdown-item .label {
+      color: var(--color-text-secondary);
+    }
+    
+    .breakdown-item .value {
+      font-weight: 600;
+    }
+    
+    .breakdown-item .value.positive {
+      color: #10b981;
+    }
+    
+    /* Scenarios */
+    .scenario-section {
+      margin-bottom: 3rem;
+    }
+    
+    .scenario-section h2 {
+      margin-bottom: 1.5rem;
+    }
+    
+    .scenario-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .scenario-tab {
+      padding: 0.625rem 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .scenario-tab:hover {
+      background: var(--color-bg-tertiary);
+    }
+    
+    .scenario-tab.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+    
+    .scenario-description {
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+    
+    .scenario-description h3 {
+      margin: 0 0 0.75rem 0;
+    }
+    
+    .scenario-description p {
+      color: var(--color-text-secondary);
+      margin: 0;
+      line-height: 1.7;
+    }
+    
+    /* Disclaimer */
+    .disclaimer {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 3rem;
+    }
+    
+    .disclaimer h4 {
+      margin: 0 0 0.5rem 0;
+      color: #f59e0b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .disclaimer h4 i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .disclaimer p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* CTA */
+    .calc-cta {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    
+    .calc-cta h3 {
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .calc-cta p {
+      color: var(--color-text-secondary);
+      margin: 0 0 1.5rem 0;
+    }
+    
+    @media (max-width: 900px) {
+      .calculator-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .calc-results-panel {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <span class="page-label">Interactive Tool</span>
+        <h1>Personal Impact Calculator</h1>
+        <p class="page-description">Explore what post-labor economics could mean for you</p>
+      </div>
+      
+      <div class="calc-hero">
+        <h1>🧮 What Would L/0 Mean for You?</h1>
+        <p>
+          Enter your current situation to see how different post-labor economic mechanisms 
+          could affect your income and financial security.
+        </p>
+      </div>
+      
+      <!-- Calculator -->
+      <div class="calculator-container">
+        <!-- Input Panel -->
+        <div class="calc-input-panel">
+          <h2><i data-lucide="sliders"></i> Your Situation</h2>
+          
+          <div class="form-group">
+            <label for="income">Current Annual Income</label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="income" class="form-input" value="50000" min="0" max="1000000" step="1000" onchange="calculate()">
+            </div>
+            <p class="hint">Your total household income before taxes</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="household">Household Size</label>
+            <select id="household" class="form-select" onchange="calculate()">
+              <option value="1">1 person (single)</option>
+              <option value="2" selected>2 people</option>
+              <option value="3">3 people</option>
+              <option value="4">4 people</option>
+              <option value="5">5+ people</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="healthcare">Annual Healthcare Costs</label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="healthcare" class="form-input" value="6000" min="0" max="100000" step="500" onchange="calculate()">
+            </div>
+            <p class="hint">Premiums, copays, deductibles, prescriptions</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="housing">Monthly Housing Cost</label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="housing" class="form-input" value="1500" min="0" max="10000" step="100" onchange="calculate()">
+            </div>
+            <p class="hint">Rent or mortgage payment</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Job Automation Risk</label>
+            <div class="range-container">
+              <span class="range-value" id="riskValue">50%</span>
+              <input type="range" id="risk" class="form-range" value="50" min="0" max="100" step="5" onchange="updateRisk(); calculate()">
+            </div>
+            <p class="hint">Estimated likelihood your job could be automated in 10 years</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="savings">Current Savings</label>
+            <div class="input-with-prefix">
+              <span class="input-prefix">$</span>
+              <input type="number" id="savings" class="form-input" value="10000" min="0" max="10000000" step="1000" onchange="calculate()">
+            </div>
+            <p class="hint">Total savings and investments</p>
+          </div>
+        </div>
+        
+        <!-- Results Panel -->
+        <div class="calc-results-panel">
+          <h2><i data-lucide="bar-chart-3"></i> Your Results</h2>
+          
+          <div class="result-card highlight">
+            <h3>Potential Additional Annual Income</h3>
+            <div class="result-value positive" id="totalBenefit">+$18,000</div>
+            <p class="result-detail">From combined post-labor mechanisms</p>
+          </div>
+          
+          <div class="result-card">
+            <h3>Effective Income Change</h3>
+            <div class="result-value" id="incomeChange">+36%</div>
+            <p class="result-detail">Compared to current situation</p>
+          </div>
+          
+          <div class="result-card">
+            <h3>Financial Security Score</h3>
+            <div class="result-value" id="securityScore">8.2/10</div>
+            <p class="result-detail">Based on income stability and safety net</p>
+          </div>
+          
+          <div class="breakdown-section">
+            <h3>📊 Income Breakdown</h3>
+            <div class="breakdown-item">
+              <span class="label">Universal Basic Income</span>
+              <span class="value positive" id="ubiValue">+$12,000/yr</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="label">Sovereign Wealth Dividend</span>
+              <span class="value positive" id="swfValue">+$2,400/yr</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="label">Healthcare Savings</span>
+              <span class="value positive" id="healthcareValue">+$6,000/yr</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="label">Data Dividend</span>
+              <span class="value positive" id="dataValue">+$600/yr</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Scenarios -->
+      <div class="scenario-section">
+        <h2>🔮 Explore Scenarios</h2>
+        
+        <div class="scenario-tabs">
+          <button class="scenario-tab active" onclick="setScenario('current')">Current System</button>
+          <button class="scenario-tab" onclick="setScenario('minimal')">Minimal L/0</button>
+          <button class="scenario-tab" onclick="setScenario('moderate')">Moderate L/0</button>
+          <button class="scenario-tab" onclick="setScenario('full')">Full L/0</button>
+        </div>
+        
+        <div class="scenario-description" id="scenarioDescription">
+          <h3 id="scenarioTitle">Current System</h3>
+          <p id="scenarioText">
+            Today's economy: Income primarily from wages. Job loss means income loss. 
+            Healthcare tied to employment. No universal safety net. High financial 
+            anxiety about automation.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <h4><i data-lucide="alert-triangle"></i> Important Disclaimer</h4>
+        <p>
+          This calculator provides illustrative estimates only. Actual policy implementations 
+          would vary significantly based on political decisions, funding mechanisms, and 
+          economic conditions. The numbers shown are based on proposals discussed in academic 
+          literature and policy debates, not guaranteed outcomes. This tool is for educational 
+          purposes to help visualize how different mechanisms might work together.
+        </p>
+      </div>
+      
+      <!-- CTA -->
+      <div class="calc-cta">
+        <h3>Want to Make This Real?</h3>
+        <p>Join the movement working to build these systems.</p>
+        <div class="cta-actions">
+          <a href="/get-involved.html" class="btn btn-primary">
+            <i data-lucide="arrow-right"></i>
+            Get Involved
+          </a>
+          <a href="/prosperity.html" class="btn btn-secondary">
+            <i data-lucide="layers"></i>
+            Learn About the Pyramid
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // Mobile nav
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+    
+    // Scenario data
+    const scenarios = {
+      current: {
+        title: 'Current System',
+        text: 'Today\'s economy: Income primarily from wages. Job loss means income loss. Healthcare tied to employment. No universal safety net. High financial anxiety about automation.',
+        ubi: 0,
+        swf: 0,
+        healthcare: 0,
+        data: 0
+      },
+      minimal: {
+        title: 'Minimal L/0 Implementation',
+        text: 'First steps: A modest UBI of $500/month, small sovereign wealth fund dividends, and partial healthcare subsidies. Similar to what Alaska provides today, scaled nationally.',
+        ubi: 6000,
+        swf: 1200,
+        healthcare: 0.3,
+        data: 200
+      },
+      moderate: {
+        title: 'Moderate L/0 Implementation',
+        text: 'Substantial progress: $1,000/month UBI, growing sovereign wealth dividends, universal basic healthcare, and data dividend programs. Similar to proposals from Andrew Yang.',
+        ubi: 12000,
+        swf: 2400,
+        healthcare: 1.0,
+        data: 600
+      },
+      full: {
+        title: 'Full L/0 Implementation',
+        text: 'Complete transition: $2,000/month UBI, robust sovereign wealth funds generating significant returns, universal healthcare, housing support, and comprehensive data dividends.',
+        ubi: 24000,
+        swf: 6000,
+        healthcare: 1.0,
+        data: 1200
+      }
+    };
+    
+    let currentScenario = 'moderate';
+    
+    function updateRisk() {
+      const risk = document.getElementById('risk').value;
+      document.getElementById('riskValue').textContent = risk + '%';
+    }
+    
+    function calculate() {
+      const income = parseFloat(document.getElementById('income').value) || 0;
+      const household = parseInt(document.getElementById('household').value) || 1;
+      const healthcare = parseFloat(document.getElementById('healthcare').value) || 0;
+      const housing = parseFloat(document.getElementById('housing').value) || 0;
+      const risk = parseFloat(document.getElementById('risk').value) || 0;
+      const savings = parseFloat(document.getElementById('savings').value) || 0;
+      
+      const scenario = scenarios[currentScenario];
+      
+      // Calculate benefits
+      const ubiAmount = scenario.ubi * household;
+      const swfAmount = scenario.swf * household;
+      const healthcareSavings = healthcare * scenario.healthcare;
+      const dataAmount = scenario.data * household;
+      
+      const totalBenefit = ubiAmount + swfAmount + healthcareSavings + dataAmount;
+      const incomeChangePercent = income > 0 ? ((totalBenefit / income) * 100).toFixed(0) : 0;
+      
+      // Security score (simplified calculation)
+      const incomeStability = currentScenario === 'current' ? (100 - risk) / 100 : 0.9;
+      const savingsRatio = Math.min(savings / (income || 1), 1);
+      const benefitRatio = Math.min(totalBenefit / 30000, 1);
+      const securityScore = ((incomeStability * 0.4 + savingsRatio * 0.3 + benefitRatio * 0.3) * 10).toFixed(1);
+      
+      // Update display
+      document.getElementById('totalBenefit').textContent = totalBenefit > 0 ? '+$' + totalBenefit.toLocaleString() : '$0';
+      document.getElementById('incomeChange').textContent = totalBenefit > 0 ? '+' + incomeChangePercent + '%' : '0%';
+      document.getElementById('securityScore').textContent = securityScore + '/10';
+      
+      document.getElementById('ubiValue').textContent = ubiAmount > 0 ? '+$' + ubiAmount.toLocaleString() + '/yr' : '$0/yr';
+      document.getElementById('swfValue').textContent = swfAmount > 0 ? '+$' + swfAmount.toLocaleString() + '/yr' : '$0/yr';
+      document.getElementById('healthcareValue').textContent = healthcareSavings > 0 ? '+$' + healthcareSavings.toLocaleString() + '/yr' : '$0/yr';
+      document.getElementById('dataValue').textContent = dataAmount > 0 ? '+$' + dataAmount.toLocaleString() + '/yr' : '$0/yr';
+      
+      // Update colors
+      const totalEl = document.getElementById('totalBenefit');
+      const changeEl = document.getElementById('incomeChange');
+      
+      if (totalBenefit > 0) {
+        totalEl.classList.add('positive');
+        totalEl.classList.remove('negative');
+        changeEl.classList.add('positive');
+        changeEl.classList.remove('negative');
+      } else {
+        totalEl.classList.remove('positive', 'negative');
+        changeEl.classList.remove('positive', 'negative');
+      }
+    }
+    
+    function setScenario(scenario) {
+      currentScenario = scenario;
+      
+      // Update tabs
+      document.querySelectorAll('.scenario-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Update description
+      document.getElementById('scenarioTitle').textContent = scenarios[scenario].title;
+      document.getElementById('scenarioText').textContent = scenarios[scenario].text;
+      
+      // Recalculate
+      calculate();
+    }
+    
+    // Initial calculation
+    calculate();
+  </script>
+</body>
+</html>

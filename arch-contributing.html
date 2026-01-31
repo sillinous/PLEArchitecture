@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contributing to Architecture | Post-Labor Economics</title>
+  <meta name="description" content="How to contribute to the Post-Labor Economics architecture. Proposal process, ADR templates, and community guidelines.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .page-hero {
+      background: linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, transparent 100%);
+      padding: calc(var(--header-height) + 4rem) 0 4rem;
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb a { color: var(--color-text-secondary); }
+    
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .page-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 700px;
+    }
+    
+    .content-section {
+      padding: 4rem 0;
+    }
+    
+    .content-section:nth-child(even) {
+      background: var(--color-bg-secondary);
+    }
+    
+    .section-header {
+      margin-bottom: 2rem;
+    }
+    
+    .section-header h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .section-header p {
+      color: var(--color-text-secondary);
+      max-width: 700px;
+    }
+    
+    /* Process steps */
+    .process-timeline {
+      position: relative;
+      padding-left: 3rem;
+    }
+    
+    .process-timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+    
+    .process-step {
+      position: relative;
+      padding-bottom: 2rem;
+    }
+    
+    .process-step:last-child {
+      padding-bottom: 0;
+    }
+    
+    .step-marker {
+      position: absolute;
+      left: -3rem;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--step-color, var(--color-bg-tertiary));
+      border: 2px solid var(--color-bg-primary);
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: white;
+      z-index: 1;
+    }
+    
+    .process-step h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .process-step p {
+      color: var(--color-text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .step-details {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-size: 0.9375rem;
+    }
+    
+    .step-details ul {
+      margin-left: 1.25rem;
+    }
+    
+    .step-details li {
+      list-style: disc;
+      margin-bottom: 0.375rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Ways to contribute */
+    .contribute-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .contribute-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+    
+    .contribute-card:hover {
+      border-color: var(--color-border-light);
+      transform: translateY(-2px);
+    }
+    
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--icon-bg, rgba(139, 92, 246, 0.15));
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      color: var(--icon-color, #a78bfa);
+    }
+    
+    .card-icon i { width: 24px; height: 24px; }
+    
+    .contribute-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .contribute-card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 1rem;
+    }
+    
+    .contribute-card .btn {
+      width: 100%;
+    }
+    
+    /* ADR Template */
+    .template-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .template-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .template-header h3 {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .template-body {
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+      white-space: pre-wrap;
+    }
+    
+    .template-body .field {
+      color: var(--color-accent);
+    }
+    
+    .template-body .comment {
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+    
+    /* Guidelines */
+    .guidelines-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .guideline-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+    }
+    
+    .guideline-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 0.5rem;
+      color: #34d399;
+      flex-shrink: 0;
+    }
+    
+    .guideline-icon i { width: 20px; height: 20px; }
+    
+    .guideline-content h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .guideline-content p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    /* CTA */
+    .cta-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
+      text-align: center;
+    }
+    
+    .cta-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .cta-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-content p {
+      color: var(--color-text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation"><i data-lucide="menu"></i></button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/governance.html">Governance <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/arch-mission.html">Mission & Vision</a></li>
+              <li><a href="/arch-principles.html">Principles</a></li>
+              <li><a href="/arch-decisions.html">Decision Records</a></li>
+              <li><a href="/arch-contributing.html">Contributing</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">Join</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/">Home</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <a href="/governance.html">Governance</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <span>Contributing</span>
+        </nav>
+        <h1 class="page-title">Contributing to the Architecture</h1>
+        <p class="page-subtitle">
+          The L/0 architecture is community-built. Here's how you can propose changes, 
+          provide feedback, and help shape the frameworks that will define our post-labor future.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Ways to Contribute -->
+    <section class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Ways to Contribute</h2>
+          <p>Whether you have a major framework proposal or just want to fix a typo, there's a place for your contribution.</p>
+        </div>
+        
+        <div class="contribute-grid">
+          <div class="contribute-card" style="--icon-bg: rgba(16, 185, 129, 0.15); --icon-color: #34d399;">
+            <div class="card-icon"><i data-lucide="message-circle"></i></div>
+            <h3>Join Discussion</h3>
+            <p>Participate in community discussions about proposed changes, share your perspective, and help refine ideas.</p>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline">
+              <i data-lucide="users" style="width: 16px; height: 16px;"></i> Skool Community
+            </a>
+          </div>
+          
+          <div class="contribute-card" style="--icon-bg: rgba(99, 102, 241, 0.15); --icon-color: #818cf8;">
+            <div class="card-icon"><i data-lucide="lightbulb"></i></div>
+            <h3>Propose Changes</h3>
+            <p>Have an idea for improving a framework, adding a concept, or changing a principle? Submit a proposal.</p>
+            <a href="#process" class="btn btn-outline">
+              <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i> See Process
+            </a>
+          </div>
+          
+          <div class="contribute-card" style="--icon-bg: rgba(245, 158, 11, 0.15); --icon-color: #fbbf24;">
+            <div class="card-icon"><i data-lucide="book-open"></i></div>
+            <h3>Improve Documentation</h3>
+            <p>Help make our frameworks clearer, fix errors, add examples, or translate content for global audiences.</p>
+            <a href="https://github.com/postlaboreconomics" target="_blank" class="btn btn-outline">
+              <i data-lucide="github" style="width: 16px; height: 16px;"></i> GitHub
+            </a>
+          </div>
+          
+          <div class="contribute-card" style="--icon-bg: rgba(236, 72, 153, 0.15); --icon-color: #f472b6;">
+            <div class="card-icon"><i data-lucide="search"></i></div>
+            <h3>Research & Evidence</h3>
+            <p>Share research, data, or real-world examples that support or challenge our frameworks.</p>
+            <a href="/research.html" class="btn btn-outline">
+              <i data-lucide="external-link" style="width: 16px; height: 16px;"></i> Research Hub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Process -->
+    <section class="content-section" id="process">
+      <div class="container">
+        <div class="section-header">
+          <h2>The ADR Process</h2>
+          <p>Significant architectural changes follow our Architecture Decision Record (ADR) process to ensure transparency and community input.</p>
+        </div>
+        
+        <div class="process-timeline">
+          <div class="process-step">
+            <div class="step-marker" style="--step-color: #6366f1;">1</div>
+            <h3>Propose</h3>
+            <p>Start a discussion in Skool or open a GitHub issue describing your idea.</p>
+            <div class="step-details">
+              <ul>
+                <li>Describe the problem or opportunity</li>
+                <li>Explain your proposed solution</li>
+                <li>Note any alternatives you considered</li>
+                <li>Tag relevant community members for feedback</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="process-step">
+            <div class="step-marker" style="--step-color: #06b6d4;">2</div>
+            <h3>Discuss</h3>
+            <p>Community members provide feedback, ask questions, and suggest refinements (2 weeks minimum).</p>
+            <div class="step-details">
+              <ul>
+                <li>Respond to questions and concerns</li>
+                <li>Incorporate feedback into your proposal</li>
+                <li>Build consensus where possible</li>
+                <li>Document dissenting views</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="process-step">
+            <div class="step-marker" style="--step-color: #f59e0b;">3</div>
+            <h3>Draft ADR</h3>
+            <p>If there's sufficient support, create a formal Architecture Decision Record.</p>
+            <div class="step-details">
+              <ul>
+                <li>Use the ADR template (see below)</li>
+                <li>Include context, decision, and consequences</li>
+                <li>Reference the discussion thread</li>
+                <li>Status: "Proposed"</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="process-step">
+            <div class="step-marker" style="--step-color: #ec4899;">4</div>
+            <h3>Review</h3>
+            <p>Architecture stewards review the ADR for alignment with principles and overall coherence.</p>
+            <div class="step-details">
+              <ul>
+                <li>Check alignment with mission and principles</li>
+                <li>Ensure no conflicts with existing decisions</li>
+                <li>Verify community consensus</li>
+                <li>May request revisions</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="process-step">
+            <div class="step-marker" style="--step-color: #10b981;">5</div>
+            <h3>Adopt</h3>
+            <p>If approved, the ADR is merged and the change is implemented.</p>
+            <div class="step-details">
+              <ul>
+                <li>Status changes to "Adopted"</li>
+                <li>Published on the governance site</li>
+                <li>Relevant documentation updated</li>
+                <li>Announced to community</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- ADR Template -->
+    <section class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>ADR Template</h2>
+          <p>Use this template when creating a formal Architecture Decision Record.</p>
+        </div>
+        
+        <div class="template-section">
+          <div class="template-header">
+            <h3><i data-lucide="file-text" style="width: 18px; height: 18px;"></i> ADR-XXX: [Title]</h3>
+            <button class="btn btn-sm btn-outline" onclick="copyTemplate()">
+              <i data-lucide="copy" style="width: 14px; height: 14px;"></i> Copy
+            </button>
+          </div>
+          <div class="template-body" id="adr-template">
+<span class="field"># ADR-XXX: [Decision Title]</span>
+
+<span class="field">## Status</span>
+Proposed | Adopted | Deprecated | Superseded by ADR-YYY
+
+<span class="field">## Date</span>
+YYYY-MM-DD
+
+<span class="field">## Context</span>
+<span class="comment">What is the issue we're addressing? What forces are at play?</span>
+
+<span class="field">## Decision</span>
+<span class="comment">What is the change we're proposing or have decided?</span>
+
+<span class="field">## Alternatives Considered</span>
+<span class="comment">What other options were evaluated? Why were they rejected?</span>
+
+<span class="field">## Consequences</span>
+<span class="comment">What are the results of this decision? Both positive and negative.</span>
+
+<span class="field">## References</span>
+<span class="comment">Links to discussion threads, related ADRs, external resources.</span></div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Guidelines -->
+    <section class="content-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Contribution Guidelines</h2>
+          <p>Please keep these principles in mind when contributing.</p>
+        </div>
+        
+        <div class="guidelines-list">
+          <div class="guideline-item">
+            <div class="guideline-icon"><i data-lucide="heart"></i></div>
+            <div class="guideline-content">
+              <h4>Be Respectful</h4>
+              <p>Engage constructively, assume good faith, and respect diverse perspectives. We're building something that affects everyone.</p>
+            </div>
+          </div>
+          
+          <div class="guideline-item">
+            <div class="guideline-icon"><i data-lucide="book"></i></div>
+            <div class="guideline-content">
+              <h4>Ground in Evidence</h4>
+              <p>Support proposals with research, data, or real-world examples where possible. Link to sources.</p>
+            </div>
+          </div>
+          
+          <div class="guideline-item">
+            <div class="guideline-icon"><i data-lucide="scale"></i></div>
+            <div class="guideline-content">
+              <h4>Align with Principles</h4>
+              <p>Proposals should align with our established architecture principles. If you disagree with a principle, propose changing it first.</p>
+            </div>
+          </div>
+          
+          <div class="guideline-item">
+            <div class="guideline-icon"><i data-lucide="globe"></i></div>
+            <div class="guideline-content">
+              <h4>Think Globally</h4>
+              <p>Consider how proposals apply across different cultures, economies, and political systems. Avoid assumptions based on one country.</p>
+            </div>
+          </div>
+          
+          <div class="guideline-item">
+            <div class="guideline-icon"><i data-lucide="git-merge"></i></div>
+            <div class="guideline-content">
+              <h4>Build on What Exists</h4>
+              <p>Check existing ADRs and discussions before proposing. Your idea might already be in progress or previously considered.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>Ready to Contribute?</h2>
+          <p>The architecture of our post-labor future is being written now. Your voice matters.</p>
+          <div class="cta-buttons">
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-lg">
+              <i data-lucide="users" style="width: 20px; height: 20px;"></i> Join the Community
+            </a>
+            <a href="/arch-decisions.html" class="btn btn-outline btn-lg">
+              <i data-lucide="file-text" style="width: 20px; height: 20px;"></i> View Active Proposals
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+    });
+    
+    function copyTemplate() {
+      const template = document.getElementById('adr-template').innerText;
+      navigator.clipboard.writeText(template).then(() => {
+        alert('Template copied to clipboard!');
+      });
+    }
+  </script>
+</body>
+</html>

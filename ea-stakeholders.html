@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stakeholder Map | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Catalog of stakeholders, their concerns, and their relationship to the architecture.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .stake-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .stake-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .stake-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* View Toggle */
+    .view-toggle {
+      display: flex;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+      margin-bottom: 2rem;
+    }
+    
+    .view-btn {
+      padding: 0.625rem 1rem;
+      background: transparent;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.15s;
+    }
+    
+    .view-btn:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .view-btn.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .view-btn i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Power/Interest Matrix */
+    .matrix-container {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .matrix-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .matrix-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 40px 1fr 1fr;
+      grid-template-rows: 1fr 1fr 40px;
+      gap: 0.5rem;
+      height: 500px;
+    }
+    
+    .matrix-y-label {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      grid-row: 1 / 3;
+    }
+    
+    .matrix-quadrant {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quadrant-label {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+    }
+    
+    .quadrant-strategy {
+      position: absolute;
+      bottom: 0.75rem;
+      right: 0.75rem;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+    }
+    
+    .quadrant-stakeholders {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-top: 2rem;
+      justify-content: center;
+      align-content: center;
+      height: 100%;
+    }
+    
+    .stake-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .stake-chip:hover {
+      border-color: var(--color-primary);
+      transform: scale(1.05);
+    }
+    
+    .stake-chip-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .matrix-x-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      grid-column: 2 / 4;
+    }
+    
+    .matrix-corner {
+      /* Empty corner */
+    }
+    
+    /* Stakeholder List */
+    .stake-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1rem;
+    }
+    
+    .stake-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .stake-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    
+    .stake-card-header {
+      padding: 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .stake-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    
+    .stake-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .stake-type {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.375rem;
+    }
+    
+    .stake-type.internal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .stake-type.external { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .stake-type.partner { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    
+    .stake-name {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stake-role {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .stake-card-body {
+      padding: 0 1.25rem 1.25rem;
+    }
+    
+    .stake-section {
+      margin-bottom: 1rem;
+    }
+    
+    .stake-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .stake-section-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.375rem;
+    }
+    
+    .stake-concerns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    
+    .concern-tag {
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .stake-metrics {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .stake-metric {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+    }
+    
+    .stake-metric-value {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    
+    .stake-metric-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .stake-metric-value.high { color: #ec4899; }
+    .stake-metric-value.medium { color: #f59e0b; }
+    .stake-metric-value.low { color: #10b981; }
+    
+    /* Stakeholder Detail Panel */
+    .stake-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    
+    .stake-modal.open {
+      display: flex;
+    }
+    
+    .stake-modal-content {
+      background: var(--color-bg-primary);
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stake-modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .stake-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .modal-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .stake-modal-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .stake-modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-bg-secondary);
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stake-modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .modal-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .modal-section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .modal-section-content {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .concern-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .concern-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+    }
+    
+    .concern-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .concern-icon i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .concern-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Related Architecture */
+    .related-arch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+    }
+    
+    .arch-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.375rem 0.625rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .arch-tag i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    @media (max-width: 1024px) {
+      .matrix-grid {
+        height: 400px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .stake-list {
+        grid-template-columns: 1fr;
+      }
+      
+      .matrix-grid {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="stake-header">
+      <div>
+        <h1>Stakeholder Map</h1>
+        <p class="stake-header-desc">Understand who is affected by the architecture, their concerns, and how to engage them effectively.</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> Add Stakeholder</button>
+    </div>
+    
+    <div class="view-toggle">
+      <button class="view-btn active"><i data-lucide="grid-3x3"></i> Matrix View</button>
+      <button class="view-btn"><i data-lucide="list"></i> List View</button>
+      <button class="view-btn"><i data-lucide="git-branch"></i> Relationship View</button>
+    </div>
+    
+    <!-- Power/Interest Matrix -->
+    <div class="matrix-container">
+      <div class="matrix-header">
+        <h2 class="matrix-title">Power/Interest Matrix</h2>
+        <button class="btn btn-outline btn-sm"><i data-lucide="download"></i> Export</button>
+      </div>
+      <div class="matrix-grid">
+        <div class="matrix-y-label">POWER →</div>
+        
+        <div class="matrix-quadrant" style="background: rgba(236, 72, 153, 0.05);">
+          <span class="quadrant-label">Keep Satisfied</span>
+          <span class="quadrant-strategy">Monitor closely</span>
+          <div class="quadrant-stakeholders">
+            <div class="stake-chip" onclick="openStakeModal()">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">DS</span>
+              <span>David Shapiro</span>
+            </div>
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6);">AB</span>
+              <span>Arch Board</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="matrix-quadrant" style="background: rgba(99, 102, 241, 0.05);">
+          <span class="quadrant-label">Manage Closely</span>
+          <span class="quadrant-strategy">Key players</span>
+          <div class="quadrant-stakeholders">
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);">CT</span>
+              <span>Core Team</span>
+            </div>
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">WL</span>
+              <span>WG Leads</span>
+            </div>
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #06b6d4, #22d3ee);">ST</span>
+              <span>Stewards</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="matrix-quadrant" style="background: rgba(16, 185, 129, 0.05);">
+          <span class="quadrant-label">Monitor</span>
+          <span class="quadrant-strategy">Minimal effort</span>
+          <div class="quadrant-stakeholders">
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #a855f7, #c084fc);">GP</span>
+              <span>General Public</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="matrix-quadrant" style="background: rgba(245, 158, 11, 0.05);">
+          <span class="quadrant-label">Keep Informed</span>
+          <span class="quadrant-strategy">Regular updates</span>
+          <div class="quadrant-stakeholders">
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);">CM</span>
+              <span>Community</span>
+            </div>
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a855f7);">PM</span>
+              <span>Policymakers</span>
+            </div>
+            <div class="stake-chip">
+              <span class="stake-chip-avatar" style="background: linear-gradient(135deg, #14b8a6, #2dd4bf);">AC</span>
+              <span>Academics</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="matrix-corner"></div>
+        <div class="matrix-x-label">INTEREST →</div>
+      </div>
+    </div>
+    
+    <!-- Stakeholder Cards -->
+    <div class="stake-list">
+      <div class="stake-card" onclick="openStakeModal()">
+        <div class="stake-card-header">
+          <div class="stake-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">DS</div>
+          <div class="stake-info">
+            <span class="stake-type internal">Internal</span>
+            <h3 class="stake-name">David Shapiro</h3>
+            <span class="stake-role">Founder & Vision Keeper</span>
+          </div>
+        </div>
+        <div class="stake-card-body">
+          <div class="stake-section">
+            <div class="stake-section-label">Key Concerns</div>
+            <div class="stake-concerns">
+              <span class="concern-tag">Movement Vision</span>
+              <span class="concern-tag">Strategic Direction</span>
+              <span class="concern-tag">Public Messaging</span>
+            </div>
+          </div>
+          <div class="stake-section">
+            <div class="stake-metrics">
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Power</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Interest</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value" style="color: var(--color-primary);">High</div>
+                <div class="stake-metric-label">Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stake-card">
+        <div class="stake-card-header">
+          <div class="stake-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);">CT</div>
+          <div class="stake-info">
+            <span class="stake-type internal">Internal</span>
+            <h3 class="stake-name">Core Team</h3>
+            <span class="stake-role">Leadership & Operations</span>
+          </div>
+        </div>
+        <div class="stake-card-body">
+          <div class="stake-section">
+            <div class="stake-section-label">Key Concerns</div>
+            <div class="stake-concerns">
+              <span class="concern-tag">Operational Efficiency</span>
+              <span class="concern-tag">Team Coordination</span>
+              <span class="concern-tag">Resource Allocation</span>
+            </div>
+          </div>
+          <div class="stake-section">
+            <div class="stake-metrics">
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Power</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Interest</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value" style="color: var(--color-primary);">High</div>
+                <div class="stake-metric-label">Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stake-card">
+        <div class="stake-card-header">
+          <div class="stake-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);">CM</div>
+          <div class="stake-info">
+            <span class="stake-type internal">Internal</span>
+            <h3 class="stake-name">Community Members</h3>
+            <span class="stake-role">Active Participants (847)</span>
+          </div>
+        </div>
+        <div class="stake-card-body">
+          <div class="stake-section">
+            <div class="stake-section-label">Key Concerns</div>
+            <div class="stake-concerns">
+              <span class="concern-tag">Accessibility</span>
+              <span class="concern-tag">Participation</span>
+              <span class="concern-tag">Voice in Decisions</span>
+            </div>
+          </div>
+          <div class="stake-section">
+            <div class="stake-metrics">
+              <div class="stake-metric">
+                <div class="stake-metric-value low">Low</div>
+                <div class="stake-metric-label">Power</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Interest</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value medium">Med</div>
+                <div class="stake-metric-label">Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stake-card">
+        <div class="stake-card-header">
+          <div class="stake-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a855f7);">PM</div>
+          <div class="stake-info">
+            <span class="stake-type external">External</span>
+            <h3 class="stake-name">Policymakers</h3>
+            <span class="stake-role">Government & Legislative</span>
+          </div>
+        </div>
+        <div class="stake-card-body">
+          <div class="stake-section">
+            <div class="stake-section-label">Key Concerns</div>
+            <div class="stake-concerns">
+              <span class="concern-tag">Evidence-Based</span>
+              <span class="concern-tag">Feasibility</span>
+              <span class="concern-tag">Political Viability</span>
+            </div>
+          </div>
+          <div class="stake-section">
+            <div class="stake-metrics">
+              <div class="stake-metric">
+                <div class="stake-metric-value low">Low</div>
+                <div class="stake-metric-label">Power</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value medium">Med</div>
+                <div class="stake-metric-label">Interest</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stake-card">
+        <div class="stake-card-header">
+          <div class="stake-avatar" style="background: linear-gradient(135deg, #14b8a6, #2dd4bf);">AC</div>
+          <div class="stake-info">
+            <span class="stake-type partner">Partner</span>
+            <h3 class="stake-name">Academic Partners</h3>
+            <span class="stake-role">Research Collaborators</span>
+          </div>
+        </div>
+        <div class="stake-card-body">
+          <div class="stake-section">
+            <div class="stake-section-label">Key Concerns</div>
+            <div class="stake-concerns">
+              <span class="concern-tag">Research Quality</span>
+              <span class="concern-tag">Data Access</span>
+              <span class="concern-tag">Attribution</span>
+            </div>
+          </div>
+          <div class="stake-section">
+            <div class="stake-metrics">
+              <div class="stake-metric">
+                <div class="stake-metric-value low">Low</div>
+                <div class="stake-metric-label">Power</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value medium">Med</div>
+                <div class="stake-metric-label">Interest</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value medium">Med</div>
+                <div class="stake-metric-label">Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="stake-card">
+        <div class="stake-card-header">
+          <div class="stake-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">WL</div>
+          <div class="stake-info">
+            <span class="stake-type internal">Internal</span>
+            <h3 class="stake-name">Working Group Leads</h3>
+            <span class="stake-role">Domain Leadership (12)</span>
+          </div>
+        </div>
+        <div class="stake-card-body">
+          <div class="stake-section">
+            <div class="stake-section-label">Key Concerns</div>
+            <div class="stake-concerns">
+              <span class="concern-tag">Group Autonomy</span>
+              <span class="concern-tag">Tools & Resources</span>
+              <span class="concern-tag">Cross-WG Coordination</span>
+            </div>
+          </div>
+          <div class="stake-section">
+            <div class="stake-metrics">
+              <div class="stake-metric">
+                <div class="stake-metric-value medium">Med</div>
+                <div class="stake-metric-label">Power</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Interest</div>
+              </div>
+              <div class="stake-metric">
+                <div class="stake-metric-value high">High</div>
+                <div class="stake-metric-label">Influence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Stakeholder Detail Modal -->
+  <div class="stake-modal" id="stake-modal">
+    <div class="stake-modal-content">
+      <div class="stake-modal-header">
+        <div class="stake-modal-title">
+          <div class="modal-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">DS</div>
+          <div>
+            <h2 class="stake-modal-name">David Shapiro</h2>
+            <span class="stake-role">Founder & Vision Keeper</span>
+          </div>
+        </div>
+        <button class="stake-modal-close" onclick="closeStakeModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="stake-modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">Description</div>
+          <div class="modal-section-content">
+            Founder and primary vision keeper of the Post-Labor Economics movement. Responsible for strategic direction, public representation, and maintaining alignment with core movement values.
+          </div>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Key Concerns</div>
+          <div class="concern-list">
+            <div class="concern-item">
+              <div class="concern-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;"><i data-lucide="eye"></i></div>
+              <div class="concern-text">Movement vision remains coherent and inspiring across all initiatives</div>
+            </div>
+            <div class="concern-item">
+              <div class="concern-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i data-lucide="compass"></i></div>
+              <div class="concern-text">Strategic direction aligns with post-labor economic theory</div>
+            </div>
+            <div class="concern-item">
+              <div class="concern-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i data-lucide="megaphone"></i></div>
+              <div class="concern-text">Public messaging is consistent and effective</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Related Architecture</div>
+          <div class="related-arch">
+            <span class="arch-tag"><i data-lucide="target"></i> Vision Statement</span>
+            <span class="arch-tag"><i data-lucide="compass"></i> Mission</span>
+            <span class="arch-tag"><i data-lucide="scale"></i> All Principles</span>
+            <span class="arch-tag"><i data-lucide="route"></i> All Strategies</span>
+            <span class="arch-tag"><i data-lucide="eye"></i> Public Viewpoint</span>
+          </div>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Engagement Strategy</div>
+          <div class="modal-section-content">
+            <strong>Strategy:</strong> Manage Closely<br><br>
+            Involve directly in all major architecture decisions. Ensure strategic alignment through regular architecture reviews. Provide executive summaries of all significant changes.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    
+    function openStakeModal() {
+      document.getElementById('stake-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+    
+    function closeStakeModal() {
+      document.getElementById('stake-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    document.getElementById('stake-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('stake-modal')) closeStakeModal();
+    });
+  </script>
+</body>
+</html>

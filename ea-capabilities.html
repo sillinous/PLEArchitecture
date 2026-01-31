@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capability Model | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Business capability model defining what the PLE organization needs to do to achieve its objectives.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .cap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .cap-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .cap-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    .cap-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    /* View Controls */
+    .view-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .view-tabs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .view-tab {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .view-tab:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .view-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    .view-tab i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .heat-legend {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .heat-scale {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .heat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .heat-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    
+    .heat-dot.level-1 { background: #ef4444; }
+    .heat-dot.level-2 { background: #f59e0b; }
+    .heat-dot.level-3 { background: #fbbf24; }
+    .heat-dot.level-4 { background: #84cc16; }
+    .heat-dot.level-5 { background: #10b981; }
+    
+    /* Capability Map */
+    .capability-map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    /* Level 1 Capability */
+    .l1-capability {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .l1-header {
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      cursor: pointer;
+    }
+    
+    .l1-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .l1-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .l1-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .l1-name {
+      font-weight: 700;
+      flex: 1;
+    }
+    
+    .l1-count {
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 9999px;
+      color: var(--color-text-muted);
+    }
+    
+    .l1-body {
+      padding: 0.75rem;
+    }
+    
+    /* Level 2 Capability */
+    .l2-capability {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+      transition: all 0.15s;
+    }
+    
+    .l2-capability:last-child {
+      margin-bottom: 0;
+    }
+    
+    .l2-capability:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .l2-header {
+      padding: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .l2-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .maturity-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .maturity-badge.level-1 { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .maturity-badge.level-2 { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .maturity-badge.level-3 { background: rgba(251, 191, 36, 0.15); color: #eab308; }
+    .maturity-badge.level-4 { background: rgba(132, 204, 22, 0.15); color: #84cc16; }
+    .maturity-badge.level-5 { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    
+    /* Level 3 Capabilities */
+    .l3-container {
+      padding: 0 0.75rem 0.75rem;
+      display: none;
+    }
+    
+    .l2-capability.expanded .l3-container {
+      display: block;
+    }
+    
+    .l3-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+    }
+    
+    .l3-capability {
+      padding: 0.375rem 0.625rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+    
+    .l3-capability:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .l3-capability.level-1 { border-left-color: #ef4444; }
+    .l3-capability.level-2 { border-left-color: #f59e0b; }
+    .l3-capability.level-3 { border-left-color: #fbbf24; }
+    .l3-capability.level-4 { border-left-color: #84cc16; }
+    .l3-capability.level-5 { border-left-color: #10b981; }
+    
+    /* Capability Detail Modal */
+    .cap-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    
+    .cap-modal.open {
+      display: flex;
+    }
+    
+    .cap-modal-content {
+      background: var(--color-bg-primary);
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .cap-modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .cap-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .cap-modal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .cap-modal-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .cap-modal-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .cap-modal-id {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .cap-modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-bg-secondary);
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .cap-modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .cap-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .cap-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .cap-section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .cap-section-content {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Maturity Assessment */
+    .maturity-assessment {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .maturity-level {
+      flex: 1;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+      text-align: center;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .maturity-level:hover {
+      border-color: var(--color-border);
+    }
+    
+    .maturity-level.current {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .maturity-level.target {
+      border-color: #10b981;
+      border-style: dashed;
+    }
+    
+    .maturity-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+    
+    .maturity-level:nth-child(1) .maturity-number { color: #ef4444; }
+    .maturity-level:nth-child(2) .maturity-number { color: #f59e0b; }
+    .maturity-level:nth-child(3) .maturity-number { color: #eab308; }
+    .maturity-level:nth-child(4) .maturity-number { color: #84cc16; }
+    .maturity-level:nth-child(5) .maturity-number { color: #10b981; }
+    
+    .maturity-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .maturity-indicators {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8125rem;
+    }
+    
+    .maturity-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .indicator-dot.current { background: var(--color-primary); }
+    .indicator-dot.target { background: #10b981; }
+    
+    /* Relationships */
+    .relationship-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .relationship-section {
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+    
+    .relationship-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .relationship-title i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .relationship-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    
+    .relationship-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .relationship-item:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .relationship-item i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1200px) {
+      .capability-map {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .capability-map {
+        grid-template-columns: 1fr;
+      }
+      
+      .view-controls {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .relationship-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="cap-header">
+      <div>
+        <h1>Capability Model</h1>
+        <p class="cap-header-desc">Business capabilities define what the organization needs to be able to do. Each capability is assessed for current and target maturity levels.</p>
+      </div>
+      <div class="cap-actions">
+        <button class="btn btn-outline"><i data-lucide="download"></i> Export</button>
+        <button class="btn btn-primary"><i data-lucide="plus"></i> Add Capability</button>
+      </div>
+    </div>
+    
+    <div class="view-controls">
+      <div class="view-tabs">
+        <button class="view-tab active"><i data-lucide="layout-grid"></i> Capability Map</button>
+        <button class="view-tab"><i data-lucide="list"></i> List View</button>
+        <button class="view-tab"><i data-lucide="git-branch"></i> Hierarchy</button>
+      </div>
+      <div class="heat-legend">
+        <span>Maturity:</span>
+        <div class="heat-scale">
+          <div class="heat-item"><div class="heat-dot level-1"></div> Initial</div>
+          <div class="heat-item"><div class="heat-dot level-2"></div> Repeatable</div>
+          <div class="heat-item"><div class="heat-dot level-3"></div> Defined</div>
+          <div class="heat-item"><div class="heat-dot level-4"></div> Managed</div>
+          <div class="heat-item"><div class="heat-dot level-5"></div> Optimized</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="capability-map">
+      <!-- Policy Development -->
+      <div class="l1-capability">
+        <div class="l1-header">
+          <div class="l1-title">
+            <div class="l1-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+              <i data-lucide="scale"></i>
+            </div>
+            <span class="l1-name">Policy Development</span>
+            <span class="l1-count">12</span>
+          </div>
+        </div>
+        <div class="l1-body">
+          <div class="l2-capability expanded">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Policy Research</span>
+              <span class="maturity-badge level-4">L4</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-5" onclick="openCapModal()">Literature Review</span>
+                <span class="l3-capability level-4">Data Analysis</span>
+                <span class="l3-capability level-3">Stakeholder Studies</span>
+                <span class="l3-capability level-4">Impact Modeling</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Policy Design</span>
+              <span class="maturity-badge level-3">L3</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-4">Framework Development</span>
+                <span class="l3-capability level-3">Mechanism Design</span>
+                <span class="l3-capability level-2">Pilot Planning</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Policy Advocacy</span>
+              <span class="maturity-badge level-2">L2</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-2">Stakeholder Engagement</span>
+                <span class="l3-capability level-2">Legislative Outreach</span>
+                <span class="l3-capability level-1">Coalition Building</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Community Engagement -->
+      <div class="l1-capability">
+        <div class="l1-header">
+          <div class="l1-title">
+            <div class="l1-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+              <i data-lucide="users"></i>
+            </div>
+            <span class="l1-name">Community Engagement</span>
+            <span class="l1-count">10</span>
+          </div>
+        </div>
+        <div class="l1-body">
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Member Onboarding</span>
+              <span class="maturity-badge level-3">L3</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-4">Welcome Process</span>
+                <span class="l3-capability level-3">Education Materials</span>
+                <span class="l3-capability level-2">Mentorship</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Community Building</span>
+              <span class="maturity-badge level-4">L4</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-5">Online Forums</span>
+                <span class="l3-capability level-4">Events & Meetups</span>
+                <span class="l3-capability level-3">Working Groups</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Content Creation</span>
+              <span class="maturity-badge level-5">L5</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-5">Written Content</span>
+                <span class="l3-capability level-5">Video Production</span>
+                <span class="l3-capability level-4">Podcast</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Governance -->
+      <div class="l1-capability">
+        <div class="l1-header">
+          <div class="l1-title">
+            <div class="l1-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+              <i data-lucide="landmark"></i>
+            </div>
+            <span class="l1-name">Governance</span>
+            <span class="l1-count">8</span>
+          </div>
+        </div>
+        <div class="l1-body">
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Decision Making</span>
+              <span class="maturity-badge level-3">L3</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-4">Proposal Process</span>
+                <span class="l3-capability level-3">Voting Mechanisms</span>
+                <span class="l3-capability level-2">Consensus Building</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Architecture Governance</span>
+              <span class="maturity-badge level-2">L2</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-3">Principle Enforcement</span>
+                <span class="l3-capability level-2">Standard Compliance</span>
+                <span class="l3-capability level-2">Exception Management</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Technology & Platform -->
+      <div class="l1-capability">
+        <div class="l1-header">
+          <div class="l1-title">
+            <div class="l1-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+              <i data-lucide="server"></i>
+            </div>
+            <span class="l1-name">Technology & Platform</span>
+            <span class="l1-count">9</span>
+          </div>
+        </div>
+        <div class="l1-body">
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Platform Development</span>
+              <span class="maturity-badge level-3">L3</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-4">Web Development</span>
+                <span class="l3-capability level-3">API Services</span>
+                <span class="l3-capability level-2">Mobile Apps</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Data Management</span>
+              <span class="maturity-badge level-2">L2</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-3">Data Storage</span>
+                <span class="l3-capability level-2">Analytics</span>
+                <span class="l3-capability level-1">Data Governance</span>
+              </div>
+            </div>
+          </div>
+          <div class="l2-capability">
+            <div class="l2-header" onclick="toggleL2(this)">
+              <span class="l2-name">Security & Privacy</span>
+              <span class="maturity-badge level-3">L3</span>
+            </div>
+            <div class="l3-container">
+              <div class="l3-grid">
+                <span class="l3-capability level-4">Access Control</span>
+                <span class="l3-capability level-3">Privacy Protection</span>
+                <span class="l3-capability level-2">Audit & Logging</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Capability Detail Modal -->
+  <div class="cap-modal" id="cap-modal">
+    <div class="cap-modal-content">
+      <div class="cap-modal-header">
+        <div class="cap-modal-title">
+          <div class="cap-modal-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+            <i data-lucide="file-search"></i>
+          </div>
+          <div>
+            <h2 class="cap-modal-name">Literature Review</h2>
+            <span class="cap-modal-id">CAP-001-001-001</span>
+          </div>
+        </div>
+        <button class="cap-modal-close" onclick="closeCapModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="cap-modal-body">
+        <div class="cap-section">
+          <div class="cap-section-title">Description</div>
+          <div class="cap-section-content">
+            The ability to systematically identify, evaluate, and synthesize existing research, publications, and academic work relevant to post-labor economics, UBI, automation, and related policy areas.
+          </div>
+        </div>
+        
+        <div class="cap-section">
+          <div class="cap-section-title">Maturity Assessment</div>
+          <div class="maturity-assessment">
+            <div class="maturity-level">
+              <div class="maturity-number">1</div>
+              <div class="maturity-label">Initial</div>
+            </div>
+            <div class="maturity-level">
+              <div class="maturity-number">2</div>
+              <div class="maturity-label">Repeatable</div>
+            </div>
+            <div class="maturity-level">
+              <div class="maturity-number">3</div>
+              <div class="maturity-label">Defined</div>
+            </div>
+            <div class="maturity-level">
+              <div class="maturity-number">4</div>
+              <div class="maturity-label">Managed</div>
+            </div>
+            <div class="maturity-level current target">
+              <div class="maturity-number">5</div>
+              <div class="maturity-label">Optimized</div>
+            </div>
+          </div>
+          <div class="maturity-indicators">
+            <span class="maturity-indicator"><span class="indicator-dot current"></span> Current: Level 5</span>
+            <span class="maturity-indicator"><span class="indicator-dot target"></span> Target: Level 5</span>
+          </div>
+        </div>
+        
+        <div class="cap-section">
+          <div class="cap-section-title">Relationships</div>
+          <div class="relationship-grid">
+            <div class="relationship-section">
+              <div class="relationship-title"><i data-lucide="arrow-up"></i> Supports Goals</div>
+              <div class="relationship-items">
+                <div class="relationship-item"><i data-lucide="target"></i> GOAL-001: UBI Implementation</div>
+                <div class="relationship-item"><i data-lucide="target"></i> GOAL-002: Data Ownership</div>
+              </div>
+            </div>
+            <div class="relationship-section">
+              <div class="relationship-title"><i data-lucide="puzzle"></i> Realized By</div>
+              <div class="relationship-items">
+                <div class="relationship-item"><i data-lucide="box"></i> ABB-005: Research Platform</div>
+                <div class="relationship-item"><i data-lucide="box"></i> SBB-012: Zotero Integration</div>
+              </div>
+            </div>
+            <div class="relationship-section">
+              <div class="relationship-title"><i data-lucide="scale"></i> Governed By Principles</div>
+              <div class="relationship-items">
+                <div class="relationship-item"><i data-lucide="shield"></i> PRIN-007: Evidence-Based</div>
+                <div class="relationship-item"><i data-lucide="shield"></i> PRIN-001: Open by Default</div>
+              </div>
+            </div>
+            <div class="relationship-section">
+              <div class="relationship-title"><i data-lucide="users"></i> Owned By</div>
+              <div class="relationship-items">
+                <div class="relationship-item"><i data-lucide="building"></i> Research Working Group</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cap-section">
+          <div class="cap-section-title">Maturity Criteria (Level 5)</div>
+          <div class="cap-section-content">
+            <ul style="margin: 0; padding-left: 1.25rem;">
+              <li>Continuous monitoring of new publications and research</li>
+              <li>Automated alerts and curation systems in place</li>
+              <li>Comprehensive research database maintained</li>
+              <li>Regular synthesis reports published</li>
+              <li>Process improvements measured and implemented</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.view-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    function toggleL2(header) {
+      const l2 = header.closest('.l2-capability');
+      l2.classList.toggle('expanded');
+    }
+    
+    function openCapModal() {
+      document.getElementById('cap-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+    
+    function closeCapModal() {
+      document.getElementById('cap-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    document.getElementById('cap-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('cap-modal')) closeCapModal();
+    });
+  </script>
+</body>
+</html>

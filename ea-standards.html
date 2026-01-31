@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standards Catalog | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Approved technologies, tools, and methodologies for the PLE community.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .std-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .std-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .std-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Lifecycle Legend */
+    .lifecycle-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .lifecycle-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    
+    .lifecycle-badge {
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .lifecycle-badge.emerging { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
+    .lifecycle-badge.trial { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .lifecycle-badge.standard { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .lifecycle-badge.contained { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    .lifecycle-badge.retiring { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    
+    /* Category Tabs */
+    .category-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .category-tab {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .category-tab:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .category-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    /* Standards Table */
+    .std-table-container {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .std-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .std-table th {
+      text-align: left;
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .std-table td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+    }
+    
+    .std-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .std-table tr:hover td {
+      background: var(--color-bg-primary);
+    }
+    
+    .std-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .std-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .std-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .std-name {
+      font-weight: 600;
+    }
+    
+    .std-id {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .std-category {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .std-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      max-width: 300px;
+    }
+    
+    .std-owner {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    
+    .owner-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .std-actions {
+      display: flex;
+      gap: 0.375rem;
+    }
+    
+    .action-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    
+    .action-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    .action-btn i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Standard Detail Modal */
+    .std-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    
+    .std-modal.open {
+      display: flex;
+    }
+    
+    .std-modal-content {
+      background: var(--color-bg-primary);
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .std-modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .std-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .std-modal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .std-modal-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .std-modal-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .std-modal-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    
+    .std-modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-bg-secondary);
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .std-modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .std-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .std-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .std-section-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .std-section-content {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Use Cases */
+    .use-cases {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .use-case {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+    }
+    
+    .use-case-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .use-case-icon i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .use-case-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Constraints */
+    .constraints {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .constraint {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(239, 68, 68, 0.05);
+      border-radius: 0.5rem;
+      border-left: 3px solid #ef4444;
+    }
+    
+    .constraint-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Related Standards */
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .related-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .related-item:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .related-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .related-icon i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .related-name {
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    
+    .related-type {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1024px) {
+      .std-table-container {
+        overflow-x: auto;
+      }
+      
+      .std-table {
+        min-width: 800px;
+      }
+      
+      .related-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .lifecycle-legend {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="std-header">
+      <div>
+        <h1>Standards Catalog</h1>
+        <p class="std-header-desc">Approved technologies, tools, and methodologies. All new initiatives should use standards from this catalog unless an exception is granted.</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> Propose Standard</button>
+    </div>
+    
+    <div class="lifecycle-legend">
+      <div class="lifecycle-item">
+        <span class="lifecycle-badge emerging">Emerging</span>
+        <span>Being evaluated</span>
+      </div>
+      <div class="lifecycle-item">
+        <span class="lifecycle-badge trial">Trial</span>
+        <span>Limited use approved</span>
+      </div>
+      <div class="lifecycle-item">
+        <span class="lifecycle-badge standard">Standard</span>
+        <span>Fully approved</span>
+      </div>
+      <div class="lifecycle-item">
+        <span class="lifecycle-badge contained">Contained</span>
+        <span>Use limited to existing</span>
+      </div>
+      <div class="lifecycle-item">
+        <span class="lifecycle-badge retiring">Retiring</span>
+        <span>Migration required</span>
+      </div>
+    </div>
+    
+    <div class="category-tabs">
+      <button class="category-tab active">All Standards</button>
+      <button class="category-tab">Development</button>
+      <button class="category-tab">Collaboration</button>
+      <button class="category-tab">Data & Analytics</button>
+      <button class="category-tab">Infrastructure</button>
+      <button class="category-tab">Methods</button>
+    </div>
+    
+    <div class="std-table-container">
+      <table class="std-table">
+        <thead>
+          <tr>
+            <th>Standard</th>
+            <th>Category</th>
+            <th>Lifecycle</th>
+            <th>Description</th>
+            <th>Owner</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr onclick="openStdModal()">
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: #24292E; color: white;">
+                  <i data-lucide="github"></i>
+                </div>
+                <div>
+                  <div class="std-name">GitHub</div>
+                  <div class="std-id">STD-001</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Development</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Version control, code hosting, and collaboration for all software projects</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">TC</span>
+                <span>Tech WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: #5865F2; color: white;">
+                  <i data-lucide="hash"></i>
+                </div>
+                <div>
+                  <div class="std-name">Discord</div>
+                  <div class="std-id">STD-002</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Collaboration</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Primary community chat and voice communication platform</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">CW</span>
+                <span>Comm WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: #000; color: white;">
+                  <i data-lucide="file-text"></i>
+                </div>
+                <div>
+                  <div class="std-name">Notion</div>
+                  <div class="std-id">STD-003</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Collaboration</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Documentation, knowledge base, and project management</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">MK</span>
+                <span>Policy WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                  <i data-lucide="file-code"></i>
+                </div>
+                <div>
+                  <div class="std-name">Markdown</div>
+                  <div class="std-id">STD-004</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Development</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Standard format for all documentation and content</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">DS</span>
+                <span>Core</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                  <i data-lucide="vote"></i>
+                </div>
+                <div>
+                  <div class="std-name">Snapshot</div>
+                  <div class="std-id">STD-005</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Collaboration</span></td>
+            <td><span class="lifecycle-badge trial">Trial</span></td>
+            <td><span class="std-desc">Decentralized voting for governance decisions</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">GV</span>
+                <span>Gov WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                  <i data-lucide="bar-chart"></i>
+                </div>
+                <div>
+                  <div class="std-name">Plausible Analytics</div>
+                  <div class="std-id">STD-006</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Data & Analytics</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Privacy-focused web analytics</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">TC</span>
+                <span>Tech WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                  <i data-lucide="cloud"></i>
+                </div>
+                <div>
+                  <div class="std-name">Netlify</div>
+                  <div class="std-id">STD-007</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Infrastructure</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Web hosting and deployment platform</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">TC</span>
+                <span>Tech WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                  <i data-lucide="git-branch"></i>
+                </div>
+                <div>
+                  <div class="std-name">ADR (MADR Format)</div>
+                  <div class="std-id">STD-008</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Methods</span></td>
+            <td><span class="lifecycle-badge standard">Standard</span></td>
+            <td><span class="std-desc">Architecture Decision Records using MADR template</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">AB</span>
+                <span>Arch Board</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="std-name-cell">
+                <div class="std-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+                  <i data-lucide="slack"></i>
+                </div>
+                <div>
+                  <div class="std-name">Slack</div>
+                  <div class="std-id">STD-009</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="std-category">Collaboration</span></td>
+            <td><span class="lifecycle-badge retiring">Retiring</span></td>
+            <td><span class="std-desc">Legacy chat platform - migrate to Discord by Q2 2026</span></td>
+            <td>
+              <div class="std-owner">
+                <span class="owner-avatar">CW</span>
+                <span>Comm WG</span>
+              </div>
+            </td>
+            <td>
+              <div class="std-actions">
+                <button class="action-btn"><i data-lucide="eye"></i></button>
+                <button class="action-btn"><i data-lucide="edit-3"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+  
+  <!-- Standard Detail Modal -->
+  <div class="std-modal" id="std-modal">
+    <div class="std-modal-content">
+      <div class="std-modal-header">
+        <div class="std-modal-title">
+          <div class="std-modal-icon" style="background: #24292E; color: white;">
+            <i data-lucide="github"></i>
+          </div>
+          <div>
+            <h2 class="std-modal-name">GitHub</h2>
+            <div class="std-modal-meta">
+              <span class="std-id">STD-001</span>
+              <span class="lifecycle-badge standard">Standard</span>
+            </div>
+          </div>
+        </div>
+        <button class="std-modal-close" onclick="closeStdModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="std-modal-body">
+        <div class="std-section">
+          <div class="std-section-title">Description</div>
+          <div class="std-section-content">
+            GitHub is the standard platform for all version control, code hosting, and software development collaboration within the PLE community. All code repositories, including website, tools, and documentation as code, must be hosted on the PLE GitHub organization.
+          </div>
+        </div>
+        
+        <div class="std-section">
+          <div class="std-section-title">Approved Use Cases</div>
+          <div class="use-cases">
+            <div class="use-case">
+              <div class="use-case-icon"><i data-lucide="check"></i></div>
+              <span class="use-case-text">Source code version control for all software projects</span>
+            </div>
+            <div class="use-case">
+              <div class="use-case-icon"><i data-lucide="check"></i></div>
+              <span class="use-case-text">Issue tracking and project management for development work</span>
+            </div>
+            <div class="use-case">
+              <div class="use-case-icon"><i data-lucide="check"></i></div>
+              <span class="use-case-text">CI/CD pipelines using GitHub Actions</span>
+            </div>
+            <div class="use-case">
+              <div class="use-case-icon"><i data-lucide="check"></i></div>
+              <span class="use-case-text">Documentation as code using GitHub Pages</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="std-section">
+          <div class="std-section-title">Constraints & Guidelines</div>
+          <div class="constraints">
+            <div class="constraint">
+              <span class="constraint-text">All repositories must be public unless containing sensitive data</span>
+            </div>
+            <div class="constraint">
+              <span class="constraint-text">Branch protection must be enabled on main branches</span>
+            </div>
+            <div class="constraint">
+              <span class="constraint-text">All commits must be signed with verified signatures</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="std-section">
+          <div class="std-section-title">Related Architecture Elements</div>
+          <div class="related-grid">
+            <div class="related-item">
+              <div class="related-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="box"></i>
+              </div>
+              <div>
+                <div class="related-name">ABB-007: Source Control</div>
+                <div class="related-type">Building Block</div>
+              </div>
+            </div>
+            <div class="related-item">
+              <div class="related-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="scale"></i>
+              </div>
+              <div>
+                <div class="related-name">PRIN-005: Open Source</div>
+                <div class="related-type">Principle</div>
+              </div>
+            </div>
+            <div class="related-item">
+              <div class="related-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+                <i data-lucide="boxes"></i>
+              </div>
+              <div>
+                <div class="related-name">CAP-Tech-01: Development</div>
+                <div class="related-type">Capability</div>
+              </div>
+            </div>
+            <div class="related-item">
+              <div class="related-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                <i data-lucide="book-check"></i>
+              </div>
+              <div>
+                <div class="related-name">STD-004: Markdown</div>
+                <div class="related-type">Standard</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="std-section">
+          <div class="std-section-title">Lifecycle History</div>
+          <div class="std-section-content">
+            <ul style="margin: 0; padding-left: 1.25rem;">
+              <li><strong>Jan 15, 2026:</strong> Approved as Standard by Architecture Board</li>
+              <li><strong>Dec 10, 2025:</strong> Trial period completed successfully</li>
+              <li><strong>Oct 1, 2025:</strong> Entered Trial phase</li>
+              <li><strong>Sept 15, 2025:</strong> Proposed by Technical Working Group</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    function openStdModal() {
+      document.getElementById('std-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+    
+    function closeStdModal() {
+      document.getElementById('std-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    document.getElementById('std-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('std-modal')) closeStdModal();
+    });
+  </script>
+</body>
+</html>

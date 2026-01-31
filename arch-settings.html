@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Customize your governance experience with personal settings and preferences.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - var(--header-height) - 4rem);
+    }
+    
+    /* Sidebar Nav */
+    .settings-nav {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .settings-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .settings-nav-item:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .settings-nav-item.active {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+    }
+    
+    .settings-nav-item i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    /* Main Content */
+    .settings-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .settings-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .settings-section-header {
+      padding: 1.25rem 1.5rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .settings-section-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .settings-section-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .settings-section-body {
+      padding: 1.5rem;
+    }
+    
+    /* Setting Row */
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .setting-row:first-child {
+      padding-top: 0;
+    }
+    
+    .setting-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .setting-info {
+      flex: 1;
+      padding-right: 2rem;
+    }
+    
+    .setting-label {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .setting-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Toggle */
+    .toggle {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+    
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--color-border);
+      border-radius: 26px;
+      transition: all 0.2s;
+    }
+    
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+    
+    .toggle input:checked + .toggle-slider {
+      background: var(--color-primary);
+    }
+    
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(22px);
+    }
+    
+    /* Select */
+    .setting-select {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+      min-width: 180px;
+    }
+    
+    .setting-select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    /* Input */
+    .setting-input {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+      min-width: 200px;
+    }
+    
+    .setting-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    /* Profile Section */
+    .profile-header {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    
+    .profile-info {
+      flex: 1;
+    }
+    
+    .profile-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .profile-email {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .profile-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Connected Accounts */
+    .connected-account {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .connected-account:last-child {
+      margin-bottom: 0;
+    }
+    
+    .account-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .account-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .account-info {
+      flex: 1;
+    }
+    
+    .account-name {
+      font-weight: 500;
+      margin-bottom: 0.125rem;
+    }
+    
+    .account-status {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .account-status.connected {
+      color: #10b981;
+    }
+    
+    /* Danger Zone */
+    .danger-zone {
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    
+    .danger-zone .settings-section-header {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .danger-zone .settings-section-title {
+      color: #ef4444;
+    }
+    
+    .danger-action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+    
+    .danger-action:not(:last-child) {
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .danger-info {
+      flex: 1;
+    }
+    
+    .danger-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .danger-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .btn-danger {
+      background: transparent;
+      border: 1px solid #ef4444;
+      color: #ef4444;
+    }
+    
+    .btn-danger:hover {
+      background: #ef4444;
+      color: white;
+    }
+    
+    @media (max-width: 1024px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .settings-nav {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 0.5rem;
+      }
+      
+      .settings-nav-item {
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="settings-layout">
+      <!-- Sidebar -->
+      <nav class="settings-nav">
+        <div class="settings-nav-item active"><i data-lucide="user"></i> Profile</div>
+        <div class="settings-nav-item"><i data-lucide="bell"></i> Notifications</div>
+        <div class="settings-nav-item"><i data-lucide="palette"></i> Appearance</div>
+        <div class="settings-nav-item"><i data-lucide="lock"></i> Privacy</div>
+        <div class="settings-nav-item"><i data-lucide="link"></i> Connected Apps</div>
+        <div class="settings-nav-item"><i data-lucide="shield"></i> Security</div>
+      </nav>
+      
+      <!-- Main Content -->
+      <div class="settings-main">
+        <!-- Profile Section -->
+        <section class="settings-section">
+          <div class="settings-section-header">
+            <h2 class="settings-section-title">Profile Settings</h2>
+            <p class="settings-section-desc">Manage your public profile and personal information</p>
+          </div>
+          <div class="settings-section-body">
+            <div class="profile-header">
+              <div class="profile-avatar">SM</div>
+              <div class="profile-info">
+                <h3 class="profile-name">Sarah Mitchell</h3>
+                <p class="profile-email">sarah.mitchell@example.com</p>
+                <div class="profile-actions">
+                  <button class="btn btn-outline btn-sm">Change Photo</button>
+                  <button class="btn btn-ghost btn-sm">Remove</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Display Name</div>
+                <div class="setting-desc">This name will be shown publicly</div>
+              </div>
+              <input type="text" class="setting-input" value="Sarah Mitchell">
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Bio</div>
+                <div class="setting-desc">Brief description for your profile</div>
+              </div>
+              <input type="text" class="setting-input" value="Economist & policy researcher" style="min-width: 280px;">
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Location</div>
+                <div class="setting-desc">Your city and country</div>
+              </div>
+              <input type="text" class="setting-input" value="London, UK">
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Timezone</div>
+                <div class="setting-desc">Used for meeting times and notifications</div>
+              </div>
+              <select class="setting-select">
+                <option>Europe/London (GMT+0)</option>
+                <option>America/New_York (EST)</option>
+                <option>America/Los_Angeles (PST)</option>
+                <option>Asia/Tokyo (JST)</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Notifications Section -->
+        <section class="settings-section">
+          <div class="settings-section-header">
+            <h2 class="settings-section-title">Notification Preferences</h2>
+            <p class="settings-section-desc">Choose how and when you want to be notified</p>
+          </div>
+          <div class="settings-section-body">
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Email Notifications</div>
+                <div class="setting-desc">Receive updates via email</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Vote Reminders</div>
+                <div class="setting-desc">Get notified when votes are about to close</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Mentions</div>
+                <div class="setting-desc">Notify when someone @mentions you</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Weekly Digest</div>
+                <div class="setting-desc">Summary of governance activity</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Working Group Updates</div>
+                <div class="setting-desc">Activity from your working groups</div>
+              </div>
+              <select class="setting-select">
+                <option>All Activity</option>
+                <option>Important Only</option>
+                <option>None</option>
+              </select>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Appearance Section -->
+        <section class="settings-section">
+          <div class="settings-section-header">
+            <h2 class="settings-section-title">Appearance</h2>
+            <p class="settings-section-desc">Customize how the platform looks</p>
+          </div>
+          <div class="settings-section-body">
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Theme</div>
+                <div class="setting-desc">Choose your preferred color scheme</div>
+              </div>
+              <select class="setting-select">
+                <option>Dark</option>
+                <option>Light</option>
+                <option>System</option>
+              </select>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Compact Mode</div>
+                <div class="setting-desc">Reduce spacing for more content density</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Show Animations</div>
+                <div class="setting-desc">Enable UI animations and transitions</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Connected Apps -->
+        <section class="settings-section">
+          <div class="settings-section-header">
+            <h2 class="settings-section-title">Connected Applications</h2>
+            <p class="settings-section-desc">Manage third-party integrations</p>
+          </div>
+          <div class="settings-section-body">
+            <div class="connected-account">
+              <div class="account-icon" style="background: #5865F2; color: white;">
+                <i data-lucide="hash"></i>
+              </div>
+              <div class="account-info">
+                <div class="account-name">Discord</div>
+                <div class="account-status connected">Connected as @sarah_m</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">Disconnect</button>
+            </div>
+            
+            <div class="connected-account">
+              <div class="account-icon" style="background: #24292E; color: white;">
+                <i data-lucide="github"></i>
+              </div>
+              <div class="account-info">
+                <div class="account-name">GitHub</div>
+                <div class="account-status connected">Connected as @sarahmitchell</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">Disconnect</button>
+            </div>
+            
+            <div class="connected-account">
+              <div class="account-icon" style="background: var(--color-bg-tertiary); color: var(--color-text-muted);">
+                <i data-lucide="calendar"></i>
+              </div>
+              <div class="account-info">
+                <div class="account-name">Google Calendar</div>
+                <div class="account-status">Not connected</div>
+              </div>
+              <button class="btn btn-primary btn-sm">Connect</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Danger Zone -->
+        <section class="settings-section danger-zone">
+          <div class="settings-section-header">
+            <h2 class="settings-section-title">Danger Zone</h2>
+            <p class="settings-section-desc">Irreversible actions - proceed with caution</p>
+          </div>
+          <div class="settings-section-body">
+            <div class="danger-action">
+              <div class="danger-info">
+                <div class="danger-title">Export Your Data</div>
+                <div class="danger-desc">Download all your contributions and data</div>
+              </div>
+              <button class="btn btn-outline btn-sm">Export</button>
+            </div>
+            <div class="danger-action">
+              <div class="danger-info">
+                <div class="danger-title">Leave All Working Groups</div>
+                <div class="danger-desc">Remove yourself from all working groups at once</div>
+              </div>
+              <button class="btn btn-danger btn-sm">Leave All</button>
+            </div>
+            <div class="danger-action">
+              <div class="danger-info">
+                <div class="danger-title">Delete Account</div>
+                <div class="danger-desc">Permanently delete your account and all data</div>
+              </div>
+              <button class="btn btn-danger btn-sm">Delete Account</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.settings-nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.settings-nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

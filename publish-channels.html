@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Channels | Publishing Suite | PLE Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+    .page-header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.75rem; }
+    .page-header h1 i { width: 28px; height: 28px; color: #f59e0b; }
+    
+    .channels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.5rem; }
+    .channel-card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: all var(--transition-base); }
+    .channel-card:hover { border-color: var(--color-border-hover); }
+    
+    .channel-header { padding: 1.25rem; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--color-border); }
+    .channel-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; }
+    .channel-icon i { width: 24px; height: 24px; color: white; }
+    .channel-icon.newsletter { background: linear-gradient(135deg, #ff6719, #ff8c19); }
+    .channel-icon.blog { background: linear-gradient(135deg, #10b981, #06b6d4); }
+    .channel-icon.youtube { background: linear-gradient(135deg, #ff0000, #cc0000); }
+    .channel-icon.podcast { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+    .channel-icon.social { background: linear-gradient(135deg, #1da1f2, #0d8bd9); }
+    .channel-icon.discord { background: linear-gradient(135deg, #5865f2, #7289da); }
+    
+    .channel-name { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .channel-desc { font-size: 0.8125rem; color: var(--color-text-muted); }
+    .channel-status { font-size: 0.6875rem; font-weight: 600; padding: 0.25rem 0.625rem; border-radius: var(--radius-full); }
+    .channel-status.active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .channel-status.paused { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    
+    .channel-body { padding: 1.25rem; }
+    .channel-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .stat-item { text-align: center; padding: 0.75rem; background: var(--color-bg-tertiary); border-radius: var(--radius-md); }
+    .stat-value { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.125rem; }
+    .stat-label { font-size: 0.625rem; color: var(--color-text-muted); }
+    
+    .channel-capabilities { padding: 1rem; background: var(--color-bg-tertiary); border-radius: var(--radius-md); margin-bottom: 1rem; }
+    .cap-title { font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem; }
+    .cap-title i { width: 12px; height: 12px; }
+    .cap-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+    .arch-tag { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.6875rem; font-weight: 500; }
+    .arch-tag i { width: 10px; height: 10px; }
+    .arch-tag.capability { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .arch-tag.goal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    
+    .channel-schedule { font-size: 0.8125rem; color: var(--color-text-secondary); display: flex; align-items: center; gap: 0.375rem; }
+    .channel-schedule i { width: 14px; height: 14px; color: var(--color-text-muted); }
+    
+    .channel-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+    .channel-actions { display: flex; gap: 0.5rem; }
+    
+    @media (max-width: 768px) { .channels-grid { grid-template-columns: 1fr; } .channel-stats { grid-template-columns: repeat(3, 1fr); } }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Publishing Suite</span></div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/publish-hub.html">← Publishing Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="page-header">
+      <div>
+        <h1><i data-lucide="radio"></i> Publishing Channels</h1>
+        <p style="color: var(--color-text-secondary);">Distribution channels mapped to platform capabilities</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> Add Channel</button>
+    </div>
+    
+    <div class="channels-grid">
+      <div class="channel-card">
+        <div class="channel-header">
+          <div>
+            <div class="channel-icon newsletter"><i data-lucide="mail"></i></div>
+            <div class="channel-name">Substack Newsletter</div>
+            <div class="channel-desc">Email newsletter distribution</div>
+          </div>
+          <span class="channel-status active">Active</span>
+        </div>
+        <div class="channel-body">
+          <div class="channel-stats">
+            <div class="stat-item"><div class="stat-value" style="color: #ff6719;">2,456</div><div class="stat-label">Subscribers</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #10b981;">68%</div><div class="stat-label">Open Rate</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #818cf8;">48</div><div class="stat-label">Issues</div></div>
+          </div>
+          <div class="channel-capabilities">
+            <div class="cap-title"><i data-lucide="boxes"></i> Mapped Capabilities</div>
+            <div class="cap-tags">
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-020: Newsletter Distribution</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-006: Content Production</span>
+            </div>
+          </div>
+          <div class="channel-schedule"><i data-lucide="calendar"></i> Weekly on Fridays</div>
+        </div>
+        <div class="channel-footer">
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Last: 2 days ago</span>
+          <div class="channel-actions">
+            <button class="btn btn-ghost btn-sm">Settings</button>
+            <button class="btn btn-outline btn-sm">Compose</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="channel-card">
+        <div class="channel-header">
+          <div>
+            <div class="channel-icon youtube"><i data-lucide="youtube"></i></div>
+            <div class="channel-name">YouTube Channel</div>
+            <div class="channel-desc">Video content and livestreams</div>
+          </div>
+          <span class="channel-status active">Active</span>
+        </div>
+        <div class="channel-body">
+          <div class="channel-stats">
+            <div class="stat-item"><div class="stat-value" style="color: #ff0000;">12.4K</div><div class="stat-label">Subscribers</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #10b981;">125K</div><div class="stat-label">Total Views</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #818cf8;">48</div><div class="stat-label">Videos</div></div>
+          </div>
+          <div class="channel-capabilities">
+            <div class="cap-title"><i data-lucide="boxes"></i> Mapped Capabilities</div>
+            <div class="cap-tags">
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-021: Video Distribution</span>
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-007: Public Awareness</span>
+            </div>
+          </div>
+          <div class="channel-schedule"><i data-lucide="calendar"></i> Livestream Saturdays 12PM ET</div>
+        </div>
+        <div class="channel-footer">
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Last: 5 days ago</span>
+          <div class="channel-actions">
+            <button class="btn btn-ghost btn-sm">Settings</button>
+            <button class="btn btn-outline btn-sm">Upload</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="channel-card">
+        <div class="channel-header">
+          <div>
+            <div class="channel-icon blog"><i data-lucide="pen-tool"></i></div>
+            <div class="channel-name">Platform Blog</div>
+            <div class="channel-desc">Long-form articles and analysis</div>
+          </div>
+          <span class="channel-status active">Active</span>
+        </div>
+        <div class="channel-body">
+          <div class="channel-stats">
+            <div class="stat-item"><div class="stat-value" style="color: #10b981;">8.2K</div><div class="stat-label">Monthly Views</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #06b6d4;">4:32</div><div class="stat-label">Avg Read Time</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #818cf8;">67</div><div class="stat-label">Articles</div></div>
+          </div>
+          <div class="channel-capabilities">
+            <div class="cap-title"><i data-lucide="boxes"></i> Mapped Capabilities</div>
+            <div class="cap-tags">
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-006: Content Production</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-002: Research</span>
+            </div>
+          </div>
+          <div class="channel-schedule"><i data-lucide="calendar"></i> 2-3 articles per week</div>
+        </div>
+        <div class="channel-footer">
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Last: Yesterday</span>
+          <div class="channel-actions">
+            <button class="btn btn-ghost btn-sm">Settings</button>
+            <button class="btn btn-outline btn-sm">New Article</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="channel-card">
+        <div class="channel-header">
+          <div>
+            <div class="channel-icon podcast"><i data-lucide="podcast"></i></div>
+            <div class="channel-name">Podcast Feed</div>
+            <div class="channel-desc">Audio content via Castopod</div>
+          </div>
+          <span class="channel-status paused">Setup</span>
+        </div>
+        <div class="channel-body">
+          <div class="channel-stats">
+            <div class="stat-item"><div class="stat-value" style="color: #8b5cf6;">—</div><div class="stat-label">Subscribers</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #a855f7;">—</div><div class="stat-label">Downloads</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #818cf8;">0</div><div class="stat-label">Episodes</div></div>
+          </div>
+          <div class="channel-capabilities">
+            <div class="cap-title"><i data-lucide="boxes"></i> Mapped Capabilities</div>
+            <div class="cap-tags">
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-022: Audio Distribution</span>
+            </div>
+          </div>
+          <div class="channel-schedule"><i data-lucide="calendar"></i> Planned: Bi-weekly</div>
+        </div>
+        <div class="channel-footer">
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Not yet launched</span>
+          <div class="channel-actions">
+            <button class="btn btn-primary btn-sm">Complete Setup</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="channel-card">
+        <div class="channel-header">
+          <div>
+            <div class="channel-icon social"><i data-lucide="twitter"></i></div>
+            <div class="channel-name">Social Media</div>
+            <div class="channel-desc">Twitter/X and LinkedIn</div>
+          </div>
+          <span class="channel-status active">Active</span>
+        </div>
+        <div class="channel-body">
+          <div class="channel-stats">
+            <div class="stat-item"><div class="stat-value" style="color: #1da1f2;">18.5K</div><div class="stat-label">Followers</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #10b981;">4.2%</div><div class="stat-label">Engagement</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #818cf8;">~20</div><div class="stat-label">Posts/Week</div></div>
+          </div>
+          <div class="channel-capabilities">
+            <div class="cap-title"><i data-lucide="boxes"></i> Mapped Capabilities</div>
+            <div class="cap-tags">
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-019: Social Media</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-003: Advocacy</span>
+            </div>
+          </div>
+          <div class="channel-schedule"><i data-lucide="calendar"></i> Daily posting</div>
+        </div>
+        <div class="channel-footer">
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Last: 2 hours ago</span>
+          <div class="channel-actions">
+            <button class="btn btn-ghost btn-sm">Settings</button>
+            <button class="btn btn-outline btn-sm">Schedule</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="channel-card">
+        <div class="channel-header">
+          <div>
+            <div class="channel-icon discord"><i data-lucide="message-circle"></i></div>
+            <div class="channel-name">Discord Server</div>
+            <div class="channel-desc">Community announcements</div>
+          </div>
+          <span class="channel-status active">Active</span>
+        </div>
+        <div class="channel-body">
+          <div class="channel-stats">
+            <div class="stat-item"><div class="stat-value" style="color: #5865f2;">847</div><div class="stat-label">Members</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #10b981;">312</div><div class="stat-label">Active</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #818cf8;">24</div><div class="stat-label">Channels</div></div>
+          </div>
+          <div class="channel-capabilities">
+            <div class="cap-title"><i data-lucide="boxes"></i> Mapped Capabilities</div>
+            <div class="cap-tags">
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-001: Community Management</span>
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-004: Movement Building</span>
+            </div>
+          </div>
+          <div class="channel-schedule"><i data-lucide="calendar"></i> Continuous engagement</div>
+        </div>
+        <div class="channel-footer">
+          <span style="font-size: 0.75rem; color: var(--color-text-muted);">Always active</span>
+          <div class="channel-actions">
+            <button class="btn btn-ghost btn-sm">Settings</button>
+            <button class="btn btn-outline btn-sm">Announce</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

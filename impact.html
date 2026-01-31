@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impact | Post-Labor Economics</title>
+  <meta name="description" content="Impact metrics and progress tracking for the Post-Labor Economics movement.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/impact.html">
+  <meta property="og:title" content="Impact | Post-Labor Economics">
+  <meta property="og:description" content="Measuring the movement's progress toward post-labor economic frameworks.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-impact.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/impact.html">
+  <meta name="twitter:title" content="Impact | Post-Labor Economics">
+  <meta name="twitter:description" content="Measuring the movement's progress toward post-labor economic frameworks.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-impact.png">
+
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .impact-hero { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%); padding: 3rem 2rem; border-radius: 1rem; margin-bottom: 2rem; text-align: center; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .metric-card { background: var(--color-bg-secondary); border-radius: 1rem; padding: 1.5rem; text-align: center; }
+    .metric-card h3 { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 1rem; }
+    .metric-card h3 i { width: 20px; height: 20px; color: var(--color-accent); }
+    .metric-value { font-size: 2.5rem; font-weight: 700; color: var(--color-accent); margin-bottom: 0.25rem; }
+    .metric-label { color: var(--color-text-secondary); font-size: 0.875rem; }
+    .dimension-card { background: var(--color-bg-secondary); border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; }
+    .dimension-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .dimension-header i { width: 24px; height: 24px; color: var(--color-accent); }
+    .dimension-header h3 { margin: 0; }
+    .sdg-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    .sdg-tag { background: var(--color-bg-tertiary); padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; color: var(--color-text-secondary); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Building the Post-Work Future</span></div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="page-header"><span class="page-label">Measuring Progress</span><h1>Impact</h1><p class="page-description">Tracking our progress toward a post-labor future</p></div>
+      <div class="impact-hero"><h2>📊 Movement Metrics</h2><p>How we measure success and progress toward our goals</p></div>
+      <div class="metrics-grid">
+        <div class="metric-card"><h3><i data-lucide="users"></i> Community</h3><div class="metric-value">150+</div><div class="metric-label">Active Members</div></div>
+        <div class="metric-card"><h3><i data-lucide="youtube"></i> YouTube</h3><div class="metric-value">150K+</div><div class="metric-label">Subscribers</div></div>
+        <div class="metric-card"><h3><i data-lucide="mail"></i> Newsletter</h3><div class="metric-value">8K+</div><div class="metric-label">Subscribers</div></div>
+        <div class="metric-card"><h3><i data-lucide="globe"></i> Reach</h3><div class="metric-value">40+</div><div class="metric-label">Countries</div></div>
+      </div>
+      <h2>Impact Dimensions</h2>
+      <div class="dimension-card"><div class="dimension-header"><i data-lucide="trending-up"></i><h3>Economic Impact</h3></div><p>Measuring our influence on economic policy discussions, UBI advocacy, and ownership model adoption.</p><div class="sdg-tags"><span class="sdg-tag">SDG 1: No Poverty</span><span class="sdg-tag">SDG 8: Decent Work</span><span class="sdg-tag">SDG 10: Reduced Inequalities</span></div></div>
+      <div class="dimension-card"><div class="dimension-header"><i data-lucide="heart"></i><h3>Social Impact</h3></div><p>Building community, fostering dialogue across political divides, and shifting cultural narratives about work.</p><div class="sdg-tags"><span class="sdg-tag">SDG 3: Good Health</span><span class="sdg-tag">SDG 4: Quality Education</span></div></div>
+      <div class="dimension-card"><div class="dimension-header"><i data-lucide="vote"></i><h3>Governance Impact</h3></div><p>Advancing algorithmic accountability, transparent governance, and citizen participation in policy.</p><div class="sdg-tags"><span class="sdg-tag">SDG 16: Strong Institutions</span><span class="sdg-tag">SDG 17: Partnerships</span></div></div>
+      <div style="text-align: center; margin-top: 3rem;"><a href="/dashboard.html" class="btn btn-primary"><i data-lucide="activity"></i> View Live Dashboard</a></div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+  <script>lucide.createIcons();const navToggle=document.querySelector('.nav-toggle'),navMenu=document.querySelector('.nav-menu');navToggle&&navMenu&&navToggle.addEventListener('click',()=>{const e=navToggle.getAttribute('aria-expanded')==='true';navToggle.setAttribute('aria-expanded',!e);navMenu.classList.toggle('is-open')});document.querySelectorAll('.has-dropdown').forEach(i=>{i.querySelector('a').addEventListener('click',e=>{window.innerWidth<768&&(e.preventDefault(),i.classList.toggle('is-open'))})});</script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics | Publishing Suite | PLE Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .analytics-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .analytics-header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.75rem; }
+    .analytics-header h1 i { width: 28px; height: 28px; color: #f59e0b; }
+    .date-range { display: flex; gap: 0.5rem; }
+    .date-btn { padding: 0.5rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-secondary); font-size: 0.8125rem; cursor: pointer; transition: all var(--transition-fast); }
+    .date-btn:hover { border-color: var(--color-border-hover); }
+    .date-btn.active { background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; color: #f59e0b; }
+    
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .metric-card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .metric-label { font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
+    .metric-value { font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .metric-change { font-size: 0.75rem; display: flex; align-items: center; gap: 0.25rem; }
+    .metric-change.positive { color: #10b981; }
+    .metric-change.negative { color: #ef4444; }
+    .metric-change i { width: 14px; height: 14px; }
+    
+    .analytics-layout { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; }
+    
+    .chart-section { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+    .chart-header { padding: 1.25rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+    .chart-title { font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .chart-title i { width: 18px; height: 18px; color: var(--color-text-muted); }
+    .chart-body { padding: 1.25rem; min-height: 280px; display: flex; align-items: center; justify-content: center; }
+    .chart-placeholder { text-align: center; color: var(--color-text-muted); }
+    .chart-placeholder i { width: 48px; height: 48px; margin-bottom: 0.75rem; opacity: 0.5; }
+    
+    .goal-impact { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+    .goal-header { padding: 1.25rem; border-bottom: 1px solid var(--color-border); }
+    .goal-header h3 { font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+    .goal-header h3 i { width: 18px; height: 18px; color: var(--color-text-muted); }
+    .goal-list { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+    
+    .goal-item { padding: 1rem; background: var(--color-bg-tertiary); border-radius: var(--radius-md); }
+    .goal-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .goal-tag { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.625rem; background: rgba(99, 102, 241, 0.15); color: #818cf8; border-radius: 4px; font-size: 0.6875rem; font-weight: 500; }
+    .goal-tag i { width: 10px; height: 10px; }
+    .goal-reach { font-size: 0.875rem; font-weight: 600; }
+    .goal-name { font-size: 0.8125rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; }
+    .goal-progress { height: 6px; background: var(--color-bg-secondary); border-radius: 3px; overflow: hidden; }
+    .goal-progress-bar { height: 100%; border-radius: 3px; }
+    .goal-stats { display: flex; gap: 1rem; margin-top: 0.75rem; font-size: 0.6875rem; color: var(--color-text-muted); }
+    
+    .content-performance { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; margin-top: 1.5rem; }
+    .perf-header { padding: 1.25rem; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+    .perf-title { font-weight: 600; }
+    .perf-table { width: 100%; }
+    .perf-table th { text-align: left; padding: 0.875rem 1.25rem; font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; background: var(--color-bg-tertiary); }
+    .perf-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--color-border); font-size: 0.875rem; }
+    .perf-table tr:last-child td { border-bottom: none; }
+    .content-title { font-weight: 500; margin-bottom: 0.25rem; }
+    .content-type { font-size: 0.6875rem; color: var(--color-text-muted); }
+    .arch-mini { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.375rem; background: rgba(99, 102, 241, 0.1); color: #818cf8; border-radius: 3px; font-size: 0.625rem; }
+    
+    @media (max-width: 1024px) { .analytics-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Publishing Suite</span></div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/publish-hub.html">← Publishing Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="analytics-header">
+      <div>
+        <h1><i data-lucide="bar-chart-2"></i> Publishing Analytics</h1>
+        <p style="color: var(--color-text-secondary);">Content performance metrics aligned to strategic goals</p>
+      </div>
+      <div class="date-range">
+        <button class="date-btn">7 Days</button>
+        <button class="date-btn active">30 Days</button>
+        <button class="date-btn">90 Days</button>
+        <button class="date-btn">Year</button>
+      </div>
+    </div>
+    
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total Reach</div>
+        <div class="metric-value" style="color: #818cf8;">124.5K</div>
+        <div class="metric-change positive"><i data-lucide="trending-up"></i> +18% vs last period</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Engagement Rate</div>
+        <div class="metric-value" style="color: #10b981;">8.4%</div>
+        <div class="metric-change positive"><i data-lucide="trending-up"></i> +2.1% vs last period</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Content Published</div>
+        <div class="metric-value" style="color: #f59e0b;">34</div>
+        <div class="metric-change positive"><i data-lucide="trending-up"></i> +6 vs last period</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Goal Coverage</div>
+        <div class="metric-value" style="color: #ec4899;">9/9</div>
+        <div class="metric-change positive"><i data-lucide="check-circle"></i> All goals active</div>
+      </div>
+    </div>
+    
+    <div class="analytics-layout">
+      <div>
+        <div class="chart-section">
+          <div class="chart-header">
+            <span class="chart-title"><i data-lucide="activity"></i> Engagement Over Time</span>
+            <select style="padding: 0.375rem 0.75rem; background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-sm); color: var(--color-text-primary); font-size: 0.8125rem;">
+              <option>All Channels</option>
+              <option>Newsletter</option>
+              <option>Blog</option>
+              <option>Video</option>
+              <option>Social</option>
+            </select>
+          </div>
+          <div class="chart-body">
+            <div class="chart-placeholder">
+              <i data-lucide="line-chart"></i>
+              <p>Interactive engagement chart</p>
+              <p style="font-size: 0.75rem;">Showing daily reach and engagement trends</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="content-performance">
+          <div class="perf-header">
+            <span class="perf-title">Top Performing Content</span>
+            <button class="btn btn-ghost btn-sm">View All</button>
+          </div>
+          <table class="perf-table">
+            <thead>
+              <tr>
+                <th>Content</th>
+                <th>Goal</th>
+                <th>Views</th>
+                <th>Engagement</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="content-title">The Economic Agency Paradox</div>
+                  <div class="content-type">Article • Blog</div>
+                </td>
+                <td><span class="arch-mini">GOAL-001</span></td>
+                <td>12,450</td>
+                <td style="color: #10b981;">12.3%</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="content-title">L/0 Livestream #48: Data Dividends</div>
+                  <div class="content-type">Video • YouTube</div>
+                </td>
+                <td><span class="arch-mini">GOAL-002</span></td>
+                <td>8,920</td>
+                <td style="color: #10b981;">9.8%</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="content-title">Newsletter #48: UBI Myths Debunked</div>
+                  <div class="content-type">Email • Substack</div>
+                </td>
+                <td><span class="arch-mini">GOAL-001</span></td>
+                <td>2,340</td>
+                <td style="color: #10b981;">68% open</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="content-title">Automation Tax Framework Brief</div>
+                  <div class="content-type">Policy Brief • PDF</div>
+                </td>
+                <td><span class="arch-mini">GOAL-003</span></td>
+                <td>1,890</td>
+                <td style="color: #10b981;">420 downloads</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="goal-impact">
+        <div class="goal-header">
+          <h3><i data-lucide="target"></i> Goal Impact Metrics</h3>
+        </div>
+        <div class="goal-list">
+          <div class="goal-item">
+            <div class="goal-item-header">
+              <span class="goal-tag"><i data-lucide="target"></i> GOAL-001</span>
+              <span class="goal-reach">45.2K reached</span>
+            </div>
+            <div class="goal-name">Universal Basic Income Advocacy</div>
+            <div class="goal-progress"><div class="goal-progress-bar" style="width: 78%; background: linear-gradient(90deg, #6366f1, #8b5cf6);"></div></div>
+            <div class="goal-stats"><span>12 pieces published</span><span>+24% vs target</span></div>
+          </div>
+          
+          <div class="goal-item">
+            <div class="goal-item-header">
+              <span class="goal-tag"><i data-lucide="target"></i> GOAL-002</span>
+              <span class="goal-reach">28.1K reached</span>
+            </div>
+            <div class="goal-name">Data Ownership Rights</div>
+            <div class="goal-progress"><div class="goal-progress-bar" style="width: 65%; background: linear-gradient(90deg, #10b981, #06b6d4);"></div></div>
+            <div class="goal-stats"><span>8 pieces published</span><span>+12% vs target</span></div>
+          </div>
+          
+          <div class="goal-item">
+            <div class="goal-item-header">
+              <span class="goal-tag"><i data-lucide="target"></i> GOAL-003</span>
+              <span class="goal-reach">18.4K reached</span>
+            </div>
+            <div class="goal-name">Automation Taxation</div>
+            <div class="goal-progress"><div class="goal-progress-bar" style="width: 52%; background: linear-gradient(90deg, #f59e0b, #fbbf24);"></div></div>
+            <div class="goal-stats"><span>5 pieces published</span><span>-3% vs target</span></div>
+          </div>
+          
+          <div class="goal-item">
+            <div class="goal-item-header">
+              <span class="goal-tag"><i data-lucide="target"></i> GOAL-007</span>
+              <span class="goal-reach">32.8K reached</span>
+            </div>
+            <div class="goal-name">Public Awareness</div>
+            <div class="goal-progress"><div class="goal-progress-bar" style="width: 85%; background: linear-gradient(90deg, #ec4899, #f472b6);"></div></div>
+            <div class="goal-stats"><span>18 pieces published</span><span>+31% vs target</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

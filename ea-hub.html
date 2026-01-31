@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Hub | PLE Platform</title>
+  <meta name="description" content="Enterprise Architecture management for Post-Labor Economics">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --color-bg-primary: #09090b;
+      --color-bg-secondary: #18181b;
+      --color-bg-tertiary: #27272a;
+      --color-bg-glass: rgba(24, 24, 27, 0.7);
+      --color-border: rgba(63, 63, 70, 0.5);
+      --color-border-hover: rgba(99, 102, 241, 0.5);
+      --color-text-primary: #fafafa;
+      --color-text-secondary: #a1a1aa;
+      --color-text-muted: #71717a;
+      --color-primary: #6366f1;
+      --color-primary-light: #818cf8;
+      --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --gradient-mesh: radial-gradient(at 40% 20%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                       radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+                       radial-gradient(at 0% 50%, rgba(236, 72, 153, 0.05) 0px, transparent 50%);
+      --header-height: 64px;
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 60px rgba(99, 102, 241, 0.15);
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+    
+    /* Header */
+    .header {
+      height: var(--header-height);
+      background: var(--color-bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--color-border);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      transition: all var(--transition-base);
+    }
+    
+    .back-btn:hover {
+      border-color: var(--color-border-hover);
+      color: var(--color-text-primary);
+    }
+    
+    .back-btn i { width: 16px; height: 16px; }
+    
+    .page-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .page-badge-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+    }
+    
+    .page-badge-icon i { width: 20px; height: 20px; color: white; }
+    
+    .page-badge-text h1 {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    
+    .page-badge-text span {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .header-btn {
+      height: 40px;
+      padding: 0 1rem;
+      background: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all var(--transition-base);
+    }
+    
+    .header-btn:hover {
+      border-color: var(--color-border-hover);
+      color: var(--color-text-primary);
+    }
+    
+    .header-btn i { width: 16px; height: 16px; }
+    
+    .header-btn.primary {
+      background: var(--gradient-primary);
+      border: none;
+      color: white;
+    }
+    
+    .header-btn.primary:hover {
+      box-shadow: var(--shadow-glow);
+    }
+    
+    /* Main Content */
+    .main {
+      padding-top: calc(var(--header-height) + 2rem);
+      padding-bottom: 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    
+    /* Hero Stats Banner */
+    .hero-stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .hero-stats::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: var(--gradient-mesh);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .stat-card {
+      flex: 1;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-base);
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-primary);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+    
+    .stat-card:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-2px);
+    }
+    
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+    
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .stat-card-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary-light);
+    }
+    
+    .stat-card-icon i { width: 20px; height: 20px; }
+    
+    .stat-card-badge {
+      padding: 0.25rem 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border-radius: 4px;
+      font-size: 0.625rem;
+      font-weight: 600;
+    }
+    
+    .stat-card-value {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .stat-card-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Section Styles */
+    .section {
+      margin-bottom: 2.5rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+    
+    .section-title i {
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-muted);
+    }
+    
+    .section-link {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-primary-light);
+      text-decoration: none;
+      transition: color var(--transition-base);
+    }
+    
+    .section-link:hover { color: #a78bfa; }
+    .section-link i { width: 14px; height: 14px; }
+    
+    /* Tool Cards Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    .tool-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-base);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity var(--transition-base);
+    }
+    
+    .tool-card:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+    
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+    
+    .tool-card-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border-radius: 4px;
+      font-size: 0.625rem;
+      font-weight: 600;
+    }
+    
+    .tool-card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      transition: all var(--transition-base);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tool-card:hover .tool-card-icon {
+      background: rgba(99, 102, 241, 0.2);
+      transform: scale(1.05);
+    }
+    
+    .tool-card-icon i {
+      width: 24px;
+      height: 24px;
+      color: var(--color-primary-light);
+    }
+    
+    .tool-card-name {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      margin-bottom: 0.375rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tool-card-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tool-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .tool-card-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .tool-card-meta i { width: 14px; height: 14px; opacity: 0.7; }
+    
+    /* Two Column Layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    /* Panel Styles */
+    .panel {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .panel-header {
+      padding: 1rem 1.25rem;
+      background: rgba(39, 39, 42, 0.5);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .panel-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .panel-title i { width: 16px; height: 16px; color: var(--color-text-muted); }
+    
+    .panel-body { padding: 1.25rem; }
+    
+    /* Compliance Ring */
+    .compliance-display {
+      text-align: center;
+      padding: 1rem;
+    }
+    
+    .compliance-ring {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .compliance-ring svg {
+      transform: rotate(-90deg);
+      width: 180px;
+      height: 180px;
+    }
+    
+    .compliance-ring circle {
+      fill: none;
+      stroke-width: 12;
+      stroke-linecap: round;
+    }
+    
+    .compliance-ring .track {
+      stroke: var(--color-bg-tertiary);
+    }
+    
+    .compliance-ring .progress {
+      stroke: url(#compliance-gradient);
+      stroke-dasharray: 502;
+      stroke-dashoffset: 55;
+      transition: stroke-dashoffset 1s ease;
+    }
+    
+    .compliance-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    
+    .compliance-value span {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .compliance-value small {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    .compliance-breakdown {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .breakdown-item {
+      padding: 0.875rem;
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .breakdown-label {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .breakdown-label i { width: 14px; height: 14px; opacity: 0.6; }
+    
+    .breakdown-value {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    
+    .breakdown-value.good { color: #10b981; }
+    .breakdown-value.warning { color: #f59e0b; }
+    
+    /* Changes List */
+    .changes-list { display: flex; flex-direction: column; }
+    
+    .change-item {
+      display: flex;
+      gap: 0.875rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--color-border);
+      transition: all var(--transition-base);
+    }
+    
+    .change-item:last-child { border-bottom: none; }
+    
+    .change-item:hover {
+      background: rgba(99, 102, 241, 0.04);
+      margin: 0 -1.25rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+    
+    .change-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .change-icon i { width: 16px; height: 16px; }
+    .change-icon.added { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .change-icon.modified { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .change-icon.approved { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    
+    .change-content { flex: 1; min-width: 0; }
+    .change-title { font-size: 0.8125rem; font-weight: 500; margin-bottom: 0.25rem; }
+    
+    .change-meta {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .change-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .change-meta i { width: 12px; height: 12px; }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-base);
+    }
+    
+    .quick-action:hover {
+      border-color: var(--color-border-hover);
+      background: rgba(99, 102, 241, 0.08);
+      transform: translateX(4px);
+    }
+    
+    .quick-action-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .quick-action-icon i { width: 18px; height: 18px; }
+    .quick-action-icon.purple { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .quick-action-icon.green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .quick-action-icon.orange { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .quick-action-icon.pink { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    
+    .quick-action-text { flex: 1; }
+    .quick-action-name { font-size: 0.875rem; font-weight: 600; }
+    .quick-action-desc { font-size: 0.6875rem; color: var(--color-text-muted); }
+    
+    .quick-action-arrow {
+      color: var(--color-text-muted);
+      transition: all var(--transition-base);
+    }
+    
+    .quick-action:hover .quick-action-arrow {
+      color: var(--color-primary);
+      transform: translateX(4px);
+    }
+    
+    .quick-action-arrow i { width: 16px; height: 16px; }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 1024px) {
+      .two-col { grid-template-columns: 1fr; }
+      .hero-stats { flex-wrap: wrap; }
+      .stat-card { min-width: calc(50% - 0.5rem); }
+    }
+    
+    /* Collaboration Tools Grid */
+    .collab-tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .collab-tool {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: var(--color-text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all var(--transition-base);
+      text-align: center;
+    }
+    
+    .collab-tool i {
+      width: 20px;
+      height: 20px;
+      color: var(--color-primary);
+      transition: transform var(--transition-fast);
+    }
+    
+    .collab-tool:hover {
+      background: var(--color-bg-tertiary);
+      border-color: var(--color-border-hover);
+      color: var(--color-text-primary);
+      transform: translateY(-2px);
+    }
+    
+    .collab-tool:hover i {
+      transform: scale(1.1);
+    }
+    
+    @media (max-width: 768px) {
+      .header { padding: 0 1rem; }
+      .main { padding-left: 1rem; padding-right: 1rem; }
+      .tools-grid { grid-template-columns: 1fr; }
+      .stat-card { min-width: 100%; }
+      .quick-actions { grid-template-columns: 1fr; }
+      .collab-tools-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <a href="/platform-home.html" class="back-btn">
+        <i data-lucide="arrow-left"></i>
+        <span>Platform</span>
+      </a>
+      <div class="page-badge">
+        <div class="page-badge-icon"><i data-lucide="layers"></i></div>
+        <div class="page-badge-text">
+          <h1>Enterprise Architecture</h1>
+          <span>TOGAF-aligned architecture management</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="header-btn"><i data-lucide="search"></i> Search</button>
+      <button class="header-btn"><i data-lucide="git-compare"></i> Impact Analysis</button>
+      <button class="header-btn primary"><i data-lucide="plus"></i> New Element</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Hero Stats -->
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon"><i data-lucide="scale"></i></div>
+          <span class="stat-card-badge">Active</span>
+        </div>
+        <div class="stat-card-value">12</div>
+        <div class="stat-card-label">Guiding Principles</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon"><i data-lucide="boxes"></i></div>
+          <span class="stat-card-badge">+3 this month</span>
+        </div>
+        <div class="stat-card-value">47</div>
+        <div class="stat-card-label">Business Capabilities</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon"><i data-lucide="book-check"></i></div>
+          <span class="stat-card-badge">2 pending</span>
+        </div>
+        <div class="stat-card-value">28</div>
+        <div class="stat-card-label">Technology Standards</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <div class="stat-card-icon"><i data-lucide="puzzle"></i></div>
+        </div>
+        <div class="stat-card-value">34</div>
+        <div class="stat-card-label">Building Blocks</div>
+      </div>
+    </div>
+    
+    <!-- Core Repository -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i data-lucide="archive"></i> Core Repository</h2>
+        <a href="/ea-repository.html" class="section-link">Browse all <i data-lucide="arrow-right"></i></a>
+      </div>
+      
+      <div class="tools-grid">
+        <a href="/ea-bmm.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="compass"></i></div>
+          <h3 class="tool-card-name">Business Motivation Model</h3>
+          <p class="tool-card-desc">Vision, mission, goals, objectives, and strategies that drive our work</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="target"></i> 3 Goals</span>
+            <span><i data-lucide="route"></i> 8 Strategies</span>
+          </div>
+        </a>
+        
+        <a href="/ea-principles.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="scale"></i></div>
+          <h3 class="tool-card-name">Architecture Principles</h3>
+          <p class="tool-card-desc">12 guiding principles with rationale and implications</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="check-circle"></i> 94% compliance</span>
+          </div>
+        </a>
+        
+        <a href="/ea-capabilities.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="boxes"></i></div>
+          <h3 class="tool-card-name">Capability Model</h3>
+          <p class="tool-card-desc">47 capabilities across 4 domains with maturity tracking</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="layers"></i> 4 Domains</span>
+            <span><i data-lucide="trending-up"></i> Avg L2</span>
+          </div>
+        </a>
+        
+        <a href="/ea-standards.html" class="tool-card">
+          <span class="tool-card-badge">2 pending</span>
+          <div class="tool-card-icon"><i data-lucide="book-check"></i></div>
+          <h3 class="tool-card-name">Standards Catalog</h3>
+          <p class="tool-card-desc">28 standards with lifecycle states and guidance</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="check"></i> 18 Standard</span>
+            <span><i data-lucide="flask-conical"></i> 6 Trial</span>
+          </div>
+        </a>
+        
+        <a href="/ea-building-blocks.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="puzzle"></i></div>
+          <h3 class="tool-card-name">Building Blocks</h3>
+          <p class="tool-card-desc">18 ABBs and 16 SBBs with capability mappings</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="box"></i> 18 ABBs</span>
+            <span><i data-lucide="server"></i> 16 SBBs</span>
+          </div>
+        </a>
+        
+        <a href="/ea-value-streams.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="git-branch"></i></div>
+          <h3 class="tool-card-name">Value Streams</h3>
+          <p class="tool-card-desc">4 value streams with stages and capability links</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="workflow"></i> 4 Streams</span>
+          </div>
+        </a>
+        
+        <a href="/ea-stakeholders.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="users"></i></div>
+          <h3 class="tool-card-name">Stakeholder Map</h3>
+          <p class="tool-card-desc">18 stakeholders with power/interest analysis</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="user"></i> 18 Stakeholders</span>
+          </div>
+        </a>
+        
+        <a href="/ea-viewpoints.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="eye"></i></div>
+          <h3 class="tool-card-name">Viewpoints & Views</h3>
+          <p class="tool-card-desc">6 architecture viewpoints for different concerns</p>
+          <div class="tool-card-meta">
+            <span><i data-lucide="layout"></i> 6 Viewpoints</span>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Analysis Tools -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i data-lucide="bar-chart-3"></i> Analysis & Planning</h2>
+      </div>
+      
+      <div class="tools-grid">
+        <a href="/ea-gap-analysis.html" class="tool-card">
+          <span class="tool-card-badge">New</span>
+          <div class="tool-card-icon"><i data-lucide="git-pull-request"></i></div>
+          <h3 class="tool-card-name">Gap Analysis</h3>
+          <p class="tool-card-desc">Compare current state to target state across domains</p>
+        </a>
+        
+        <a href="/ea-impact.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="git-compare"></i></div>
+          <h3 class="tool-card-name">Impact Analysis</h3>
+          <p class="tool-card-desc">Assess change impact across architecture elements</p>
+        </a>
+        
+        <a href="/ea-roadmap.html" class="tool-card">
+          <span class="tool-card-badge">New</span>
+          <div class="tool-card-icon"><i data-lucide="gantt-chart"></i></div>
+          <h3 class="tool-card-name">Architecture Roadmap</h3>
+          <p class="tool-card-desc">Timeline of planned changes by ADM phase</p>
+        </a>
+        
+        <a href="/ea-metamodel.html" class="tool-card">
+          <div class="tool-card-icon"><i data-lucide="workflow"></i></div>
+          <h3 class="tool-card-name">Metamodel Reference</h3>
+          <p class="tool-card-desc">Entity types, relationships, and constraints</p>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Two Column: Health & Activity -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><i data-lucide="shield-check"></i> Architecture Health</div>
+        </div>
+        <div class="panel-body">
+          <div class="compliance-display">
+            <div class="compliance-ring">
+              <svg viewBox="0 0 180 180">
+                <defs>
+                  <linearGradient id="compliance-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#6366f1"/>
+                    <stop offset="100%" style="stop-color:#a78bfa"/>
+                  </linearGradient>
+                </defs>
+                <circle class="track" cx="90" cy="90" r="80"/>
+                <circle class="progress" cx="90" cy="90" r="80"/>
+              </svg>
+              <div class="compliance-value">
+                <span>89%</span>
+                <small>Compliance</small>
+              </div>
+            </div>
+            
+            <div class="compliance-breakdown">
+              <div class="breakdown-item">
+                <span class="breakdown-label"><i data-lucide="scale"></i> Principles</span>
+                <span class="breakdown-value good">94%</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-label"><i data-lucide="book-check"></i> Standards</span>
+                <span class="breakdown-value warning">78%</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-label"><i data-lucide="boxes"></i> Capabilities</span>
+                <span class="breakdown-value good">86%</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-label"><i data-lucide="target"></i> Goals</span>
+                <span class="breakdown-value good">91%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><i data-lucide="history"></i> Recent Changes</div>
+        </div>
+        <div class="panel-body">
+          <div class="changes-list">
+            <div class="change-item">
+              <div class="change-icon approved"><i data-lucide="check-circle"></i></div>
+              <div class="change-content">
+                <div class="change-title">PRIN-010: Climate-Conscious Tech approved</div>
+                <div class="change-meta">
+                  <span><i data-lucide="user"></i> Architecture Board</span>
+                  <span><i data-lucide="clock"></i> 5 hours ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="change-item">
+              <div class="change-icon added"><i data-lucide="plus"></i></div>
+              <div class="change-content">
+                <div class="change-title">CAP-024: Data Dividends capability added</div>
+                <div class="change-meta">
+                  <span><i data-lucide="user"></i> Maria K.</span>
+                  <span><i data-lucide="clock"></i> Yesterday</span>
+                </div>
+              </div>
+            </div>
+            <div class="change-item">
+              <div class="change-icon modified"><i data-lucide="edit-3"></i></div>
+              <div class="change-content">
+                <div class="change-title">STD-009: Discord updated to Standard</div>
+                <div class="change-meta">
+                  <span><i data-lucide="user"></i> Tech WG</span>
+                  <span><i data-lucide="clock"></i> 2 days ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="change-item">
+              <div class="change-icon added"><i data-lucide="plus"></i></div>
+              <div class="change-content">
+                <div class="change-title">SBB-017: Castopod added as Trial</div>
+                <div class="change-meta">
+                  <span><i data-lucide="user"></i> Tech WG</span>
+                  <span><i data-lucide="clock"></i> 3 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <section class="section" style="margin-top: 2rem;">
+      <div class="section-header">
+        <h2 class="section-title"><i data-lucide="zap"></i> Quick Actions</h2>
+      </div>
+      
+      <div class="quick-actions">
+        <a href="/ea-alignment.html" class="quick-action">
+          <div class="quick-action-icon purple"><i data-lucide="check-square"></i></div>
+          <div class="quick-action-text">
+            <div class="quick-action-name">Check Alignment</div>
+            <div class="quick-action-desc">Verify initiative alignment with architecture</div>
+          </div>
+          <div class="quick-action-arrow"><i data-lucide="arrow-right"></i></div>
+        </a>
+        
+        <a href="/ea-governance.html#exceptions" class="quick-action">
+          <div class="quick-action-icon orange"><i data-lucide="alert-triangle"></i></div>
+          <div class="quick-action-text">
+            <div class="quick-action-name">Request Exception</div>
+            <div class="quick-action-desc">Submit a standards exception request</div>
+          </div>
+          <div class="quick-action-arrow"><i data-lucide="arrow-right"></i></div>
+        </a>
+        
+        <a href="/ea-standards.html#propose" class="quick-action">
+          <div class="quick-action-icon green"><i data-lucide="lightbulb"></i></div>
+          <div class="quick-action-text">
+            <div class="quick-action-name">Propose Standard</div>
+            <div class="quick-action-desc">Suggest a new technology standard</div>
+          </div>
+          <div class="quick-action-arrow"><i data-lucide="arrow-right"></i></div>
+        </a>
+        
+        <a href="/ea-governance.html#reviews" class="quick-action">
+          <div class="quick-action-icon pink"><i data-lucide="clipboard-check"></i></div>
+          <div class="quick-action-text">
+            <div class="quick-action-name">Review Pending</div>
+            <div class="quick-action-desc">7 items awaiting review</div>
+          </div>
+          <div class="quick-action-arrow"><i data-lucide="arrow-right"></i></div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Architecture Collaboration Tools -->
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2><i data-lucide="users" style="width:24px;height:24px;color:var(--color-primary)"></i> Collaboration Tools</h2>
+          <p class="section-subtitle">Work together on architecture artifacts and decisions</p>
+        </div>
+        <a href="/arch-dashboard.html" class="view-all-link">View Dashboard <i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="collab-tools-grid">
+        <a href="/arch-dashboard.html" class="collab-tool"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
+        <a href="/arch-create.html" class="collab-tool"><i data-lucide="plus-circle"></i><span>Create Element</span></a>
+        <a href="/arch-editor.html" class="collab-tool"><i data-lucide="edit-3"></i><span>Editor</span></a>
+        <a href="/arch-explorer.html" class="collab-tool"><i data-lucide="compass"></i><span>Explorer</span></a>
+        <a href="/arch-search.html" class="collab-tool"><i data-lucide="search"></i><span>Search</span></a>
+        <a href="/arch-templates.html" class="collab-tool"><i data-lucide="file-code"></i><span>Templates</span></a>
+        <a href="/arch-review.html" class="collab-tool"><i data-lucide="check-circle"></i><span>Reviews</span></a>
+        <a href="/arch-workflow.html" class="collab-tool"><i data-lucide="git-branch"></i><span>Workflow</span></a>
+        <a href="/arch-versioning.html" class="collab-tool"><i data-lucide="history"></i><span>Versioning</span></a>
+        <a href="/arch-diff.html" class="collab-tool"><i data-lucide="git-compare"></i><span>Diff View</span></a>
+        <a href="/arch-collaborate.html" class="collab-tool"><i data-lucide="users"></i><span>Collaborate</span></a>
+        <a href="/arch-voting.html" class="collab-tool"><i data-lucide="vote"></i><span>Voting</span></a>
+        <a href="/arch-deliberation.html" class="collab-tool"><i data-lucide="message-square"></i><span>Deliberation</span></a>
+        <a href="/arch-decisions.html" class="collab-tool"><i data-lucide="gavel"></i><span>Decisions</span></a>
+        <a href="/arch-meetings.html" class="collab-tool"><i data-lucide="video"></i><span>Meetings</span></a>
+        <a href="/arch-groups.html" class="collab-tool"><i data-lucide="users-round"></i><span>Groups</span></a>
+        <a href="/arch-members.html" class="collab-tool"><i data-lucide="user-check"></i><span>Members</span></a>
+        <a href="/arch-notifications.html" class="collab-tool"><i data-lucide="bell"></i><span>Notifications</span></a>
+        <a href="/arch-artifacts.html" class="collab-tool"><i data-lucide="box"></i><span>Artifacts</span></a>
+        <a href="/arch-dependencies.html" class="collab-tool"><i data-lucide="network"></i><span>Dependencies</span></a>
+        <a href="/arch-alignment.html" class="collab-tool"><i data-lucide="target"></i><span>Alignment</span></a>
+        <a href="/arch-analytics.html" class="collab-tool"><i data-lucide="bar-chart-3"></i><span>Analytics</span></a>
+        <a href="/arch-roadmap.html" class="collab-tool"><i data-lucide="map"></i><span>Roadmap</span></a>
+        <a href="/arch-strategy.html" class="collab-tool"><i data-lucide="trending-up"></i><span>Strategy</span></a>
+        <a href="/arch-principles.html" class="collab-tool"><i data-lucide="bookmark"></i><span>Principles</span></a>
+        <a href="/arch-knowledge.html" class="collab-tool"><i data-lucide="book-open"></i><span>Knowledge Base</span></a>
+        <a href="/arch-whiteboard.html" class="collab-tool"><i data-lucide="pen-tool"></i><span>Whiteboard</span></a>
+        <a href="/arch-communication.html" class="collab-tool"><i data-lucide="megaphone"></i><span>Communication</span></a>
+        <a href="/arch-technical.html" class="collab-tool"><i data-lucide="cpu"></i><span>Technical</span></a>
+        <a href="/arch-integrations.html" class="collab-tool"><i data-lucide="plug"></i><span>Integrations</span></a>
+        <a href="/arch-settings.html" class="collab-tool"><i data-lucide="settings"></i><span>Settings</span></a>
+        <a href="/arch-onboarding.html" class="collab-tool"><i data-lucide="rocket"></i><span>Onboarding</span></a>
+        <a href="/arch-mission.html" class="collab-tool"><i data-lucide="flag"></i><span>Mission</span></a>
+        <a href="/arch-contributing.html" class="collab-tool"><i data-lucide="heart-handshake"></i><span>Contributing</span></a>
+        <a href="/arch-my-contributions.html" class="collab-tool"><i data-lucide="user"></i><span>My Work</span></a>
+        <a href="/arch-help.html" class="collab-tool"><i data-lucide="help-circle"></i><span>Help</span></a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

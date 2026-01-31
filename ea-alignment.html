@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Initiative Alignment | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Check alignment of proposed initiatives with architecture principles, capabilities, and standards.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .align-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .align-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .align-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Initiative Input */
+    .initiative-form {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .form-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .form-title i {
+      width: 20px;
+      height: 20px;
+      color: var(--color-primary);
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    
+    .form-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+    }
+    
+    .form-input, .form-textarea, .form-select {
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.9375rem;
+    }
+    
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    
+    /* Results Layout */
+    .results-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+    }
+    
+    /* Score Card */
+    .score-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .score-title {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+    
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 1rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .score-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 8px solid var(--color-bg-tertiary);
+    }
+    
+    .score-ring-progress {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 8px solid transparent;
+      border-top-color: #10b981;
+      border-right-color: #10b981;
+      border-bottom-color: #10b981;
+      transform: rotate(-45deg);
+    }
+    
+    .score-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #10b981;
+    }
+    
+    .score-max {
+      font-size: 1.25rem;
+      color: var(--color-text-muted);
+    }
+    
+    .score-label {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #10b981;
+    }
+    
+    .score-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-top: 0.5rem;
+    }
+    
+    /* Alignment Sections */
+    .align-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    
+    .align-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .align-section-header {
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .align-section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .align-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .align-icon i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .align-score {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .align-score-value {
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+    
+    .align-score-value.good { color: #10b981; }
+    .align-score-value.warning { color: #f59e0b; }
+    .align-score-value.critical { color: #ef4444; }
+    
+    .align-section-body {
+      padding: 1rem 1.25rem;
+    }
+    
+    /* Alignment Items */
+    .align-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.875rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .align-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .align-status {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .align-status i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .align-status.aligned { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .align-status.partial { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .align-status.gap { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .align-status.na { background: var(--color-bg-secondary); color: var(--color-text-muted); }
+    
+    .align-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .align-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .align-detail {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+    
+    /* Recommendations Panel */
+    .recommendations-panel {
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .rec-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .rec-card:last-child {
+      margin-bottom: 0;
+    }
+    
+    .rec-header {
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .rec-header i {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+    
+    .rec-body {
+      padding: 1rem 1.25rem;
+    }
+    
+    /* Action Items */
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .action-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+    }
+    
+    .action-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .action-icon i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .action-icon.required { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .action-icon.recommended { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .action-icon.optional { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    
+    .action-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+    
+    /* Suggested Resources */
+    .resource-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .resource-item:hover {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+    }
+    
+    .resource-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    @media (max-width: 1024px) {
+      .results-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .recommendations-panel {
+        position: static;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="align-header">
+      <div>
+        <h1>Initiative Alignment</h1>
+        <p class="align-header-desc">Check how your proposed initiative aligns with community architecture. Identify gaps early and get guidance on requirements.</p>
+      </div>
+    </div>
+    
+    <!-- Initiative Input Form -->
+    <div class="initiative-form">
+      <h2 class="form-title"><i data-lucide="file-plus"></i> Describe Your Initiative</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Initiative Name</label>
+          <input type="text" class="form-input" value="Community Podcast Platform" placeholder="Enter initiative name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select">
+            <option>Content Initiative</option>
+            <option>Technology Project</option>
+            <option>Policy Development</option>
+            <option>Community Program</option>
+            <option selected>Platform Development</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" placeholder="Describe what you're proposing...">Build a dedicated podcast hosting and distribution platform for PLE content. Would host episodes, show notes, transcripts, and enable community discussions around each episode.</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Primary Working Group</label>
+          <select class="form-select">
+            <option>Policy Mechanisms</option>
+            <option>Research & Analysis</option>
+            <option selected>Community Outreach</option>
+            <option>Technical Infrastructure</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estimated Effort</label>
+          <select class="form-select">
+            <option>Small (&lt; 1 week)</option>
+            <option selected>Medium (1-4 weeks)</option>
+            <option>Large (1-3 months)</option>
+            <option>Major (3+ months)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-outline">Save Draft</button>
+        <button class="btn btn-primary"><i data-lucide="scan"></i> Check Alignment</button>
+      </div>
+    </div>
+    
+    <!-- Results -->
+    <div class="results-layout">
+      <div class="results-main">
+        <!-- Score Card -->
+        <div class="score-card">
+          <div class="score-title">Overall Alignment Score</div>
+          <div class="score-circle">
+            <div class="score-ring"></div>
+            <div class="score-ring-progress"></div>
+            <div>
+              <span class="score-value">78</span><span class="score-max">/100</span>
+            </div>
+          </div>
+          <div class="score-label">Good Alignment</div>
+          <div class="score-desc">Minor adjustments needed before proceeding</div>
+        </div>
+        
+        <!-- Principles Alignment -->
+        <div class="align-section">
+          <div class="align-section-header">
+            <div class="align-section-title">
+              <div class="align-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="scale"></i>
+              </div>
+              <span>Principles Alignment</span>
+            </div>
+            <div class="align-score">
+              <span class="align-score-value warning">85%</span>
+            </div>
+          </div>
+          <div class="align-section-body">
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">PRIN-001: Open by Default</div>
+                <div class="align-detail">Content will be publicly accessible. Transcripts enable search and accessibility.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status partial"><i data-lucide="alert-triangle"></i></div>
+              <div class="align-content">
+                <div class="align-name">PRIN-005: Prefer Open Source</div>
+                <div class="align-detail">Consider open-source hosting alternatives (PeerTube, Castopod) before proprietary platforms.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">PRIN-006: Stakeholder Inclusivity</div>
+                <div class="align-detail">Audio format increases accessibility. Transcripts support hearing impaired.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">PRIN-007: Evidence-Based</div>
+                <div class="align-detail">Show notes and transcripts will include citations and sources.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Standards Alignment -->
+        <div class="align-section">
+          <div class="align-section-header">
+            <div class="align-section-title">
+              <div class="align-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="book-check"></i>
+              </div>
+              <span>Standards Compliance</span>
+            </div>
+            <div class="align-score">
+              <span class="align-score-value warning">70%</span>
+            </div>
+          </div>
+          <div class="align-section-body">
+            <div class="align-item">
+              <div class="align-status gap"><i data-lucide="x"></i></div>
+              <div class="align-content">
+                <div class="align-name">STD-007: Netlify (Hosting)</div>
+                <div class="align-detail">Podcast hosting requires specialized platform. Exception request may be needed.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">STD-004: Markdown</div>
+                <div class="align-detail">Show notes and transcripts can be stored as Markdown.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">STD-001: GitHub</div>
+                <div class="align-detail">Content management and show notes can live in a GitHub repository.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Capabilities -->
+        <div class="align-section">
+          <div class="align-section-header">
+            <div class="align-section-title">
+              <div class="align-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+                <i data-lucide="boxes"></i>
+              </div>
+              <span>Capability Support</span>
+            </div>
+            <div class="align-score">
+              <span class="align-score-value good">90%</span>
+            </div>
+          </div>
+          <div class="align-section-body">
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">CAP-Comm-03: Content Creation</div>
+                <div class="align-detail">Directly supports and extends existing content creation capability.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status aligned"><i data-lucide="check"></i></div>
+              <div class="align-content">
+                <div class="align-name">CAP-Comm-02: Community Building</div>
+                <div class="align-detail">Episode discussions enhance community engagement.</div>
+              </div>
+            </div>
+            <div class="align-item">
+              <div class="align-status partial"><i data-lucide="alert-triangle"></i></div>
+              <div class="align-content">
+                <div class="align-name">CAP-Tech-01: Platform Development</div>
+                <div class="align-detail">Will require development resources. Coordinate with Tech WG.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recommendations Panel -->
+      <div class="recommendations-panel">
+        <div class="rec-card">
+          <div class="rec-header"><i data-lucide="alert-circle"></i> Required Actions</div>
+          <div class="rec-body">
+            <div class="action-list">
+              <div class="action-item">
+                <div class="action-icon required"><i data-lucide="file-warning"></i></div>
+                <div class="action-text">Submit exception request for podcast hosting platform (STD-007)</div>
+              </div>
+              <div class="action-item">
+                <div class="action-icon required"><i data-lucide="users"></i></div>
+                <div class="action-text">Coordinate with Tech WG for development resources</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="rec-card">
+          <div class="rec-header"><i data-lucide="lightbulb"></i> Recommendations</div>
+          <div class="rec-body">
+            <div class="action-list">
+              <div class="action-item">
+                <div class="action-icon recommended"><i data-lucide="search"></i></div>
+                <div class="action-text">Evaluate Castopod (open-source) before proprietary alternatives</div>
+              </div>
+              <div class="action-item">
+                <div class="action-icon optional"><i data-lucide="link"></i></div>
+                <div class="action-text">Link content to relevant policy proposals and research</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="rec-card">
+          <div class="rec-header"><i data-lucide="book-open"></i> Helpful Resources</div>
+          <div class="rec-body">
+            <div class="resource-list">
+              <a class="resource-item"><i data-lucide="scale"></i> Principle: Prefer Open Source</a>
+              <a class="resource-item"><i data-lucide="book-check"></i> Standard: Hosting Platforms</a>
+              <a class="resource-item"><i data-lucide="file-warning"></i> Exception Request Template</a>
+              <a class="resource-item"><i data-lucide="boxes"></i> Content Creation Capability</a>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline" style="flex: 1;"><i data-lucide="download"></i> Export</button>
+          <button class="btn btn-primary" style="flex: 1;"><i data-lucide="send"></i> Submit</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

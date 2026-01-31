@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborative Editor | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Real-time collaborative editing for architecture documents with presence indicators and inline comments.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Editor Layout */
+    .editor-container {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      min-height: calc(100vh - var(--header-height));
+    }
+    
+    /* Toolbar */
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: var(--header-height);
+      z-index: 100;
+    }
+    
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .toolbar-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--color-border);
+      margin: 0 0.5rem;
+    }
+    
+    .toolbar-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      position: relative;
+    }
+    
+    .toolbar-btn:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .toolbar-btn.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .toolbar-btn i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .toolbar-btn[title]::after {
+      content: attr(title);
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+      font-size: 0.6875rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+    
+    .toolbar-btn:hover[title]::after {
+      opacity: 1;
+    }
+    
+    .toolbar-select {
+      padding: 0.375rem 2rem 0.375rem 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text-primary);
+      font-size: 0.8125rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+    }
+    
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    /* Presence Indicators */
+    .presence-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .presence-avatars {
+      display: flex;
+      margin-left: -6px;
+    }
+    
+    .presence-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+      margin-left: -6px;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .presence-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border: 2px solid var(--color-bg-secondary);
+      border-radius: 50%;
+    }
+    
+    .presence-avatar.typing::after {
+      background: #fbbf24;
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    
+    .presence-count {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Save Status */
+    .save-status {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .save-status i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .save-status.saving {
+      color: #fbbf24;
+    }
+    
+    .save-status.saved {
+      color: #10b981;
+    }
+    
+    /* Main Editor */
+    .editor-main {
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg-primary);
+    }
+    
+    .editor-content {
+      flex: 1;
+      padding: 3rem;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    /* Document Header */
+    .doc-header {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .doc-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .doc-type-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(244, 114, 182, 0.15);
+      color: #f472b6;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .doc-type-badge i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .doc-status {
+      padding: 0.25rem 0.75rem;
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .doc-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      outline: none;
+    }
+    
+    .doc-title:empty::before {
+      content: 'Untitled Document';
+      color: var(--color-text-muted);
+    }
+    
+    .doc-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      outline: none;
+    }
+    
+    .doc-subtitle:empty::before {
+      content: 'Add a brief description...';
+      color: var(--color-text-muted);
+    }
+    
+    /* Editor Body */
+    .editor-body {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--color-text-secondary);
+    }
+    
+    .editor-body [contenteditable] {
+      outline: none;
+    }
+    
+    .editor-body h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .editor-body h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .editor-body p {
+      margin-bottom: 1rem;
+    }
+    
+    .editor-body ul, .editor-body ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+    
+    .editor-body li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .editor-body blockquote {
+      border-left: 3px solid var(--color-primary);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--color-text-primary);
+      font-style: italic;
+    }
+    
+    .editor-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+      padding: 0.125rem 0.375rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      color: #f472b6;
+    }
+    
+    .editor-body pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    
+    /* Inline Comment Highlight */
+    .comment-highlight {
+      background: rgba(251, 191, 36, 0.2);
+      border-bottom: 2px solid #fbbf24;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .comment-highlight:hover {
+      background: rgba(251, 191, 36, 0.3);
+    }
+    
+    .comment-indicator {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 16px;
+      height: 16px;
+      background: #fbbf24;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    /* Suggestion Highlight */
+    .suggestion-add {
+      background: rgba(16, 185, 129, 0.2);
+      border-bottom: 2px dashed #10b981;
+    }
+    
+    .suggestion-remove {
+      background: rgba(239, 68, 68, 0.2);
+      text-decoration: line-through;
+      color: var(--color-text-muted);
+    }
+    
+    /* Cursor Positions */
+    .remote-cursor {
+      position: absolute;
+      width: 2px;
+      background: var(--cursor-color);
+      animation: blink 1s infinite;
+    }
+    
+    .remote-cursor::after {
+      content: attr(data-name);
+      position: absolute;
+      top: -20px;
+      left: 0;
+      padding: 2px 6px;
+      background: var(--cursor-color);
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 500;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    
+    /* Sidebar */
+    .editor-sidebar {
+      background: var(--color-bg-secondary);
+      border-left: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .sidebar-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .sidebar-tab {
+      flex: 1;
+      padding: 0.875rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    
+    .sidebar-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .sidebar-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+    
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    /* Comments Panel */
+    .comment-thread {
+      margin-bottom: 1rem;
+    }
+    
+    .comment-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      transition: all 0.15s;
+    }
+    
+    .comment-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .comment-card.selected {
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, 0.05);
+    }
+    
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .comment-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .comment-meta {
+      flex: 1;
+    }
+    
+    .comment-author {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .comment-time {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .comment-resolve {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    
+    .comment-resolve:hover {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+    
+    .comment-resolve i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .comment-context {
+      font-size: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 2px solid #fbbf24;
+      margin-bottom: 0.75rem;
+      border-radius: 0 4px 4px 0;
+      color: var(--color-text-secondary);
+    }
+    
+    .comment-body {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    
+    .comment-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .comment-action {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.15s;
+    }
+    
+    .comment-action:hover {
+      color: var(--color-primary);
+    }
+    
+    .comment-action i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Reply Thread */
+    .comment-replies {
+      margin-top: 0.75rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--color-border);
+    }
+    
+    .comment-reply {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .comment-reply:last-child {
+      border-bottom: none;
+    }
+    
+    /* Add Comment */
+    .add-comment {
+      margin-top: 1rem;
+    }
+    
+    .add-comment textarea {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+      resize: none;
+      min-height: 80px;
+    }
+    
+    .add-comment textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .add-comment-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    /* Suggestions Panel */
+    .suggestion-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .suggestion-diff {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+      margin: 0.75rem 0;
+    }
+    
+    .suggestion-old {
+      color: #ef4444;
+      text-decoration: line-through;
+    }
+    
+    .suggestion-new {
+      color: #10b981;
+    }
+    
+    .suggestion-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .suggestion-actions button {
+      flex: 1;
+    }
+    
+    /* Outline Panel */
+    .outline-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .outline-item:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .outline-item.active {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-primary);
+    }
+    
+    .outline-item.h2 {
+      padding-left: 0.75rem;
+    }
+    
+    .outline-item.h3 {
+      padding-left: 1.5rem;
+    }
+    
+    .outline-item i {
+      width: 14px;
+      height: 14px;
+      opacity: 0.5;
+    }
+    
+    /* Word Count */
+    .word-count {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+    
+    .word-count-item {
+      padding: 0.5rem;
+    }
+    
+    .word-count-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .word-count-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+    
+    @media (max-width: 1024px) {
+      .editor-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .editor-sidebar {
+        display: none;
+      }
+      
+      .editor-content {
+        padding: 2rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/arch-artifacts.html">← Artifacts</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="editor-toolbar" style="margin-top: var(--header-height);">
+    <div class="toolbar-left">
+      <div class="toolbar-group">
+        <select class="toolbar-select">
+          <option>Paragraph</option>
+          <option>Heading 1</option>
+          <option>Heading 2</option>
+          <option>Heading 3</option>
+          <option>Quote</option>
+          <option>Code</option>
+        </select>
+      </div>
+      
+      <div class="toolbar-divider"></div>
+      
+      <div class="toolbar-group">
+        <button class="toolbar-btn" title="Bold"><i data-lucide="bold"></i></button>
+        <button class="toolbar-btn" title="Italic"><i data-lucide="italic"></i></button>
+        <button class="toolbar-btn" title="Underline"><i data-lucide="underline"></i></button>
+        <button class="toolbar-btn" title="Strikethrough"><i data-lucide="strikethrough"></i></button>
+      </div>
+      
+      <div class="toolbar-divider"></div>
+      
+      <div class="toolbar-group">
+        <button class="toolbar-btn" title="Bullet List"><i data-lucide="list"></i></button>
+        <button class="toolbar-btn" title="Numbered List"><i data-lucide="list-ordered"></i></button>
+        <button class="toolbar-btn" title="Checklist"><i data-lucide="list-checks"></i></button>
+      </div>
+      
+      <div class="toolbar-divider"></div>
+      
+      <div class="toolbar-group">
+        <button class="toolbar-btn" title="Link"><i data-lucide="link"></i></button>
+        <button class="toolbar-btn" title="Image"><i data-lucide="image"></i></button>
+        <button class="toolbar-btn" title="Table"><i data-lucide="table-2"></i></button>
+        <button class="toolbar-btn" title="Divider"><i data-lucide="minus"></i></button>
+      </div>
+      
+      <div class="toolbar-divider"></div>
+      
+      <div class="toolbar-group">
+        <button class="toolbar-btn active" title="Comment"><i data-lucide="message-square"></i></button>
+        <button class="toolbar-btn" title="Suggest Edit"><i data-lucide="git-pull-request"></i></button>
+      </div>
+    </div>
+    
+    <div class="toolbar-right">
+      <div class="save-status saved">
+        <i data-lucide="check-circle"></i>
+        Saved
+      </div>
+      
+      <div class="presence-bar">
+        <div class="presence-avatars">
+          <div class="presence-avatar typing" style="background: linear-gradient(135deg, #10b981, #059669);" title="David S. - Editing">DS</div>
+          <div class="presence-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);" title="Maria K. - Viewing">MK</div>
+          <div class="presence-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);" title="You">SM</div>
+        </div>
+        <span class="presence-count">3 editing</span>
+      </div>
+      
+      <button class="btn btn-outline btn-sm">
+        <i data-lucide="share-2"></i> Share
+      </button>
+    </div>
+  </div>
+
+  <div class="editor-container">
+    <!-- Main Editor -->
+    <main class="editor-main">
+      <div class="editor-content">
+        <div class="doc-header">
+          <div class="doc-meta">
+            <span class="doc-type-badge">
+              <i data-lucide="lightbulb"></i>
+              Proposal
+            </span>
+            <span class="doc-status">In Review</span>
+          </div>
+          <h1 class="doc-title" contenteditable="true">Data Dividends Integration</h1>
+          <p class="doc-subtitle" contenteditable="true">Proposal to add "Data Dividends" as a component of Layer 3 (Collective Ownership) in the Pyramid of Prosperity</p>
+        </div>
+        
+        <div class="editor-body">
+          <h2 contenteditable="true">Context</h2>
+          <p contenteditable="true">As corporations increasingly monetize user data, citizens should receive direct compensation for their contributions to this value creation. This proposal establishes a formal mechanism within the Pyramid of Prosperity framework.</p>
+          
+          <h2 contenteditable="true">Problem Statement</h2>
+          <p contenteditable="true">Currently, Layer 3 (Collective Ownership) includes sovereign wealth funds, public infrastructure, and community-owned enterprises. However, it does not address the <span class="comment-highlight">significant value generated from personal data<span class="comment-indicator">3</span></span>, which corporations extract and monetize without adequate compensation to data generators.</p>
+          
+          <h2 contenteditable="true">Proposed Solution</h2>
+          <p contenteditable="true">Add "Data Dividends" as a fourth component of Layer 3 with the following characteristics:</p>
+          
+          <ul contenteditable="true">
+            <li><strong>Definition:</strong> Regular payments to citizens derived from corporate profits generated through the use of collective personal data</li>
+            <li><strong>Mechanism:</strong> Data trusts that negotiate on behalf of citizens and distribute proceeds</li>
+            <li><span class="suggestion-add"><strong>Valuation:</strong> Standardized methodologies for assessing data contribution value</span></li>
+            <li><strong>Privacy:</strong> Strong protections ensuring data use remains consensual and transparent</li>
+          </ul>
+          
+          <h2 contenteditable="true">Alignment with Principles</h2>
+          <p contenteditable="true">This proposal directly supports:</p>
+          
+          <blockquote contenteditable="true">
+            <strong>Human Agency First:</strong> Citizens gain control over their data and benefit from its use, rather than being passive subjects of data extraction.
+          </blockquote>
+          
+          <h2 contenteditable="true">Implementation Considerations</h2>
+          <p contenteditable="true">Implementation would require:</p>
+          
+          <ol contenteditable="true">
+            <li>Legislative framework for data rights</li>
+            <li>Technical infrastructure for tracking and distribution</li>
+            <li>International coordination for global data flows</li>
+            <li>Governance structures for data trusts</li>
+          </ol>
+          
+          <h2 contenteditable="true">References</h2>
+          <p contenteditable="true">Related artifacts:</p>
+          <ul contenteditable="true">
+            <li><code>FWK-001: Pyramid of Prosperity</code></li>
+            <li><code>PRIN-001: Human Agency First</code></li>
+            <li><code>ADR-007: Layer Definitions</code></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Sidebar -->
+    <aside class="editor-sidebar">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active">Comments</button>
+        <button class="sidebar-tab">Suggestions</button>
+        <button class="sidebar-tab">Outline</button>
+      </div>
+      
+      <div class="sidebar-content" id="comments-panel">
+        <div class="comment-thread">
+          <div class="comment-card selected">
+            <div class="comment-header">
+              <div class="comment-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+              <div class="comment-meta">
+                <div class="comment-author">David Shapiro</div>
+                <div class="comment-time">2 hours ago</div>
+              </div>
+              <button class="comment-resolve" title="Resolve"><i data-lucide="check"></i></button>
+            </div>
+            <div class="comment-context">"significant value generated from personal data"</div>
+            <div class="comment-body">Should we quantify this? According to recent studies, the average American's data is worth $240/year to tech companies.</div>
+            <div class="comment-actions">
+              <button class="comment-action"><i data-lucide="reply"></i> Reply</button>
+              <button class="comment-action"><i data-lucide="at-sign"></i> Mention</button>
+            </div>
+            
+            <div class="comment-replies">
+              <div class="comment-reply">
+                <div class="comment-header" style="margin-bottom: 0.5rem;">
+                  <div class="comment-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5); width: 24px; height: 24px; font-size: 0.5rem;">MK</div>
+                  <div class="comment-meta">
+                    <div class="comment-author">Maria K.</div>
+                    <div class="comment-time">1 hour ago</div>
+                  </div>
+                </div>
+                <div class="comment-body" style="font-size: 0.8125rem;">Great point. I'll add a reference to the Jaron Lanier research on data valuation.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="comment-thread">
+          <div class="comment-card">
+            <div class="comment-header">
+              <div class="comment-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+              <div class="comment-meta">
+                <div class="comment-author">Thomas Chen</div>
+                <div class="comment-time">Yesterday</div>
+              </div>
+              <button class="comment-resolve" title="Resolve"><i data-lucide="check"></i></button>
+            </div>
+            <div class="comment-body">The implementation section needs more detail on technical infrastructure. What specific technologies are we considering?</div>
+            <div class="comment-actions">
+              <button class="comment-action"><i data-lucide="reply"></i> Reply</button>
+              <button class="comment-action"><i data-lucide="at-sign"></i> Mention</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="add-comment">
+          <textarea placeholder="Add a comment..."></textarea>
+          <div class="add-comment-actions">
+            <button class="btn btn-outline btn-sm">Cancel</button>
+            <button class="btn btn-primary btn-sm">Comment</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-content" id="suggestions-panel" style="display: none;">
+        <div class="suggestion-card">
+          <div class="comment-header">
+            <div class="comment-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</div>
+            <div class="comment-meta">
+              <div class="comment-author">Sarah Mitchell</div>
+              <div class="comment-time">3 hours ago</div>
+            </div>
+          </div>
+          <div class="suggestion-diff">
+            <div class="suggestion-new">+ <strong>Valuation:</strong> Standardized methodologies for assessing data contribution value</div>
+          </div>
+          <div class="suggestion-actions">
+            <button class="btn btn-outline btn-sm" style="color: #ef4444; border-color: #ef4444;">
+              <i data-lucide="x"></i> Reject
+            </button>
+            <button class="btn btn-primary btn-sm" style="background: #10b981; border-color: #10b981;">
+              <i data-lucide="check"></i> Accept
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-content" id="outline-panel" style="display: none;">
+        <div class="outline-item h2 active">
+          <i data-lucide="hash"></i>
+          Context
+        </div>
+        <div class="outline-item h2">
+          <i data-lucide="hash"></i>
+          Problem Statement
+        </div>
+        <div class="outline-item h2">
+          <i data-lucide="hash"></i>
+          Proposed Solution
+        </div>
+        <div class="outline-item h2">
+          <i data-lucide="hash"></i>
+          Alignment with Principles
+        </div>
+        <div class="outline-item h2">
+          <i data-lucide="hash"></i>
+          Implementation Considerations
+        </div>
+        <div class="outline-item h2">
+          <i data-lucide="hash"></i>
+          References
+        </div>
+        
+        <div class="word-count" style="margin-top: 1.5rem;">
+          <div class="word-count-item">
+            <div class="word-count-value">342</div>
+            <div class="word-count-label">Words</div>
+          </div>
+          <div class="word-count-item">
+            <div class="word-count-value">2,104</div>
+            <div class="word-count-label">Characters</div>
+          </div>
+          <div class="word-count-item">
+            <div class="word-count-value">6</div>
+            <div class="word-count-label">Sections</div>
+          </div>
+          <div class="word-count-item">
+            <div class="word-count-value">~2 min</div>
+            <div class="word-count-label">Read Time</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    // Sidebar tabs
+    document.querySelectorAll('.sidebar-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const panels = {
+          'Comments': 'comments-panel',
+          'Suggestions': 'suggestions-panel',
+          'Outline': 'outline-panel'
+        };
+        
+        document.querySelectorAll('.sidebar-content').forEach(p => p.style.display = 'none');
+        document.getElementById(panels[tab.textContent]).style.display = 'block';
+      });
+    });
+    
+    // Toolbar buttons
+    document.querySelectorAll('.toolbar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!btn.classList.contains('active')) {
+          btn.classList.add('active');
+          setTimeout(() => btn.classList.remove('active'), 200);
+        }
+      });
+    });
+    
+    // Comment highlight click
+    document.querySelectorAll('.comment-highlight').forEach(highlight => {
+      highlight.addEventListener('click', () => {
+        document.querySelectorAll('.comment-card').forEach(c => c.classList.remove('selected'));
+        document.querySelector('.comment-card').classList.add('selected');
+      });
+    });
+    
+    // Outline items
+    document.querySelectorAll('.outline-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.outline-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    
+    // Simulated auto-save
+    let saveTimeout;
+    document.querySelectorAll('[contenteditable]').forEach(el => {
+      el.addEventListener('input', () => {
+        const status = document.querySelector('.save-status');
+        status.classList.remove('saved');
+        status.classList.add('saving');
+        status.innerHTML = '<i data-lucide="loader-2"></i> Saving...';
+        lucide.createIcons();
+        
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+          status.classList.remove('saving');
+          status.classList.add('saved');
+          status.innerHTML = '<i data-lucide="check-circle"></i> Saved';
+          lucide.createIcons();
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>

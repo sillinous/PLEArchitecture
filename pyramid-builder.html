@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pyramid Builder | Post-Labor Economics</title>
+  <meta name="description" content="Pyramid Builder - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/pyramid-builder.html">
+  <meta property="og:title" content="Pyramid Builder | Post-Labor Economics">
+  <meta property="og:description" content="Interactive tool to design your own post-labor transition framework using the Pyramid of Prosperity model.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-builder.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/pyramid-builder.html">
+  <meta name="twitter:title" content="Pyramid Builder | Post-Labor Economics">
+  <meta name="twitter:description" content="Interactive tool to design your own post-labor transition framework using the Pyramid of Prosperity model.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-builder.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.builder-hero {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+  padding: 2.5rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.builder-hero h1 {
+  margin-bottom: 0.5rem;
+}
+
+.builder-hero p {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Main Layout */
+.builder-container {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Pyramid Canvas */
+.pyramid-canvas {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  min-height: 600px;
+}
+
+.canvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.canvas-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.canvas-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.canvas-tab {
+  padding: 0.5rem 1rem;
+  background: var(--bg-tertiary);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.canvas-tab.active {
+  background: var(--accent);
+  color: white;
+}
+
+.canvas-tab:hover:not(.active) {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Pyramid Visualization */
+.pyramid-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+}
+
+.pyramid-layer-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  border: 2px dashed var(--border);
+  transition: all 0.3s;
+  min-height: 60px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.pyramid-layer-slot:hover {
+  border-color: var(--accent);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.pyramid-layer-slot.filled {
+  border-style: solid;
+  color: white;
+  font-weight: 600;
+}
+
+.pyramid-layer-slot.filled:hover {
+  transform: scale(1.02);
+}
+
+/* Layer widths for pyramid shape */
+.slot-5 { width: 35%; }
+.slot-4 { width: 50%; }
+.slot-3 { width: 65%; }
+.slot-2 { width: 80%; }
+.slot-1 { width: 95%; }
+
+.slot-empty-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.layer-remove {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.3);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.pyramid-layer-slot.filled:hover .layer-remove {
+  opacity: 1;
+}
+
+.layer-remove i {
+  width: 14px;
+  height: 14px;
+  color: white;
+}
+
+/* Sidebar */
+.builder-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mechanism-palette {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.palette-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.palette-header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.palette-filter {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.filter-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.filter-btn i {
+  width: 14px;
+  height: 14px;
+}
+
+.filter-btn.prosperity { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.filter-btn.power { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+.filter-btn.active { box-shadow: 0 0 0 2px var(--accent); }
+
+.mechanism-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.mechanism-item {
+  padding: 0.75rem;
+  background: var(--bg-tertiary);
+  border-radius: 0.5rem;
+  cursor: grab;
+  transition: all 0.2s;
+  border-left: 3px solid;
+}
+
+.mechanism-item:hover {
+  transform: translateX(4px);
+}
+
+.mechanism-item.prosperity { border-color: #10b981; }
+.mechanism-item.power { border-color: #6366f1; }
+
+.mechanism-item.dragging {
+  opacity: 0.5;
+}
+
+.mechanism-item h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.mechanism-item p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.mechanism-layer-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+  background: var(--bg-secondary);
+}
+
+/* Summary Panel */
+.summary-panel {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+
+.summary-panel h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.summary-stat {
+  background: var(--bg-tertiary);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.summary-stat .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.summary-stat .label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.coverage-meter {
+  margin-top: 1rem;
+}
+
+.coverage-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.coverage-bar {
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.coverage-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #6366f1);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+/* Actions */
+.builder-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.builder-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* Layer Detail Modal */
+.layer-detail {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display: none;
+}
+
+.layer-detail.active {
+  display: block;
+}
+
+.layer-detail h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.layer-detail p {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.layer-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.layer-example {
+  background: var(--bg-tertiary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+}
+
+/* Share Section */
+.share-section {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.share-section h3 {
+  margin-bottom: 1rem;
+}
+
+.share-url {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 500px;
+  margin: 0 auto 1rem;
+}
+
+.share-url input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.share-url .btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .builder-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .pyramid-layer-slot {
+    width: 100% !important;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Interactive Tool</span>
+  <h1>Pyramid Builder</h1>
+  <p class="page-description">Design your own post-labor transition framework</p>
+</div>
+
+<div class="builder-hero">
+  <h1>🔺 Build Your Pyramid</h1>
+  <p>
+    Explore different combinations of policy mechanisms. Drag items from the palette 
+    to build your ideal transition framework. See how the pieces fit together.
+  </p>
+</div>
+
+<div class="builder-container">
+  <!-- Pyramid Canvas -->
+  <div class="pyramid-canvas">
+    <div class="canvas-header">
+      <h2>Your Framework</h2>
+      <div class="canvas-tabs">
+        <button class="canvas-tab active" onclick="switchPyramid('prosperity')">Prosperity</button>
+        <button class="canvas-tab" onclick="switchPyramid('power')">Power</button>
+        <button class="canvas-tab" onclick="switchPyramid('combined')">Combined</button>
+      </div>
+    </div>
+    
+    <div class="pyramid-display" id="pyramid-prosperity">
+      <div class="pyramid-layer-slot slot-5" data-layer="5" data-pyramid="prosperity" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 5: Residual Wages</span>
+      </div>
+      <div class="pyramid-layer-slot slot-4" data-layer="4" data-pyramid="prosperity" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 4: Individual Assets</span>
+      </div>
+      <div class="pyramid-layer-slot slot-3" data-layer="3" data-pyramid="prosperity" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 3: Collective Private</span>
+      </div>
+      <div class="pyramid-layer-slot slot-2" data-layer="2" data-pyramid="prosperity" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 2: Public Assets</span>
+      </div>
+      <div class="pyramid-layer-slot slot-1" data-layer="1" data-pyramid="prosperity" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 1: Universals</span>
+      </div>
+    </div>
+    
+    <div class="pyramid-display" id="pyramid-power" style="display: none;">
+      <div class="pyramid-layer-slot slot-5" data-layer="5" data-pyramid="power" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 5: Metagovernance</span>
+      </div>
+      <div class="pyramid-layer-slot slot-4" data-layer="4" data-pyramid="power" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 4: Direct Democracy</span>
+      </div>
+      <div class="pyramid-layer-slot slot-3" data-layer="3" data-pyramid="power" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 3: Transparency</span>
+      </div>
+      <div class="pyramid-layer-slot slot-2" data-layer="2" data-pyramid="power" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 2: Payment Rails</span>
+      </div>
+      <div class="pyramid-layer-slot slot-1" data-layer="1" data-pyramid="power" onclick="selectSlot(this)">
+        <span class="slot-empty-text">Layer 1: Civic Bedrock</span>
+      </div>
+    </div>
+    
+    <div class="layer-detail" id="layer-detail">
+      <h4 id="detail-title">Select a layer</h4>
+      <p id="detail-description">Click on a pyramid layer or mechanism to see details.</p>
+      <div class="layer-examples" id="detail-examples"></div>
+    </div>
+  </div>
+  
+  <!-- Sidebar -->
+  <div class="builder-sidebar">
+    <!-- Mechanism Palette -->
+    <div class="mechanism-palette">
+      <div class="palette-header">
+        <h3>Policy Mechanisms</h3>
+        <div class="palette-filter">
+          <button class="filter-btn prosperity active" onclick="filterMechanisms('prosperity')" title="Prosperity">
+            <i data-lucide="trending-up"></i>
+          </button>
+          <button class="filter-btn power active" onclick="filterMechanisms('power')" title="Power">
+            <i data-lucide="shield"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="mechanism-list" id="mechanism-list">
+        <!-- Prosperity Mechanisms -->
+        <div class="mechanism-item prosperity" data-id="ubi" data-layer="1" data-pyramid="prosperity" draggable="true">
+          <h4>Universal Basic Income <span class="mechanism-layer-badge">L1</span></h4>
+          <p>Regular cash payments to all citizens</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="uhc" data-layer="1" data-pyramid="prosperity" draggable="true">
+          <h4>Universal Healthcare <span class="mechanism-layer-badge">L1</span></h4>
+          <p>Healthcare access for all citizens</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="swf" data-layer="2" data-pyramid="prosperity" draggable="true">
+          <h4>Sovereign Wealth Fund <span class="mechanism-layer-badge">L2</span></h4>
+          <p>National investment fund with citizen dividends</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="data-trust" data-layer="2" data-pyramid="prosperity" draggable="true">
+          <h4>Data Trust <span class="mechanism-layer-badge">L2</span></h4>
+          <p>Public data dividends for citizens</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="esop" data-layer="3" data-pyramid="prosperity" draggable="true">
+          <h4>ESOPs <span class="mechanism-layer-badge">L3</span></h4>
+          <p>Employee stock ownership plans</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="coop" data-layer="3" data-pyramid="prosperity" draggable="true">
+          <h4>Cooperatives <span class="mechanism-layer-badge">L3</span></h4>
+          <p>Worker-owned businesses</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="baby-bonds" data-layer="4" data-pyramid="prosperity" draggable="true">
+          <h4>Baby Bonds <span class="mechanism-layer-badge">L4</span></h4>
+          <p>Universal capital grants at birth</p>
+        </div>
+        <div class="mechanism-item prosperity" data-id="min-wage" data-layer="5" data-pyramid="prosperity" draggable="true">
+          <h4>High Minimum Wage <span class="mechanism-layer-badge">L5</span></h4>
+          <p>Strong wage floors for remaining jobs</p>
+        </div>
+        
+        <!-- Power Mechanisms -->
+        <div class="mechanism-item power" data-id="digital-id" data-layer="1" data-pyramid="power" draggable="true">
+          <h4>Digital Identity <span class="mechanism-layer-badge">L1</span></h4>
+          <p>Self-sovereign blockchain identity</p>
+        </div>
+        <div class="mechanism-item power" data-id="property-registry" data-layer="1" data-pyramid="power" draggable="true">
+          <h4>Property Registry <span class="mechanism-layer-badge">L1</span></h4>
+          <p>Immutable property records</p>
+        </div>
+        <div class="mechanism-item power" data-id="upi" data-layer="2" data-pyramid="power" draggable="true">
+          <h4>Open Payment Rails <span class="mechanism-layer-badge">L2</span></h4>
+          <p>Instant universal payments (like UPI)</p>
+        </div>
+        <div class="mechanism-item power" data-id="open-procurement" data-layer="3" data-pyramid="power" draggable="true">
+          <h4>Open Procurement <span class="mechanism-layer-badge">L3</span></h4>
+          <p>Transparent government contracting</p>
+        </div>
+        <div class="mechanism-item power" data-id="participatory-budget" data-layer="4" data-pyramid="power" draggable="true">
+          <h4>Participatory Budgeting <span class="mechanism-layer-badge">L4</span></h4>
+          <p>Citizens decide budget allocations</p>
+        </div>
+        <div class="mechanism-item power" data-id="quadratic-voting" data-layer="4" data-pyramid="power" draggable="true">
+          <h4>Quadratic Voting <span class="mechanism-layer-badge">L4</span></h4>
+          <p>Preference-weighted democratic voting</p>
+        </div>
+        <div class="mechanism-item power" data-id="sunset-clauses" data-layer="5" data-pyramid="power" draggable="true">
+          <h4>Sunset Clauses <span class="mechanism-layer-badge">L5</span></h4>
+          <p>Laws that auto-expire without renewal</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Summary Panel -->
+    <div class="summary-panel">
+      <h3>📊 Framework Summary</h3>
+      
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <div class="value" id="prosperity-count">0</div>
+          <div class="label">Prosperity Mechanisms</div>
+        </div>
+        <div class="summary-stat">
+          <div class="value" id="power-count">0</div>
+          <div class="label">Power Mechanisms</div>
+        </div>
+      </div>
+      
+      <div class="coverage-meter">
+        <div class="coverage-label">
+          <span>Layer Coverage</span>
+          <span id="coverage-percent">0%</span>
+        </div>
+        <div class="coverage-bar">
+          <div class="coverage-fill" id="coverage-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+      
+      <div class="builder-actions" style="margin-top: 1rem;">
+        <button class="btn btn-outline btn-sm" onclick="resetBuilder()">
+          <i data-lucide="refresh-cw"></i>
+          Reset
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="loadExample()">
+          <i data-lucide="sparkles"></i>
+          Example
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Share Section -->
+<div class="share-section">
+  <h3>📤 Share Your Framework</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+    Share your custom pyramid design with others
+  </p>
+  <div class="share-url">
+    <input type="text" id="share-url" value="Build a framework to generate share link" readonly>
+    <button class="btn btn-primary" onclick="copyShareUrl()">
+      <i data-lucide="copy"></i>
+      Copy
+    </button>
+  </div>
+  <p style="font-size: 0.8rem; color: var(--text-secondary);">
+    Or discuss your framework in the <a href="https://www.skool.com/postlaboreconomics" target="_blank">community</a>
+  </p>
+</div>
+
+<script>
+// State
+let currentPyramid = 'prosperity';
+let selectedMechanisms = {
+  prosperity: {},
+  power: {}
+};
+
+const mechanismDetails = {
+  'ubi': {
+    title: 'Universal Basic Income',
+    description: 'Regular unconditional cash payments to all citizens. Creates a floor of economic security without bureaucratic means-testing.',
+    examples: ['Alaska PFD ($1,600/yr)', 'Finland Pilot', 'Stockton SEED', 'GiveDirectly']
+  },
+  'uhc': {
+    title: 'Universal Healthcare',
+    description: 'Guarantee healthcare access to all citizens regardless of employment status. Decouples health security from jobs.',
+    examples: ['NHS (UK)', 'Medicare for All proposals', 'Taiwan NHI', 'Canada Medicare']
+  },
+  'swf': {
+    title: 'Sovereign Wealth Fund',
+    description: 'National investment fund that generates returns for all citizens. The gold standard is Norway\'s $1.7T fund.',
+    examples: ['Norway GPFG ($1.7T)', 'Alaska Permanent Fund', 'Singapore GIC', 'Abu Dhabi ADIA']
+  },
+  'data-trust': {
+    title: 'Data Trust',
+    description: 'Collectively owned data assets that generate dividends. Your data creates value—you should share in it.',
+    examples: ['Proposed in EU', 'California Data Dividend', 'Ocean Protocol']
+  },
+  'esop': {
+    title: 'Employee Stock Ownership Plans',
+    description: 'Workers own equity in their companies. Proven mechanism for broadening capital ownership.',
+    examples: ['Publix', 'WinCo Foods', '6,500+ US companies']
+  },
+  'coop': {
+    title: 'Worker Cooperatives',
+    description: 'Businesses owned and democratically controlled by workers. Mondragon proves this scales.',
+    examples: ['Mondragon (80K workers)', 'REI', 'Land O\'Lakes', 'Ocean Spray']
+  },
+  'baby-bonds': {
+    title: 'Baby Bonds',
+    description: 'Universal capital grants at birth that grow until adulthood. Gives everyone a stake in capitalism.',
+    examples: ['UK Child Trust Fund', 'Booker proposal (US)', 'Singapore Baby Bonus']
+  },
+  'min-wage': {
+    title: 'High Minimum Wage',
+    description: 'Strong wage floors for remaining human jobs. As jobs become scarce, protections become critical.',
+    examples: ['$15+ movements', 'Denmark ($22/hr)', 'Australia ($16 USD)']
+  },
+  'digital-id': {
+    title: 'Self-Sovereign Digital Identity',
+    description: 'Blockchain-based identity that you control. Cannot be revoked or tampered with by governments.',
+    examples: ['Estonia e-Residency', 'Worldcoin', 'Ceramic Network']
+  },
+  'property-registry': {
+    title: 'Blockchain Property Registry',
+    description: 'Immutable records of property ownership. Prevents corruption and enables trustless transactions.',
+    examples: ['Georgia land registry', 'Sweden pilots', 'Dubai land dept']
+  },
+  'upi': {
+    title: 'Open Payment Rails',
+    description: 'Public infrastructure for instant, free digital payments. Breaks banking monopolies.',
+    examples: ['India UPI (1B+ users)', 'Brazil Pix', 'Thailand PromptPay']
+  },
+  'open-procurement': {
+    title: 'Open Procurement',
+    description: 'All government contracts and spending visible to citizens. Sunlight is the best disinfectant.',
+    examples: ['Ukraine ProZorro', 'Open Contracting', 'UK Spend Data']
+  },
+  'participatory-budget': {
+    title: 'Participatory Budgeting',
+    description: 'Citizens directly decide how to allocate portions of public budgets.',
+    examples: ['Porto Alegre (Brazil)', 'NYC PB', 'Paris Budget Participatif']
+  },
+  'quadratic-voting': {
+    title: 'Quadratic Voting',
+    description: 'Voting system that lets people express intensity of preferences, not just binary choices.',
+    examples: ['Colorado legislature pilot', 'Gitcoin grants', 'RadicalxChange']
+  },
+  'sunset-clauses': {
+    title: 'Sunset Clauses',
+    description: 'Laws automatically expire unless actively renewed. Forces regular review of regulations.',
+    examples: ['Texas Sunset Commission', 'UK Parliament acts', 'Proposed reforms']
+  }
+};
+
+// Switch between pyramids
+function switchPyramid(type) {
+  currentPyramid = type;
+  
+  // Update tabs
+  document.querySelectorAll('.canvas-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  // Show/hide pyramids
+  document.getElementById('pyramid-prosperity').style.display = 
+    (type === 'prosperity' || type === 'combined') ? 'flex' : 'none';
+  document.getElementById('pyramid-power').style.display = 
+    (type === 'power' || type === 'combined') ? 'flex' : 'none';
+  
+  // Update mechanism filter
+  if (type !== 'combined') {
+    filterMechanisms(type);
+  }
+  
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+}
+
+// Filter mechanisms in palette
+function filterMechanisms(type) {
+  const buttons = document.querySelectorAll('.filter-btn');
+  const btn = document.querySelector(`.filter-btn.${type}`);
+  
+  if (event) {
+    btn.classList.toggle('active');
+  }
+  
+  const showProsperity = document.querySelector('.filter-btn.prosperity').classList.contains('active');
+  const showPower = document.querySelector('.filter-btn.power').classList.contains('active');
+  
+  document.querySelectorAll('.mechanism-item').forEach(item => {
+    const isProsperity = item.classList.contains('prosperity');
+    const isPower = item.classList.contains('power');
+    
+    if ((isProsperity && showProsperity) || (isPower && showPower)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+// Select slot and show details
+function selectSlot(slot) {
+  const layer = slot.dataset.layer;
+  const pyramid = slot.dataset.pyramid;
+  
+  // If slot has content, show its details
+  const mechanismId = slot.dataset.mechanism;
+  if (mechanismId && mechanismDetails[mechanismId]) {
+    showMechanismDetail(mechanismId);
+  }
+}
+
+// Show mechanism detail
+function showMechanismDetail(id) {
+  const detail = mechanismDetails[id];
+  if (!detail) return;
+  
+  document.getElementById('detail-title').textContent = detail.title;
+  document.getElementById('detail-description').textContent = detail.description;
+  
+  const examplesContainer = document.getElementById('detail-examples');
+  examplesContainer.innerHTML = detail.examples.map(ex => 
+    `<span class="layer-example">${ex}</span>`
+  ).join('');
+  
+  document.getElementById('layer-detail').classList.add('active');
+}
+
+// Add mechanism to pyramid
+function addMechanismToSlot(mechanismId, layer, pyramid) {
+  const mechanism = document.querySelector(`[data-id="${mechanismId}"]`);
+  if (!mechanism) return;
+  
+  const slot = document.querySelector(
+    `.pyramid-layer-slot[data-layer="${layer}"][data-pyramid="${pyramid}"]`
+  );
+  if (!slot) return;
+  
+  // Set slot content
+  const isProsperity = pyramid === 'prosperity';
+  slot.innerHTML = `
+    ${mechanism.querySelector('h4').textContent.split('<')[0].trim()}
+    <button class="layer-remove" onclick="removeMechanism('${layer}', '${pyramid}')">
+      <i data-lucide="x"></i>
+    </button>
+  `;
+  slot.classList.add('filled');
+  slot.style.background = isProsperity 
+    ? 'linear-gradient(135deg, #10b981, #059669)' 
+    : 'linear-gradient(135deg, #6366f1, #4f46e5)';
+  slot.dataset.mechanism = mechanismId;
+  
+  // Track selection
+  selectedMechanisms[pyramid][layer] = mechanismId;
+  
+  updateSummary();
+  updateShareUrl();
+  
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+}
+
+// Remove mechanism from slot
+function removeMechanism(layer, pyramid) {
+  event.stopPropagation();
+  
+  const slot = document.querySelector(
+    `.pyramid-layer-slot[data-layer="${layer}"][data-pyramid="${pyramid}"]`
+  );
+  
+  const labels = {
+    prosperity: {
+      1: 'Layer 1: Universals',
+      2: 'Layer 2: Public Assets',
+      3: 'Layer 3: Collective Private',
+      4: 'Layer 4: Individual Assets',
+      5: 'Layer 5: Residual Wages'
+    },
+    power: {
+      1: 'Layer 1: Civic Bedrock',
+      2: 'Layer 2: Payment Rails',
+      3: 'Layer 3: Transparency',
+      4: 'Layer 4: Direct Democracy',
+      5: 'Layer 5: Metagovernance'
+    }
+  };
+  
+  slot.innerHTML = `<span class="slot-empty-text">${labels[pyramid][layer]}</span>`;
+  slot.classList.remove('filled');
+  slot.style.background = '';
+  delete slot.dataset.mechanism;
+  delete selectedMechanisms[pyramid][layer];
+  
+  updateSummary();
+  updateShareUrl();
+}
+
+// Update summary statistics
+function updateSummary() {
+  const prosperityCount = Object.keys(selectedMechanisms.prosperity).length;
+  const powerCount = Object.keys(selectedMechanisms.power).length;
+  const totalLayers = 10;
+  const filledLayers = prosperityCount + powerCount;
+  const coverage = Math.round((filledLayers / totalLayers) * 100);
+  
+  document.getElementById('prosperity-count').textContent = prosperityCount;
+  document.getElementById('power-count').textContent = powerCount;
+  document.getElementById('coverage-percent').textContent = coverage + '%';
+  document.getElementById('coverage-fill').style.width = coverage + '%';
+}
+
+// Update share URL
+function updateShareUrl() {
+  const data = {
+    p: selectedMechanisms.prosperity,
+    w: selectedMechanisms.power
+  };
+  const encoded = btoa(JSON.stringify(data));
+  const url = window.location.origin + window.location.pathname + '?f=' + encoded;
+  document.getElementById('share-url').value = url;
+}
+
+// Copy share URL
+function copyShareUrl() {
+  const input = document.getElementById('share-url');
+  input.select();
+  document.execCommand('copy');
+  
+  const btn = event.target.closest('.btn');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<i data-lucide="check"></i> Copied!';
+  setTimeout(() => {
+    btn.innerHTML = originalText;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  }, 2000);
+}
+
+// Reset builder
+function resetBuilder() {
+  selectedMechanisms = { prosperity: {}, power: {} };
+  
+  document.querySelectorAll('.pyramid-layer-slot').forEach(slot => {
+    const layer = slot.dataset.layer;
+    const pyramid = slot.dataset.pyramid;
+    
+    const labels = {
+      prosperity: {
+        1: 'Layer 1: Universals',
+        2: 'Layer 2: Public Assets',
+        3: 'Layer 3: Collective Private',
+        4: 'Layer 4: Individual Assets',
+        5: 'Layer 5: Residual Wages'
+      },
+      power: {
+        1: 'Layer 1: Civic Bedrock',
+        2: 'Layer 2: Payment Rails',
+        3: 'Layer 3: Transparency',
+        4: 'Layer 4: Direct Democracy',
+        5: 'Layer 5: Metagovernance'
+      }
+    };
+    
+    slot.innerHTML = `<span class="slot-empty-text">${labels[pyramid][layer]}</span>`;
+    slot.classList.remove('filled');
+    slot.style.background = '';
+    delete slot.dataset.mechanism;
+  });
+  
+  document.getElementById('layer-detail').classList.remove('active');
+  updateSummary();
+  updateShareUrl();
+}
+
+// Load example framework
+function loadExample() {
+  resetBuilder();
+  
+  // Add example mechanisms
+  setTimeout(() => {
+    addMechanismToSlot('ubi', '1', 'prosperity');
+    addMechanismToSlot('swf', '2', 'prosperity');
+    addMechanismToSlot('coop', '3', 'prosperity');
+    addMechanismToSlot('baby-bonds', '4', 'prosperity');
+    
+    addMechanismToSlot('digital-id', '1', 'power');
+    addMechanismToSlot('upi', '2', 'power');
+    addMechanismToSlot('open-procurement', '3', 'power');
+    addMechanismToSlot('participatory-budget', '4', 'power');
+  }, 100);
+}
+
+// Initialize drag and drop
+document.addEventListener('DOMContentLoaded', function() {
+  const mechanisms = document.querySelectorAll('.mechanism-item');
+  const slots = document.querySelectorAll('.pyramid-layer-slot');
+  
+  mechanisms.forEach(mechanism => {
+    mechanism.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', JSON.stringify({
+        id: mechanism.dataset.id,
+        layer: mechanism.dataset.layer,
+        pyramid: mechanism.dataset.pyramid
+      }));
+      mechanism.classList.add('dragging');
+    });
+    
+    mechanism.addEventListener('dragend', () => {
+      mechanism.classList.remove('dragging');
+    });
+    
+    // Click to add
+    mechanism.addEventListener('click', () => {
+      const data = {
+        id: mechanism.dataset.id,
+        layer: mechanism.dataset.layer,
+        pyramid: mechanism.dataset.pyramid
+      };
+      addMechanismToSlot(data.id, data.layer, data.pyramid);
+      showMechanismDetail(data.id);
+    });
+  });
+  
+  slots.forEach(slot => {
+    slot.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      slot.style.borderColor = 'var(--accent)';
+    });
+    
+    slot.addEventListener('dragleave', () => {
+      if (!slot.classList.contains('filled')) {
+        slot.style.borderColor = '';
+      }
+    });
+    
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      
+      // Only allow dropping in correct layer
+      if (slot.dataset.layer === data.layer && slot.dataset.pyramid === data.pyramid) {
+        addMechanismToSlot(data.id, data.layer, data.pyramid);
+      }
+      
+      slot.style.borderColor = '';
+    });
+  });
+  
+  // Load from URL if present
+  const urlParams = new URLSearchParams(window.location.search);
+  const framework = urlParams.get('f');
+  if (framework) {
+    try {
+      const data = JSON.parse(atob(framework));
+      if (data.p) {
+        Object.entries(data.p).forEach(([layer, id]) => {
+          addMechanismToSlot(id, layer, 'prosperity');
+        });
+      }
+      if (data.w) {
+        Object.entries(data.w).forEach(([layer, id]) => {
+          addMechanismToSlot(id, layer, 'power');
+        });
+      }
+    } catch (e) {
+      console.error('Invalid framework URL');
+    }
+  }
+  
+  updateSummary();
+});
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

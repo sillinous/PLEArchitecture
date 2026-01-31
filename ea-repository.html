@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Repository | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Browse, search, and explore all architecture artifacts in one unified repository.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .repo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .repo-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .repo-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Search Bar */
+    .repo-search {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-row {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .search-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+    
+    .search-input-wrap i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 2.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.9375rem;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .search-filters {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .filter-select {
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.9375rem;
+      min-width: 150px;
+    }
+    
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+    }
+    
+    .stat-chip i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    .stat-value {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    
+    /* Repository Layout */
+    .repo-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 1.5rem;
+    }
+    
+    /* Sidebar */
+    .repo-sidebar {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1rem;
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .sidebar-section {
+      margin-bottom: 1.25rem;
+    }
+    
+    .sidebar-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .sidebar-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .sidebar-item:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .sidebar-item.active {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+    }
+    
+    .sidebar-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .sidebar-count {
+      margin-left: auto;
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.375rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 4px;
+      color: var(--color-text-muted);
+    }
+    
+    /* Results Grid */
+    .repo-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    
+    /* Artifact Card */
+    .artifact-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .artifact-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    
+    .artifact-banner {
+      height: 6px;
+    }
+    
+    .artifact-banner.principle { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+    .artifact-banner.capability { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .artifact-banner.standard { background: linear-gradient(90deg, #10b981, #34d399); }
+    .artifact-banner.building-block { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .artifact-banner.goal { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+    .artifact-banner.strategy { background: linear-gradient(90deg, #a855f7, #c084fc); }
+    .artifact-banner.stakeholder { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .artifact-banner.value-stream { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+    
+    .artifact-body {
+      padding: 1.25rem;
+    }
+    
+    .artifact-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .artifact-id {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 4px;
+      color: var(--color-text-muted);
+    }
+    
+    .artifact-type {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .artifact-type.principle { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .artifact-type.capability { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .artifact-type.standard { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .artifact-type.building-block { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .artifact-type.goal { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
+    .artifact-type.strategy { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    .artifact-type.stakeholder { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .artifact-type.value-stream { background: rgba(20, 184, 166, 0.15); color: #14b8a6; }
+    
+    .artifact-status {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    
+    .artifact-status.current { color: #10b981; }
+    .artifact-status.proposed { color: #fbbf24; }
+    .artifact-status.retired { color: #ef4444; }
+    
+    .artifact-status i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .artifact-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.375rem;
+    }
+    
+    .artifact-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .artifact-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .artifact-relations {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .relation-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .relation-badge i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .artifact-updated {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      grid-column: 1 / -1;
+    }
+    
+    .empty-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .empty-icon i {
+      width: 32px;
+      height: 32px;
+      color: var(--color-text-muted);
+    }
+    
+    .empty-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .empty-desc {
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1024px) {
+      .repo-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .repo-sidebar {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 0.5rem;
+        padding: 0.75rem;
+      }
+      
+      .sidebar-section {
+        display: flex;
+        gap: 0.25rem;
+        margin-bottom: 0;
+      }
+      
+      .sidebar-title {
+        display: none;
+      }
+      
+      .sidebar-item {
+        white-space: nowrap;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .search-row {
+        flex-direction: column;
+      }
+      
+      .search-filters {
+        flex-wrap: wrap;
+      }
+      
+      .stats-bar {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="repo-header">
+      <div>
+        <h1>Architecture Repository</h1>
+        <p class="repo-header-desc">Browse, search, and explore all architecture artifacts. The single source of truth for organizational architecture.</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> Add Artifact</button>
+    </div>
+    
+    <!-- Search -->
+    <div class="repo-search">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <i data-lucide="search"></i>
+          <input type="text" class="search-input" placeholder="Search artifacts by name, ID, or description...">
+        </div>
+        <div class="search-filters">
+          <select class="filter-select">
+            <option value="">All Types</option>
+            <option>Principles</option>
+            <option>Capabilities</option>
+            <option>Standards</option>
+            <option>Building Blocks</option>
+            <option>Goals</option>
+            <option>Strategies</option>
+          </select>
+          <select class="filter-select">
+            <option value="">All Status</option>
+            <option>Current</option>
+            <option>Proposed</option>
+            <option>Retired</option>
+          </select>
+          <select class="filter-select">
+            <option value="">All Domains</option>
+            <option>Business</option>
+            <option>Data</option>
+            <option>Application</option>
+            <option>Technology</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-chip"><i data-lucide="file"></i> Total: <span class="stat-value">156</span></div>
+      <div class="stat-chip"><i data-lucide="check-circle"></i> Current: <span class="stat-value">142</span></div>
+      <div class="stat-chip"><i data-lucide="clock"></i> Proposed: <span class="stat-value">11</span></div>
+      <div class="stat-chip"><i data-lucide="archive"></i> Retired: <span class="stat-value">3</span></div>
+    </div>
+    
+    <div class="repo-layout">
+      <!-- Sidebar -->
+      <nav class="repo-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Artifact Types</div>
+          <div class="sidebar-item active"><i data-lucide="layers"></i> All <span class="sidebar-count">156</span></div>
+          <div class="sidebar-item"><i data-lucide="scale"></i> Principles <span class="sidebar-count">12</span></div>
+          <div class="sidebar-item"><i data-lucide="boxes"></i> Capabilities <span class="sidebar-count">47</span></div>
+          <div class="sidebar-item"><i data-lucide="book-check"></i> Standards <span class="sidebar-count">28</span></div>
+          <div class="sidebar-item"><i data-lucide="puzzle"></i> Building Blocks <span class="sidebar-count">34</span></div>
+          <div class="sidebar-item"><i data-lucide="target"></i> Goals <span class="sidebar-count">4</span></div>
+          <div class="sidebar-item"><i data-lucide="route"></i> Strategies <span class="sidebar-count">6</span></div>
+          <div class="sidebar-item"><i data-lucide="users"></i> Stakeholders <span class="sidebar-count">18</span></div>
+          <div class="sidebar-item"><i data-lucide="workflow"></i> Value Streams <span class="sidebar-count">4</span></div>
+        </div>
+      </nav>
+      
+      <!-- Results Grid -->
+      <div class="repo-results">
+        <!-- Principle -->
+        <div class="artifact-card">
+          <div class="artifact-banner principle"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">PRIN-001</span>
+              <span class="artifact-type principle">Principle</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Open by Default</h3>
+            <p class="artifact-desc">All architecture artifacts, decisions, and discussions are open and accessible to the community unless there's a compelling reason for restriction.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="link"></i> 14 refs</span>
+                <span class="relation-badge"><i data-lucide="box"></i> 3 BBs</span>
+              </div>
+              <span class="artifact-updated">Updated 2d ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Capability -->
+        <div class="artifact-card">
+          <div class="artifact-banner capability"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">CAP-001</span>
+              <span class="artifact-type capability">Capability</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Policy Research</h3>
+            <p class="artifact-desc">Systematically identify, evaluate, and synthesize existing research relevant to post-labor economics and policy development.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="target"></i> 2 goals</span>
+                <span class="relation-badge"><i data-lucide="layers"></i> L5</span>
+              </div>
+              <span class="artifact-updated">Updated 5d ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Standard -->
+        <div class="artifact-card">
+          <div class="artifact-banner standard"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">STD-001</span>
+              <span class="artifact-type standard">Standard</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">GitHub</h3>
+            <p class="artifact-desc">Version control, code hosting, and collaboration platform for all software development projects.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="box"></i> 1 ABB</span>
+                <span class="relation-badge"><i data-lucide="package"></i> 1 SBB</span>
+              </div>
+              <span class="artifact-updated">Updated 1w ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Building Block -->
+        <div class="artifact-card">
+          <div class="artifact-banner building-block"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">ABB-001</span>
+              <span class="artifact-type building-block">ABB</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Governance Voting System</h3>
+            <p class="artifact-desc">System enabling community participation in decision-making through various voting mechanisms.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="package"></i> 2 SBBs</span>
+                <span class="relation-badge"><i data-lucide="boxes"></i> 1 cap</span>
+              </div>
+              <span class="artifact-updated">Updated 3d ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Goal -->
+        <div class="artifact-card">
+          <div class="artifact-banner goal"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">GOAL-001</span>
+              <span class="artifact-type goal">Goal</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Universal Basic Income</h3>
+            <p class="artifact-desc">Establish policy frameworks and pilot programs that demonstrate viable pathways to universal basic income.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="flag"></i> 3 obj</span>
+                <span class="relation-badge"><i data-lucide="route"></i> 2 strat</span>
+              </div>
+              <span class="artifact-updated">Updated 1d ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Strategy -->
+        <div class="artifact-card">
+          <div class="artifact-banner strategy"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">STRAT-001</span>
+              <span class="artifact-type strategy">Strategy</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Policy Framework Development</h3>
+            <p class="artifact-desc">Create comprehensive, research-backed policy proposals ready for legislative consideration.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="target"></i> 2 goals</span>
+                <span class="relation-badge"><i data-lucide="wrench"></i> 5 tactics</span>
+              </div>
+              <span class="artifact-updated">Updated 4d ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Stakeholder -->
+        <div class="artifact-card">
+          <div class="artifact-banner stakeholder"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">STK-001</span>
+              <span class="artifact-type stakeholder">Stakeholder</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Core Team</h3>
+            <p class="artifact-desc">Leadership and operations team responsible for strategic direction and day-to-day management.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="alert-circle"></i> 4 concerns</span>
+                <span class="relation-badge"><i data-lucide="eye"></i> 2 views</span>
+              </div>
+              <span class="artifact-updated">Updated 1w ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Value Stream -->
+        <div class="artifact-card">
+          <div class="artifact-banner value-stream"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">VS-001</span>
+              <span class="artifact-type value-stream">Value Stream</span>
+              <span class="artifact-status current"><i data-lucide="check-circle"></i> Current</span>
+            </div>
+            <h3 class="artifact-name">Policy Development</h3>
+            <p class="artifact-desc">End-to-end value stream from research through policy publication and advocacy.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="git-commit"></i> 5 stages</span>
+                <span class="relation-badge"><i data-lucide="target"></i> 3 goals</span>
+              </div>
+              <span class="artifact-updated">Updated 6d ago</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Proposed Principle -->
+        <div class="artifact-card">
+          <div class="artifact-banner principle"></div>
+          <div class="artifact-body">
+            <div class="artifact-meta">
+              <span class="artifact-id">PRIN-010</span>
+              <span class="artifact-type principle">Principle</span>
+              <span class="artifact-status proposed"><i data-lucide="clock"></i> Proposed</span>
+            </div>
+            <h3 class="artifact-name">Climate-Conscious Technology</h3>
+            <p class="artifact-desc">Technology choices should minimize environmental impact. Prefer energy-efficient solutions.</p>
+            <div class="artifact-footer">
+              <div class="artifact-relations">
+                <span class="relation-badge"><i data-lucide="link"></i> 0 refs</span>
+              </div>
+              <span class="artifact-updated">Proposed 12d ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

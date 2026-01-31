@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Contributions | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Track your contributions, achievements, and impact on the Post-Labor Economics governance ecosystem.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Dashboard Header */
+    .dashboard-header {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(99, 102, 241, 0.15) 100%);
+      border-radius: 1.5rem;
+    }
+    
+    .profile-section {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .profile-avatar-large {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      border: 4px solid var(--color-bg-secondary);
+    }
+    
+    .profile-info h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .profile-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(251, 191, 36, 0.15);
+      color: #fbbf24;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .profile-role i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .profile-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .profile-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .profile-meta-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .header-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-left: auto;
+    }
+    
+    .header-stat {
+      text-align: center;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      border: 1px solid var(--color-border);
+    }
+    
+    .header-stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #8b5cf6, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .header-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .stat-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .stat-change {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    
+    .stat-change.positive { color: #10b981; }
+    .stat-change i { width: 12px; height: 12px; }
+    
+    /* Main Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .section-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .section-title { font-size: 1rem; font-weight: 600; }
+    .section-body { padding: 1.25rem; }
+    
+    /* Activity Chart */
+    .activity-chart {
+      height: 200px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      padding: 1rem 0;
+    }
+    
+    .activity-bar {
+      flex: 1;
+      background: var(--color-primary);
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: all 0.3s;
+    }
+    
+    .activity-bar:hover { background: #818cf8; }
+    
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    /* Activity List */
+    .activity-list { display: flex; flex-direction: column; }
+    
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .activity-item:last-child { border-bottom: none; }
+    
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .activity-icon i { width: 16px; height: 16px; }
+    .activity-icon.vote { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .activity-icon.comment { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .activity-icon.create { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .activity-icon.review { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
+    
+    .activity-content { flex: 1; min-width: 0; }
+    .activity-text { font-size: 0.875rem; line-height: 1.4; }
+    .activity-text strong { color: var(--color-text-primary); }
+    .activity-time { font-size: 0.75rem; color: var(--color-text-muted); margin-top: 0.25rem; }
+    
+    /* Achievements */
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .achievement-card {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    
+    .achievement-card:hover { transform: translateY(-2px); }
+    .achievement-card.locked { opacity: 0.5; }
+    
+    .achievement-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 0.75rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .achievement-name { font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .achievement-desc { font-size: 0.6875rem; color: var(--color-text-muted); }
+    
+    /* Tasks */
+    .task-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .task-item:hover { background: rgba(99, 102, 241, 0.1); }
+    
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-border);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .task-checkbox i { width: 12px; height: 12px; opacity: 0; }
+    
+    .task-item.completed .task-checkbox {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    
+    .task-item.completed .task-checkbox i { opacity: 1; color: white; }
+    .task-item.completed .task-title { text-decoration: line-through; color: var(--color-text-muted); }
+    
+    .task-content { flex: 1; }
+    .task-title { font-size: 0.875rem; font-weight: 500; }
+    .task-due { font-size: 0.6875rem; color: var(--color-text-muted); }
+    .task-due.urgent { color: #ef4444; }
+    
+    .task-priority { width: 8px; height: 8px; border-radius: 50%; }
+    .task-priority.high { background: #ef4444; }
+    .task-priority.medium { background: #fbbf24; }
+    .task-priority.low { background: #10b981; }
+    
+    /* Streak */
+    .streak-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+      border-radius: 0.75rem;
+    }
+    
+    .streak-icon { font-size: 3rem; }
+    .streak-value { font-size: 2.5rem; font-weight: 800; color: #fbbf24; }
+    .streak-label { font-size: 0.875rem; color: var(--color-text-secondary); }
+    
+    .streak-days { display: flex; gap: 0.375rem; margin-top: 1rem; justify-content: center; }
+    
+    .streak-day {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      background: var(--color-bg-secondary);
+      color: var(--color-text-muted);
+    }
+    
+    .streak-day.active { background: #fbbf24; color: white; }
+    .streak-day.today { border: 2px solid #fbbf24; }
+    
+    @media (max-width: 1200px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .header-stats { display: none; }
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-header { flex-direction: column; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .achievements-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="dashboard-header">
+      <div class="profile-section">
+        <div class="profile-avatar-large" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</div>
+        <div class="profile-info">
+          <span class="profile-role"><i data-lucide="shield"></i> Steward</span>
+          <h1>Sarah Mitchell</h1>
+          <div class="profile-meta">
+            <span class="profile-meta-item"><i data-lucide="map-pin"></i> London, UK</span>
+            <span class="profile-meta-item"><i data-lucide="calendar"></i> Member since Mar 2024</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="header-stat"><div class="header-stat-value">847</div><div class="header-stat-label">Voting Power</div></div>
+        <div class="header-stat"><div class="header-stat-value">23</div><div class="header-stat-label">Day Streak</div></div>
+        <div class="header-stat"><div class="header-stat-value">#12</div><div class="header-stat-label">Leaderboard</div></div>
+      </div>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;"><i data-lucide="file-text"></i></div>
+        <div><div class="stat-value">38</div><div class="stat-label">Total Contributions</div><div class="stat-change positive"><i data-lucide="trending-up"></i> +5 this month</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i data-lucide="vote"></i></div>
+        <div><div class="stat-value">67</div><div class="stat-label">Votes Cast</div><div class="stat-change positive"><i data-lucide="trending-up"></i> +12 this month</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;"><i data-lucide="scan-search"></i></div>
+        <div><div class="stat-value">31</div><div class="stat-label">Reviews Completed</div><div class="stat-change positive"><i data-lucide="trending-up"></i> +8 this month</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;"><i data-lucide="message-square"></i></div>
+        <div><div class="stat-value">156</div><div class="stat-label">Comments</div><div class="stat-change positive"><i data-lucide="trending-up"></i> +23 this month</div></div>
+      </div>
+    </div>
+    
+    <div class="dashboard-grid">
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="section-card">
+          <div class="section-header"><h3 class="section-title">Contribution Activity</h3></div>
+          <div class="section-body">
+            <div class="activity-chart">
+              <div class="activity-bar" style="height: 30%;"></div><div class="activity-bar" style="height: 45%;"></div><div class="activity-bar" style="height: 20%;"></div><div class="activity-bar" style="height: 70%;"></div><div class="activity-bar" style="height: 55%;"></div><div class="activity-bar" style="height: 40%;"></div><div class="activity-bar" style="height: 85%;"></div><div class="activity-bar" style="height: 60%;"></div><div class="activity-bar" style="height: 35%;"></div><div class="activity-bar" style="height: 50%;"></div><div class="activity-bar" style="height: 75%;"></div><div class="activity-bar" style="height: 45%;"></div><div class="activity-bar" style="height: 65%;"></div><div class="activity-bar" style="height: 80%;"></div><div class="activity-bar" style="height: 55%;"></div><div class="activity-bar" style="height: 40%;"></div><div class="activity-bar" style="height: 90%;"></div><div class="activity-bar" style="height: 70%;"></div><div class="activity-bar" style="height: 45%;"></div><div class="activity-bar" style="height: 60%;"></div><div class="activity-bar" style="height: 35%;"></div><div class="activity-bar" style="height: 50%;"></div><div class="activity-bar" style="height: 85%;"></div><div class="activity-bar" style="height: 65%;"></div><div class="activity-bar" style="height: 40%;"></div><div class="activity-bar" style="height: 75%;"></div><div class="activity-bar" style="height: 55%;"></div><div class="activity-bar" style="height: 95%;"></div><div class="activity-bar" style="height: 70%;"></div><div class="activity-bar" style="height: 50%;"></div>
+            </div>
+            <div class="chart-labels"><span>Jan 1</span><span>Jan 8</span><span>Jan 15</span><span>Jan 22</span><span>Jan 29</span></div>
+          </div>
+        </div>
+        
+        <div class="section-card">
+          <div class="section-header"><h3 class="section-title">Recent Activity</h3><a href="#" style="font-size: 0.875rem; color: var(--color-primary);">View all</a></div>
+          <div class="section-body" style="padding: 0.5rem 1.25rem;">
+            <div class="activity-list">
+              <div class="activity-item"><div class="activity-icon vote"><i data-lucide="check-circle"></i></div><div class="activity-content"><div class="activity-text">Voted <strong>Approve</strong> on PROP-015: Data Dividends</div><div class="activity-time">5 hours ago</div></div></div>
+              <div class="activity-item"><div class="activity-icon comment"><i data-lucide="message-square"></i></div><div class="activity-content"><div class="activity-text">Commented on <strong>ADR-007</strong> version comparison</div><div class="activity-time">Yesterday</div></div></div>
+              <div class="activity-item"><div class="activity-icon create"><i data-lucide="plus-circle"></i></div><div class="activity-content"><div class="activity-text">Submitted suggestion for <strong>PROP-015</strong></div><div class="activity-time">2 days ago</div></div></div>
+              <div class="activity-item"><div class="activity-icon review"><i data-lucide="scan-search"></i></div><div class="activity-content"><div class="activity-text">Completed review of <strong>ADR-009</strong></div><div class="activity-time">3 days ago</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="section-card">
+          <div class="section-header"><h3 class="section-title">Activity Streak</h3></div>
+          <div class="section-body">
+            <div class="streak-display"><span class="streak-icon">🔥</span><div><div class="streak-value">23</div><div class="streak-label">Day Streak</div></div></div>
+            <div class="streak-days"><div class="streak-day active">M</div><div class="streak-day active">T</div><div class="streak-day active">W</div><div class="streak-day active">T</div><div class="streak-day active">F</div><div class="streak-day active">S</div><div class="streak-day active today">S</div></div>
+          </div>
+        </div>
+        
+        <div class="section-card">
+          <div class="section-header"><h3 class="section-title">Pending Tasks</h3><span style="font-size: 0.75rem; color: var(--color-text-muted);">4 remaining</span></div>
+          <div class="section-body">
+            <div class="task-list">
+              <div class="task-item"><div class="task-checkbox"><i data-lucide="check"></i></div><div class="task-content"><div class="task-title">Submit vote on Q1 Priorities</div><div class="task-due urgent">Due in 6 hours</div></div><div class="task-priority high"></div></div>
+              <div class="task-item"><div class="task-checkbox"><i data-lucide="check"></i></div><div class="task-content"><div class="task-title">Review ADR-009</div><div class="task-due">Due in 2 days</div></div><div class="task-priority medium"></div></div>
+              <div class="task-item completed"><div class="task-checkbox"><i data-lucide="check"></i></div><div class="task-content"><div class="task-title">Vote on Data Dividends</div><div class="task-due">Completed</div></div><div class="task-priority low"></div></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section-card">
+          <div class="section-header"><h3 class="section-title">Achievements</h3><span style="font-size: 0.75rem; color: var(--color-text-muted);">8 of 24</span></div>
+          <div class="section-body">
+            <div class="achievements-grid">
+              <div class="achievement-card"><div class="achievement-icon" style="background: linear-gradient(135deg, #10b981, #059669);">🏆</div><div class="achievement-name">First Contribution</div><div class="achievement-desc">Submit your first artifact</div></div>
+              <div class="achievement-card"><div class="achievement-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">⚡</div><div class="achievement-name">Streak Master</div><div class="achievement-desc">21 day activity streak</div></div>
+              <div class="achievement-card"><div class="achievement-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🎯</div><div class="achievement-name">Thoughtful Reviewer</div><div class="achievement-desc">25 helpful reviews</div></div>
+              <div class="achievement-card"><div class="achievement-icon" style="background: linear-gradient(135deg, #ec4899, #db2777);">💬</div><div class="achievement-name">Discussion Leader</div><div class="achievement-desc">100 meaningful comments</div></div>
+              <div class="achievement-card locked"><div class="achievement-icon" style="background: var(--color-bg-tertiary);">🏅</div><div class="achievement-name">Consensus Builder</div><div class="achievement-desc">10 proposals adopted</div></div>
+              <div class="achievement-card locked"><div class="achievement-icon" style="background: var(--color-bg-tertiary);">🌟</div><div class="achievement-name">Rising Star</div><div class="achievement-desc">Top 10 leaderboard</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    document.querySelectorAll('.task-item').forEach(item => {
+      item.addEventListener('click', () => item.classList.toggle('completed'));
+    });
+  </script>
+</body>
+</html>

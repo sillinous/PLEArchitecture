@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working Groups | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Join and manage working groups focused on specific governance areas.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .groups-header {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(236, 72, 153, 0.15) 100%);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .groups-header-content h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .groups-header-content p {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+    }
+    
+    .groups-stats {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .group-stat {
+      text-align: center;
+    }
+    
+    .group-stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .group-stat-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Tabs */
+    .groups-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .groups-tab {
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .groups-tab:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-secondary);
+    }
+    
+    .groups-tab.active {
+      color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .groups-tab .count {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+    }
+    
+    .groups-tab.active .count {
+      background: rgba(99, 102, 241, 0.2);
+    }
+    
+    /* Groups Grid */
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.25rem;
+    }
+    
+    /* Group Card */
+    .group-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    
+    .group-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    
+    .group-card.member {
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+    
+    .group-banner {
+      height: 80px;
+      position: relative;
+    }
+    
+    .group-banner.policy { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .group-banner.research { background: linear-gradient(135deg, #10b981, #06b6d4); }
+    .group-banner.outreach { background: linear-gradient(135deg, #ec4899, #f472b6); }
+    .group-banner.technical { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .group-banner.education { background: linear-gradient(135deg, #ef4444, #f97316); }
+    .group-banner.governance { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+    
+    .group-icon {
+      position: absolute;
+      bottom: -24px;
+      left: 1.25rem;
+      width: 56px;
+      height: 56px;
+      background: var(--color-bg-secondary);
+      border: 3px solid var(--color-bg-secondary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .group-member-badge {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      padding: 0.25rem 0.625rem;
+      background: rgba(16, 185, 129, 0.9);
+      color: white;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .group-member-badge i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .group-body {
+      padding: 2rem 1.25rem 1.25rem;
+    }
+    
+    .group-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .group-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    .group-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .group-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .group-meta-item i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    .group-members-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .member-avatars {
+      display: flex;
+    }
+    
+    .member-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+      margin-left: -8px;
+    }
+    
+    .member-avatar:first-child {
+      margin-left: 0;
+    }
+    
+    .member-avatar.more {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-muted);
+    }
+    
+    .members-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .group-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .group-tag {
+      padding: 0.25rem 0.625rem;
+      background: var(--color-bg-primary);
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .group-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .group-actions .btn {
+      flex: 1;
+    }
+    
+    /* Group Detail Modal */
+    .group-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    
+    .group-modal.open {
+      display: flex;
+    }
+    
+    .group-modal-content {
+      background: var(--color-bg-primary);
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .group-modal-banner {
+      height: 120px;
+      position: relative;
+    }
+    
+    .group-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .group-modal-icon {
+      position: absolute;
+      bottom: -28px;
+      left: 1.5rem;
+      width: 64px;
+      height: 64px;
+      background: var(--color-bg-primary);
+      border: 4px solid var(--color-bg-primary);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+    }
+    
+    .group-modal-body {
+      padding: 2.5rem 1.5rem 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .group-modal-header {
+      margin-bottom: 1.5rem;
+    }
+    
+    .group-modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .group-modal-desc {
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .group-detail-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .group-detail-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .group-leads {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    
+    .group-lead {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+    }
+    
+    .lead-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .lead-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .lead-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .lead-role {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .group-activities {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .group-activity {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+    }
+    
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .activity-icon i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .activity-content {
+      flex: 1;
+    }
+    
+    .activity-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .activity-time {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .group-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    @media (max-width: 768px) {
+      .groups-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      
+      .groups-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="groups-header">
+      <div class="groups-header-content">
+        <h1>Working Groups</h1>
+        <p>Join teams focused on specific areas of post-labor economics. Collaborate with like-minded contributors to drive progress.</p>
+      </div>
+      <div class="groups-stats">
+        <div class="group-stat">
+          <div class="group-stat-value">12</div>
+          <div class="group-stat-label">Active Groups</div>
+        </div>
+        <div class="group-stat">
+          <div class="group-stat-value">234</div>
+          <div class="group-stat-label">Total Members</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="groups-tabs">
+      <button class="groups-tab active">All Groups <span class="count">12</span></button>
+      <button class="groups-tab">My Groups <span class="count">3</span></button>
+      <button class="groups-tab">Recruiting <span class="count">5</span></button>
+    </div>
+    
+    <div class="groups-grid">
+      <!-- Policy Working Group -->
+      <div class="group-card member">
+        <div class="group-banner policy">
+          <div class="group-icon">⚖️</div>
+          <span class="group-member-badge"><i data-lucide="check"></i> Member</span>
+        </div>
+        <div class="group-body">
+          <h3 class="group-name">Policy Mechanisms</h3>
+          <p class="group-desc">Design and refine concrete policy frameworks including automation taxes, data dividends, and UBI implementation strategies.</p>
+          <div class="group-meta">
+            <span class="group-meta-item"><i data-lucide="users"></i> 28 members</span>
+            <span class="group-meta-item"><i data-lucide="calendar"></i> Meets weekly</span>
+          </div>
+          <div class="group-members-preview">
+            <div class="member-avatars">
+              <span class="member-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</span>
+              <span class="member-avatar more">+25</span>
+            </div>
+            <span class="members-label">Active this week</span>
+          </div>
+          <div class="group-tags">
+            <span class="group-tag">UBI</span>
+            <span class="group-tag">Automation Tax</span>
+            <span class="group-tag">Policy</span>
+          </div>
+          <div class="group-actions">
+            <button class="btn btn-outline" onclick="openGroupModal()">View</button>
+            <button class="btn btn-primary"><i data-lucide="message-circle"></i> Chat</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Research Group -->
+      <div class="group-card member">
+        <div class="group-banner research">
+          <div class="group-icon">🔬</div>
+          <span class="group-member-badge"><i data-lucide="check"></i> Member</span>
+        </div>
+        <div class="group-body">
+          <h3 class="group-name">Research & Analysis</h3>
+          <p class="group-desc">Conduct economic modeling, analyze automation trends, and produce research supporting PLE frameworks.</p>
+          <div class="group-meta">
+            <span class="group-meta-item"><i data-lucide="users"></i> 19 members</span>
+            <span class="group-meta-item"><i data-lucide="calendar"></i> Meets bi-weekly</span>
+          </div>
+          <div class="group-members-preview">
+            <div class="member-avatars">
+              <span class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">AL</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">JR</span>
+              <span class="member-avatar more">+16</span>
+            </div>
+            <span class="members-label">Active this week</span>
+          </div>
+          <div class="group-tags">
+            <span class="group-tag">Economics</span>
+            <span class="group-tag">Data Analysis</span>
+            <span class="group-tag">Modeling</span>
+          </div>
+          <div class="group-actions">
+            <button class="btn btn-outline">View</button>
+            <button class="btn btn-primary"><i data-lucide="message-circle"></i> Chat</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Outreach Group -->
+      <div class="group-card">
+        <div class="group-banner outreach">
+          <div class="group-icon">📢</div>
+        </div>
+        <div class="group-body">
+          <h3 class="group-name">Community Outreach</h3>
+          <p class="group-desc">Grow the movement through content creation, social media, partnerships, and community events.</p>
+          <div class="group-meta">
+            <span class="group-meta-item"><i data-lucide="users"></i> 34 members</span>
+            <span class="group-meta-item"><i data-lucide="calendar"></i> Meets weekly</span>
+          </div>
+          <div class="group-members-preview">
+            <div class="member-avatars">
+              <span class="member-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">LM</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">RK</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #f43f5e, #e11d48);">NP</span>
+              <span class="member-avatar more">+31</span>
+            </div>
+            <span class="members-label">Active this week</span>
+          </div>
+          <div class="group-tags">
+            <span class="group-tag">Content</span>
+            <span class="group-tag">Social Media</span>
+            <span class="group-tag">Events</span>
+          </div>
+          <div class="group-actions">
+            <button class="btn btn-outline">View</button>
+            <button class="btn btn-primary"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Technical Group -->
+      <div class="group-card member">
+        <div class="group-banner technical">
+          <div class="group-icon">⚙️</div>
+          <span class="group-member-badge"><i data-lucide="check"></i> Member</span>
+        </div>
+        <div class="group-body">
+          <h3 class="group-name">Technical Infrastructure</h3>
+          <p class="group-desc">Build and maintain governance tools, develop the platform, and create technical specifications.</p>
+          <div class="group-meta">
+            <span class="group-meta-item"><i data-lucide="users"></i> 15 members</span>
+            <span class="group-meta-item"><i data-lucide="calendar"></i> Meets weekly</span>
+          </div>
+          <div class="group-members-preview">
+            <div class="member-avatars">
+              <span class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">DV</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">KS</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #a855f7, #9333ea);">MW</span>
+              <span class="member-avatar more">+12</span>
+            </div>
+            <span class="members-label">Active this week</span>
+          </div>
+          <div class="group-tags">
+            <span class="group-tag">Development</span>
+            <span class="group-tag">Blockchain</span>
+            <span class="group-tag">AI</span>
+          </div>
+          <div class="group-actions">
+            <button class="btn btn-outline">View</button>
+            <button class="btn btn-primary"><i data-lucide="message-circle"></i> Chat</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Education Group -->
+      <div class="group-card">
+        <div class="group-banner education">
+          <div class="group-icon">📚</div>
+        </div>
+        <div class="group-body">
+          <h3 class="group-name">Education & Onboarding</h3>
+          <p class="group-desc">Create educational content, develop onboarding materials, and help new members understand PLE concepts.</p>
+          <div class="group-meta">
+            <span class="group-meta-item"><i data-lucide="users"></i> 22 members</span>
+            <span class="group-meta-item"><i data-lucide="calendar"></i> Meets bi-weekly</span>
+          </div>
+          <div class="group-members-preview">
+            <div class="member-avatars">
+              <span class="member-avatar" style="background: linear-gradient(135deg, #ef4444, #dc2626);">HP</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #22c55e, #16a34a);">BT</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #eab308, #ca8a04);">YL</span>
+              <span class="member-avatar more">+19</span>
+            </div>
+            <span class="members-label">Active this week</span>
+          </div>
+          <div class="group-tags">
+            <span class="group-tag">Courses</span>
+            <span class="group-tag">Documentation</span>
+            <span class="group-tag">Mentorship</span>
+          </div>
+          <div class="group-actions">
+            <button class="btn btn-outline">View</button>
+            <button class="btn btn-primary"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Governance Group -->
+      <div class="group-card">
+        <div class="group-banner governance">
+          <div class="group-icon">🏛️</div>
+        </div>
+        <div class="group-body">
+          <h3 class="group-name">Meta-Governance</h3>
+          <p class="group-desc">Improve the governance process itself—voting mechanisms, decision frameworks, and community structures.</p>
+          <div class="group-meta">
+            <span class="group-meta-item"><i data-lucide="users"></i> 16 members</span>
+            <span class="group-meta-item"><i data-lucide="calendar"></i> Meets monthly</span>
+          </div>
+          <div class="group-members-preview">
+            <div class="member-avatars">
+              <span class="member-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">CV</span>
+              <span class="member-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">EA</span>
+              <span class="member-avatar more">+13</span>
+            </div>
+            <span class="members-label">Active this week</span>
+          </div>
+          <div class="group-tags">
+            <span class="group-tag">Voting</span>
+            <span class="group-tag">Process</span>
+            <span class="group-tag">Structure</span>
+          </div>
+          <div class="group-actions">
+            <button class="btn btn-outline">View</button>
+            <button class="btn btn-primary"><i data-lucide="user-plus"></i> Join</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Group Detail Modal -->
+  <div class="group-modal" id="group-modal">
+    <div class="group-modal-content">
+      <div class="group-modal-banner group-banner policy">
+        <button class="group-modal-close" onclick="closeGroupModal()"><i data-lucide="x"></i></button>
+        <div class="group-modal-icon">⚖️</div>
+      </div>
+      <div class="group-modal-body">
+        <div class="group-modal-header">
+          <h2 class="group-modal-title">Policy Mechanisms</h2>
+          <p class="group-modal-desc">Design and refine concrete policy frameworks including automation taxes, data dividends, and UBI implementation strategies. We work on turning theoretical concepts into actionable policy proposals.</p>
+        </div>
+        
+        <div class="group-detail-section">
+          <div class="group-detail-label">Group Leads</div>
+          <div class="group-leads">
+            <div class="group-lead">
+              <span class="lead-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</span>
+              <div class="lead-info">
+                <span class="lead-name">David Shapiro</span>
+                <span class="lead-role">Founder & Lead</span>
+              </div>
+            </div>
+            <div class="group-lead">
+              <span class="lead-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</span>
+              <div class="lead-info">
+                <span class="lead-name">Maria Kowalski</span>
+                <span class="lead-role">Co-Lead</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="group-detail-section">
+          <div class="group-detail-label">Recent Activity</div>
+          <div class="group-activities">
+            <div class="group-activity">
+              <div class="activity-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="file-text"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">PROP-015 Data Dividends Draft Completed</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="group-activity">
+              <div class="activity-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="video"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">Weekly Sync Meeting</div>
+                <div class="activity-time">Yesterday at 2:00 PM</div>
+              </div>
+            </div>
+            <div class="group-activity">
+              <div class="activity-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                <i data-lucide="message-square"></i>
+              </div>
+              <div class="activity-content">
+                <div class="activity-title">Automation Tax Discussion Thread</div>
+                <div class="activity-time">3 days ago • 47 comments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="group-detail-section">
+          <div class="group-detail-label">Focus Areas</div>
+          <div class="group-tags" style="margin-bottom: 0;">
+            <span class="group-tag">UBI Implementation</span>
+            <span class="group-tag">Automation Tax</span>
+            <span class="group-tag">Data Dividends</span>
+            <span class="group-tag">Sovereign Wealth Funds</span>
+            <span class="group-tag">Universal Services</span>
+          </div>
+        </div>
+      </div>
+      <div class="group-modal-footer">
+        <button class="btn btn-outline" onclick="closeGroupModal()">Close</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline"><i data-lucide="settings"></i> Settings</button>
+          <button class="btn btn-primary"><i data-lucide="message-circle"></i> Open Chat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.groups-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.groups-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    function openGroupModal() {
+      document.getElementById('group-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+    
+    function closeGroupModal() {
+      document.getElementById('group-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    document.getElementById('group-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('group-modal')) {
+        closeGroupModal();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Search across all governance artifacts, discussions, and members.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .search-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    /* Search Header */
+    .search-header {
+      text-align: center;
+      padding: 3rem 0 2rem;
+    }
+    
+    .search-header h1 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .search-box {
+      position: relative;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.25rem 1rem 3rem;
+      background: var(--color-bg-secondary);
+      border: 2px solid var(--color-border);
+      border-radius: 1rem;
+      color: var(--color-text-primary);
+      font-size: 1.125rem;
+      transition: all 0.2s;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--color-text-muted);
+    }
+    
+    .search-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .search-shortcut {
+      position: absolute;
+      right: 1rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    /* Quick Filters */
+    .quick-filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .quick-filter {
+      padding: 0.5rem 0.875rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .quick-filter:hover {
+      border-color: var(--color-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .quick-filter.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    .quick-filter i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Search Results */
+    .search-results {
+      margin-top: 2rem;
+    }
+    
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .results-count {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .results-count strong {
+      color: var(--color-text-primary);
+    }
+    
+    .results-sort {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .results-sort select {
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.8125rem;
+    }
+    
+    /* Result Cards */
+    .result-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .result-card:hover {
+      border-color: var(--color-primary);
+      transform: translateX(4px);
+    }
+    
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    
+    .result-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .result-type i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .result-type.proposal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .result-type.adr { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .result-type.policy { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
+    .result-type.guide { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .result-type.discussion { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
+    .result-type.member { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    
+    .result-status {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .result-title {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .result-title mark {
+      background: rgba(251, 191, 36, 0.3);
+      color: inherit;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    
+    .result-excerpt {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    
+    .result-excerpt mark {
+      background: rgba(251, 191, 36, 0.3);
+      color: inherit;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    
+    .result-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .result-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .result-meta-item i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Member Result */
+    .result-card.member-result {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .member-avatar-large {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+    
+    .member-info {
+      flex: 1;
+    }
+    
+    .member-name {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .member-role {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .member-tags {
+      display: flex;
+      gap: 0.375rem;
+    }
+    
+    .member-tag {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Recent Searches */
+    .recent-searches {
+      margin-top: 2rem;
+    }
+    
+    .recent-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .recent-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+    
+    .recent-clear {
+      font-size: 0.8125rem;
+      color: var(--color-primary);
+      cursor: pointer;
+    }
+    
+    .recent-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .recent-item:hover {
+      border-color: var(--color-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .recent-item i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    /* Popular Searches */
+    .popular-searches {
+      margin-top: 1.5rem;
+    }
+    
+    .popular-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .popular-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .popular-item {
+      padding: 0.5rem 0.875rem;
+      background: var(--color-bg-secondary);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .popular-item:hover {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .no-results-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .no-results-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .no-results-desc {
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .no-results-suggestions {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="search-container">
+      <div class="search-header">
+        <h1>Search Everything</h1>
+        <div class="search-box">
+          <div class="search-input-wrapper">
+            <span class="search-icon"><i data-lucide="search"></i></span>
+            <input type="text" class="search-input" placeholder="Search artifacts, discussions, members..." id="search-input" value="data dividends">
+            <span class="search-shortcut">⌘K</span>
+          </div>
+        </div>
+        <div class="quick-filters">
+          <button class="quick-filter active"><i data-lucide="layers"></i> All</button>
+          <button class="quick-filter"><i data-lucide="file-text"></i> Proposals</button>
+          <button class="quick-filter"><i data-lucide="git-branch"></i> ADRs</button>
+          <button class="quick-filter"><i data-lucide="scale"></i> Policies</button>
+          <button class="quick-filter"><i data-lucide="message-square"></i> Discussions</button>
+          <button class="quick-filter"><i data-lucide="users"></i> Members</button>
+        </div>
+      </div>
+      
+      <div class="search-results" id="results">
+        <div class="results-header">
+          <span class="results-count">Found <strong>12</strong> results for "<strong>data dividends</strong>"</span>
+          <div class="results-sort">
+            Sort by:
+            <select>
+              <option>Relevance</option>
+              <option>Newest</option>
+              <option>Most Viewed</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Proposal Result -->
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-type proposal"><i data-lucide="file-text"></i> Proposal</span>
+            <span class="result-status">Active Vote</span>
+          </div>
+          <h3 class="result-title">PROP-015: <mark>Data Dividends</mark> Framework</h3>
+          <p class="result-excerpt">Establish the foundational framework for <mark>data dividends</mark> including valuation methodology, distribution mechanisms, and governance structures for collective data ownership...</p>
+          <div class="result-meta">
+            <span class="result-meta-item"><i data-lucide="user"></i> Maria Kowalski</span>
+            <span class="result-meta-item"><i data-lucide="calendar"></i> Jan 20, 2026</span>
+            <span class="result-meta-item"><i data-lucide="message-square"></i> 47 comments</span>
+          </div>
+        </div>
+        
+        <!-- ADR Result -->
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-type adr"><i data-lucide="git-branch"></i> ADR</span>
+            <span class="result-status">Accepted</span>
+          </div>
+          <h3 class="result-title">ADR-023: <mark>Data Dividend</mark> Calculation Methodology</h3>
+          <p class="result-excerpt">Decision record documenting the chosen approach for calculating individual <mark>data dividend</mark> shares based on data contribution metrics and collective value generation...</p>
+          <div class="result-meta">
+            <span class="result-meta-item"><i data-lucide="user"></i> Thomas Chen</span>
+            <span class="result-meta-item"><i data-lucide="calendar"></i> Jan 15, 2026</span>
+            <span class="result-meta-item"><i data-lucide="eye"></i> 234 views</span>
+          </div>
+        </div>
+        
+        <!-- Discussion Result -->
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-type discussion"><i data-lucide="message-square"></i> Discussion</span>
+            <span class="result-status">Active</span>
+          </div>
+          <h3 class="result-title">How should <mark>data dividends</mark> be distributed?</h3>
+          <p class="result-excerpt">I've been thinking about the distribution mechanisms for <mark>data dividends</mark>. Should we prioritize equal distribution or weight by data contribution? What are the fairness implications...</p>
+          <div class="result-meta">
+            <span class="result-meta-item"><i data-lucide="user"></i> Alexandra Lee</span>
+            <span class="result-meta-item"><i data-lucide="calendar"></i> Jan 22, 2026</span>
+            <span class="result-meta-item"><i data-lucide="message-square"></i> 89 replies</span>
+          </div>
+        </div>
+        
+        <!-- Knowledge Base Result -->
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-type guide"><i data-lucide="book-open"></i> Knowledge Base</span>
+            <span class="result-status">Published</span>
+          </div>
+          <h3 class="result-title"><mark>Data Dividends</mark>: Concept Overview</h3>
+          <p class="result-excerpt"><mark>Data dividends</mark> represent a mechanism for distributing the economic value generated from collective data to the individuals who produce it. This concept addresses the current asymmetry...</p>
+          <div class="result-meta">
+            <span class="result-meta-item"><i data-lucide="calendar"></i> Updated Jan 18, 2026</span>
+            <span class="result-meta-item"><i data-lucide="eye"></i> 1,234 views</span>
+          </div>
+        </div>
+        
+        <!-- Member Result -->
+        <div class="result-card member-result">
+          <div class="member-avatar-large" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</div>
+          <div class="member-info">
+            <div class="result-type member" style="margin-bottom: 0.5rem;"><i data-lucide="user"></i> Member</div>
+            <h3 class="member-name">Maria Kowalski</h3>
+            <p class="member-role">Steward • Policy Working Group Lead</p>
+            <div class="member-tags">
+              <span class="member-tag">Data Dividends</span>
+              <span class="member-tag">UBI</span>
+              <span class="member-tag">Policy</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Policy Result -->
+        <div class="result-card">
+          <div class="result-header">
+            <span class="result-type policy"><i data-lucide="scale"></i> Policy</span>
+            <span class="result-status">Draft</span>
+          </div>
+          <h3 class="result-title"><mark>Data Dividend</mark> Distribution Policy</h3>
+          <p class="result-excerpt">Draft policy document outlining the rules and procedures for <mark>data dividend</mark> distribution including eligibility criteria, calculation periods, and disbursement schedules...</p>
+          <div class="result-meta">
+            <span class="result-meta-item"><i data-lucide="user"></i> Policy WG</span>
+            <span class="result-meta-item"><i data-lucide="calendar"></i> Jan 25, 2026</span>
+            <span class="result-meta-item"><i data-lucide="edit"></i> Under Review</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Empty state (hidden) -->
+      <div class="search-results" id="empty-state" style="display: none;">
+        <div class="no-results">
+          <div class="no-results-icon">🔍</div>
+          <h3 class="no-results-title">No results found</h3>
+          <p class="no-results-desc">Try different keywords or browse by category</p>
+          <div class="no-results-suggestions">
+            <span class="popular-item">UBI</span>
+            <span class="popular-item">Automation Tax</span>
+            <span class="popular-item">Pyramid of Prosperity</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent & Popular (shown when empty) -->
+      <div id="suggestions" style="display: none;">
+        <div class="recent-searches">
+          <div class="recent-header">
+            <span class="recent-title">Recent Searches</span>
+            <span class="recent-clear">Clear all</span>
+          </div>
+          <div class="recent-list">
+            <div class="recent-item"><i data-lucide="clock"></i> automation tax</div>
+            <div class="recent-item"><i data-lucide="clock"></i> voting mechanisms</div>
+            <div class="recent-item"><i data-lucide="clock"></i> Maria Kowalski</div>
+            <div class="recent-item"><i data-lucide="clock"></i> UBI implementation</div>
+          </div>
+        </div>
+        
+        <div class="popular-searches">
+          <div class="popular-title">Popular Searches</div>
+          <div class="popular-list">
+            <span class="popular-item">UBI</span>
+            <span class="popular-item">Automation Tax</span>
+            <span class="popular-item">Pyramid of Prosperity</span>
+            <span class="popular-item">Data Dividends</span>
+            <span class="popular-item">Laborism</span>
+            <span class="popular-item">Governance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.quick-filter').forEach(filter => {
+      filter.addEventListener('click', () => {
+        document.querySelectorAll('.quick-filter').forEach(f => f.classList.remove('active'));
+        filter.classList.add('active');
+      });
+    });
+    
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', (e) => {
+      if (e.target.value.length === 0) {
+        document.getElementById('results').style.display = 'none';
+        document.getElementById('suggestions').style.display = 'block';
+      } else {
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('suggestions').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

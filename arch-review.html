@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review & Evaluate | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Community review and evaluation system for architecture artifacts. Vote, comment, and assess alignment with core principles.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Review Page Styles */
+    .review-hero {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .review-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    /* Review Queue Stats */
+    .review-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .review-stat {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .review-stat .stat-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .review-stat .stat-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .review-stat .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .review-stat .stat-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Tab Navigation */
+    .review-tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .review-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .review-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .review-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+    
+    .review-tab i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .review-tab .badge {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+    }
+    
+    /* Review Item */
+    .review-item {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    
+    .review-item:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+    
+    .review-item-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .review-item-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .review-item-icon i {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .review-item-info {
+      flex: 1;
+    }
+    
+    .review-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .review-item-id {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    
+    .review-item-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .review-item-desc {
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    
+    .review-item-status {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+    
+    .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .priority-badge.high { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+    .priority-badge.medium { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .priority-badge.low { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    
+    .deadline {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Review Body */
+    .review-item-body {
+      padding: 1.5rem;
+    }
+    
+    /* Evaluation Checklist */
+    .evaluation-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .evaluation-section h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+    
+    .evaluation-checklist {
+      display: grid;
+      gap: 0.75rem;
+    }
+    
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .check-item:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .check-item.checked {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+    
+    .check-box {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s;
+    }
+    
+    .check-item.checked .check-box {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    
+    .check-box i {
+      width: 14px;
+      height: 14px;
+      color: white;
+      opacity: 0;
+    }
+    
+    .check-item.checked .check-box i {
+      opacity: 1;
+    }
+    
+    .check-content {
+      flex: 1;
+    }
+    
+    .check-label {
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .check-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Principle Alignment Assessment */
+    .alignment-assessment {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .alignment-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+    }
+    
+    .alignment-principle {
+      flex: 1;
+      font-weight: 500;
+    }
+    
+    .alignment-slider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 200px;
+    }
+    
+    .slider-track {
+      flex: 1;
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .slider-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ef4444, #fbbf24, #10b981);
+      border-radius: 4px;
+    }
+    
+    .slider-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 18px;
+      height: 18px;
+      background: white;
+      border: 2px solid var(--color-primary);
+      border-radius: 50%;
+      cursor: grab;
+    }
+    
+    .alignment-value {
+      font-size: 0.875rem;
+      font-weight: 600;
+      min-width: 40px;
+      text-align: right;
+    }
+    
+    /* Voting Section */
+    .voting-section {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .vote-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .vote-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 2px solid var(--color-border);
+      border-radius: 0.75rem;
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .vote-btn:hover {
+      border-color: var(--color-text-muted);
+      color: var(--color-text-primary);
+    }
+    
+    .vote-btn.approve:hover,
+    .vote-btn.approve.active {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+    
+    .vote-btn.request-changes:hover,
+    .vote-btn.request-changes.active {
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, 0.1);
+      color: #fbbf24;
+    }
+    
+    .vote-btn.reject:hover,
+    .vote-btn.reject.active {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .vote-btn i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .vote-stats {
+      display: flex;
+      gap: 2rem;
+      margin-left: auto;
+    }
+    
+    .vote-stat {
+      text-align: center;
+    }
+    
+    .vote-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .vote-stat-value.approve { color: #10b981; }
+    .vote-stat-value.changes { color: #fbbf24; }
+    .vote-stat-value.reject { color: #ef4444; }
+    
+    .vote-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Comment Section */
+    .comments-section {
+      margin-top: 1.5rem;
+    }
+    
+    .comments-section h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .comments-section h4 .count {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .comment {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .comment:last-child {
+      border-bottom: none;
+    }
+    
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+    
+    .comment-content {
+      flex: 1;
+    }
+    
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .comment-author {
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    
+    .comment-role {
+      font-size: 0.75rem;
+      padding: 0.125rem 0.5rem;
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+      border-radius: 4px;
+    }
+    
+    .comment-time {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .comment-text {
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .comment-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+    
+    .comment-action {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    
+    .comment-action:hover {
+      color: var(--color-primary);
+    }
+    
+    .comment-action i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Add Comment */
+    .add-comment {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .comment-input {
+      flex: 1;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      color: var(--color-text-primary);
+      font-family: inherit;
+      font-size: 0.9375rem;
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .comment-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    /* Review Actions */
+    .review-item-actions {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .review-item-actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+    
+    /* Impact Matrix */
+    .impact-matrix {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .impact-cell {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+    
+    .impact-cell-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    
+    .impact-cell-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .impact-cell-value.high { color: #10b981; }
+    .impact-cell-value.medium { color: #fbbf24; }
+    .impact-cell-value.low { color: #94a3b8; }
+    
+    /* Consensus Meter */
+    .consensus-meter {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 1rem;
+    }
+    
+    .consensus-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .consensus-header h4 {
+      font-size: 1rem;
+      margin: 0;
+    }
+    
+    .consensus-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    
+    .consensus-bar {
+      height: 12px;
+      background: var(--color-border);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+    }
+    
+    .consensus-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    
+    .consensus-segment.approve { background: #10b981; }
+    .consensus-segment.changes { background: #fbbf24; }
+    .consensus-segment.reject { background: #ef4444; }
+    .consensus-segment.pending { background: #64748b; }
+    
+    .consensus-legend {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .legend-dot.approve { background: #10b981; }
+    .legend-dot.changes { background: #fbbf24; }
+    .legend-dot.reject { background: #ef4444; }
+    .legend-dot.pending { background: #64748b; }
+    
+    @media (max-width: 768px) {
+      .review-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .review-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .review-tab {
+        white-space: nowrap;
+      }
+      
+      .review-item-header {
+        flex-direction: column;
+      }
+      
+      .review-item-status {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .voting-section {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .vote-buttons {
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      
+      .vote-btn {
+        flex: 1;
+        min-width: calc(50% - 0.25rem);
+        justify-content: center;
+      }
+      
+      .vote-stats {
+        margin-left: 0;
+        width: 100%;
+        justify-content: space-around;
+      }
+      
+      .impact-matrix {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/governance.html">Governance <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/governance.html">Overview</a></li>
+              <li><a href="/arch-artifacts.html">Artifacts</a></li>
+              <li><a href="/arch-review.html">Review & Evaluate</a></li>
+              <li><a href="/arch-collaborate.html">Collaborate</a></li>
+              <li><a href="/arch-create.html">Create New</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <i data-lucide="menu"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem);">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="separator">/</span>
+      <a href="/governance.html">Governance</a>
+      <span class="separator">/</span>
+      <span class="current">Review & Evaluate</span>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="review-hero">
+      <h1>Review & Evaluate</h1>
+      <p style="color: var(--color-text-secondary); font-size: 1.125rem; max-width: 600px;">
+        Participate in community governance by reviewing proposals, voting on decisions, and assessing alignment with core principles.
+      </p>
+    </section>
+    
+    <!-- Stats -->
+    <section class="review-stats">
+      <div class="review-stat">
+        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15);">
+          <i data-lucide="clipboard-list" style="color: #818cf8;"></i>
+        </div>
+        <div class="stat-value">8</div>
+        <div class="stat-label">Awaiting Review</div>
+      </div>
+      <div class="review-stat">
+        <div class="stat-icon" style="background: rgba(251, 191, 36, 0.15);">
+          <i data-lucide="alert-circle" style="color: #fbbf24;"></i>
+        </div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">High Priority</div>
+      </div>
+      <div class="review-stat">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15);">
+          <i data-lucide="check-circle" style="color: #34d399;"></i>
+        </div>
+        <div class="stat-value">24</div>
+        <div class="stat-label">Completed This Month</div>
+      </div>
+      <div class="review-stat">
+        <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15);">
+          <i data-lucide="users" style="color: #f472b6;"></i>
+        </div>
+        <div class="stat-value">156</div>
+        <div class="stat-label">Active Reviewers</div>
+      </div>
+    </section>
+    
+    <!-- Tabs -->
+    <div class="review-tabs">
+      <button class="review-tab active">
+        <i data-lucide="inbox"></i>
+        Review Queue
+        <span class="badge">8</span>
+      </button>
+      <button class="review-tab">
+        <i data-lucide="check-square"></i>
+        My Reviews
+      </button>
+      <button class="review-tab">
+        <i data-lucide="history"></i>
+        Recently Completed
+      </button>
+      <button class="review-tab">
+        <i data-lucide="bar-chart-3"></i>
+        Analytics
+      </button>
+    </div>
+    
+    <!-- Review Items -->
+    <section class="review-queue">
+      <!-- High Priority Review Item -->
+      <article class="review-item" id="prop-015">
+        <div class="review-item-header">
+          <div class="review-item-icon" style="background: rgba(236, 72, 153, 0.15); color: #f472b6;">
+            <i data-lucide="lightbulb"></i>
+          </div>
+          <div class="review-item-info">
+            <div class="review-item-meta">
+              <span class="review-item-id">PROP-015</span>
+              <span>Proposal</span>
+              <span>•</span>
+              <span>Submitted Jan 20, 2026</span>
+              <span>•</span>
+              <span>by Sarah M.</span>
+            </div>
+            <h3 class="review-item-title">Data Dividends Integration</h3>
+            <p class="review-item-desc">
+              Proposal to add "Data Dividends" as a component of Layer 3 (Collective Ownership) in the Pyramid of Prosperity. This would establish a mechanism for citizens to receive compensation for the use of their personal data by corporations.
+            </p>
+          </div>
+          <div class="review-item-status">
+            <span class="priority-badge high">
+              <i data-lucide="alert-triangle" style="width: 12px; height: 12px;"></i>
+              High Priority
+            </span>
+            <span class="deadline">Due: Feb 3, 2026</span>
+          </div>
+        </div>
+        
+        <div class="review-item-body">
+          <!-- Evaluation Checklist -->
+          <div class="evaluation-section">
+            <h4>Evaluation Checklist</h4>
+            <div class="evaluation-checklist">
+              <div class="check-item checked" onclick="this.classList.toggle('checked')">
+                <div class="check-box"><i data-lucide="check"></i></div>
+                <div class="check-content">
+                  <div class="check-label">Problem Statement Clear</div>
+                  <div class="check-desc">The proposal clearly articulates the problem being solved</div>
+                </div>
+              </div>
+              <div class="check-item checked" onclick="this.classList.toggle('checked')">
+                <div class="check-box"><i data-lucide="check"></i></div>
+                <div class="check-content">
+                  <div class="check-label">Solution Well-Defined</div>
+                  <div class="check-desc">The proposed solution is specific and actionable</div>
+                </div>
+              </div>
+              <div class="check-item" onclick="this.classList.toggle('checked')">
+                <div class="check-box"><i data-lucide="check"></i></div>
+                <div class="check-content">
+                  <div class="check-label">Evidence Provided</div>
+                  <div class="check-desc">Claims are supported by research, data, or real-world examples</div>
+                </div>
+              </div>
+              <div class="check-item" onclick="this.classList.toggle('checked')">
+                <div class="check-box"><i data-lucide="check"></i></div>
+                <div class="check-content">
+                  <div class="check-label">Alternatives Considered</div>
+                  <div class="check-desc">The proposal discusses why alternatives were rejected</div>
+                </div>
+              </div>
+              <div class="check-item checked" onclick="this.classList.toggle('checked')">
+                <div class="check-box"><i data-lucide="check"></i></div>
+                <div class="check-content">
+                  <div class="check-label">Consequences Addressed</div>
+                  <div class="check-desc">Both positive and negative consequences are documented</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Principle Alignment -->
+          <div class="evaluation-section">
+            <h4>Principle Alignment Assessment</h4>
+            <div class="alignment-assessment">
+              <div class="alignment-item">
+                <span class="alignment-principle">Human Agency First</span>
+                <div class="alignment-slider">
+                  <div class="slider-track">
+                    <div class="slider-fill" style="width: 85%;"></div>
+                    <div class="slider-thumb" style="left: 85%;"></div>
+                  </div>
+                  <span class="alignment-value" style="color: #10b981;">85%</span>
+                </div>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-principle">Evidence Over Ideology</span>
+                <div class="alignment-slider">
+                  <div class="slider-track">
+                    <div class="slider-fill" style="width: 60%;"></div>
+                    <div class="slider-thumb" style="left: 60%;"></div>
+                  </div>
+                  <span class="alignment-value" style="color: #fbbf24;">60%</span>
+                </div>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-principle">Incremental Transition</span>
+                <div class="alignment-slider">
+                  <div class="slider-track">
+                    <div class="slider-fill" style="width: 90%;"></div>
+                    <div class="slider-thumb" style="left: 90%;"></div>
+                  </div>
+                  <span class="alignment-value" style="color: #10b981;">90%</span>
+                </div>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-principle">Global Applicability</span>
+                <div class="alignment-slider">
+                  <div class="slider-track">
+                    <div class="slider-fill" style="width: 70%;"></div>
+                    <div class="slider-thumb" style="left: 70%;"></div>
+                  </div>
+                  <span class="alignment-value" style="color: #fbbf24;">70%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Impact Matrix -->
+          <div class="evaluation-section">
+            <h4>Impact Assessment</h4>
+            <div class="impact-matrix">
+              <div class="impact-cell">
+                <div class="impact-cell-label">Scope</div>
+                <div class="impact-cell-value high">Global</div>
+              </div>
+              <div class="impact-cell">
+                <div class="impact-cell-label">Complexity</div>
+                <div class="impact-cell-value medium">Medium</div>
+              </div>
+              <div class="impact-cell">
+                <div class="impact-cell-label">Reversibility</div>
+                <div class="impact-cell-value high">High</div>
+              </div>
+              <div class="impact-cell">
+                <div class="impact-cell-label">Dependencies</div>
+                <div class="impact-cell-value low">3</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Consensus Meter -->
+          <div class="consensus-meter">
+            <div class="consensus-header">
+              <h4>Community Consensus</h4>
+              <span class="consensus-value">78% Agreement</span>
+            </div>
+            <div class="consensus-bar">
+              <div class="consensus-segment approve" style="width: 62%;"></div>
+              <div class="consensus-segment changes" style="width: 16%;"></div>
+              <div class="consensus-segment reject" style="width: 7%;"></div>
+              <div class="consensus-segment pending" style="width: 15%;"></div>
+            </div>
+            <div class="consensus-legend">
+              <span class="legend-item"><span class="legend-dot approve"></span> Approve (62%)</span>
+              <span class="legend-item"><span class="legend-dot changes"></span> Changes (16%)</span>
+              <span class="legend-item"><span class="legend-dot reject"></span> Reject (7%)</span>
+              <span class="legend-item"><span class="legend-dot pending"></span> Pending (15%)</span>
+            </div>
+          </div>
+          
+          <!-- Voting -->
+          <div class="voting-section">
+            <div class="vote-buttons">
+              <button class="vote-btn approve">
+                <i data-lucide="check"></i>
+                Approve
+              </button>
+              <button class="vote-btn request-changes">
+                <i data-lucide="edit-3"></i>
+                Request Changes
+              </button>
+              <button class="vote-btn reject">
+                <i data-lucide="x"></i>
+                Reject
+              </button>
+            </div>
+            <div class="vote-stats">
+              <div class="vote-stat">
+                <div class="vote-stat-value approve">47</div>
+                <div class="vote-stat-label">Approvals</div>
+              </div>
+              <div class="vote-stat">
+                <div class="vote-stat-value changes">12</div>
+                <div class="vote-stat-label">Changes</div>
+              </div>
+              <div class="vote-stat">
+                <div class="vote-stat-value reject">5</div>
+                <div class="vote-stat-label">Rejections</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Comments -->
+          <div class="comments-section">
+            <h4>
+              <i data-lucide="message-square"></i>
+              Discussion
+              <span class="count">47 comments</span>
+            </h4>
+            
+            <div class="comment">
+              <div class="comment-avatar">DS</div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-author">David Shapiro</span>
+                  <span class="comment-role">Steward</span>
+                  <span class="comment-time">2 days ago</span>
+                </div>
+                <p class="comment-text">
+                  I strongly support this proposal. Data dividends align well with our principle of collective ownership. The main question is implementation — how do we ensure fair valuation of data contributions across different demographics?
+                </p>
+                <div class="comment-actions">
+                  <button class="comment-action"><i data-lucide="thumbs-up"></i> 23</button>
+                  <button class="comment-action"><i data-lucide="message-circle"></i> Reply</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="comment">
+              <div class="comment-avatar">MK</div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-author">Maria K.</span>
+                  <span class="comment-time">1 day ago</span>
+                </div>
+                <p class="comment-text">
+                  The evidence section could be stronger. Can we reference the existing data dividend pilots in California and the EU's digital dividend discussions? This would help establish credibility.
+                </p>
+                <div class="comment-actions">
+                  <button class="comment-action"><i data-lucide="thumbs-up"></i> 15</button>
+                  <button class="comment-action"><i data-lucide="message-circle"></i> Reply</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Add Comment -->
+            <div class="add-comment">
+              <div class="comment-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">Y</div>
+              <div style="flex: 1; display: flex; flex-direction: column; gap: 0.75rem;">
+                <textarea class="comment-input" placeholder="Add your thoughts to the discussion..."></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                  <button class="btn btn-primary btn-sm">
+                    <i data-lucide="send"></i>
+                    Post Comment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="review-item-actions">
+          <a href="/arch-artifacts.html#prop-015" class="btn btn-outline">
+            <i data-lucide="file-text"></i>
+            View Full Proposal
+          </a>
+          <button class="btn btn-outline">
+            <i data-lucide="git-compare"></i>
+            Compare Versions
+          </button>
+          <button class="btn btn-primary">
+            <i data-lucide="send"></i>
+            Submit Review
+          </button>
+        </div>
+      </article>
+      
+      <!-- Second Review Item (Collapsed) -->
+      <article class="review-item">
+        <div class="review-item-header">
+          <div class="review-item-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+            <i data-lucide="file-text"></i>
+          </div>
+          <div class="review-item-info">
+            <div class="review-item-meta">
+              <span class="review-item-id">ADR-009</span>
+              <span>Architecture Decision</span>
+              <span>•</span>
+              <span>Submitted Jan 22, 2026</span>
+            </div>
+            <h3 class="review-item-title">Expand Stakeholder Categories</h3>
+            <p class="review-item-desc">
+              Add four new stakeholder categories: Caregivers & Parents, Creative Workers, Environmental Advocates, and Disability Rights Activists.
+            </p>
+          </div>
+          <div class="review-item-status">
+            <span class="priority-badge medium">
+              <i data-lucide="minus" style="width: 12px; height: 12px;"></i>
+              Medium Priority
+            </span>
+            <span class="deadline">Due: Feb 10, 2026</span>
+          </div>
+        </div>
+        <div class="review-item-actions">
+          <button class="btn btn-outline" style="flex: 2;">
+            <i data-lucide="chevron-down"></i>
+            Expand Review
+          </button>
+          <button class="btn btn-primary" style="flex: 1;">
+            <i data-lucide="clipboard-check"></i>
+            Quick Vote
+          </button>
+        </div>
+      </article>
+      
+      <!-- Third Review Item (Collapsed) -->
+      <article class="review-item">
+        <div class="review-item-header">
+          <div class="review-item-icon" style="background: rgba(139, 92, 246, 0.15); color: #a78bfa;">
+            <i data-lucide="compass"></i>
+          </div>
+          <div class="review-item-info">
+            <div class="review-item-meta">
+              <span class="review-item-id">PRIN-009</span>
+              <span>Principle Amendment</span>
+              <span>•</span>
+              <span>Submitted Jan 25, 2026</span>
+            </div>
+            <h3 class="review-item-title">Add "Intergenerational Equity" Principle</h3>
+            <p class="review-item-desc">
+              Proposed new core principle ensuring that post-labor economic systems consider impacts on future generations and long-term sustainability.
+            </p>
+          </div>
+          <div class="review-item-status">
+            <span class="priority-badge low">
+              <i data-lucide="arrow-down" style="width: 12px; height: 12px;"></i>
+              Low Priority
+            </span>
+            <span class="deadline">Due: Feb 28, 2026</span>
+          </div>
+        </div>
+        <div class="review-item-actions">
+          <button class="btn btn-outline" style="flex: 2;">
+            <i data-lucide="chevron-down"></i>
+            Expand Review
+          </button>
+          <button class="btn btn-primary" style="flex: 1;">
+            <i data-lucide="clipboard-check"></i>
+            Quick Vote
+          </button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p class="copyright">© 2026 Post-Labor Economics. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // Tab switching
+    document.querySelectorAll('.review-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.review-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    // Vote button interaction
+    document.querySelectorAll('.vote-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parent = btn.closest('.vote-buttons');
+        parent.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

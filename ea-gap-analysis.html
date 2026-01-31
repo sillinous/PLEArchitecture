@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gap Analysis | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Identify gaps between current and target architecture states. Plan migration paths and prioritize improvements.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .gap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .gap-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .gap-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Summary Cards */
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .summary-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    
+    .summary-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+    }
+    
+    .summary-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .summary-value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    
+    .summary-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    /* Domain Tabs */
+    .domain-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+    
+    .domain-tab {
+      padding: 0.75rem 1.25rem;
+      background: transparent;
+      border: none;
+      border-radius: 0.5rem 0.5rem 0 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+    
+    .domain-tab:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-secondary);
+    }
+    
+    .domain-tab.active {
+      color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .domain-tab i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .tab-count {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+    }
+    
+    .domain-tab.active .tab-count {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    /* Gap Analysis Table */
+    .gap-table-container {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    
+    .gap-table-header {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 120px;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+    }
+    
+    .gap-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 120px;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      align-items: center;
+      transition: background 0.15s;
+    }
+    
+    .gap-row:last-child {
+      border-bottom: none;
+    }
+    
+    .gap-row:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .gap-element {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .gap-element-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .gap-element-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .gap-element-icon.capability { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .gap-element-icon.standard { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .gap-element-icon.building-block { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    
+    .gap-element-info h4 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.125rem;
+    }
+    
+    .gap-element-id {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* State Badges */
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .state-badge i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .state-badge.l1 { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .state-badge.l2 { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .state-badge.l3 { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+    .state-badge.l4 { background: rgba(132, 204, 22, 0.15); color: #84cc16; }
+    .state-badge.l5 { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    
+    .state-badge.none { background: var(--color-bg-tertiary); color: var(--color-text-muted); }
+    .state-badge.partial { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .state-badge.full { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    
+    /* Gap Indicator */
+    .gap-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .gap-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--color-bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .gap-bar-current {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      border-radius: 4px;
+    }
+    
+    .gap-bar-current.l1 { width: 20%; background: #ef4444; }
+    .gap-bar-current.l2 { width: 40%; background: #f59e0b; }
+    .gap-bar-current.l3 { width: 60%; background: #eab308; }
+    .gap-bar-current.l4 { width: 80%; background: #84cc16; }
+    .gap-bar-current.l5 { width: 100%; background: #10b981; }
+    
+    .gap-bar-target {
+      position: absolute;
+      top: -2px;
+      height: calc(100% + 4px);
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 2px;
+    }
+    
+    .gap-bar-target.l3 { left: 60%; }
+    .gap-bar-target.l4 { left: 80%; }
+    .gap-bar-target.l5 { left: calc(100% - 3px); }
+    
+    .gap-delta {
+      font-size: 0.75rem;
+      font-weight: 600;
+      min-width: 40px;
+      text-align: right;
+    }
+    
+    .gap-delta.positive { color: #10b981; }
+    .gap-delta.needs-work { color: #f59e0b; }
+    .gap-delta.critical { color: #ef4444; }
+    
+    /* Priority Actions */
+    .priority-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .priority-header {
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .priority-title {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .priority-title i {
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+    }
+    
+    .priority-body {
+      padding: 1.25rem;
+    }
+    
+    .priority-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .priority-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      border-left: 4px solid;
+    }
+    
+    .priority-item.high { border-left-color: #ef4444; }
+    .priority-item.medium { border-left-color: #f59e0b; }
+    .priority-item.low { border-left-color: #10b981; }
+    
+    .priority-rank {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+    
+    .priority-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .priority-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .priority-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+    
+    .priority-meta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .priority-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .priority-meta i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .priority-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+    
+    .priority-effort {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1024px) {
+      .summary-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .gap-table-header,
+      .gap-row {
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      }
+      
+      .gap-table-header > *:last-child,
+      .gap-row > *:last-child {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .summary-row {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .gap-table-header,
+      .gap-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+      
+      .gap-table-header > *:not(:first-child) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="gap-header">
+      <div>
+        <h1>Gap Analysis</h1>
+        <p class="gap-header-desc">Compare current architecture state to target state. Identify gaps, prioritize improvements, and plan migration paths.</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-outline"><i data-lucide="download"></i> Export</button>
+        <button class="btn btn-primary"><i data-lucide="settings-2"></i> Configure Targets</button>
+      </div>
+    </div>
+    
+    <!-- Summary Cards -->
+    <div class="summary-row">
+      <div class="summary-card">
+        <div class="summary-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+          <i data-lucide="check-circle"></i>
+        </div>
+        <div class="summary-value" style="color: #10b981;">23</div>
+        <div class="summary-label">At Target</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+          <i data-lucide="arrow-up-right"></i>
+        </div>
+        <div class="summary-value" style="color: #f59e0b;">18</div>
+        <div class="summary-label">Minor Gaps</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">
+          <i data-lucide="alert-triangle"></i>
+        </div>
+        <div class="summary-value" style="color: #ef4444;">6</div>
+        <div class="summary-label">Critical Gaps</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+          <i data-lucide="target"></i>
+        </div>
+        <div class="summary-value" style="color: var(--color-primary);">72%</div>
+        <div class="summary-label">Overall Readiness</div>
+      </div>
+    </div>
+    
+    <!-- Domain Tabs -->
+    <div class="domain-tabs">
+      <button class="domain-tab active"><i data-lucide="layers"></i> All Domains <span class="tab-count">47</span></button>
+      <button class="domain-tab"><i data-lucide="briefcase"></i> Business <span class="tab-count">12</span></button>
+      <button class="domain-tab"><i data-lucide="database"></i> Data <span class="tab-count">8</span></button>
+      <button class="domain-tab"><i data-lucide="layout"></i> Application <span class="tab-count">15</span></button>
+      <button class="domain-tab"><i data-lucide="cpu"></i> Technology <span class="tab-count">12</span></button>
+    </div>
+    
+    <!-- Gap Analysis Table -->
+    <div class="gap-table-container">
+      <div class="gap-table-header">
+        <span>Element</span>
+        <span>Current State</span>
+        <span>Target State</span>
+        <span>Gap</span>
+        <span>Priority</span>
+      </div>
+      
+      <div class="gap-row">
+        <div class="gap-element">
+          <div class="gap-element-icon capability"><i data-lucide="boxes"></i></div>
+          <div class="gap-element-info">
+            <h4>Data Governance</h4>
+            <span class="gap-element-id">CAP-Tech-02</span>
+          </div>
+        </div>
+        <span class="state-badge l1"><i data-lucide="circle"></i> Level 1</span>
+        <span class="state-badge l4"><i data-lucide="target"></i> Level 4</span>
+        <div class="gap-indicator">
+          <div class="gap-bar">
+            <div class="gap-bar-current l1"></div>
+            <div class="gap-bar-target l4"></div>
+          </div>
+          <span class="gap-delta critical">+3</span>
+        </div>
+        <button class="btn btn-primary btn-sm">Plan</button>
+      </div>
+      
+      <div class="gap-row">
+        <div class="gap-element">
+          <div class="gap-element-icon capability"><i data-lucide="boxes"></i></div>
+          <div class="gap-element-info">
+            <h4>Coalition Building</h4>
+            <span class="gap-element-id">CAP-Pol-03</span>
+          </div>
+        </div>
+        <span class="state-badge l1"><i data-lucide="circle"></i> Level 1</span>
+        <span class="state-badge l3"><i data-lucide="target"></i> Level 3</span>
+        <div class="gap-indicator">
+          <div class="gap-bar">
+            <div class="gap-bar-current l1"></div>
+            <div class="gap-bar-target l3"></div>
+          </div>
+          <span class="gap-delta critical">+2</span>
+        </div>
+        <button class="btn btn-primary btn-sm">Plan</button>
+      </div>
+      
+      <div class="gap-row">
+        <div class="gap-element">
+          <div class="gap-element-icon capability"><i data-lucide="boxes"></i></div>
+          <div class="gap-element-info">
+            <h4>Mentorship Program</h4>
+            <span class="gap-element-id">CAP-Comm-01-03</span>
+          </div>
+        </div>
+        <span class="state-badge l2"><i data-lucide="circle"></i> Level 2</span>
+        <span class="state-badge l4"><i data-lucide="target"></i> Level 4</span>
+        <div class="gap-indicator">
+          <div class="gap-bar">
+            <div class="gap-bar-current l2"></div>
+            <div class="gap-bar-target l4"></div>
+          </div>
+          <span class="gap-delta needs-work">+2</span>
+        </div>
+        <button class="btn btn-outline btn-sm">Plan</button>
+      </div>
+      
+      <div class="gap-row">
+        <div class="gap-element">
+          <div class="gap-element-icon standard"><i data-lucide="book-check"></i></div>
+          <div class="gap-element-info">
+            <h4>Discord Migration</h4>
+            <span class="gap-element-id">STD-002 / STD-009</span>
+          </div>
+        </div>
+        <span class="state-badge partial"><i data-lucide="circle"></i> Partial</span>
+        <span class="state-badge full"><i data-lucide="target"></i> Complete</span>
+        <div class="gap-indicator">
+          <div class="gap-bar">
+            <div class="gap-bar-current l3"></div>
+            <div class="gap-bar-target l5"></div>
+          </div>
+          <span class="gap-delta needs-work">40%</span>
+        </div>
+        <button class="btn btn-outline btn-sm">Plan</button>
+      </div>
+      
+      <div class="gap-row">
+        <div class="gap-element">
+          <div class="gap-element-icon capability"><i data-lucide="boxes"></i></div>
+          <div class="gap-element-info">
+            <h4>Policy Research</h4>
+            <span class="gap-element-id">CAP-Pol-01</span>
+          </div>
+        </div>
+        <span class="state-badge l4"><i data-lucide="circle"></i> Level 4</span>
+        <span class="state-badge l5"><i data-lucide="target"></i> Level 5</span>
+        <div class="gap-indicator">
+          <div class="gap-bar">
+            <div class="gap-bar-current l4"></div>
+            <div class="gap-bar-target l5"></div>
+          </div>
+          <span class="gap-delta needs-work">+1</span>
+        </div>
+        <button class="btn btn-outline btn-sm">Plan</button>
+      </div>
+      
+      <div class="gap-row">
+        <div class="gap-element">
+          <div class="gap-element-icon capability"><i data-lucide="boxes"></i></div>
+          <div class="gap-element-info">
+            <h4>Content Creation</h4>
+            <span class="gap-element-id">CAP-Comm-03</span>
+          </div>
+        </div>
+        <span class="state-badge l5"><i data-lucide="check-circle"></i> Level 5</span>
+        <span class="state-badge l5"><i data-lucide="target"></i> Level 5</span>
+        <div class="gap-indicator">
+          <div class="gap-bar">
+            <div class="gap-bar-current l5"></div>
+          </div>
+          <span class="gap-delta positive">✓</span>
+        </div>
+        <button class="btn btn-ghost btn-sm">View</button>
+      </div>
+    </div>
+    
+    <!-- Priority Actions -->
+    <div class="priority-section">
+      <div class="priority-header">
+        <div class="priority-title"><i data-lucide="flag"></i> Priority Gap Closure Actions</div>
+        <button class="btn btn-outline btn-sm"><i data-lucide="plus"></i> Add Action</button>
+      </div>
+      <div class="priority-body">
+        <div class="priority-list">
+          <div class="priority-item high">
+            <div class="priority-rank">1</div>
+            <div class="priority-content">
+              <h4 class="priority-name">Establish Data Governance Framework</h4>
+              <p class="priority-desc">Define data ownership policies, create data dictionary, implement access controls, and establish data quality metrics.</p>
+              <div class="priority-meta">
+                <span><i data-lucide="boxes"></i> CAP-Tech-02</span>
+                <span><i data-lucide="calendar"></i> Q1 2026</span>
+                <span><i data-lucide="users"></i> Tech WG</span>
+              </div>
+            </div>
+            <div class="priority-actions">
+              <span class="priority-effort">Large Effort</span>
+              <button class="btn btn-primary btn-sm">Start</button>
+            </div>
+          </div>
+          
+          <div class="priority-item high">
+            <div class="priority-rank">2</div>
+            <div class="priority-content">
+              <h4 class="priority-name">Launch Coalition Building Initiative</h4>
+              <p class="priority-desc">Identify potential coalition partners, develop partnership framework, and initiate outreach to aligned organizations.</p>
+              <div class="priority-meta">
+                <span><i data-lucide="boxes"></i> CAP-Pol-03</span>
+                <span><i data-lucide="calendar"></i> Q1 2026</span>
+                <span><i data-lucide="users"></i> Policy WG</span>
+              </div>
+            </div>
+            <div class="priority-actions">
+              <span class="priority-effort">Medium Effort</span>
+              <button class="btn btn-outline btn-sm">Plan</button>
+            </div>
+          </div>
+          
+          <div class="priority-item medium">
+            <div class="priority-rank">3</div>
+            <div class="priority-content">
+              <h4 class="priority-name">Complete Slack to Discord Migration</h4>
+              <p class="priority-desc">Migrate all channels, bots, and integrations. Archive Slack history and complete member transition.</p>
+              <div class="priority-meta">
+                <span><i data-lucide="book-check"></i> STD-002/009</span>
+                <span><i data-lucide="calendar"></i> Q2 2026</span>
+                <span><i data-lucide="users"></i> Comm WG</span>
+              </div>
+            </div>
+            <div class="priority-actions">
+              <span class="priority-effort">Medium Effort</span>
+              <button class="btn btn-outline btn-sm">In Progress</button>
+            </div>
+          </div>
+          
+          <div class="priority-item medium">
+            <div class="priority-rank">4</div>
+            <div class="priority-content">
+              <h4 class="priority-name">Formalize Mentorship Program</h4>
+              <p class="priority-desc">Create structured mentorship matching, define mentorship guidelines, and implement progress tracking.</p>
+              <div class="priority-meta">
+                <span><i data-lucide="boxes"></i> CAP-Comm-01-03</span>
+                <span><i data-lucide="calendar"></i> Q2 2026</span>
+                <span><i data-lucide="users"></i> Community</span>
+              </div>
+            </div>
+            <div class="priority-actions">
+              <span class="priority-effort">Small Effort</span>
+              <button class="btn btn-outline btn-sm">Plan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.domain-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.domain-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

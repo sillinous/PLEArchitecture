@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newsletter Archive | Post-Labor Economics</title>
+  <meta name="description" content="Archive of all Post-Labor Economics newsletter posts. Essays, analysis, and updates from David Shapiro on Substack.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/newsletter.html">
+  <meta property="og:title" content="Newsletter Archive | Post-Labor Economics">
+  <meta property="og:description" content="Archive of all Post-Labor Economics essays and updates from the Substack. Free to subscribe.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-newsletter.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/newsletter.html">
+  <meta name="twitter:title" content="Newsletter Archive | Post-Labor Economics">
+  <meta name="twitter:description" content="Archive of all Post-Labor Economics essays and updates from the Substack. Free to subscribe.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-newsletter.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .newsletter-hero {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+      padding: 3rem 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .newsletter-hero h1 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .newsletter-hero p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+    
+    .subscribe-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .subscribe-form input {
+      flex: 1;
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      color: var(--color-text-primary);
+    }
+    
+    .subscribe-form input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    
+    /* Stats */
+    .newsletter-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat .value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    
+    .stat .label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Filter Tabs */
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-tab {
+      padding: 0.625rem 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .filter-tab:hover {
+      background: var(--color-bg-tertiary);
+    }
+    
+    .filter-tab.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+    
+    /* Featured Post */
+    .featured-post {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      align-items: center;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      padding: 0.375rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .featured-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #10b981, #6366f1);
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    
+    .featured-content h2 {
+      margin: 0 0 0.75rem 0;
+      font-size: 1.5rem;
+    }
+    
+    .featured-content h2 a {
+      color: var(--color-text-primary);
+    }
+    
+    .featured-content h2 a:hover {
+      color: var(--color-accent);
+    }
+    
+    .featured-excerpt {
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    
+    .featured-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+    
+    .featured-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .featured-meta i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Posts Grid */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .post-card {
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    
+    .post-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .post-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+    
+    .post-image.concept { background: linear-gradient(135deg, #10b981, #14b8a6); }
+    .post-image.framework { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .post-image.analysis { background: linear-gradient(135deg, #f59e0b, #eab308); }
+    .post-image.update { background: linear-gradient(135deg, #3b82f6, #0ea5e9); }
+    
+    .post-content {
+      padding: 1.25rem;
+    }
+    
+    .post-category {
+      display: inline-block;
+      padding: 0.25rem 0.625rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .post-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.05rem;
+      line-height: 1.4;
+    }
+    
+    .post-title a {
+      color: var(--color-text-primary);
+    }
+    
+    .post-title a:hover {
+      color: var(--color-accent);
+    }
+    
+    .post-excerpt {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .post-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+    
+    .post-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .post-meta i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Load More */
+    .load-more {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    /* Popular Topics */
+    .popular-topics {
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .popular-topics h2 {
+      margin: 0 0 1.5rem 0;
+      font-size: 1.1rem;
+    }
+    
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    
+    .topic-card {
+      background: var(--color-bg-tertiary);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .topic-card:hover {
+      background: var(--color-accent);
+      color: white;
+    }
+    
+    .topic-card .emoji {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .topic-card .name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .topic-card .count {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    .topic-card:hover .count {
+      color: rgba(255,255,255,0.8);
+    }
+    
+    /* Subscribe CTA */
+    .subscribe-cta {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+      border-radius: 1rem;
+      padding: 3rem;
+      text-align: center;
+    }
+    
+    .subscribe-cta h2 {
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .subscribe-cta p {
+      color: var(--color-text-secondary);
+      margin: 0 0 1.5rem 0;
+    }
+    
+    @media (max-width: 768px) {
+      .featured-post {
+        grid-template-columns: 1fr;
+      }
+      
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .subscribe-form {
+        flex-direction: column;
+      }
+      
+      .newsletter-stats {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <span class="page-label">Content</span>
+        <h1>Newsletter Archive</h1>
+        <p class="page-description">All essays, analysis, and updates from the Substack</p>
+      </div>
+      
+      <div class="newsletter-hero">
+        <h1>📬 The L/0 Newsletter</h1>
+        <p>
+          Deep dives into post-labor economics, framework updates, and movement news. 
+          Free to subscribe, published weekly.
+        </p>
+        <form class="subscribe-form" action="https://daveshap.substack.com" target="_blank">
+          <input type="email" placeholder="Enter your email" required>
+          <button type="submit" class="btn btn-primary">Subscribe Free</button>
+        </form>
+      </div>
+      
+      <!-- Stats -->
+      <div class="newsletter-stats">
+        <div class="stat">
+          <div class="value">8K+</div>
+          <div class="label">Subscribers</div>
+        </div>
+        <div class="stat">
+          <div class="value">120+</div>
+          <div class="label">Posts</div>
+        </div>
+        <div class="stat">
+          <div class="value">Weekly</div>
+          <div class="label">Frequency</div>
+        </div>
+        <div class="stat">
+          <div class="value">Free</div>
+          <div class="label">Always</div>
+        </div>
+      </div>
+      
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterPosts('all')">All Posts</button>
+        <button class="filter-tab" onclick="filterPosts('concept')">Core Concepts</button>
+        <button class="filter-tab" onclick="filterPosts('framework')">Frameworks</button>
+        <button class="filter-tab" onclick="filterPosts('analysis')">Analysis</button>
+        <button class="filter-tab" onclick="filterPosts('update')">Updates</button>
+      </div>
+      
+      <!-- Featured Post -->
+      <div class="featured-post">
+        <div class="featured-image">🔺</div>
+        <div class="featured-content">
+          <span class="featured-badge">⭐ Featured</span>
+          <h2><a href="https://daveshap.substack.com" target="_blank">The Pyramid of Prosperity: A Framework for Post-Labor Income</a></h2>
+          <p class="featured-excerpt">
+            How do people get money when jobs disappear? This foundational essay introduces the five-layer 
+            income framework—from UBI at the base to residual wages at the top—that forms the economic core 
+            of post-labor economics.
+          </p>
+          <div class="featured-meta">
+            <span><i data-lucide="calendar"></i> Jan 15, 2026</span>
+            <span><i data-lucide="clock"></i> 12 min read</span>
+            <span><i data-lucide="heart"></i> 342 likes</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Posts Grid -->
+      <div class="posts-grid">
+        <article class="post-card" data-category="concept">
+          <div class="post-image concept">⛓️</div>
+          <div class="post-content">
+            <span class="post-category">Core Concept</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">Laborism: The Ideology You Didn't Know You Had</a></h3>
+            <p class="post-excerpt">The invisible belief that work is morally necessary—and why it prevents us from imagining alternatives.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Jan 22, 2026</span>
+              <span><i data-lucide="clock"></i> 8 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="framework">
+          <div class="post-image framework">🏛️</div>
+          <div class="post-content">
+            <span class="post-category">Framework</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">The Pyramid of Power: Democratic Leverage Without Labor Power</a></h3>
+            <p class="post-excerpt">When you can't strike, how do citizens maintain power? Five layers of algorithmic governance.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Jan 8, 2026</span>
+              <span><i data-lucide="clock"></i> 15 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="concept">
+          <div class="post-image concept">🔄</div>
+          <div class="post-content">
+            <span class="post-category">Core Concept</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">The Economic Agency Paradox Explained</a></h3>
+            <p class="post-excerpt">Cheap goods are useless if you have no money. The self-reinforcing trap of automation.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Dec 28, 2025</span>
+              <span><i data-lucide="clock"></i> 10 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="analysis">
+          <div class="post-image analysis">📊</div>
+          <div class="post-content">
+            <span class="post-category">Analysis</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">Norway's Sovereign Wealth Fund: A Model for the World</a></h3>
+            <p class="post-excerpt">$1.7 trillion proving that collective ownership works at scale. What can we learn?</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Dec 21, 2025</span>
+              <span><i data-lucide="clock"></i> 11 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="analysis">
+          <div class="post-image analysis">🌍</div>
+          <div class="post-content">
+            <span class="post-category">Analysis</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">Global Exhaustion: Tang Ping, Quiet Quitting, and What Comes Next</a></h3>
+            <p class="post-excerpt">Workers worldwide are burned out. What does this mean for the future of labor?</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Dec 14, 2025</span>
+              <span><i data-lucide="clock"></i> 9 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="update">
+          <div class="post-image update">🚀</div>
+          <div class="post-content">
+            <span class="post-category">Update</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">Launching the Post-Labor Economics Movement</a></h3>
+            <p class="post-excerpt">Announcing the L/0 thesis, the community, and the roadmap ahead.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Dec 1, 2025</span>
+              <span><i data-lucide="clock"></i> 7 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="framework">
+          <div class="post-image framework">🤝</div>
+          <div class="post-content">
+            <span class="post-category">Framework</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">Building the Unlikely Coalition</a></h3>
+            <p class="post-excerpt">Why exhausted workers and forward-thinking capitalists need each other.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Nov 24, 2025</span>
+              <span><i data-lucide="clock"></i> 13 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="concept">
+          <div class="post-image concept">🎯</div>
+          <div class="post-content">
+            <span class="post-category">Core Concept</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">What Is L/0? The Labor Zero Thesis</a></h3>
+            <p class="post-excerpt">Division by zero breaks math. Zero labor breaks economics. The foundational idea.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Nov 15, 2025</span>
+              <span><i data-lucide="clock"></i> 6 min</span>
+            </div>
+          </div>
+        </article>
+        
+        <article class="post-card" data-category="analysis">
+          <div class="post-image analysis">💰</div>
+          <div class="post-content">
+            <span class="post-category">Analysis</span>
+            <h3 class="post-title"><a href="https://daveshap.substack.com" target="_blank">UBI Experiments: What We've Learned So Far</a></h3>
+            <p class="post-excerpt">From Finland to Stockton, reviewing the evidence for unconditional cash.</p>
+            <div class="post-meta">
+              <span><i data-lucide="calendar"></i> Nov 8, 2025</span>
+              <span><i data-lucide="clock"></i> 14 min</span>
+            </div>
+          </div>
+        </article>
+      </div>
+      
+      <!-- Load More -->
+      <div class="load-more">
+        <a href="https://daveshap.substack.com/archive" target="_blank" class="btn btn-secondary">
+          <i data-lucide="archive"></i>
+          View Full Archive on Substack
+        </a>
+      </div>
+      
+      <!-- Popular Topics -->
+      <div class="popular-topics">
+        <h2>📚 Browse by Topic</h2>
+        <div class="topics-grid">
+          <div class="topic-card" onclick="filterPosts('concept')">
+            <div class="emoji">🎯</div>
+            <div class="name">L/0 Thesis</div>
+            <div class="count">12 posts</div>
+          </div>
+          <div class="topic-card" onclick="filterPosts('framework')">
+            <div class="emoji">🔺</div>
+            <div class="name">Pyramids</div>
+            <div class="count">8 posts</div>
+          </div>
+          <div class="topic-card">
+            <div class="emoji">💰</div>
+            <div class="name">UBI</div>
+            <div class="count">15 posts</div>
+          </div>
+          <div class="topic-card">
+            <div class="emoji">🤖</div>
+            <div class="name">AI Impact</div>
+            <div class="count">20 posts</div>
+          </div>
+          <div class="topic-card">
+            <div class="emoji">🏛️</div>
+            <div class="name">Policy</div>
+            <div class="count">11 posts</div>
+          </div>
+          <div class="topic-card">
+            <div class="emoji">🌍</div>
+            <div class="name">Case Studies</div>
+            <div class="count">9 posts</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Subscribe CTA -->
+      <div class="subscribe-cta">
+        <h2>📧 Never Miss a Post</h2>
+        <p>Get new essays delivered directly to your inbox. Free, always.</p>
+        <a href="https://daveshap.substack.com" target="_blank" class="btn btn-primary">
+          <i data-lucide="mail"></i>
+          Subscribe on Substack
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // Mobile nav
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+    
+    // Filter posts
+    function filterPosts(category) {
+      document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.querySelectorAll('.post-card').forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

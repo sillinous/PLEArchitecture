@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Library | Content Suite | PLE Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .research-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; }
+    .research-header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .research-header h1 i { width: 28px; height: 28px; color: #10b981; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; text-align: center; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.75rem; color: var(--color-text-muted); }
+    
+    .research-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+    .research-card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: all var(--transition-base); }
+    .research-card:hover { border-color: var(--color-border-hover); transform: translateY(-2px); }
+    
+    .research-card-header { padding: 1.25rem; border-bottom: 1px solid var(--color-border); }
+    .research-type { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: var(--radius-full); font-size: 0.6875rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .research-type.paper { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .research-type.analysis { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .research-type.brief { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .research-type.report { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .research-type i { width: 12px; height: 12px; }
+    
+    .research-title { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.4; }
+    .research-authors { font-size: 0.8125rem; color: var(--color-text-secondary); }
+    
+    .research-card-body { padding: 1.25rem; }
+    .research-abstract { font-size: 0.8125rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .research-meta { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 1rem; }
+    .research-meta span { display: flex; align-items: center; gap: 0.25rem; }
+    .research-meta i { width: 12px; height: 12px; }
+    
+    .research-alignment { padding: 1rem; background: var(--color-bg-tertiary); border-radius: var(--radius-md); }
+    .alignment-title { font-size: 0.6875rem; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0.625rem; display: flex; align-items: center; gap: 0.375rem; }
+    .alignment-title i { width: 12px; height: 12px; }
+    .alignment-row { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.5rem; }
+    .alignment-row:last-child { margin-bottom: 0; }
+    
+    .arch-tag { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.6875rem; font-weight: 500; }
+    .arch-tag i { width: 10px; height: 10px; }
+    .arch-tag.goal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .arch-tag.strategy { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .arch-tag.capability { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .arch-tag.objective { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    
+    .research-card-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+    .research-status { font-size: 0.6875rem; font-weight: 600; padding: 0.25rem 0.625rem; border-radius: var(--radius-full); }
+    .research-status.published { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .research-status.draft { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .research-status.review { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .research-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Content Suite</span></div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/content-hub.html">← Content Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="research-header">
+      <div>
+        <h1><i data-lucide="book-open"></i> Research Library</h1>
+        <p style="color: var(--color-text-secondary);">Academic papers, analysis, and policy briefs aligned to strategic goals</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> New Research</button>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value" style="color: #818cf8;">47</div><div class="stat-label">Total Papers</div></div>
+      <div class="stat-card"><div class="stat-value" style="color: #10b981;">32</div><div class="stat-label">Published</div></div>
+      <div class="stat-card"><div class="stat-value" style="color: #f472b6;">6</div><div class="stat-label">Strategies Supported</div></div>
+      <div class="stat-card"><div class="stat-value" style="color: #fbbf24;">96%</div><div class="stat-label">Architecture Aligned</div></div>
+    </div>
+    
+    <div class="research-grid">
+      <article class="research-card">
+        <div class="research-card-header">
+          <span class="research-type analysis"><i data-lucide="bar-chart-2"></i> Analysis</span>
+          <h3 class="research-title">UBI Pilot Programs: A Meta-Analysis of Global Outcomes (2015-2025)</h3>
+          <div class="research-authors">Research Working Group • Maria K., James T.</div>
+        </div>
+        <div class="research-card-body">
+          <p class="research-abstract">Comprehensive analysis of 34 UBI pilot programs across 12 countries, examining employment effects, health outcomes, and social impact metrics to establish evidence-based policy recommendations.</p>
+          <div class="research-meta">
+            <span><i data-lucide="calendar"></i> Jan 2026</span>
+            <span><i data-lucide="file-text"></i> 48 pages</span>
+            <span><i data-lucide="quote"></i> 12 citations</span>
+          </div>
+          <div class="research-alignment">
+            <div class="alignment-title"><i data-lucide="layers"></i> Architecture Alignment</div>
+            <div class="alignment-row">
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-001: UBI</span>
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-006: Evidence Base</span>
+            </div>
+            <div class="alignment-row">
+              <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-001: Research Foundation</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-002: Research</span>
+            </div>
+          </div>
+        </div>
+        <div class="research-card-footer">
+          <span class="research-status published">Published</span>
+          <button class="btn btn-ghost btn-sm">View Paper</button>
+        </div>
+      </article>
+      
+      <article class="research-card">
+        <div class="research-card-header">
+          <span class="research-type brief"><i data-lucide="file-text"></i> Policy Brief</span>
+          <h3 class="research-title">Automation Tax Framework: Progressive Revenue Mechanisms for AI-Driven Displacement</h3>
+          <div class="research-authors">Policy Working Group • David S., Jennifer M.</div>
+        </div>
+        <div class="research-card-body">
+          <p class="research-abstract">Proposes a graduated taxation framework for automation capital investment, with revenue allocation mechanisms tied directly to worker transition programs and universal basic income funding.</p>
+          <div class="research-meta">
+            <span><i data-lucide="calendar"></i> Jan 2026</span>
+            <span><i data-lucide="file-text"></i> 24 pages</span>
+            <span><i data-lucide="quote"></i> 8 citations</span>
+          </div>
+          <div class="research-alignment">
+            <div class="alignment-title"><i data-lucide="layers"></i> Architecture Alignment</div>
+            <div class="alignment-row">
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-003: Automation Tax</span>
+              <span class="arch-tag objective"><i data-lucide="flag"></i> OBJ-012: Tax Framework</span>
+            </div>
+            <div class="alignment-row">
+              <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-003: Policy Development</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-007: Policy Analysis</span>
+            </div>
+          </div>
+        </div>
+        <div class="research-card-footer">
+          <span class="research-status review">In Review</span>
+          <button class="btn btn-ghost btn-sm">View Paper</button>
+        </div>
+      </article>
+      
+      <article class="research-card">
+        <div class="research-card-header">
+          <span class="research-type paper"><i data-lucide="graduation-cap"></i> Academic Paper</span>
+          <h3 class="research-title">Data Dividends: Economic Models for Personal Data Value Distribution</h3>
+          <div class="research-authors">Research Working Group • Sarah L., Michael R.</div>
+        </div>
+        <div class="research-card-body">
+          <p class="research-abstract">Economic modeling of data dividend systems that compensate individuals for the value generated from their personal data, examining implementation feasibility and distributional effects.</p>
+          <div class="research-meta">
+            <span><i data-lucide="calendar"></i> Dec 2025</span>
+            <span><i data-lucide="file-text"></i> 36 pages</span>
+            <span><i data-lucide="quote"></i> 5 citations</span>
+          </div>
+          <div class="research-alignment">
+            <div class="alignment-title"><i data-lucide="layers"></i> Architecture Alignment</div>
+            <div class="alignment-row">
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-002: Data Ownership</span>
+            </div>
+            <div class="alignment-row">
+              <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-004: Data Rights</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-024: Data Dividends</span>
+            </div>
+          </div>
+        </div>
+        <div class="research-card-footer">
+          <span class="research-status published">Published</span>
+          <button class="btn btn-ghost btn-sm">View Paper</button>
+        </div>
+      </article>
+      
+      <article class="research-card">
+        <div class="research-card-header">
+          <span class="research-type report"><i data-lucide="pie-chart"></i> Report</span>
+          <h3 class="research-title">Workforce Transition Impact Assessment: AI Adoption in Manufacturing</h3>
+          <div class="research-authors">Research Working Group • Alex P., Chris N.</div>
+        </div>
+        <div class="research-card-body">
+          <p class="research-abstract">Sector-specific analysis of AI and automation adoption in manufacturing, projecting workforce displacement patterns and evaluating transition support program effectiveness.</p>
+          <div class="research-meta">
+            <span><i data-lucide="calendar"></i> Nov 2025</span>
+            <span><i data-lucide="file-text"></i> 52 pages</span>
+            <span><i data-lucide="quote"></i> 15 citations</span>
+          </div>
+          <div class="research-alignment">
+            <div class="alignment-title"><i data-lucide="layers"></i> Architecture Alignment</div>
+            <div class="alignment-row">
+              <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-008: Workforce Transition</span>
+            </div>
+            <div class="alignment-row">
+              <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-005: Community Programs</span>
+              <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-025: Transition Support</span>
+            </div>
+          </div>
+        </div>
+        <div class="research-card-footer">
+          <span class="research-status published">Published</span>
+          <button class="btn btn-ghost btn-sm">View Paper</button>
+        </div>
+      </article>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission, Vision & Goals | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="The foundational purpose, aspirational future, and strategic goals that guide the Post-Labor Economics movement architecture.">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/arch-mission.html">
+  <meta property="og:title" content="Mission, Vision & Goals | Post-Labor Economics">
+  <meta property="og:description" content="The foundational purpose, aspirational future, and strategic goals guiding the L/0 architecture.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-governance.png">
+
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .page-hero {
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
+      padding: calc(var(--header-height) + 4rem) 0 4rem;
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb a {
+      color: var(--color-text-secondary);
+    }
+    
+    .breadcrumb a:hover {
+      color: var(--color-accent);
+    }
+    
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    
+    .page-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 700px;
+    }
+    
+    /* Mission/Vision cards */
+    .mvg-section {
+      padding: 4rem 0;
+    }
+    
+    .mvg-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mvg-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--card-gradient, var(--gradient-prosperity));
+    }
+    
+    .mvg-card.vision::before {
+      --card-gradient: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    
+    .mvg-card.goals::before {
+      --card-gradient: linear-gradient(90deg, #f59e0b 0%, #ef4444 100%);
+    }
+    
+    .mvg-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 1rem;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #34d399;
+      margin-bottom: 1.5rem;
+    }
+    
+    .mvg-card.vision .mvg-label {
+      background: rgba(99, 102, 241, 0.1);
+      color: #818cf8;
+    }
+    
+    .mvg-card.goals .mvg-label {
+      background: rgba(245, 158, 11, 0.1);
+      color: #fbbf24;
+    }
+    
+    .mvg-card h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .mvg-statement {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--color-text-primary);
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--color-accent);
+    }
+    
+    .mvg-card.vision .mvg-statement {
+      border-left-color: #6366f1;
+    }
+    
+    .mvg-explanation {
+      color: var(--color-text-secondary);
+      font-size: 1.0625rem;
+      line-height: 1.7;
+    }
+    
+    /* Goals list */
+    .goals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .goal-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .goal-card:hover {
+      border-color: var(--color-border-light);
+      transform: translateY(-2px);
+    }
+    
+    .goal-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--goal-color, rgba(245, 158, 11, 0.15));
+      border-radius: 0.5rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--goal-accent, #fbbf24);
+      margin-bottom: 1rem;
+    }
+    
+    .goal-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .goal-card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    /* Strategy hierarchy */
+    .strategy-section {
+      padding: 4rem 0;
+      background: var(--color-bg-secondary);
+    }
+    
+    .hierarchy-diagram {
+      max-width: 900px;
+      margin: 3rem auto 0;
+    }
+    
+    .hierarchy-level {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 1rem;
+    }
+    
+    .hierarchy-label {
+      width: 140px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+    }
+    
+    .hierarchy-content {
+      flex: 1;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--level-color, var(--color-accent));
+      border-radius: 0 0.75rem 0.75rem 0;
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .hierarchy-content h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--level-color, var(--color-accent));
+    }
+    
+    .hierarchy-content p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      margin: 0;
+    }
+    
+    .hierarchy-level.mission { --level-color: #10b981; }
+    .hierarchy-level.vision { --level-color: #6366f1; }
+    .hierarchy-level.goals { --level-color: #f59e0b; }
+    .hierarchy-level.strategies { --level-color: #ec4899; }
+    .hierarchy-level.objectives { --level-color: #06b6d4; }
+    .hierarchy-level.tactics { --level-color: #8b5cf6; }
+    
+    /* Connecting lines */
+    .hierarchy-connector {
+      width: 140px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .hierarchy-connector::before {
+      content: '';
+      width: 2px;
+      height: 1rem;
+      background: var(--color-border);
+    }
+    
+    /* Values section */
+    .values-section {
+      padding: 4rem 0;
+    }
+    
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .value-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .value-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--value-bg, rgba(16, 185, 129, 0.1));
+      border-radius: 1rem;
+      color: var(--value-color, #34d399);
+    }
+    
+    .value-icon i {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .value-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .value-card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    /* ADR reference */
+    .adr-reference {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .adr-reference-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(99, 102, 241, 0.15);
+      border-radius: 0.75rem;
+      color: #818cf8;
+      flex-shrink: 0;
+    }
+    
+    .adr-reference-content {
+      flex: 1;
+    }
+    
+    .adr-reference h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .adr-reference p {
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .hierarchy-level {
+        flex-direction: column;
+      }
+      
+      .hierarchy-label {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+      
+      .hierarchy-content {
+        border-left: none;
+        border-top: 4px solid var(--level-color, var(--color-accent));
+        border-radius: 0 0 0.75rem 0.75rem;
+      }
+      
+      .hierarchy-connector {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/governance.html">Architecture Governance</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/">Home</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <a href="/governance.html">Governance</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <span>Mission & Vision</span>
+        </nav>
+        <h1 class="page-title">Mission, Vision & Goals</h1>
+        <p class="page-subtitle">
+          The foundational purpose, aspirational future state, and strategic goals 
+          that shape every architectural decision in the Post-Labor Economics movement.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Mission -->
+    <section class="mvg-section">
+      <div class="container">
+        <div class="mvg-card mission">
+          <span class="mvg-label">
+            <i data-lucide="compass" style="width: 14px; height: 14px;"></i>
+            Mission Statement
+          </span>
+          <h2>Our Purpose</h2>
+          <p class="mvg-statement">
+            To develop and disseminate comprehensive frameworks that enable humanity's 
+            successful transition from labor-based to ownership-based economic systems, 
+            ensuring dignity, agency, and prosperity for all.
+          </p>
+          <p class="mvg-explanation">
+            The mission defines our reason for existence. It answers "Why do we exist?" and guides 
+            all our activities. Every framework we develop, every policy we propose, and every 
+            coalition we build must serve this fundamental purpose. The mission is our north star—
+            unchanging even as strategies and tactics evolve.
+          </p>
+        </div>
+        
+        <div class="mvg-card vision">
+          <span class="mvg-label">
+            <i data-lucide="telescope" style="width: 14px; height: 14px;"></i>
+            Vision Statement
+          </span>
+          <h2>Our Aspiration</h2>
+          <p class="mvg-statement">
+            A world where no one is obligated to work for survival—where technology serves 
+            humanity, ownership is democratized, and every person has the freedom to pursue 
+            meaningful contribution on their own terms.
+          </p>
+          <p class="mvg-explanation">
+            The vision describes our desired future state—the world we're working to create. 
+            It answers "What does success look like?" Unlike the mission, the vision is 
+            aspirational and may evolve as we make progress. It inspires and motivates, 
+            helping stakeholders understand what we're building toward.
+          </p>
+        </div>
+        
+        <div class="mvg-card goals">
+          <span class="mvg-label">
+            <i data-lucide="target" style="width: 14px; height: 14px;"></i>
+            Strategic Goals
+          </span>
+          <h2>Our Objectives (2024-2030)</h2>
+          <p class="mvg-explanation" style="margin-bottom: 1.5rem;">
+            Goals are measurable outcomes that move us from mission to vision. These six 
+            strategic goals represent our priorities for the next five years.
+          </p>
+          
+          <div class="goals-grid">
+            <div class="goal-card">
+              <span class="goal-number" style="--goal-color: rgba(16, 185, 129, 0.15); --goal-accent: #34d399;">1</span>
+              <h3>Framework Development</h3>
+              <p>Complete and refine the dual pyramid architecture with comprehensive policy implementation pathways.</p>
+            </div>
+            
+            <div class="goal-card">
+              <span class="goal-number" style="--goal-color: rgba(99, 102, 241, 0.15); --goal-accent: #818cf8;">2</span>
+              <h3>Coalition Building</h3>
+              <p>Establish active partnerships with 50+ organizations across labor, business, policy, and research sectors.</p>
+            </div>
+            
+            <div class="goal-card">
+              <span class="goal-number" style="--goal-color: rgba(236, 72, 153, 0.15); --goal-accent: #f472b6;">3</span>
+              <h3>Public Awareness</h3>
+              <p>Reach 1 million people with post-labor economics concepts through content, events, and media.</p>
+            </div>
+            
+            <div class="goal-card">
+              <span class="goal-number" style="--goal-color: rgba(245, 158, 11, 0.15); --goal-accent: #fbbf24;">4</span>
+              <h3>Policy Influence</h3>
+              <p>Contribute to policy discussions in 10+ jurisdictions considering UBI, wealth funds, or related mechanisms.</p>
+            </div>
+            
+            <div class="goal-card">
+              <span class="goal-number" style="--goal-color: rgba(6, 182, 212, 0.15); --goal-accent: #22d3ee;">5</span>
+              <h3>Research Validation</h3>
+              <p>Partner with academic institutions to produce peer-reviewed research supporting our frameworks.</p>
+            </div>
+            
+            <div class="goal-card">
+              <span class="goal-number" style="--goal-color: rgba(139, 92, 246, 0.15); --goal-accent: #a78bfa;">6</span>
+              <h3>Community Growth</h3>
+              <p>Build an active community of 10,000+ engaged members with local chapters in 25+ cities worldwide.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Strategy Hierarchy -->
+    <section class="strategy-section">
+      <div class="container">
+        <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
+          <h2>Strategic Hierarchy</h2>
+          <p style="color: var(--color-text-secondary); max-width: 600px; margin: 0 auto;">
+            How our mission cascades into actionable work. Each level provides context and 
+            constraints for the level below.
+          </p>
+        </div>
+        
+        <div class="hierarchy-diagram">
+          <div class="hierarchy-level mission">
+            <div class="hierarchy-label">Mission</div>
+            <div class="hierarchy-content">
+              <h4>Why We Exist</h4>
+              <p>Enable humanity's transition from labor-based to ownership-based economics with dignity for all.</p>
+            </div>
+          </div>
+          
+          <div class="hierarchy-connector"></div>
+          
+          <div class="hierarchy-level vision">
+            <div class="hierarchy-label">Vision</div>
+            <div class="hierarchy-content">
+              <h4>What Success Looks Like</h4>
+              <p>A world where no one must work for survival; technology serves humanity; ownership is democratized.</p>
+            </div>
+          </div>
+          
+          <div class="hierarchy-connector"></div>
+          
+          <div class="hierarchy-level goals">
+            <div class="hierarchy-label">Goals</div>
+            <div class="hierarchy-content">
+              <h4>Multi-Year Outcomes</h4>
+              <p>Framework development, coalition building, public awareness, policy influence, research validation, community growth.</p>
+            </div>
+          </div>
+          
+          <div class="hierarchy-connector"></div>
+          
+          <div class="hierarchy-level strategies">
+            <div class="hierarchy-label">Strategies</div>
+            <div class="hierarchy-content">
+              <h4>Approaches to Achieve Goals</h4>
+              <p>Content-first growth, unlikely alliances, evidence-based advocacy, open-source architecture, distributed organizing.</p>
+            </div>
+          </div>
+          
+          <div class="hierarchy-connector"></div>
+          
+          <div class="hierarchy-level objectives">
+            <div class="hierarchy-label">Objectives</div>
+            <div class="hierarchy-content">
+              <h4>Quarterly/Annual Targets</h4>
+              <p>Specific, measurable targets like "Publish book by Q2 2026" or "Launch 5 new chapters by Q4 2025."</p>
+            </div>
+          </div>
+          
+          <div class="hierarchy-connector"></div>
+          
+          <div class="hierarchy-level tactics">
+            <div class="hierarchy-label">Tactics</div>
+            <div class="hierarchy-content">
+              <h4>Specific Actions</h4>
+              <p>Weekly newsletters, monthly AMAs, pyramid builder tool, policy one-pagers, chapter starter kits.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Core Values -->
+    <section class="values-section">
+      <div class="container">
+        <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+          <h2>Guiding Values</h2>
+          <p style="color: var(--color-text-secondary); max-width: 600px; margin: 0 auto;">
+            The non-negotiable beliefs that inform how we pursue our mission and interact 
+            with each other and the world.
+          </p>
+        </div>
+        
+        <div class="values-grid">
+          <div class="value-card" style="--value-bg: rgba(16, 185, 129, 0.1); --value-color: #34d399;">
+            <div class="value-icon">
+              <i data-lucide="users"></i>
+            </div>
+            <h3>Human Dignity</h3>
+            <p>Every person deserves economic security and the freedom to pursue meaningful work, regardless of their labor market value.</p>
+          </div>
+          
+          <div class="value-card" style="--value-bg: rgba(99, 102, 241, 0.1); --value-color: #818cf8;">
+            <div class="value-icon">
+              <i data-lucide="scale"></i>
+            </div>
+            <h3>Evidence-Based</h3>
+            <p>We ground our frameworks in data, research, and real-world experiments, updating our views as evidence evolves.</p>
+          </div>
+          
+          <div class="value-card" style="--value-bg: rgba(245, 158, 11, 0.1); --value-color: #fbbf24;">
+            <div class="value-icon">
+              <i data-lucide="handshake"></i>
+            </div>
+            <h3>Inclusive Coalition</h3>
+            <p>Transformation requires unlikely alliances. We seek common ground with those who might initially disagree.</p>
+          </div>
+          
+          <div class="value-card" style="--value-bg: rgba(236, 72, 153, 0.1); --value-color: #f472b6;">
+            <div class="value-icon">
+              <i data-lucide="lock-open"></i>
+            </div>
+            <h3>Open & Transparent</h3>
+            <p>Our architecture, decisions, and processes are public. We invite scrutiny and contribution from all.</p>
+          </div>
+          
+          <div class="value-card" style="--value-bg: rgba(6, 182, 212, 0.1); --value-color: #22d3ee;">
+            <div class="value-icon">
+              <i data-lucide="repeat"></i>
+            </div>
+            <h3>Iterative Progress</h3>
+            <p>Perfect is the enemy of good. We ship, learn, and improve rather than waiting for perfection.</p>
+          </div>
+          
+          <div class="value-card" style="--value-bg: rgba(139, 92, 246, 0.1); --value-color: #a78bfa;">
+            <div class="value-icon">
+              <i data-lucide="globe-2"></i>
+            </div>
+            <h3>Global Perspective</h3>
+            <p>Post-labor economics is a worldwide challenge. Our frameworks must work across cultures and contexts.</p>
+          </div>
+        </div>
+        
+        <!-- ADR Reference -->
+        <div class="adr-reference">
+          <div class="adr-reference-icon">
+            <i data-lucide="file-text" style="width: 24px; height: 24px;"></i>
+          </div>
+          <div class="adr-reference-content">
+            <h4>Architecture Decision Record</h4>
+            <p>This mission, vision, and goals were established in <a href="/arch-decisions.html#adr-001">ADR-001</a> and are reviewed annually. Last updated: January 2026.</p>
+          </div>
+          <a href="/arch-decisions.html#adr-001" class="btn btn-outline btn-sm">View ADR</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+        </div>
+        <div class="footer-nav">
+          <h4>Governance</h4>
+          <ul>
+            <li><a href="/arch-mission.html">Mission & Vision</a></li>
+            <li><a href="/arch-principles.html">Principles</a></li>
+            <li><a href="/arch-decisions.html">Decision Records</a></li>
+            <li><a href="/arch-contributing.html">Contributing</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

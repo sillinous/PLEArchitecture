@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Deep insights into governance health, participation, and impact metrics.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .analytics-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .analytics-header h1 {
+      font-size: 1.75rem;
+    }
+    
+    .date-range {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    
+    .date-range i {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+    
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .kpi-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+    
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .kpi-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .kpi-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .kpi-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .kpi-trend.up { color: #10b981; }
+    .kpi-trend.down { color: #ef4444; }
+    
+    .kpi-trend i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    
+    .kpi-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Charts Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .chart-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .chart-title {
+      font-weight: 600;
+    }
+    
+    .chart-body {
+      padding: 1.25rem;
+    }
+    
+    /* Line Chart */
+    .line-chart {
+      height: 240px;
+      position: relative;
+    }
+    
+    .chart-grid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .chart-grid-line {
+      border-top: 1px dashed var(--color-border);
+      position: relative;
+    }
+    
+    .chart-grid-line::before {
+      content: attr(data-value);
+      position: absolute;
+      left: -40px;
+      top: -8px;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .chart-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+    }
+    
+    .chart-path {
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+    }
+    
+    .chart-area {
+      fill: url(#gradient);
+      opacity: 0.2;
+    }
+    
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Bar Chart */
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 200px;
+      gap: 0.5rem;
+      padding-top: 1rem;
+    }
+    
+    .bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .bar {
+      width: 100%;
+      max-width: 40px;
+      border-radius: 4px 4px 0 0;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .bar:hover {
+      opacity: 0.8;
+    }
+    
+    .bar::before {
+      content: attr(data-value);
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    
+    .bar:hover::before {
+      opacity: 1;
+    }
+    
+    .bar-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Donut Chart */
+    .donut-chart {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .donut-visual {
+      position: relative;
+      width: 140px;
+      height: 140px;
+    }
+    
+    .donut-visual svg {
+      transform: rotate(-90deg);
+    }
+    
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .donut-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    
+    .donut-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .donut-legend {
+      flex: 1;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .legend-item:last-child {
+      border-bottom: none;
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .legend-name {
+      flex: 1;
+      font-size: 0.8125rem;
+    }
+    
+    .legend-value {
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .data-table th {
+      text-align: left;
+      padding: 0.875rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .data-table td {
+      padding: 0.875rem 1rem;
+      font-size: 0.875rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .data-table tr:hover td {
+      background: var(--color-bg-primary);
+    }
+    
+    .rank-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    
+    .rank-badge.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: white; }
+    .rank-badge.silver { background: linear-gradient(135deg, #94a3b8, #64748b); color: white; }
+    .rank-badge.bronze { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
+    .rank-badge.default { background: var(--color-bg-tertiary); color: var(--color-text-muted); }
+    
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .user-avatar-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .user-name {
+      font-weight: 500;
+    }
+    
+    .user-role {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Insights */
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .insight-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+    
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .insight-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .insight-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .insight-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+    
+    .insight-content {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .insight-action {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="analytics-header">
+      <h1>Analytics Dashboard</h1>
+      <div class="date-range">
+        <i data-lucide="calendar"></i>
+        <span>Last 30 Days</span>
+        <i data-lucide="chevron-down"></i>
+      </div>
+    </div>
+    
+    <!-- KPI Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+            <i data-lucide="users"></i>
+          </div>
+          <span class="kpi-trend up"><i data-lucide="trending-up"></i> +12%</span>
+        </div>
+        <div class="kpi-value">847</div>
+        <div class="kpi-label">Active Contributors</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+            <i data-lucide="vote"></i>
+          </div>
+          <span class="kpi-trend up"><i data-lucide="trending-up"></i> +23%</span>
+        </div>
+        <div class="kpi-value">2,341</div>
+        <div class="kpi-label">Votes Cast</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+            <i data-lucide="file-text"></i>
+          </div>
+          <span class="kpi-trend up"><i data-lucide="trending-up"></i> +8%</span>
+        </div>
+        <div class="kpi-value">156</div>
+        <div class="kpi-label">Artifacts Created</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+            <i data-lucide="message-square"></i>
+          </div>
+          <span class="kpi-trend down"><i data-lucide="trending-down"></i> -3%</span>
+        </div>
+        <div class="kpi-value">4,892</div>
+        <div class="kpi-label">Comments & Discussions</div>
+      </div>
+    </div>
+    
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Participation Over Time</span>
+          <select style="padding: 0.375rem 0.75rem; background: var(--color-bg-primary); border: 1px solid var(--color-border); border-radius: 0.5rem; color: var(--color-text-primary); font-size: 0.8125rem;">
+            <option>Contributions</option>
+            <option>Votes</option>
+            <option>Comments</option>
+          </select>
+        </div>
+        <div class="chart-body">
+          <div class="line-chart">
+            <div class="chart-grid">
+              <div class="chart-grid-line" data-value="100"></div>
+              <div class="chart-grid-line" data-value="75"></div>
+              <div class="chart-grid-line" data-value="50"></div>
+              <div class="chart-grid-line" data-value="25"></div>
+              <div class="chart-grid-line" data-value="0"></div>
+            </div>
+            <svg class="chart-line" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.5" />
+                  <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0" />
+                </linearGradient>
+              </defs>
+              <path class="chart-area" d="M 0,70 L 10,65 L 20,55 L 30,60 L 40,45 L 50,50 L 60,35 L 70,40 L 80,25 L 90,30 L 100,20 L 100,100 L 0,100 Z" />
+              <path class="chart-path" d="M 0,70 L 10,65 L 20,55 L 30,60 L 40,45 L 50,50 L 60,35 L 70,40 L 80,25 L 90,30 L 100,20" />
+            </svg>
+          </div>
+          <div class="chart-labels">
+            <span>Jan 1</span>
+            <span>Jan 8</span>
+            <span>Jan 15</span>
+            <span>Jan 22</span>
+            <span>Jan 29</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Artifact Distribution</span>
+        </div>
+        <div class="chart-body">
+          <div class="donut-chart">
+            <div class="donut-visual">
+              <svg viewBox="0 0 36 36" width="140" height="140">
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#1e293b" stroke-width="3"></circle>
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#818cf8" stroke-width="3" stroke-dasharray="35 65" stroke-dashoffset="0"></circle>
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="28 72" stroke-dashoffset="-35"></circle>
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#f472b6" stroke-width="3" stroke-dasharray="22 78" stroke-dashoffset="-63"></circle>
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="-85"></circle>
+              </svg>
+              <div class="donut-center">
+                <div class="donut-value">156</div>
+                <div class="donut-label">Total</div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #818cf8;"></span>
+                <span class="legend-name">Proposals</span>
+                <span class="legend-value">54</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #10b981;"></span>
+                <span class="legend-name">ADRs</span>
+                <span class="legend-value">44</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #f472b6;"></span>
+                <span class="legend-name">Policies</span>
+                <span class="legend-value">34</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #fbbf24;"></span>
+                <span class="legend-name">Guides</span>
+                <span class="legend-value">24</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Insights -->
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <span class="insight-title">Strong Engagement</span>
+        </div>
+        <div class="insight-content">Participation has increased 23% this month. The Data Dividends proposal sparked significant community interest with 89 unique voters.</div>
+        <div class="insight-action">
+          <a href="#" style="font-size: 0.8125rem; color: var(--color-primary);">View Details →</a>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+            <i data-lucide="alert-triangle"></i>
+          </div>
+          <span class="insight-title">Discussion Slowdown</span>
+        </div>
+        <div class="insight-content">Comments decreased 3% this week. Consider hosting an AMA or opening more deliberation threads to boost engagement.</div>
+        <div class="insight-action">
+          <a href="#" style="font-size: 0.8125rem; color: var(--color-primary);">Create Discussion →</a>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-header">
+          <div class="insight-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+            <i data-lucide="user-plus"></i>
+          </div>
+          <span class="insight-title">New Contributors</span>
+        </div>
+        <div class="insight-content">34 new members completed onboarding this week. 78% have already cast their first vote or commented on a proposal.</div>
+        <div class="insight-action">
+          <a href="#" style="font-size: 0.8125rem; color: var(--color-primary);">Welcome New Members →</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- More Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Vote Distribution by Type</span>
+        </div>
+        <div class="chart-body">
+          <div class="bar-chart">
+            <div class="bar-group">
+              <div class="bar" style="height: 85%; background: #818cf8;" data-value="847"></div>
+              <span class="bar-label">Standard</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar" style="height: 62%; background: #f472b6;" data-value="623"></div>
+              <span class="bar-label">Ranked</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar" style="height: 48%; background: #fbbf24;" data-value="489"></div>
+              <span class="bar-label">Quadratic</span>
+            </div>
+            <div class="bar-group">
+              <div class="bar" style="height: 38%; background: #10b981;" data-value="382"></div>
+              <span class="bar-label">Conviction</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Top Contributors</span>
+          <a href="#" style="font-size: 0.8125rem; color: var(--color-primary);">View All</a>
+        </div>
+        <div class="chart-body" style="padding: 0;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;">Rank</th>
+                <th>Contributor</th>
+                <th style="text-align: right;">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="rank-badge gold">1</span></td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-avatar-small" style="background: linear-gradient(135deg, #10b981, #059669);">DS</span>
+                    <div><div class="user-name">David Shapiro</div><div class="user-role">Founder</div></div>
+                  </div>
+                </td>
+                <td style="text-align: right; font-weight: 600;">4,892</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge silver">2</span></td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-avatar-small" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</span>
+                    <div><div class="user-name">Maria Kowalski</div><div class="user-role">Steward</div></div>
+                  </div>
+                </td>
+                <td style="text-align: right; font-weight: 600;">3,456</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge bronze">3</span></td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-avatar-small" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</span>
+                    <div><div class="user-name">Sarah Mitchell</div><div class="user-role">Steward</div></div>
+                  </div>
+                </td>
+                <td style="text-align: right; font-weight: 600;">2,847</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">4</span></td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-avatar-small" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</span>
+                    <div><div class="user-name">Thomas Chen</div><div class="user-role">Contributor</div></div>
+                  </div>
+                </td>
+                <td style="text-align: right; font-weight: 600;">2,234</td>
+              </tr>
+              <tr>
+                <td><span class="rank-badge default">5</span></td>
+                <td>
+                  <div class="user-cell">
+                    <span class="user-avatar-small" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">AL</span>
+                    <div><div class="user-name">Alexandra Lee</div><div class="user-role">Contributor</div></div>
+                  </div>
+                </td>
+                <td style="text-align: right; font-weight: 600;">1,987</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

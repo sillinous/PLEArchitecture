@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meetings | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Schedule and manage working group meetings and governance sessions.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .meetings-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - var(--header-height) - 4rem);
+    }
+    
+    /* Sidebar */
+    .meetings-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    /* Mini Calendar */
+    .mini-calendar {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+    
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .calendar-month {
+      font-weight: 600;
+    }
+    
+    .calendar-nav {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .calendar-nav button {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    
+    .calendar-nav button:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .calendar-nav button i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      text-align: center;
+    }
+    
+    .calendar-day-header {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      padding: 0.5rem 0;
+    }
+    
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    
+    .calendar-day:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .calendar-day.other-month {
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+    
+    .calendar-day.today {
+      background: var(--color-primary);
+      color: white;
+      font-weight: 600;
+    }
+    
+    .calendar-day.has-event::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: #10b981;
+      border-radius: 50%;
+    }
+    
+    .calendar-day.today.has-event::after {
+      background: white;
+    }
+    
+    /* Upcoming List */
+    .upcoming-meetings {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      flex: 1;
+    }
+    
+    .upcoming-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 600;
+    }
+    
+    .upcoming-list {
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .upcoming-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .upcoming-item:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .upcoming-date {
+      width: 44px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    
+    .upcoming-date-day {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    
+    .upcoming-date-month {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+    
+    .upcoming-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .upcoming-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .upcoming-time {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .upcoming-badge {
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .upcoming-badge.working-group { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .upcoming-badge.all-hands { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .upcoming-badge.review { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
+    
+    /* Main Content */
+    .meetings-main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .meetings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .meetings-header h1 {
+      font-size: 1.75rem;
+    }
+    
+    .view-toggle {
+      display: flex;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+    }
+    
+    .view-btn {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.15s;
+    }
+    
+    .view-btn:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .view-btn.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .view-btn i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Week View */
+    .week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .week-nav button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    
+    .week-nav button:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    .week-nav button i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .week-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .week-grid {
+      display: grid;
+      grid-template-columns: 60px repeat(7, 1fr);
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .week-day-header {
+      padding: 1rem 0.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-bg-tertiary);
+    }
+    
+    .week-day-name {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.25rem;
+    }
+    
+    .week-day-date {
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .week-day-header.today .week-day-date {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .time-column {
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-bg-tertiary);
+    }
+    
+    .time-slot {
+      height: 60px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .day-column {
+      position: relative;
+      border-left: 1px solid var(--color-border);
+    }
+    
+    .day-slot {
+      height: 60px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    /* Meeting Event */
+    .meeting-event {
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      border-radius: 6px;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.15s;
+    }
+    
+    .meeting-event:hover {
+      transform: scale(1.02);
+      z-index: 10;
+    }
+    
+    .meeting-event.working-group {
+      background: rgba(99, 102, 241, 0.2);
+      border-left: 3px solid #818cf8;
+      color: #c7d2fe;
+    }
+    
+    .meeting-event.all-hands {
+      background: rgba(16, 185, 129, 0.2);
+      border-left: 3px solid #10b981;
+      color: #a7f3d0;
+    }
+    
+    .meeting-event.review {
+      background: rgba(244, 114, 182, 0.2);
+      border-left: 3px solid #f472b6;
+      color: #fbcfe8;
+    }
+    
+    .meeting-event.community {
+      background: rgba(251, 191, 36, 0.2);
+      border-left: 3px solid #fbbf24;
+      color: #fef3c7;
+    }
+    
+    .meeting-event-title {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .meeting-event-time {
+      font-size: 0.625rem;
+      opacity: 0.8;
+    }
+    
+    /* Meeting Detail Modal */
+    .meeting-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+    
+    .meeting-modal.open {
+      display: flex;
+    }
+    
+    .meeting-modal-content {
+      background: var(--color-bg-primary);
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 560px;
+      overflow: hidden;
+    }
+    
+    .meeting-modal-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .meeting-modal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      background: rgba(99, 102, 241, 0.3);
+      color: #c7d2fe;
+      margin-bottom: 0.75rem;
+    }
+    
+    .meeting-modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .meeting-modal-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .meeting-modal-time i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .meeting-modal-body {
+      padding: 1.5rem;
+    }
+    
+    .meeting-detail-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .meeting-detail-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .meeting-detail-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    
+    .meeting-detail-content {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .meeting-attendees {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .meeting-attendee {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+    }
+    
+    .meeting-attendee-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .meeting-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .meeting-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+      color: var(--color-text-secondary);
+      transition: all 0.15s;
+    }
+    
+    .meeting-link:hover {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--color-primary);
+    }
+    
+    .meeting-link i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .meeting-modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    @media (max-width: 1024px) {
+      .meetings-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .meetings-sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="meetings-layout">
+      <!-- Sidebar -->
+      <aside class="meetings-sidebar">
+        <div class="mini-calendar">
+          <div class="calendar-header">
+            <span class="calendar-month">January 2026</span>
+            <div class="calendar-nav">
+              <button><i data-lucide="chevron-left"></i></button>
+              <button><i data-lucide="chevron-right"></i></button>
+            </div>
+          </div>
+          <div class="calendar-grid">
+            <div class="calendar-day-header">Su</div>
+            <div class="calendar-day-header">Mo</div>
+            <div class="calendar-day-header">Tu</div>
+            <div class="calendar-day-header">We</div>
+            <div class="calendar-day-header">Th</div>
+            <div class="calendar-day-header">Fr</div>
+            <div class="calendar-day-header">Sa</div>
+            
+            <div class="calendar-day other-month">29</div>
+            <div class="calendar-day other-month">30</div>
+            <div class="calendar-day other-month">31</div>
+            <div class="calendar-day">1</div>
+            <div class="calendar-day">2</div>
+            <div class="calendar-day">3</div>
+            <div class="calendar-day">4</div>
+            
+            <div class="calendar-day">5</div>
+            <div class="calendar-day has-event">6</div>
+            <div class="calendar-day">7</div>
+            <div class="calendar-day has-event">8</div>
+            <div class="calendar-day">9</div>
+            <div class="calendar-day">10</div>
+            <div class="calendar-day">11</div>
+            
+            <div class="calendar-day">12</div>
+            <div class="calendar-day has-event">13</div>
+            <div class="calendar-day">14</div>
+            <div class="calendar-day has-event">15</div>
+            <div class="calendar-day">16</div>
+            <div class="calendar-day">17</div>
+            <div class="calendar-day">18</div>
+            
+            <div class="calendar-day">19</div>
+            <div class="calendar-day has-event">20</div>
+            <div class="calendar-day">21</div>
+            <div class="calendar-day has-event">22</div>
+            <div class="calendar-day">23</div>
+            <div class="calendar-day">24</div>
+            <div class="calendar-day">25</div>
+            
+            <div class="calendar-day">26</div>
+            <div class="calendar-day has-event">27</div>
+            <div class="calendar-day">28</div>
+            <div class="calendar-day today has-event">29</div>
+            <div class="calendar-day has-event">30</div>
+            <div class="calendar-day">31</div>
+            <div class="calendar-day other-month">1</div>
+          </div>
+        </div>
+        
+        <div class="upcoming-meetings">
+          <div class="upcoming-header">Upcoming</div>
+          <div class="upcoming-list">
+            <div class="upcoming-item" onclick="openMeetingModal()">
+              <div class="upcoming-date">
+                <div class="upcoming-date-day">29</div>
+                <div class="upcoming-date-month">Jan</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">Policy Working Group</div>
+                <div class="upcoming-time">2:00 PM - 3:00 PM</div>
+              </div>
+              <span class="upcoming-badge working-group">WG</span>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-date">
+                <div class="upcoming-date-day">30</div>
+                <div class="upcoming-date-month">Jan</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">PROP-015 Review</div>
+                <div class="upcoming-time">10:00 AM - 11:00 AM</div>
+              </div>
+              <span class="upcoming-badge review">Review</span>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-date">
+                <div class="upcoming-date-day">3</div>
+                <div class="upcoming-date-month">Feb</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">Community All-Hands</div>
+                <div class="upcoming-time">5:00 PM - 6:30 PM</div>
+              </div>
+              <span class="upcoming-badge all-hands">All</span>
+            </div>
+            <div class="upcoming-item">
+              <div class="upcoming-date">
+                <div class="upcoming-date-day">5</div>
+                <div class="upcoming-date-month">Feb</div>
+              </div>
+              <div class="upcoming-info">
+                <div class="upcoming-title">Research Sync</div>
+                <div class="upcoming-time">3:00 PM - 4:00 PM</div>
+              </div>
+              <span class="upcoming-badge working-group">WG</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="meetings-main">
+        <div class="meetings-header">
+          <h1>Meetings</h1>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div class="view-toggle">
+              <button class="view-btn"><i data-lucide="calendar"></i> Day</button>
+              <button class="view-btn active"><i data-lucide="columns"></i> Week</button>
+              <button class="view-btn"><i data-lucide="grid"></i> Month</button>
+            </div>
+            <button class="btn btn-primary"><i data-lucide="plus"></i> Schedule</button>
+          </div>
+        </div>
+        
+        <div class="week-header">
+          <div class="week-nav">
+            <button><i data-lucide="chevron-left"></i></button>
+            <span class="week-title">January 27 - February 2, 2026</span>
+            <button><i data-lucide="chevron-right"></i></button>
+          </div>
+          <button class="btn btn-outline btn-sm">Today</button>
+        </div>
+        
+        <div class="week-grid">
+          <!-- Header Row -->
+          <div class="time-column"></div>
+          <div class="week-day-header"><div class="week-day-name">Mon</div><div class="week-day-date">27</div></div>
+          <div class="week-day-header"><div class="week-day-name">Tue</div><div class="week-day-date">28</div></div>
+          <div class="week-day-header today"><div class="week-day-name">Wed</div><div class="week-day-date">29</div></div>
+          <div class="week-day-header"><div class="week-day-name">Thu</div><div class="week-day-date">30</div></div>
+          <div class="week-day-header"><div class="week-day-name">Fri</div><div class="week-day-date">31</div></div>
+          <div class="week-day-header"><div class="week-day-name">Sat</div><div class="week-day-date">1</div></div>
+          <div class="week-day-header"><div class="week-day-name">Sun</div><div class="week-day-date">2</div></div>
+          
+          <!-- Time Slots -->
+          <div class="time-column">
+            <div class="time-slot">9 AM</div>
+            <div class="time-slot">10 AM</div>
+            <div class="time-slot">11 AM</div>
+            <div class="time-slot">12 PM</div>
+            <div class="time-slot">1 PM</div>
+            <div class="time-slot">2 PM</div>
+            <div class="time-slot">3 PM</div>
+            <div class="time-slot">4 PM</div>
+            <div class="time-slot">5 PM</div>
+          </div>
+          
+          <!-- Monday -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="meeting-event community" style="top: 240px; height: 60px;">
+              <div class="meeting-event-title">Office Hours</div>
+              <div class="meeting-event-time">1:00 - 2:00 PM</div>
+            </div>
+          </div>
+          
+          <!-- Tuesday -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+          </div>
+          
+          <!-- Wednesday (Today) -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="meeting-event working-group" style="top: 300px; height: 60px;" onclick="openMeetingModal()">
+              <div class="meeting-event-title">Policy Working Group</div>
+              <div class="meeting-event-time">2:00 - 3:00 PM</div>
+            </div>
+          </div>
+          
+          <!-- Thursday -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="meeting-event review" style="top: 60px; height: 60px;">
+              <div class="meeting-event-title">PROP-015 Review</div>
+              <div class="meeting-event-time">10:00 - 11:00 AM</div>
+            </div>
+          </div>
+          
+          <!-- Friday -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="meeting-event working-group" style="top: 180px; height: 90px;">
+              <div class="meeting-event-title">Research Deep Dive</div>
+              <div class="meeting-event-time">12:00 - 1:30 PM</div>
+            </div>
+          </div>
+          
+          <!-- Saturday -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+          </div>
+          
+          <!-- Sunday -->
+          <div class="day-column">
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+            <div class="day-slot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Meeting Modal -->
+  <div class="meeting-modal" id="meeting-modal">
+    <div class="meeting-modal-content">
+      <div class="meeting-modal-header">
+        <span class="meeting-modal-badge"><i data-lucide="users" style="width: 12px; height: 12px;"></i> Working Group</span>
+        <h2 class="meeting-modal-title">Policy Working Group</h2>
+        <div class="meeting-modal-time">
+          <i data-lucide="calendar"></i>
+          Wednesday, January 29, 2026 • 2:00 PM - 3:00 PM EST
+        </div>
+      </div>
+      <div class="meeting-modal-body">
+        <div class="meeting-detail-section">
+          <div class="meeting-detail-label">Description</div>
+          <div class="meeting-detail-content">Weekly sync for the Policy Working Group to discuss automation tax frameworks, UBI implementation strategies, and data dividend mechanisms.</div>
+        </div>
+        <div class="meeting-detail-section">
+          <div class="meeting-detail-label">Agenda</div>
+          <div class="meeting-detail-content">
+            1. Review action items from last week<br>
+            2. Discuss PROP-015 implementation details<br>
+            3. Draft automation tax policy language<br>
+            4. Open discussion & Q&A
+          </div>
+        </div>
+        <div class="meeting-detail-section">
+          <div class="meeting-detail-label">Attendees (8)</div>
+          <div class="meeting-attendees">
+            <span class="meeting-attendee"><span class="meeting-attendee-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</span> David Shapiro</span>
+            <span class="meeting-attendee"><span class="meeting-attendee-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</span> Maria Kowalski</span>
+            <span class="meeting-attendee"><span class="meeting-attendee-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</span> Sarah Mitchell</span>
+            <span class="meeting-attendee"><span class="meeting-attendee-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</span> Thomas Chen</span>
+            <span class="meeting-attendee" style="background: var(--color-bg-tertiary);">+4 more</span>
+          </div>
+        </div>
+        <div class="meeting-detail-section">
+          <div class="meeting-detail-label">Links</div>
+          <div class="meeting-links">
+            <a href="#" class="meeting-link"><i data-lucide="video"></i> Join Video Call (Zoom)</a>
+            <a href="#" class="meeting-link"><i data-lucide="file-text"></i> Meeting Notes Doc</a>
+            <a href="#" class="meeting-link"><i data-lucide="calendar"></i> Add to Calendar</a>
+          </div>
+        </div>
+      </div>
+      <div class="meeting-modal-footer">
+        <button class="btn btn-outline" onclick="closeMeetingModal()">Close</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline"><i data-lucide="edit"></i> Edit</button>
+          <button class="btn btn-primary"><i data-lucide="video"></i> Join Meeting</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    
+    function openMeetingModal() {
+      document.getElementById('meeting-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+    
+    function closeMeetingModal() {
+      document.getElementById('meeting-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    document.getElementById('meeting-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('meeting-modal')) {
+        closeMeetingModal();
+      }
+    });
+  </script>
+</body>
+</html>

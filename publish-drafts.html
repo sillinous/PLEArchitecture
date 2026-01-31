@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drafts | Publishing Suite | PLE Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .drafts-layout { display: grid; grid-template-columns: 260px 1fr; gap: 2rem; }
+    
+    .drafts-sidebar { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.25rem; height: fit-content; position: sticky; top: calc(var(--header-height) + 2rem); }
+    .sidebar-title { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); margin-bottom: 0.75rem; }
+    .filter-list { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 1.5rem; }
+    .filter-item { display: flex; align-items: center; gap: 0.625rem; padding: 0.625rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--color-text-secondary); cursor: pointer; transition: all var(--transition-fast); }
+    .filter-item:hover { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+    .filter-item.active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .filter-item i { width: 16px; height: 16px; }
+    .filter-count { margin-left: auto; font-size: 0.6875rem; padding: 0.125rem 0.5rem; background: var(--color-bg-tertiary); border-radius: var(--radius-full); }
+    
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .page-header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.75rem; }
+    .page-header h1 i { width: 28px; height: 28px; color: #10b981; }
+    .header-actions { display: flex; gap: 0.5rem; }
+    
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem; text-align: center; }
+    .stat-value { font-size: 1.5rem; font-weight: 700; }
+    .stat-label { font-size: 0.6875rem; color: var(--color-text-muted); }
+    
+    .filters-bar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .search-input { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-md); flex: 1; min-width: 200px; }
+    .search-input i { width: 16px; height: 16px; color: var(--color-text-muted); }
+    .search-input input { flex: 1; background: transparent; border: none; color: var(--color-text-primary); font-size: 0.875rem; }
+    .search-input input:focus { outline: none; }
+    .filter-select { padding: 0.5rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-primary); font-size: 0.875rem; cursor: pointer; }
+    
+    .drafts-list { display: flex; flex-direction: column; gap: 1rem; }
+    .draft-card { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; transition: all var(--transition-base); }
+    .draft-card:hover { border-color: var(--color-border-hover); }
+    
+    .draft-content { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; padding: 1.25rem; }
+    .draft-main { min-width: 0; }
+    
+    .draft-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .draft-status { padding: 0.25rem 0.625rem; border-radius: var(--radius-full); font-size: 0.625rem; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
+    .draft-status.draft { background: rgba(107, 114, 128, 0.15); color: #9ca3af; }
+    .draft-status.in-review { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .draft-status.approved { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .draft-status.needs-revision { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    
+    .draft-type { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.625rem; font-weight: 500; flex-shrink: 0; }
+    .draft-type i { width: 10px; height: 10px; }
+    .draft-type.article { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .draft-type.newsletter { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .draft-type.social { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
+    .draft-type.video { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .draft-type.brief { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    
+    .draft-title { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.3; }
+    .draft-excerpt { font-size: 0.8125rem; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .draft-meta { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .draft-meta span { display: flex; align-items: center; gap: 0.25rem; }
+    .draft-meta i { width: 12px; height: 12px; }
+    
+    .draft-alignment { padding: 0.75rem; background: var(--color-bg-tertiary); border-radius: var(--radius-md); }
+    .alignment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .alignment-label { font-size: 0.625rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; display: flex; align-items: center; gap: 0.25rem; }
+    .alignment-label i { width: 10px; height: 10px; }
+    .alignment-score { font-size: 0.75rem; font-weight: 600; color: #10b981; }
+    .alignment-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+    .arch-tag { display: inline-flex; align-items: center; gap: 0.1875rem; padding: 0.1875rem 0.5rem; border-radius: 4px; font-size: 0.625rem; font-weight: 500; }
+    .arch-tag i { width: 10px; height: 10px; }
+    .arch-tag.goal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .arch-tag.strategy { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .arch-tag.capability { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .arch-tag.campaign { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    
+    .draft-actions { display: flex; flex-direction: column; gap: 0.5rem; justify-content: center; min-width: 120px; }
+    .draft-author { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .author-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 0.625rem; font-weight: 600; color: white; }
+    .author-info { font-size: 0.75rem; }
+    .author-name { font-weight: 500; }
+    .author-role { color: var(--color-text-muted); }
+    
+    .progress-bar { height: 4px; background: var(--color-bg-tertiary); border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem; }
+    .progress-fill { height: 100%; border-radius: 2px; transition: width var(--transition-base); }
+    .progress-fill.low { background: #ef4444; }
+    .progress-fill.medium { background: #f59e0b; }
+    .progress-fill.high { background: #10b981; }
+    .progress-label { font-size: 0.625rem; color: var(--color-text-muted); text-align: center; }
+    
+    @media (max-width: 1024px) { .drafts-layout { grid-template-columns: 1fr; } .drafts-sidebar { display: none; } }
+    @media (max-width: 768px) { .stats-bar { grid-template-columns: repeat(2, 1fr); } .draft-content { grid-template-columns: 1fr; } .draft-actions { flex-direction: row; margin-top: 1rem; } }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Publishing Suite</span></div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/publish-hub.html">← Publishing Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="drafts-layout">
+      <aside class="drafts-sidebar">
+        <div class="sidebar-title">Status</div>
+        <div class="filter-list">
+          <div class="filter-item active"><i data-lucide="file-text"></i> All Drafts <span class="filter-count">24</span></div>
+          <div class="filter-item"><i data-lucide="edit-3"></i> In Progress <span class="filter-count">12</span></div>
+          <div class="filter-item"><i data-lucide="clock"></i> In Review <span class="filter-count">6</span></div>
+          <div class="filter-item"><i data-lucide="check-circle"></i> Approved <span class="filter-count">4</span></div>
+          <div class="filter-item"><i data-lucide="alert-circle"></i> Needs Revision <span class="filter-count">2</span></div>
+        </div>
+        
+        <div class="sidebar-title">Content Type</div>
+        <div class="filter-list">
+          <div class="filter-item"><i data-lucide="file-text"></i> Articles <span class="filter-count">10</span></div>
+          <div class="filter-item"><i data-lucide="mail"></i> Newsletters <span class="filter-count">4</span></div>
+          <div class="filter-item"><i data-lucide="share-2"></i> Social Posts <span class="filter-count">6</span></div>
+          <div class="filter-item"><i data-lucide="video"></i> Video Scripts <span class="filter-count">3</span></div>
+          <div class="filter-item"><i data-lucide="briefcase"></i> Policy Briefs <span class="filter-count">1</span></div>
+        </div>
+        
+        <div class="sidebar-title">By Goal</div>
+        <div class="filter-list">
+          <div class="filter-item"><i data-lucide="target"></i> GOAL-001: UBI <span class="filter-count">11</span></div>
+          <div class="filter-item"><i data-lucide="target"></i> GOAL-002: Data <span class="filter-count">7</span></div>
+          <div class="filter-item"><i data-lucide="target"></i> GOAL-003: Tax <span class="filter-count">4</span></div>
+          <div class="filter-item"><i data-lucide="target"></i> GOAL-009: Education <span class="filter-count">2</span></div>
+        </div>
+        
+        <div class="sidebar-title">By Campaign</div>
+        <div class="filter-list">
+          <div class="filter-item"><i data-lucide="megaphone"></i> UBI Awareness <span class="filter-count">8</span></div>
+          <div class="filter-item"><i data-lucide="megaphone"></i> Data Rights <span class="filter-count">5</span></div>
+          <div class="filter-item"><i data-lucide="megaphone"></i> Tax Framework <span class="filter-count">3</span></div>
+        </div>
+      </aside>
+      
+      <div class="drafts-main">
+        <div class="page-header">
+          <div>
+            <h1><i data-lucide="file-edit"></i> Content Drafts</h1>
+            <p style="color: var(--color-text-secondary);">In-progress content with architecture alignment tracking</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-outline"><i data-lucide="filter"></i> Bulk Actions</button>
+            <button class="btn btn-primary"><i data-lucide="plus"></i> New Draft</button>
+          </div>
+        </div>
+        
+        <div class="stats-bar">
+          <div class="stat-card"><div class="stat-value" style="color: #818cf8;">24</div><div class="stat-label">Total Drafts</div></div>
+          <div class="stat-card"><div class="stat-value" style="color: #f59e0b;">6</div><div class="stat-label">Pending Review</div></div>
+          <div class="stat-card"><div class="stat-value" style="color: #10b981;">4</div><div class="stat-label">Ready to Publish</div></div>
+          <div class="stat-card"><div class="stat-value" style="color: #ec4899;">92%</div><div class="stat-label">Avg. Alignment</div></div>
+        </div>
+        
+        <div class="filters-bar">
+          <div class="search-input">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search drafts...">
+          </div>
+          <select class="filter-select">
+            <option>All Types</option>
+            <option>Articles</option>
+            <option>Newsletters</option>
+            <option>Social</option>
+            <option>Video</option>
+          </select>
+          <select class="filter-select">
+            <option>All Goals</option>
+            <option>GOAL-001: UBI</option>
+            <option>GOAL-002: Data</option>
+            <option>GOAL-003: Tax</option>
+          </select>
+          <select class="filter-select">
+            <option>Sort: Last Modified</option>
+            <option>Sort: Alignment Score</option>
+            <option>Sort: Due Date</option>
+          </select>
+        </div>
+        
+        <div class="drafts-list">
+          <article class="draft-card">
+            <div class="draft-content">
+              <div class="draft-main">
+                <div class="draft-header">
+                  <span class="draft-status approved">Approved</span>
+                  <span class="draft-type article"><i data-lucide="file-text"></i> Article</span>
+                </div>
+                <h3 class="draft-title">The Economic Agency Paradox: Why Traditional Work is Failing the Modern Economy</h3>
+                <p class="draft-excerpt">A comprehensive exploration of how the fundamental relationship between labor and economic participation is being disrupted by technological advancement, and what this means for policy frameworks.</p>
+                <div class="draft-meta">
+                  <span><i data-lucide="calendar"></i> Due: Feb 3</span>
+                  <span><i data-lucide="clock"></i> Modified: 2h ago</span>
+                  <span><i data-lucide="file-text"></i> 2,450 words</span>
+                </div>
+                <div class="draft-alignment">
+                  <div class="alignment-header">
+                    <span class="alignment-label"><i data-lucide="layers"></i> Architecture Alignment</span>
+                    <span class="alignment-score">96%</span>
+                  </div>
+                  <div class="alignment-tags">
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-001</span>
+                    <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-001</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-006</span>
+                    <span class="arch-tag campaign"><i data-lucide="megaphone"></i> UBI Awareness</span>
+                  </div>
+                </div>
+              </div>
+              <div class="draft-actions">
+                <div class="draft-author">
+                  <div class="author-avatar">TK</div>
+                  <div class="author-info">
+                    <div class="author-name">Travis K.</div>
+                    <div class="author-role">Lead Author</div>
+                  </div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill high" style="width: 96%;"></div></div>
+                <div class="progress-label">96% Complete</div>
+                <button class="btn btn-primary btn-sm">Publish</button>
+                <button class="btn btn-ghost btn-sm">Edit</button>
+              </div>
+            </div>
+          </article>
+          
+          <article class="draft-card">
+            <div class="draft-content">
+              <div class="draft-main">
+                <div class="draft-header">
+                  <span class="draft-status in-review">In Review</span>
+                  <span class="draft-type newsletter"><i data-lucide="mail"></i> Newsletter</span>
+                </div>
+                <h3 class="draft-title">L/0 Newsletter #49: February Movement Update & Summit Preview</h3>
+                <p class="draft-excerpt">Monthly community update featuring key research highlights, upcoming events including the Post-Labor Summit 2026, and progress reports on active campaigns.</p>
+                <div class="draft-meta">
+                  <span><i data-lucide="calendar"></i> Due: Feb 1</span>
+                  <span><i data-lucide="clock"></i> Modified: 6h ago</span>
+                  <span><i data-lucide="file-text"></i> 1,280 words</span>
+                </div>
+                <div class="draft-alignment">
+                  <div class="alignment-header">
+                    <span class="alignment-label"><i data-lucide="layers"></i> Architecture Alignment</span>
+                    <span class="alignment-score">94%</span>
+                  </div>
+                  <div class="alignment-tags">
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-002</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-020</span>
+                    <span class="arch-tag campaign"><i data-lucide="megaphone"></i> Data Rights</span>
+                  </div>
+                </div>
+              </div>
+              <div class="draft-actions">
+                <div class="draft-author">
+                  <div class="author-avatar">MK</div>
+                  <div class="author-info">
+                    <div class="author-name">Maria K.</div>
+                    <div class="author-role">Media WG</div>
+                  </div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill high" style="width: 85%;"></div></div>
+                <div class="progress-label">In Review</div>
+                <button class="btn btn-outline btn-sm">Review</button>
+                <button class="btn btn-ghost btn-sm">Edit</button>
+              </div>
+            </div>
+          </article>
+          
+          <article class="draft-card">
+            <div class="draft-content">
+              <div class="draft-main">
+                <div class="draft-header">
+                  <span class="draft-status draft">Draft</span>
+                  <span class="draft-type video"><i data-lucide="video"></i> Video Script</span>
+                </div>
+                <h3 class="draft-title">L/0 Livestream #49 Script: Economic Agency in the Age of AGI</h3>
+                <p class="draft-excerpt">Full script outline for Saturday's livestream including talking points, guest interview questions, and audience Q&A structure for the AGI economic impact discussion.</p>
+                <div class="draft-meta">
+                  <span><i data-lucide="calendar"></i> Due: Jan 31</span>
+                  <span><i data-lucide="clock"></i> Modified: 1d ago</span>
+                  <span><i data-lucide="file-text"></i> 3,200 words</span>
+                </div>
+                <div class="draft-alignment">
+                  <div class="alignment-header">
+                    <span class="alignment-label"><i data-lucide="layers"></i> Architecture Alignment</span>
+                    <span class="alignment-score">89%</span>
+                  </div>
+                  <div class="alignment-tags">
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-001</span>
+                    <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-002</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-021</span>
+                  </div>
+                </div>
+              </div>
+              <div class="draft-actions">
+                <div class="draft-author">
+                  <div class="author-avatar">JM</div>
+                  <div class="author-info">
+                    <div class="author-name">Jennifer M.</div>
+                    <div class="author-role">Media WG</div>
+                  </div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill medium" style="width: 65%;"></div></div>
+                <div class="progress-label">65% Complete</div>
+                <button class="btn btn-outline btn-sm">Continue</button>
+                <button class="btn btn-ghost btn-sm">Preview</button>
+              </div>
+            </div>
+          </article>
+          
+          <article class="draft-card">
+            <div class="draft-content">
+              <div class="draft-main">
+                <div class="draft-header">
+                  <span class="draft-status needs-revision">Needs Revision</span>
+                  <span class="draft-type brief"><i data-lucide="briefcase"></i> Policy Brief</span>
+                </div>
+                <h3 class="draft-title">Automation Tax Implementation: State-Level Policy Recommendations</h3>
+                <p class="draft-excerpt">Technical policy brief outlining recommended legislative language, revenue projection models, and implementation timelines for state-level automation taxation.</p>
+                <div class="draft-meta">
+                  <span><i data-lucide="calendar"></i> Due: Feb 15</span>
+                  <span><i data-lucide="clock"></i> Modified: 3d ago</span>
+                  <span><i data-lucide="file-text"></i> 4,100 words</span>
+                </div>
+                <div class="draft-alignment">
+                  <div class="alignment-header">
+                    <span class="alignment-label"><i data-lucide="layers"></i> Architecture Alignment</span>
+                    <span class="alignment-score">78%</span>
+                  </div>
+                  <div class="alignment-tags">
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-003</span>
+                    <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-003</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-007</span>
+                    <span class="arch-tag campaign"><i data-lucide="megaphone"></i> Tax Framework</span>
+                  </div>
+                </div>
+              </div>
+              <div class="draft-actions">
+                <div class="draft-author">
+                  <div class="author-avatar">DS</div>
+                  <div class="author-info">
+                    <div class="author-name">David S.</div>
+                    <div class="author-role">Policy WG</div>
+                  </div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill low" style="width: 78%;"></div></div>
+                <div class="progress-label">Needs Work</div>
+                <button class="btn btn-outline btn-sm">View Feedback</button>
+                <button class="btn btn-ghost btn-sm">Edit</button>
+              </div>
+            </div>
+          </article>
+          
+          <article class="draft-card">
+            <div class="draft-content">
+              <div class="draft-main">
+                <div class="draft-header">
+                  <span class="draft-status draft">Draft</span>
+                  <span class="draft-type social"><i data-lucide="share-2"></i> Social Thread</span>
+                </div>
+                <h3 class="draft-title">Data Dividends Explained: 10-Tweet Thread</h3>
+                <p class="draft-excerpt">Educational Twitter/X thread breaking down the data dividends concept for mainstream audiences with simple analogies and clear policy asks.</p>
+                <div class="draft-meta">
+                  <span><i data-lucide="calendar"></i> Due: Feb 5</span>
+                  <span><i data-lucide="clock"></i> Modified: 5h ago</span>
+                  <span><i data-lucide="file-text"></i> 10 posts</span>
+                </div>
+                <div class="draft-alignment">
+                  <div class="alignment-header">
+                    <span class="alignment-label"><i data-lucide="layers"></i> Architecture Alignment</span>
+                    <span class="alignment-score">91%</span>
+                  </div>
+                  <div class="alignment-tags">
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-002</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-019</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-024</span>
+                    <span class="arch-tag campaign"><i data-lucide="megaphone"></i> Data Rights</span>
+                  </div>
+                </div>
+              </div>
+              <div class="draft-actions">
+                <div class="draft-author">
+                  <div class="author-avatar">SL</div>
+                  <div class="author-info">
+                    <div class="author-name">Sarah L.</div>
+                    <div class="author-role">Outreach WG</div>
+                  </div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill high" style="width: 80%;"></div></div>
+                <div class="progress-label">80% Complete</div>
+                <button class="btn btn-outline btn-sm">Continue</button>
+                <button class="btn btn-ghost btn-sm">Preview</button>
+              </div>
+            </div>
+          </article>
+          
+          <article class="draft-card">
+            <div class="draft-content">
+              <div class="draft-main">
+                <div class="draft-header">
+                  <span class="draft-status approved">Approved</span>
+                  <span class="draft-type article"><i data-lucide="file-text"></i> Article</span>
+                </div>
+                <h3 class="draft-title">Post-Labor Summit 2026: What to Expect and How to Prepare</h3>
+                <p class="draft-excerpt">Comprehensive preview of the upcoming virtual summit including session highlights, speaker announcements, and participation guidelines for community members.</p>
+                <div class="draft-meta">
+                  <span><i data-lucide="calendar"></i> Due: Feb 8</span>
+                  <span><i data-lucide="clock"></i> Modified: 1d ago</span>
+                  <span><i data-lucide="file-text"></i> 1,850 words</span>
+                </div>
+                <div class="draft-alignment">
+                  <div class="alignment-header">
+                    <span class="alignment-label"><i data-lucide="layers"></i> Architecture Alignment</span>
+                    <span class="alignment-score">98%</span>
+                  </div>
+                  <div class="alignment-tags">
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-001</span>
+                    <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-009</span>
+                    <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-006</span>
+                    <span class="arch-tag campaign"><i data-lucide="megaphone"></i> UBI Awareness</span>
+                  </div>
+                </div>
+              </div>
+              <div class="draft-actions">
+                <div class="draft-author">
+                  <div class="author-avatar">AP</div>
+                  <div class="author-info">
+                    <div class="author-name">Alex P.</div>
+                    <div class="author-role">Media WG</div>
+                  </div>
+                </div>
+                <div class="progress-bar"><div class="progress-fill high" style="width: 100%;"></div></div>
+                <div class="progress-label">Ready</div>
+                <button class="btn btn-primary btn-sm">Schedule</button>
+                <button class="btn btn-ghost btn-sm">Edit</button>
+              </div>
+            </div>
+          </article>
+        </div>
+        
+        <div style="display: flex; justify-content: center; margin-top: 2rem;">
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-ghost btn-sm" disabled><i data-lucide="chevron-left"></i></button>
+            <button class="btn btn-primary btn-sm">1</button>
+            <button class="btn btn-ghost btn-sm">2</button>
+            <button class="btn btn-ghost btn-sm">3</button>
+            <button class="btn btn-ghost btn-sm"><i data-lucide="chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

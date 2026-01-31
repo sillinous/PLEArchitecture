@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossary | Post-Labor Economics</title>
+  <meta name="description" content="Complete glossary of Post-Labor Economics terms, concepts, and frameworks. Learn the language of the L/0 movement.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/glossary.html">
+  <meta property="og:title" content="Glossary | Post-Labor Economics">
+  <meta property="og:description" content="Complete dictionary of post-labor economics terms. UBI, laborism, L/0, Economic Agency Paradox, and 30+ concepts defined.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-glossary.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/glossary.html">
+  <meta name="twitter:title" content="Glossary | Post-Labor Economics">
+  <meta name="twitter:description" content="Complete dictionary of post-labor economics terms. UBI, laborism, L/0, Economic Agency Paradox, and 30+ concepts defined.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-glossary.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .glossary-hero {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+      padding: 3rem 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .glossary-hero p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0.5rem auto 0;
+    }
+    
+    /* Search and Filter */
+    .glossary-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .glossary-search {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+    
+    .glossary-search i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-muted);
+    }
+    
+    .glossary-search input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 3rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+    }
+    
+    .glossary-search input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    
+    .category-filter {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .filter-btn:hover {
+      background: var(--color-bg-tertiary);
+    }
+    
+    .filter-btn.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+    
+    /* Alphabet Navigation */
+    .alphabet-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+    }
+    
+    .alphabet-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .alphabet-btn:hover {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .alphabet-btn.active {
+      background: var(--color-accent);
+      color: white;
+    }
+    
+    .alphabet-btn.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    /* Terms List */
+    .glossary-section {
+      margin-bottom: 2rem;
+      scroll-margin-top: 100px;
+    }
+    
+    .glossary-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-accent);
+    }
+    
+    .glossary-section-header .letter {
+      width: 40px;
+      height: 40px;
+      background: var(--color-accent);
+      color: white;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .glossary-section-header h2 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .term-card {
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 0.75rem;
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .term-card:hover {
+      border-left-color: var(--color-accent);
+      transform: translateX(4px);
+    }
+    
+    .term-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .term-title {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--color-text-primary);
+    }
+    
+    .term-title .aka {
+      font-weight: 400;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    .term-category {
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .term-category.core { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .term-category.framework { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+    .term-category.mechanism { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .term-category.economic { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
+    .term-category.political { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    
+    .term-definition {
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      margin: 0 0 1rem 0;
+    }
+    
+    .term-footer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .term-link {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8rem;
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+    
+    .term-link:hover {
+      text-decoration: underline;
+    }
+    
+    .term-link i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .related-terms {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+    
+    .related-terms a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+    }
+    
+    .related-terms a:hover {
+      color: var(--color-accent);
+    }
+    
+    /* Stats */
+    .glossary-stats {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .no-results i {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    @media (max-width: 768px) {
+      .glossary-controls {
+        flex-direction: column;
+      }
+      
+      .alphabet-nav {
+        gap: 0.125rem;
+      }
+      
+      .alphabet-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <span class="page-label">Reference</span>
+        <h1>Glossary</h1>
+        <p class="page-description">The complete dictionary of Post-Labor Economics</p>
+      </div>
+      
+      <div class="glossary-hero">
+        <h1>📚 Learn the Language</h1>
+        <p>
+          Every movement has its vocabulary. Master these terms to understand and 
+          contribute to the post-labor economics conversation.
+        </p>
+      </div>
+      
+      <!-- Stats -->
+      <div class="glossary-stats">
+        <div class="stat">
+          <div class="stat-number" id="termCount">32</div>
+          <div class="stat-label">Terms Defined</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">15</div>
+          <div class="stat-label">Policy Mechanisms</div>
+        </div>
+      </div>
+      
+      <!-- Search and Filter -->
+      <div class="glossary-controls">
+        <div class="glossary-search">
+          <i data-lucide="search"></i>
+          <input type="text" id="searchInput" placeholder="Search terms..." oninput="filterTerms()">
+        </div>
+        <div class="category-filter">
+          <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+          <button class="filter-btn" onclick="filterByCategory('core')">Core Concepts</button>
+          <button class="filter-btn" onclick="filterByCategory('framework')">Frameworks</button>
+          <button class="filter-btn" onclick="filterByCategory('mechanism')">Mechanisms</button>
+          <button class="filter-btn" onclick="filterByCategory('economic')">Economic</button>
+          <button class="filter-btn" onclick="filterByCategory('political')">Political</button>
+        </div>
+      </div>
+      
+      <!-- Alphabet Navigation -->
+      <div class="alphabet-nav" id="alphabetNav"></div>
+      
+      <!-- Terms Container -->
+      <div id="termsContainer"></div>
+      
+      <!-- No Results -->
+      <div class="no-results" id="noResults" style="display: none;">
+        <i data-lucide="search-x"></i>
+        <h3>No terms found</h3>
+        <p>Try a different search term or clear filters.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // Mobile nav
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+    
+    // Glossary data
+    const terms = [
+      { term: "Algorithmic Power", aka: "", category: "political", definition: "The replacement of labor power with technological systems that enforce accountability. When workers can no longer strike effectively, algorithmic systems (blockchain, open data, participatory budgeting) become the new mechanism for citizen leverage over institutions.", link: "/power.html", related: ["Labor Power", "Pyramid of Power"] },
+      { term: "Baby Bonds", aka: "", category: "mechanism", definition: "Government-funded investment accounts established at birth for every citizen. The accounts grow over time and become accessible at adulthood, providing capital for education, housing, or business. Proposed by economists like Darrick Hamilton.", link: "/prosperity.html", related: ["Individual Assets", "Pyramid of Prosperity"] },
+      { term: "Citizen Dividend", aka: "Universal Dividend", category: "mechanism", definition: "Regular payments to all citizens from collectively-owned assets, such as sovereign wealth funds or data trusts. Unlike UBI funded by taxes, dividends come from returns on shared investments. Alaska's Permanent Fund Dividend is the primary example.", link: "/prosperity.html", related: ["Sovereign Wealth Fund", "UBI"] },
+      { term: "Collective Private Ownership", aka: "", category: "framework", definition: "Layer 3 of the Pyramid of Prosperity. Ownership structures that are private but shared among groups: worker cooperatives, ESOPs (Employee Stock Ownership Plans), community land trusts, and DAOs (Decentralized Autonomous Organizations).", link: "/prosperity.html", related: ["Cooperatives", "ESOP"] },
+      { term: "Cooperatives", aka: "Co-ops", category: "mechanism", definition: "Businesses owned and democratically controlled by their members (workers, consumers, or producers). Mondragon in Spain is the world's largest, with 80,000+ worker-owners. REI is a well-known consumer cooperative.", link: "/prosperity.html", related: ["Collective Private Ownership", "ESOP"] },
+      { term: "Data Dividend", aka: "Data Trust", category: "mechanism", definition: "Payments to citizens for the collective value generated by their data. Rather than tech companies capturing all value from user data, a data trust would collect and distribute returns to data generators. California has explored this concept.", link: "/prosperity.html", related: ["Public Assets", "Citizen Dividend"] },
+      { term: "Direct Democracy", aka: "Participatory Democracy", category: "political", definition: "Layer 4 of the Pyramid of Power. Systems enabling citizens to directly participate in governance decisions rather than only electing representatives. Includes participatory budgeting, quadratic voting, and citizen assemblies.", link: "/power.html", related: ["Participatory Budgeting", "Quadratic Voting"] },
+      { term: "Economic Agency Paradox", aka: "", category: "core", definition: "The self-reinforcing trap where automation simultaneously lowers prices (good) and destroys the wage-earning mechanism by which people get money to buy things (bad). You can't benefit from cheap goods if you have no income.", link: "/concepts.html", related: ["L/0", "Post-Labor Economics"] },
+      { term: "ESOP", aka: "Employee Stock Ownership Plan", category: "mechanism", definition: "A qualified retirement plan that gives workers ownership stake in the company. In the US, there are about 6,500 ESOPs covering 14 million participants. A form of collective private ownership that aligns worker and company interests.", link: "/prosperity.html", related: ["Cooperatives", "Collective Private Ownership"] },
+      { term: "Global Exhaustion", aka: "", category: "core", definition: "The worldwide phenomenon of worker burnout, disengagement, and withdrawal. Manifests as China's 'tang ping' (lying flat), Japan's 'hikikomori', America's 'quiet quitting', and rising 'deaths of despair.' Evidence that the current labor system is failing.", link: "/concepts.html", related: ["Laborism", "L/0"] },
+      { term: "Individual Assets", aka: "", category: "framework", definition: "Layer 4 of the Pyramid of Prosperity. Personally-owned wealth that generates returns: investment portfolios, baby bonds, housing equity, intellectual property. The goal is for everyone to have a meaningful capital base.", link: "/prosperity.html", related: ["Baby Bonds", "Pyramid of Prosperity"] },
+      { term: "L/0", aka: "Labor Zero, L-Zero", category: "core", definition: "Shorthand for the thesis that obligatory human labor is ending. The '/' evokes division by zero—an operation that breaks normal mathematical rules, just as zero labor breaks normal economic rules. Core thesis of the Post-Labor Economics movement.", link: "/about.html", related: ["Post-Labor Economics", "Laborism"] },
+      { term: "Labor Power", aka: "", category: "political", definition: "The leverage workers have through their ability to withhold labor (strikes, unions, collective bargaining). Historically the primary mechanism for citizen influence over economic institutions. Being eroded by automation and gig economy.", link: "/power.html", related: ["Algorithmic Power", "Pyramid of Power"] },
+      { term: "Laborism", aka: "", category: "core", definition: "The invisible ideology that work is morally necessary—that people should have to work to deserve survival. Spans political left and right. Makes alternatives to wage labor literally unthinkable for most people. The core belief system that L/0 challenges.", link: "/concepts.html", related: ["L/0", "Post-Labor Economics"] },
+      { term: "Metagovernance", aka: "", category: "political", definition: "Layer 5 of the Pyramid of Power. The rules for changing rules—constitutional mechanisms, sunset clauses, and processes that prevent any system from becoming permanently entrenched. Ensures the governance system itself can evolve.", link: "/power.html", related: ["Sunset Clauses", "Pyramid of Power"] },
+      { term: "Open Payment Rails", aka: "UPI-style Systems", category: "mechanism", definition: "Layer 2 of the Pyramid of Power. Public digital payment infrastructure that anyone can build on (like India's UPI system, which processes 10+ billion transactions monthly). Prevents private monopolies over money movement.", link: "/power.html", related: ["Pyramid of Power", "Transparency"] },
+      { term: "Participatory Budgeting", aka: "PB", category: "mechanism", definition: "Democratic process where community members directly decide how to spend part of a public budget. Started in Porto Alegre, Brazil in 1989. Now used in thousands of cities worldwide. A practical form of direct democracy.", link: "/power.html", related: ["Direct Democracy", "Quadratic Voting"] },
+      { term: "Post-Labor Economics", aka: "PLE", category: "core", definition: "The study of how society will function when AI, automation, and robotics can perform most productive work. Addresses three questions: How do people get income? How do citizens maintain power? What gives life meaning?", link: "/about.html", related: ["L/0", "Pyramid of Prosperity", "Pyramid of Power"] },
+      { term: "Public Assets", aka: "", category: "framework", definition: "Layer 2 of the Pyramid of Prosperity. Collectively-owned resources that generate returns for all citizens: sovereign wealth funds, public land, natural resources, infrastructure. The key to non-wage income.", link: "/prosperity.html", related: ["Sovereign Wealth Fund", "Citizen Dividend"] },
+      { term: "Pyramid of Power", aka: "", category: "framework", definition: "Five-layer framework for maintaining democratic leverage in a post-labor world. From base to peak: Civic Bedrock (identity, property), Payment Rails (open finance), Transparency, Direct Democracy, Metagovernance. Answers: how do citizens maintain power without labor power?", link: "/power.html", related: ["Pyramid of Prosperity", "Algorithmic Power"] },
+      { term: "Pyramid of Prosperity", aka: "", category: "framework", definition: "Five-layer framework for income distribution after wages. From base to peak: Universals (UBI, healthcare), Public Assets (sovereign wealth), Collective Private (cooperatives), Individual Assets (baby bonds), Residual Wages. Answers: where does money come from without jobs?", link: "/prosperity.html", related: ["Pyramid of Power", "UBI"] },
+      { term: "Quadratic Voting", aka: "QV", category: "mechanism", definition: "Voting system where you can express intensity of preference by spending more 'voice credits,' but with increasing cost (1 vote = 1 credit, 2 votes = 4 credits, etc.). Balances majority rule with minority protection. Proposed by Glen Weyl.", link: "/power.html", related: ["Direct Democracy", "Participatory Budgeting"] },
+      { term: "Residual Wages", aka: "", category: "framework", definition: "Layer 5 (top) of the Pyramid of Prosperity. The wages that remain for human work that is either protected by policy or genuinely preferred to be done by humans. Expected to shrink over time as automation advances.", link: "/prosperity.html", related: ["Pyramid of Prosperity", "L/0"] },
+      { term: "Sovereign Wealth Fund", aka: "SWF", category: "mechanism", definition: "State-owned investment fund that generates returns for citizens. Norway's Government Pension Fund Global ($1.7+ trillion) is the largest. Alaska's Permanent Fund pays annual dividends to all residents. A proven mechanism for collective capital ownership.", link: "/prosperity.html", related: ["Citizen Dividend", "Public Assets"] },
+      { term: "Sunset Clauses", aka: "", category: "mechanism", definition: "Automatic expiration dates built into laws and institutions. Part of metagovernance—ensures systems must be actively renewed rather than persisting by default. Prevents institutional ossification.", link: "/power.html", related: ["Metagovernance", "Pyramid of Power"] },
+      { term: "Tang Ping", aka: "Lying Flat", category: "economic", definition: "Chinese social movement where young people reject the pressure of overwork and consumerism, choosing instead to do the minimum necessary to survive. A form of passive resistance to laborism. Related to 'quiet quitting' in the West.", link: "/concepts.html", related: ["Global Exhaustion", "Laborism"] },
+      { term: "Theory of Change", aka: "ToC", category: "framework", definition: "The roadmap for how the Post-Labor Economics movement achieves its goals. Four phases: Awareness (now), Pilot Programs, Scaling, and Full Transition. Identifies stakeholders, leverage points, and milestones.", link: "/theory-of-change.html", related: ["Post-Labor Economics", "Coalition"] },
+      { term: "Transparency", aka: "Radical Transparency", category: "political", definition: "Layer 3 of the Pyramid of Power. Open access to government data, procurement, spending, and decision-making. Enables citizen oversight when labor power no longer provides leverage. Includes open budgets and algorithmic accountability.", link: "/power.html", related: ["Open Payment Rails", "Pyramid of Power"] },
+      { term: "UBI", aka: "Universal Basic Income", category: "mechanism", definition: "Regular unconditional cash payments to all citizens regardless of employment status. Layer 1 of the Pyramid of Prosperity. Creates a floor of economic security. Examples: Alaska PFD, Finland pilot, Stockton SEED program.", link: "/prosperity.html", related: ["Citizen Dividend", "Universals"] },
+      { term: "Universals", aka: "Universal Services", category: "framework", definition: "Layer 1 (base) of the Pyramid of Prosperity. Services provided to all citizens: Universal Basic Income, universal healthcare, free public education, basic housing. The foundation that ensures no one falls below a minimum standard.", link: "/prosperity.html", related: ["UBI", "Pyramid of Prosperity"] },
+      { term: "UPI", aka: "Unified Payments Interface", category: "mechanism", definition: "India's public digital payment system enabling instant bank transfers. Processes 10+ billion transactions monthly. An example of open payment rails that prevents private monopolies over financial infrastructure. Model for Pyramid of Power Layer 2.", link: "/power.html", related: ["Open Payment Rails", "Pyramid of Power"] },
+      { term: "Work vs Labor", aka: "", category: "core", definition: "Critical distinction in PLE. Work is meaningful activity (art, caregiving, craftsmanship). Labor is work done under coercion—because you'll starve otherwise. L/0 seeks to end obligatory labor, not all work. Many people will choose to work; none should be forced.", link: "/concepts.html", related: ["L/0", "Laborism"] }
+    ];
+    
+    let currentCategory = 'all';
+    let currentSearch = '';
+    
+    // Initialize
+    function init() {
+      renderAlphabet();
+      renderTerms();
+      document.getElementById('termCount').textContent = terms.length;
+    }
+    
+    // Render alphabet navigation
+    function renderAlphabet() {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      const usedLetters = [...new Set(terms.map(t => t.term[0].toUpperCase()))];
+      
+      const nav = document.getElementById('alphabetNav');
+      nav.innerHTML = letters.map(letter => {
+        const hasTerms = usedLetters.includes(letter);
+        return `<button class="alphabet-btn ${hasTerms ? '' : 'disabled'}" 
+                        onclick="${hasTerms ? `scrollToLetter('${letter}')` : ''}"
+                        ${hasTerms ? '' : 'disabled'}>${letter}</button>`;
+      }).join('');
+    }
+    
+    // Render terms
+    function renderTerms() {
+      const filtered = terms.filter(t => {
+        const matchesCategory = currentCategory === 'all' || t.category === currentCategory;
+        const matchesSearch = currentSearch === '' || 
+          t.term.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          t.definition.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          (t.aka && t.aka.toLowerCase().includes(currentSearch.toLowerCase()));
+        return matchesCategory && matchesSearch;
+      });
+      
+      if (filtered.length === 0) {
+        document.getElementById('termsContainer').innerHTML = '';
+        document.getElementById('noResults').style.display = 'block';
+        return;
+      }
+      
+      document.getElementById('noResults').style.display = 'none';
+      
+      // Group by first letter
+      const grouped = {};
+      filtered.forEach(t => {
+        const letter = t.term[0].toUpperCase();
+        if (!grouped[letter]) grouped[letter] = [];
+        grouped[letter].push(t);
+      });
+      
+      // Render
+      const container = document.getElementById('termsContainer');
+      container.innerHTML = Object.keys(grouped).sort().map(letter => `
+        <div class="glossary-section" id="letter-${letter}">
+          <div class="glossary-section-header">
+            <span class="letter">${letter}</span>
+            <h2>${grouped[letter].length} term${grouped[letter].length > 1 ? 's' : ''}</h2>
+          </div>
+          ${grouped[letter].map(t => `
+            <div class="term-card" data-category="${t.category}">
+              <div class="term-header">
+                <h3 class="term-title">
+                  ${t.term}
+                  ${t.aka ? `<span class="aka">(${t.aka})</span>` : ''}
+                </h3>
+                <span class="term-category ${t.category}">${t.category}</span>
+              </div>
+              <p class="term-definition">${t.definition}</p>
+              <div class="term-footer">
+                ${t.link ? `<a href="${t.link}" class="term-link"><i data-lucide="arrow-right"></i> Learn more</a>` : ''}
+                ${t.related.length ? `<span class="related-terms">Related: ${t.related.map(r => `<a href="#" onclick="searchFor('${r}')">${r}</a>`).join(', ')}</span>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+      
+      lucide.createIcons();
+    }
+    
+    // Filter functions
+    function filterTerms() {
+      currentSearch = document.getElementById('searchInput').value;
+      renderTerms();
+    }
+    
+    function filterByCategory(category) {
+      currentCategory = category;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderTerms();
+    }
+    
+    function scrollToLetter(letter) {
+      const el = document.getElementById('letter-' + letter);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    
+    function searchFor(term) {
+      event.preventDefault();
+      document.getElementById('searchInput').value = term;
+      currentSearch = term;
+      renderTerms();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Initialize on load
+    init();
+  </script>
+</body>
+</html>

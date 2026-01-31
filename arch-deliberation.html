@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deliberation Forum | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Structured deliberation platform for complex governance discussions with argument mapping and consensus building.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Deliberation Layout */
+    .delib-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      min-height: calc(100vh - var(--header-height));
+      background: var(--color-bg-primary);
+    }
+    
+    /* Left Sidebar - Topics */
+    .topics-sidebar {
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .topics-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .topics-header h2 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .topics-search {
+      position: relative;
+    }
+    
+    .topics-search input {
+      width: 100%;
+      padding: 0.5rem 0.75rem 0.5rem 2rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.8125rem;
+    }
+    
+    .topics-search input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .topics-search i {
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    .topics-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+    }
+    
+    .topic-category {
+      margin-bottom: 1rem;
+    }
+    
+    .topic-category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      cursor: pointer;
+    }
+    
+    .topic-category-header i {
+      width: 12px;
+      height: 12px;
+      transition: transform 0.15s;
+    }
+    
+    .topic-category.collapsed .topic-category-header i {
+      transform: rotate(-90deg);
+    }
+    
+    .topic-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .topic-item:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .topic-item.active {
+      background: rgba(99, 102, 241, 0.15);
+    }
+    
+    .topic-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .topic-status.active { background: #10b981; }
+    .topic-status.pending { background: #fbbf24; }
+    .topic-status.resolved { background: #6366f1; }
+    
+    .topic-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .topic-title {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .topic-meta {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .topic-unread {
+      padding: 0.125rem 0.375rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      font-weight: 600;
+    }
+    
+    /* Main Content */
+    .delib-main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .delib-header {
+      padding: 1.25rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .delib-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    
+    .delib-title-area {
+      flex: 1;
+    }
+    
+    .delib-breadcrumb {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .delib-breadcrumb a {
+      color: var(--color-primary);
+    }
+    
+    .delib-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .delib-meta {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .delib-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .delib-meta-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* View Toggle */
+    .view-modes {
+      display: flex;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .view-mode {
+      padding: 0.5rem 0.875rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.15s;
+    }
+    
+    .view-mode:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .view-mode.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .view-mode i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Consensus Bar */
+    .consensus-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .consensus-bar-label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    
+    .consensus-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+    
+    .consensus-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    
+    .consensus-segment.support { background: #10b981; }
+    .consensus-segment.neutral { background: #94a3b8; }
+    .consensus-segment.oppose { background: #ef4444; }
+    
+    .consensus-legend {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+    }
+    
+    .consensus-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .consensus-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    /* Discussion Content */
+    .delib-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+    
+    /* Argument Map View */
+    .argument-map {
+      min-height: 600px;
+    }
+    
+    .argument-node {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .main-proposition {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border: 2px solid var(--color-primary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .proposition-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .proposition-label i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .proposition-text {
+      font-size: 1.125rem;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+    
+    /* Arguments Container */
+    .arguments-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .arguments-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .arguments-column-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+    
+    .arguments-column-header i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .arguments-column-header.support {
+      color: #10b981;
+    }
+    
+    .arguments-column-header.oppose {
+      color: #ef4444;
+    }
+    
+    /* Argument Card */
+    .argument-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      transition: all 0.15s;
+    }
+    
+    .argument-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .argument-card.support {
+      border-left: 3px solid #10b981;
+    }
+    
+    .argument-card.oppose {
+      border-left: 3px solid #ef4444;
+    }
+    
+    .argument-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .argument-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .argument-meta {
+      flex: 1;
+    }
+    
+    .argument-author {
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    
+    .argument-time {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .argument-strength {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .argument-strength i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .argument-body {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    
+    .argument-evidence {
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .argument-evidence-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 0.375rem;
+    }
+    
+    .argument-evidence-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .argument-actions {
+      display: flex;
+      gap: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .argument-action {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    
+    .argument-action:hover {
+      color: var(--color-primary);
+    }
+    
+    .argument-action i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .argument-action.upvoted {
+      color: #10b981;
+    }
+    
+    /* Add Argument Button */
+    .add-argument-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: transparent;
+      border: 2px dashed var(--color-border);
+      border-radius: 0.75rem;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .add-argument-btn:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    .add-argument-btn i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    /* Right Sidebar */
+    .context-sidebar {
+      background: var(--color-bg-secondary);
+      border-left: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .context-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .context-tab {
+      flex: 1;
+      padding: 0.875rem 0.5rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    
+    .context-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .context-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+    
+    .context-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    /* Summary Panel */
+    .summary-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .summary-section h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .summary-card {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+    }
+    
+    .summary-stat {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    
+    .summary-stat:last-child {
+      margin-bottom: 0;
+    }
+    
+    .summary-stat-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .summary-stat-value {
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    
+    /* Participants */
+    .participants-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .participant-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+      background: var(--color-bg-primary);
+      border-radius: 9999px;
+    }
+    
+    .participant-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .participant-name {
+      font-size: 0.75rem;
+    }
+    
+    /* Key Points */
+    .key-points {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .key-point {
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    
+    .key-point-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    .key-point-icon.support { color: #10b981; }
+    .key-point-icon.oppose { color: #ef4444; }
+    
+    .key-point-text {
+      color: var(--color-text-secondary);
+    }
+    
+    /* Related Items */
+    .related-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .related-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .related-item:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .related-item i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    /* Take Position CTA */
+    .position-cta {
+      padding: 1rem;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-bg-secondary);
+    }
+    
+    .position-cta h4 {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .position-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .position-btn {
+      flex: 1;
+      padding: 0.625rem;
+      border-radius: 0.5rem;
+      border: 1px solid;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+    }
+    
+    .position-btn i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .position-btn.support {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: #10b981;
+      color: #10b981;
+    }
+    
+    .position-btn.support:hover {
+      background: #10b981;
+      color: white;
+    }
+    
+    .position-btn.neutral {
+      background: rgba(148, 163, 184, 0.1);
+      border-color: #94a3b8;
+      color: #94a3b8;
+    }
+    
+    .position-btn.neutral:hover {
+      background: #94a3b8;
+      color: white;
+    }
+    
+    .position-btn.oppose {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    
+    .position-btn.oppose:hover {
+      background: #ef4444;
+      color: white;
+    }
+    
+    @media (max-width: 1200px) {
+      .delib-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .topics-sidebar, .context-sidebar {
+        display: none;
+      }
+      
+      .arguments-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/arch-collaborate.html">← Collaborate</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="delib-container" style="margin-top: var(--header-height);">
+    <!-- Topics Sidebar -->
+    <aside class="topics-sidebar">
+      <div class="topics-header">
+        <h2>Deliberations</h2>
+        <div class="topics-search">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search topics...">
+        </div>
+      </div>
+      
+      <div class="topics-list">
+        <div class="topic-category">
+          <div class="topic-category-header">
+            <i data-lucide="chevron-down"></i>
+            Active Discussions
+          </div>
+          <div class="topic-item active">
+            <div class="topic-status active"></div>
+            <div class="topic-info">
+              <div class="topic-title">Data Dividends Implementation</div>
+              <div class="topic-meta">47 participants • 12 new</div>
+            </div>
+            <span class="topic-unread">12</span>
+          </div>
+          <div class="topic-item">
+            <div class="topic-status active"></div>
+            <div class="topic-info">
+              <div class="topic-title">Automation Tax Thresholds</div>
+              <div class="topic-meta">31 participants</div>
+            </div>
+          </div>
+          <div class="topic-item">
+            <div class="topic-status pending"></div>
+            <div class="topic-info">
+              <div class="topic-title">UBI Indexing Mechanism</div>
+              <div class="topic-meta">24 participants</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="topic-category">
+          <div class="topic-category-header">
+            <i data-lucide="chevron-down"></i>
+            Pending Review
+          </div>
+          <div class="topic-item">
+            <div class="topic-status pending"></div>
+            <div class="topic-info">
+              <div class="topic-title">Caregiver Recognition Scope</div>
+              <div class="topic-meta">18 participants</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="topic-category">
+          <div class="topic-category-header">
+            <i data-lucide="chevron-down"></i>
+            Resolved
+          </div>
+          <div class="topic-item">
+            <div class="topic-status resolved"></div>
+            <div class="topic-info">
+              <div class="topic-title">Layer 1 Minimum Standards</div>
+              <div class="topic-meta">Consensus reached</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="delib-main">
+      <div class="delib-header">
+        <div class="delib-header-top">
+          <div class="delib-title-area">
+            <div class="delib-breadcrumb">
+              <a href="#">Deliberations</a> / PROP-015
+            </div>
+            <h1 class="delib-title">Should Data Dividends be added to Layer 3?</h1>
+            <div class="delib-meta">
+              <span class="delib-meta-item"><i data-lucide="users"></i> 47 participants</span>
+              <span class="delib-meta-item"><i data-lucide="message-square"></i> 89 arguments</span>
+              <span class="delib-meta-item"><i data-lucide="clock"></i> 5 days left</span>
+            </div>
+          </div>
+          
+          <div class="view-modes">
+            <button class="view-mode active">
+              <i data-lucide="git-branch"></i> Arguments
+            </button>
+            <button class="view-mode">
+              <i data-lucide="list"></i> Timeline
+            </button>
+            <button class="view-mode">
+              <i data-lucide="bar-chart-3"></i> Summary
+            </button>
+          </div>
+        </div>
+        
+        <div class="consensus-bar-container">
+          <span class="consensus-bar-label">Consensus:</span>
+          <div class="consensus-bar">
+            <div class="consensus-segment support" style="width: 62%;"></div>
+            <div class="consensus-segment neutral" style="width: 20%;"></div>
+            <div class="consensus-segment oppose" style="width: 18%;"></div>
+          </div>
+          <div class="consensus-legend">
+            <span class="consensus-legend-item">
+              <span class="consensus-legend-dot" style="background: #10b981;"></span>
+              Support (62%)
+            </span>
+            <span class="consensus-legend-item">
+              <span class="consensus-legend-dot" style="background: #94a3b8;"></span>
+              Neutral (20%)
+            </span>
+            <span class="consensus-legend-item">
+              <span class="consensus-legend-dot" style="background: #ef4444;"></span>
+              Oppose (18%)
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="delib-content">
+        <!-- Main Proposition -->
+        <div class="main-proposition">
+          <span class="proposition-label">
+            <i data-lucide="target"></i> Proposition
+          </span>
+          <p class="proposition-text">Add "Data Dividends" as a fourth component of Layer 3 (Collective Ownership) in the Pyramid of Prosperity, establishing a mechanism for citizens to receive compensation for corporate use of their personal data.</p>
+        </div>
+        
+        <!-- Arguments -->
+        <div class="arguments-container">
+          <!-- Support Column -->
+          <div class="arguments-column">
+            <div class="arguments-column-header support">
+              <i data-lucide="thumbs-up"></i>
+              Supporting Arguments (34)
+            </div>
+            
+            <div class="argument-card support">
+              <div class="argument-header">
+                <div class="argument-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+                <div class="argument-meta">
+                  <div class="argument-author">David Shapiro</div>
+                  <div class="argument-time">2 days ago</div>
+                </div>
+                <div class="argument-strength">
+                  <i data-lucide="zap"></i> Strong
+                </div>
+              </div>
+              <div class="argument-body">Data dividends align perfectly with our Human Agency First principle. By compensating citizens for their data, we restore power and choice to individuals who currently have no leverage over how their information is monetized.</div>
+              <div class="argument-evidence">
+                <div class="argument-evidence-label">Supporting Evidence</div>
+                <div class="argument-evidence-text">Tech giants earned $227B from advertising in 2024, primarily powered by user data. The average user's data is worth ~$240/year (Lanier, 2023).</div>
+              </div>
+              <div class="argument-actions">
+                <button class="argument-action upvoted"><i data-lucide="arrow-up"></i> 47</button>
+                <button class="argument-action"><i data-lucide="message-square"></i> 12</button>
+                <button class="argument-action"><i data-lucide="git-branch"></i> Counter</button>
+              </div>
+            </div>
+            
+            <div class="argument-card support">
+              <div class="argument-header">
+                <div class="argument-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</div>
+                <div class="argument-meta">
+                  <div class="argument-author">Sarah Mitchell</div>
+                  <div class="argument-time">1 day ago</div>
+                </div>
+                <div class="argument-strength">
+                  <i data-lucide="zap"></i> Strong
+                </div>
+              </div>
+              <div class="argument-body">This creates a natural transition pathway. As AI automates jobs, data dividends provide an alternative income stream that grows with automation—the more AI depends on data, the more citizens benefit.</div>
+              <div class="argument-actions">
+                <button class="argument-action"><i data-lucide="arrow-up"></i> 31</button>
+                <button class="argument-action"><i data-lucide="message-square"></i> 8</button>
+                <button class="argument-action"><i data-lucide="git-branch"></i> Counter</button>
+              </div>
+            </div>
+            
+            <button class="add-argument-btn">
+              <i data-lucide="plus"></i>
+              Add Supporting Argument
+            </button>
+          </div>
+          
+          <!-- Oppose Column -->
+          <div class="arguments-column">
+            <div class="arguments-column-header oppose">
+              <i data-lucide="thumbs-down"></i>
+              Opposing Arguments (18)
+            </div>
+            
+            <div class="argument-card oppose">
+              <div class="argument-header">
+                <div class="argument-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+                <div class="argument-meta">
+                  <div class="argument-author">Thomas Chen</div>
+                  <div class="argument-time">1 day ago</div>
+                </div>
+                <div class="argument-strength">
+                  <i data-lucide="zap"></i> Moderate
+                </div>
+              </div>
+              <div class="argument-body">Implementation complexity is significant. How do we track individual data contributions across thousands of platforms? The technical infrastructure alone could cost billions and create new privacy concerns.</div>
+              <div class="argument-actions">
+                <button class="argument-action"><i data-lucide="arrow-up"></i> 23</button>
+                <button class="argument-action"><i data-lucide="message-square"></i> 15</button>
+                <button class="argument-action"><i data-lucide="git-branch"></i> Counter</button>
+              </div>
+            </div>
+            
+            <div class="argument-card oppose">
+              <div class="argument-header">
+                <div class="argument-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">AL</div>
+                <div class="argument-meta">
+                  <div class="argument-author">Alexandra Lee</div>
+                  <div class="argument-time">12 hours ago</div>
+                </div>
+                <div class="argument-strength">
+                  <i data-lucide="zap"></i> Weak
+                </div>
+              </div>
+              <div class="argument-body">Data dividends might incentivize more data collection, not less. If people benefit from sharing data, privacy could become a luxury only the wealthy can afford.</div>
+              <div class="argument-actions">
+                <button class="argument-action"><i data-lucide="arrow-up"></i> 12</button>
+                <button class="argument-action"><i data-lucide="message-square"></i> 7</button>
+                <button class="argument-action"><i data-lucide="git-branch"></i> Counter</button>
+              </div>
+            </div>
+            
+            <button class="add-argument-btn">
+              <i data-lucide="plus"></i>
+              Add Opposing Argument
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Context Sidebar -->
+    <aside class="context-sidebar">
+      <div class="context-tabs">
+        <button class="context-tab active">Summary</button>
+        <button class="context-tab">People</button>
+        <button class="context-tab">Related</button>
+      </div>
+      
+      <div class="context-content">
+        <div class="summary-section">
+          <h4>Discussion Stats</h4>
+          <div class="summary-card">
+            <div class="summary-stat">
+              <span class="summary-stat-label">Total Arguments</span>
+              <span class="summary-stat-value">89</span>
+            </div>
+            <div class="summary-stat">
+              <span class="summary-stat-label">Supporting</span>
+              <span class="summary-stat-value" style="color: #10b981;">34</span>
+            </div>
+            <div class="summary-stat">
+              <span class="summary-stat-label">Opposing</span>
+              <span class="summary-stat-value" style="color: #ef4444;">18</span>
+            </div>
+            <div class="summary-stat">
+              <span class="summary-stat-label">Questions</span>
+              <span class="summary-stat-value">37</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-section">
+          <h4>Key Points - Support</h4>
+          <div class="key-points">
+            <div class="key-point">
+              <i data-lucide="check-circle" class="key-point-icon support"></i>
+              <span class="key-point-text">Aligns with Human Agency First principle</span>
+            </div>
+            <div class="key-point">
+              <i data-lucide="check-circle" class="key-point-icon support"></i>
+              <span class="key-point-text">Creates transition income pathway</span>
+            </div>
+            <div class="key-point">
+              <i data-lucide="check-circle" class="key-point-icon support"></i>
+              <span class="key-point-text">Existing precedents (Alaska PFD)</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-section">
+          <h4>Key Points - Oppose</h4>
+          <div class="key-points">
+            <div class="key-point">
+              <i data-lucide="x-circle" class="key-point-icon oppose"></i>
+              <span class="key-point-text">Implementation complexity</span>
+            </div>
+            <div class="key-point">
+              <i data-lucide="x-circle" class="key-point-icon oppose"></i>
+              <span class="key-point-text">Potential privacy paradox</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-section">
+          <h4>Active Participants</h4>
+          <div class="participants-list">
+            <div class="participant-chip">
+              <div class="participant-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+              <span class="participant-name">David S.</span>
+            </div>
+            <div class="participant-chip">
+              <div class="participant-avatar" style="background: linear-gradient(135deg, #ec4899, #db2777);">SM</div>
+              <span class="participant-name">Sarah M.</span>
+            </div>
+            <div class="participant-chip">
+              <div class="participant-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">TC</div>
+              <span class="participant-name">Thomas C.</span>
+            </div>
+            <div class="participant-chip">
+              <div class="participant-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</div>
+              <span class="participant-name">Maria K.</span>
+            </div>
+            <div class="participant-chip">
+              <div class="participant-avatar" style="background: rgba(148, 163, 184, 0.3); color: var(--color-text-muted);">+43</div>
+              <span class="participant-name">more</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-section">
+          <h4>Related Artifacts</h4>
+          <div class="related-list">
+            <div class="related-item">
+              <i data-lucide="file-text"></i>
+              ADR-007: Layer Definitions
+            </div>
+            <div class="related-item">
+              <i data-lucide="compass"></i>
+              PRIN-001: Human Agency First
+            </div>
+            <div class="related-item">
+              <i data-lucide="boxes"></i>
+              FWK-001: Pyramid of Prosperity
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="position-cta">
+        <h4>Take Your Position</h4>
+        <div class="position-buttons">
+          <button class="position-btn support">
+            <i data-lucide="thumbs-up"></i>
+            Support
+          </button>
+          <button class="position-btn neutral">
+            <i data-lucide="minus"></i>
+            Neutral
+          </button>
+          <button class="position-btn oppose">
+            <i data-lucide="thumbs-down"></i>
+            Oppose
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    // Tab switching
+    document.querySelectorAll('.context-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.context-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    // View mode switching
+    document.querySelectorAll('.view-mode').forEach(mode => {
+      mode.addEventListener('click', () => {
+        document.querySelectorAll('.view-mode').forEach(m => m.classList.remove('active'));
+        mode.classList.add('active');
+      });
+    });
+    
+    // Topic selection
+    document.querySelectorAll('.topic-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.topic-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    
+    // Argument upvote
+    document.querySelectorAll('.argument-action').forEach(action => {
+      action.addEventListener('click', () => {
+        if (action.querySelector('[data-lucide="arrow-up"]')) {
+          action.classList.toggle('upvoted');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Preview | Post-Labor Economics</title>
+  <meta name="description" content="Book Preview - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/book.html">
+  <meta property="og:title" content="The Book | Post-Labor Economics">
+  <meta property="og:description" content="Post-Labor Economics: Navigating Humanity's Greatest Transition. Coming Q2 2026 from David Shapiro.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-book.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/book.html">
+  <meta name="twitter:title" content="The Book | Post-Labor Economics">
+  <meta name="twitter:description" content="Post-Labor Economics: Navigating Humanity's Greatest Transition. Coming Q2 2026 from David Shapiro.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-book.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.book-hero {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  align-items: center;
+}
+
+.book-cover {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  aspect-ratio: 2/3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.book-cover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  pointer-events: none;
+}
+
+.book-cover-content {
+  position: relative;
+  z-index: 1;
+}
+
+.book-l0-symbol {
+  font-size: 4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #10b981, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.book-cover h2 {
+  color: white;
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.book-cover .subtitle {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+}
+
+.book-cover .author {
+  margin-top: 2rem;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.book-info h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.book-info .tagline {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.book-meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.meta-item i {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+.book-progress {
+  background: var(--bg-secondary);
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.progress-header .percent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(90deg, #10b981, #6366f1);
+  border-radius: 4px;
+}
+
+.book-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Table of Contents */
+.toc-section {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.toc-section h2 {
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toc-section h2 i {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.toc-part {
+  background: var(--bg-tertiary);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+}
+
+.toc-part-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.part-number {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.toc-part h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.toc-chapters {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-chapters li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toc-chapters li:last-child {
+  border-bottom: none;
+}
+
+.toc-chapters li i {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
+.chapter-preview {
+  color: var(--accent);
+  font-size: 0.75rem;
+  margin-left: auto;
+}
+
+/* Excerpt Section */
+.excerpt-section {
+  margin-bottom: 3rem;
+}
+
+.excerpt-section h2 {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.excerpt-section h2 i {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.excerpt-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2.5rem;
+  border-left: 4px solid var(--accent);
+}
+
+.excerpt-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.excerpt-source {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.excerpt-content {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+.excerpt-content p {
+  margin: 0 0 1.25rem 0;
+}
+
+.excerpt-content p:last-child {
+  margin-bottom: 0;
+}
+
+.excerpt-content strong {
+  color: var(--text-primary);
+}
+
+.excerpt-content .highlight {
+  background: rgba(16, 185, 129, 0.1);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+/* Key Insights */
+.insights-section {
+  margin-bottom: 3rem;
+}
+
+.insights-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.insight-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border-top: 3px solid;
+}
+
+.insight-card:nth-child(1) { border-color: #10b981; }
+.insight-card:nth-child(2) { border-color: #6366f1; }
+.insight-card:nth-child(3) { border-color: #f59e0b; }
+.insight-card:nth-child(4) { border-color: #ec4899; }
+
+.insight-card h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+}
+
+.insight-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Pre-order Section */
+.preorder-section {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+  border-radius: 1rem;
+  padding: 3rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.preorder-section h2 {
+  margin: 0 0 0.5rem 0;
+}
+
+.preorder-section p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.notify-form {
+  display: flex;
+  gap: 0.75rem;
+  max-width: 450px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.notify-form input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.875rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.notify-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .book-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .book-cover {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  .book-meta {
+    justify-content: center;
+  }
+  
+  .book-cta {
+    justify-content: center;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Coming Q2 2026</span>
+  <h1>The Book</h1>
+  <p class="page-description">A comprehensive guide to navigating the post-labor transition</p>
+</div>
+
+<div class="book-hero">
+  <div class="book-cover">
+    <div class="book-cover-content">
+      <div class="book-l0-symbol">L/0</div>
+      <h2>Post-Labor Economics</h2>
+      <p class="subtitle">Navigating Humanity's Greatest Transition</p>
+      <p class="author">David Shapiro</p>
+    </div>
+  </div>
+  
+  <div class="book-info">
+    <h1>Post-Labor Economics: Navigating Humanity's Greatest Transition</h1>
+    <p class="tagline">The definitive guide to building a world where no one has to work to survive.</p>
+    
+    <div class="book-meta">
+      <div class="meta-item">
+        <i data-lucide="book-open"></i>
+        <span>~300 pages</span>
+      </div>
+      <div class="meta-item">
+        <i data-lucide="calendar"></i>
+        <span>Target: Q2 2026</span>
+      </div>
+      <div class="meta-item">
+        <i data-lucide="user"></i>
+        <span>David Shapiro</span>
+      </div>
+    </div>
+    
+    <div class="book-progress">
+      <div class="progress-header">
+        <span>Manuscript Progress</span>
+        <span class="percent">60% Complete</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+    
+    <div class="book-cta">
+      <a href="#notify" class="btn btn-primary">
+        <i data-lucide="bell"></i>
+        Get Notified at Launch
+      </a>
+      <a href="https://daveshap.substack.com" target="_blank" class="btn btn-outline">
+        <i data-lucide="mail"></i>
+        Read Essays Now
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Table of Contents -->
+<div class="toc-section">
+  <h2><i data-lucide="list"></i> Table of Contents</h2>
+  
+  <div class="toc-grid">
+    <div class="toc-part">
+      <div class="toc-part-header">
+        <span class="part-number">I</span>
+        <h3>The Problem</h3>
+      </div>
+      <ul class="toc-chapters">
+        <li><i data-lucide="file-text"></i> Introduction: The End of Obligatory Labor</li>
+        <li><i data-lucide="file-text"></i> Laborism: The Invisible Ideology</li>
+        <li><i data-lucide="file-text"></i> The Economic Agency Paradox</li>
+        <li><i data-lucide="file-text"></i> Global Exhaustion: Tang Ping to Deaths of Despair</li>
+        <li><i data-lucide="file-text"></i> Why This Time Is Different</li>
+      </ul>
+    </div>
+    
+    <div class="toc-part">
+      <div class="toc-part-header">
+        <span class="part-number">II</span>
+        <h3>The Frameworks</h3>
+      </div>
+      <ul class="toc-chapters">
+        <li><i data-lucide="file-text"></i> The Pyramid of Prosperity <span class="chapter-preview">Preview ↓</span></li>
+        <li><i data-lucide="file-text"></i> The Pyramid of Power</li>
+        <li><i data-lucide="file-text"></i> Algorithmic Power vs Labor Power</li>
+        <li><i data-lucide="file-text"></i> Proven Mechanisms: Evidence from 50+ Countries</li>
+      </ul>
+    </div>
+    
+    <div class="toc-part">
+      <div class="toc-part-header">
+        <span class="part-number">III</span>
+        <h3>The Coalition</h3>
+      </div>
+      <ul class="toc-chapters">
+        <li><i data-lucide="file-text"></i> Neither Side Wants This Marriage</li>
+        <li><i data-lucide="file-text"></i> Exhausted Workers & Their Allies</li>
+        <li><i data-lucide="file-text"></i> Forward-Thinking Capitalists</li>
+        <li><i data-lucide="file-text"></i> The AI Builders</li>
+        <li><i data-lucide="file-text"></i> Techno-Realist Policymakers</li>
+      </ul>
+    </div>
+    
+    <div class="toc-part">
+      <div class="toc-part-header">
+        <span class="part-number">IV</span>
+        <h3>The Transition</h3>
+      </div>
+      <ul class="toc-chapters">
+        <li><i data-lucide="file-text"></i> Phase 1: Building Awareness</li>
+        <li><i data-lucide="file-text"></i> Phase 2: Policy Pilots</li>
+        <li><i data-lucide="file-text"></i> Phase 3: Scaling Up</li>
+        <li><i data-lucide="file-text"></i> Phase 4: The Post-Labor World</li>
+        <li><i data-lucide="file-text"></i> Conclusion: Choosing Our Future</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Excerpt -->
+<div class="excerpt-section">
+  <h2><i data-lucide="quote"></i> Chapter Preview</h2>
+  
+  <div class="excerpt-card">
+    <h3>From Chapter 6: The Pyramid of Prosperity</h3>
+    <p class="excerpt-source">Draft Excerpt — Subject to Change</p>
+    
+    <div class="excerpt-content">
+      <p>The question everyone asks is simple: <strong>"If jobs go away, where does money come from?"</strong></p>
+      
+      <p>It's the right question. But the answer most people expect—some government program handing out checks—is dangerously incomplete. <span class="highlight">A world where everyone's income depends on government transfers is a world where government has absolute power.</span> We need something more robust.</p>
+      
+      <p>Enter the Pyramid of Prosperity: a five-layer framework for how households will receive income in a post-labor world. The key insight is that <strong>ownership replaces wages</strong>. Instead of selling your time, you own shares in the productive economy and receive returns.</p>
+      
+      <p>Start at the bottom with Layer 1: Universals. This is your floor—Universal Basic Income, Universal Healthcare, universal services that ensure no one falls below a minimum standard. It's important, but it's just the foundation.</p>
+      
+      <p>Layer 2: Public Assets. Here's where it gets interesting. Sovereign wealth funds—like Norway's $1.7 trillion fund—invest on behalf of all citizens. The returns flow back as dividends. You're not receiving charity; you're receiving your share of collectively owned capital. Add data trusts that monetize the collective value we create online, and resource royalties from public lands.</p>
+      
+      <p>The pattern continues upward through collective private ownership (cooperatives, ESOPs, DAOs), individual assets (baby bonds, personal portfolios), and yes, some residual wages for protected human work at the top.</p>
+      
+      <p>The beauty of this structure? <strong>Every mechanism already exists somewhere.</strong> Norway has the sovereign wealth fund. Alaska has the citizen dividend. Spain has Mondragon's worker cooperatives. We're not inventing new ideas—we're combining proven mechanisms into a coherent system.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Key Insights -->
+<div class="insights-section">
+  <h2>📚 Key Insights You'll Discover</h2>
+  
+  <div class="insights-grid">
+    <div class="insight-card">
+      <h3>Why "New Jobs" Won't Save Us</h3>
+      <p>Previous automation replaced physical labor. AI replaces cognitive labor. When machines can think, what's left for humans? The book explains why this time really is different—and what we can do about it.</p>
+    </div>
+    
+    <div class="insight-card">
+      <h3>The Hidden Ideology of Laborism</h3>
+      <p>We've been trained to believe work is morally necessary. This invisible ideology spans left and right, making alternatives literally unthinkable. The book names it so we can examine it.</p>
+    </div>
+    
+    <div class="insight-card">
+      <h3>Ownership, Not Just Payments</h3>
+      <p>UBI alone concentrates power dangerously. The Pyramid of Prosperity shows how citizens can own shares in automated production—receiving returns as capitalists, not dependents.</p>
+    </div>
+    
+    <div class="insight-card">
+      <h3>The Surprising Coalition</h3>
+      <p>Exhausted workers and forward-thinking capitalists both want to end obligatory labor—for different reasons. The book maps how to build bridges between unlikely allies.</p>
+    </div>
+  </div>
+</div>
+
+<!-- About Author -->
+<div class="toc-section">
+  <h2><i data-lucide="user"></i> About the Author</h2>
+  
+  <div style="display: flex; gap: 2rem; align-items: start; flex-wrap: wrap;">
+    <div style="width: 120px; height: 120px; background: linear-gradient(135deg, var(--accent), #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <i data-lucide="user" style="width: 48px; height: 48px; color: white;"></i>
+    </div>
+    <div style="flex: 1; min-width: 280px;">
+      <h3 style="margin: 0 0 0.5rem 0;">David Shapiro</h3>
+      <p style="color: var(--text-secondary); margin: 0 0 1rem 0;">Technologist, Writer, Movement Builder</p>
+      <p style="color: var(--text-secondary); line-height: 1.7; margin: 0;">
+        David Shapiro is a technologist and writer who has spent years exploring the implications of artificial intelligence for human society. His YouTube channel has grown to over 150,000 subscribers, and his Substack reaches thousands weekly with deep dives on AI, automation, and the future of work. He founded the Post-Labor Economics movement to channel these insights into actionable frameworks for civilizational transition.
+      </p>
+      <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+        <a href="https://www.youtube.com/@DaveShap" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+          <i data-lucide="youtube" style="width: 18px; height: 18px;"></i>
+          YouTube
+        </a>
+        <a href="https://daveshap.substack.com" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+          <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+          Substack
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pre-order / Notify -->
+<div class="preorder-section" id="notify">
+  <h2>📖 Get Notified at Launch</h2>
+  <p>Be the first to know when the book is available. Subscribe to get updates on publication date, early access opportunities, and exclusive previews.</p>
+  
+  <div class="notify-form">
+    <input type="email" placeholder="your@email.com" id="notify-email">
+    <a href="https://daveshap.substack.com" target="_blank" class="btn btn-primary" onclick="trackBookNotify()">
+      <i data-lucide="bell"></i>
+      Notify Me
+    </a>
+  </div>
+  
+  <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1.5rem;">
+    Join 8,000+ subscribers on Substack. You'll also get weekly essays on post-labor economics.
+  </p>
+</div>
+
+<script>
+function trackBookNotify() {
+  const email = document.getElementById('notify-email').value;
+  console.log('Book notification signup:', email);
+}
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Chapters & Meetups | Post-Labor Economics</title>
+  <meta name="description" content="Find Post-Labor Economics community members near you. Join or start a local chapter in your city.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/chapters.html">
+  <meta property="og:title" content="Local Chapters | Post-Labor Economics">
+  <meta property="og:description" content="Find Post-Labor Economics community members near you. Join or start a local chapter in your city.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-chapters.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/chapters.html">
+  <meta name="twitter:title" content="Local Chapters | Post-Labor Economics">
+  <meta name="twitter:description" content="Find Post-Labor Economics community members near you. Join or start a local chapter in your city.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-chapters.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .chapters-hero {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+      padding: 3rem 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .chapters-hero h1 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .chapters-hero p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Stats Banner */
+    .chapter-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-box {
+      background: var(--color-bg-secondary);
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+    
+    .stat-box .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-accent);
+    }
+    
+    .stat-box .label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* World Map */
+    .world-map-container {
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .world-map-container h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+    }
+    
+    .world-map {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      aspect-ratio: 2/1;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.03) 0%, rgba(99, 102, 241, 0.05) 100%);
+      border-radius: 0.5rem;
+    }
+    
+    /* SVG World Map simplified */
+    .map-svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .map-continent {
+      fill: var(--color-bg-tertiary);
+      stroke: var(--color-border);
+      stroke-width: 0.5;
+    }
+    
+    /* Map Markers */
+    .map-marker {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      animation: pulse-marker 2s infinite;
+      z-index: 10;
+    }
+    
+    .map-marker.large {
+      width: 18px;
+      height: 18px;
+      background: #8b5cf6;
+    }
+    
+    .map-marker::after {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: rgba(16, 185, 129, 0.3);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+    
+    .map-marker.large::after {
+      width: 32px;
+      height: 32px;
+      background: rgba(139, 92, 246, 0.3);
+    }
+    
+    @keyframes pulse-marker {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+    
+    .marker-tooltip {
+      position: absolute;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 100;
+      transform: translateX(-50%);
+      bottom: 100%;
+      margin-bottom: 8px;
+    }
+    
+    .map-marker:hover .marker-tooltip {
+      opacity: 1;
+    }
+    
+    .map-legend {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .legend-dot.active { background: var(--color-accent); }
+    .legend-dot.forming { background: #8b5cf6; }
+    
+    /* Region Tabs */
+    .region-tabs {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .region-tab {
+      padding: 0.625rem 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .region-tab:hover {
+      background: var(--color-bg-tertiary);
+    }
+    
+    .region-tab.active {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+    
+    /* Chapters Grid */
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .chapter-card {
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+    }
+    
+    .chapter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .chapter-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    
+    .chapter-location {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .chapter-flag {
+      font-size: 2rem;
+    }
+    
+    .chapter-location h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    
+    .chapter-location p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .chapter-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    
+    .chapter-status.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .chapter-status.forming { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+    .chapter-status.interest { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    
+    .chapter-stats-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .chapter-stats-row span {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .chapter-stats-row i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .chapter-description {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .chapter-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .chapter-actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+    
+    /* Start Chapter CTA */
+    .start-chapter-cta {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(16, 185, 129, 0.15) 100%);
+      border-radius: 1rem;
+      padding: 3rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .start-chapter-cta h2 {
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .start-chapter-cta p {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+    }
+    
+    /* Steps to Start */
+    .start-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 800px;
+      margin: 2rem auto 0;
+      text-align: left;
+    }
+    
+    .start-step {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: var(--color-accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.95rem;
+    }
+    
+    .step-content p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Upcoming Meetups */
+    .upcoming-meetups {
+      margin-bottom: 3rem;
+    }
+    
+    .upcoming-meetups h2 {
+      margin-bottom: 1.5rem;
+    }
+    
+    .meetup-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .meetup-item {
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .meetup-date {
+      text-align: center;
+      min-width: 60px;
+    }
+    
+    .meetup-date .day {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+    
+    .meetup-date .month {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+    }
+    
+    .meetup-info {
+      flex: 1;
+    }
+    
+    .meetup-info h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
+    
+    .meetup-info p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .meetup-info p i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    @media (max-width: 768px) {
+      .chapters-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .chapter-actions {
+        flex-direction: column;
+      }
+      
+      .meetup-item {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+        <span class="page-label">Community</span>
+        <h1>Local Chapters</h1>
+        <p class="page-description">Connect with the movement in your area</p>
+      </div>
+      
+      <div class="chapters-hero">
+        <h1>🌍 Find Your Local Community</h1>
+        <p>
+          The post-labor transition happens locally. Find other community members near you, 
+          or start a chapter in your city.
+        </p>
+      </div>
+      
+      <!-- Stats -->
+      <div class="chapter-stats">
+        <div class="stat-box">
+          <div class="value">40+</div>
+          <div class="label">Countries</div>
+        </div>
+        <div class="stat-box">
+          <div class="value">12</div>
+          <div class="label">Active Chapters</div>
+        </div>
+        <div class="stat-box">
+          <div class="value">8</div>
+          <div class="label">Forming Chapters</div>
+        </div>
+        <div class="stat-box">
+          <div class="value">150+</div>
+          <div class="label">Global Members</div>
+        </div>
+      </div>
+      
+      <!-- World Map -->
+      <div class="world-map-container">
+        <h2>📍 Community Map</h2>
+        <div class="world-map">
+          <!-- Simplified world outline using CSS -->
+          <svg class="map-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice">
+            <!-- Simplified continent shapes -->
+            <path class="map-continent" d="M150,120 Q200,100 250,110 L280,140 Q300,180 280,220 L240,250 Q200,270 160,250 L130,200 Q120,160 150,120" />
+            <path class="map-continent" d="M300,100 Q400,80 500,90 L550,120 Q580,160 560,200 L520,240 Q460,260 400,250 L340,210 Q300,170 300,100" />
+            <path class="map-continent" d="M580,80 Q700,60 800,90 L850,130 Q880,180 860,230 L800,280 Q720,300 640,280 L580,230 Q560,160 580,80" />
+            <path class="map-continent" d="M200,280 Q280,260 340,290 L360,350 Q350,400 300,420 L240,400 Q190,370 200,280" />
+            <path class="map-continent" d="M700,300 Q780,280 840,310 L860,370 Q850,420 800,440 L740,420 Q690,380 700,300" />
+          </svg>
+          
+          <!-- Map Markers - positioned with percentages -->
+          <!-- North America -->
+          <div class="map-marker large" style="left: 20%; top: 35%;">
+            <span class="marker-tooltip">San Francisco Bay Area (12 members)</span>
+          </div>
+          <div class="map-marker" style="left: 25%; top: 40%;">
+            <span class="marker-tooltip">Austin, TX (5 members)</span>
+          </div>
+          <div class="map-marker" style="left: 28%; top: 35%;">
+            <span class="marker-tooltip">New York City (8 members)</span>
+          </div>
+          <div class="map-marker" style="left: 23%; top: 30%;">
+            <span class="marker-tooltip">Seattle (4 members)</span>
+          </div>
+          <div class="map-marker" style="left: 22%; top: 28%;">
+            <span class="marker-tooltip">Vancouver (3 members)</span>
+          </div>
+          
+          <!-- Europe -->
+          <div class="map-marker large" style="left: 48%; top: 30%;">
+            <span class="marker-tooltip">London (10 members)</span>
+          </div>
+          <div class="map-marker" style="left: 50%; top: 32%;">
+            <span class="marker-tooltip">Berlin (6 members)</span>
+          </div>
+          <div class="map-marker" style="left: 47%; top: 35%;">
+            <span class="marker-tooltip">Amsterdam (4 members)</span>
+          </div>
+          <div class="map-marker" style="left: 52%; top: 28%;">
+            <span class="marker-tooltip">Stockholm (3 members)</span>
+          </div>
+          
+          <!-- Asia/Pacific -->
+          <div class="map-marker" style="left: 75%; top: 40%;">
+            <span class="marker-tooltip">Singapore (5 members)</span>
+          </div>
+          <div class="map-marker" style="left: 80%; top: 55%;">
+            <span class="marker-tooltip">Sydney (4 members)</span>
+          </div>
+          <div class="map-marker" style="left: 82%; top: 35%;">
+            <span class="marker-tooltip">Tokyo (3 members)</span>
+          </div>
+        </div>
+        
+        <div class="map-legend">
+          <span class="legend-item">
+            <span class="legend-dot active"></span>
+            Active Chapter (5+ members)
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot forming"></span>
+            Major Hub (10+ members)
+          </span>
+        </div>
+      </div>
+      
+      <!-- Region Filter -->
+      <div class="region-tabs">
+        <button class="region-tab active" onclick="filterRegion('all')">All Regions</button>
+        <button class="region-tab" onclick="filterRegion('na')">North America</button>
+        <button class="region-tab" onclick="filterRegion('eu')">Europe</button>
+        <button class="region-tab" onclick="filterRegion('asia')">Asia-Pacific</button>
+        <button class="region-tab" onclick="filterRegion('other')">Other</button>
+      </div>
+      
+      <!-- Chapters Grid -->
+      <div class="chapters-grid">
+        <!-- San Francisco -->
+        <div class="chapter-card" data-region="na">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇺🇸</span>
+              <div>
+                <h3>San Francisco Bay Area</h3>
+                <p>California, USA</p>
+              </div>
+            </div>
+            <span class="chapter-status active">Active</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 12 members</span>
+            <span><i data-lucide="calendar"></i> Monthly meetups</span>
+          </div>
+          <p class="chapter-description">
+            The largest US chapter. Regular meetups in SF and South Bay. Mix of tech workers, researchers, and policy folks.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join Chapter
+            </a>
+          </div>
+        </div>
+        
+        <!-- London -->
+        <div class="chapter-card" data-region="eu">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇬🇧</span>
+              <div>
+                <h3>London</h3>
+                <p>United Kingdom</p>
+              </div>
+            </div>
+            <span class="chapter-status active">Active</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 10 members</span>
+            <span><i data-lucide="calendar"></i> Bi-weekly calls</span>
+          </div>
+          <p class="chapter-description">
+            UK's hub for post-labor economics. Strong connections to policy and academic circles. Regular online discussions.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join Chapter
+            </a>
+          </div>
+        </div>
+        
+        <!-- New York -->
+        <div class="chapter-card" data-region="na">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇺🇸</span>
+              <div>
+                <h3>New York City</h3>
+                <p>New York, USA</p>
+              </div>
+            </div>
+            <span class="chapter-status active">Active</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 8 members</span>
+            <span><i data-lucide="calendar"></i> Monthly meetups</span>
+          </div>
+          <p class="chapter-description">
+            East coast presence. Finance, media, and policy perspectives. Meetups in Manhattan and Brooklyn.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join Chapter
+            </a>
+          </div>
+        </div>
+        
+        <!-- Berlin -->
+        <div class="chapter-card" data-region="eu">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇩🇪</span>
+              <div>
+                <h3>Berlin</h3>
+                <p>Germany</p>
+              </div>
+            </div>
+            <span class="chapter-status active">Active</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 6 members</span>
+            <span><i data-lucide="calendar"></i> Monthly meetups</span>
+          </div>
+          <p class="chapter-description">
+            Germany's startup capital. Focus on EU policy perspectives and tech industry impact.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join Chapter
+            </a>
+          </div>
+        </div>
+        
+        <!-- Singapore -->
+        <div class="chapter-card" data-region="asia">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇸🇬</span>
+              <div>
+                <h3>Singapore</h3>
+                <p>Singapore</p>
+              </div>
+            </div>
+            <span class="chapter-status forming">Forming</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 5 members</span>
+            <span><i data-lucide="calendar"></i> Getting started</span>
+          </div>
+          <p class="chapter-description">
+            Southeast Asia's emerging hub. Tech-forward city interested in post-labor frameworks.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Help Build
+            </a>
+          </div>
+        </div>
+        
+        <!-- Austin -->
+        <div class="chapter-card" data-region="na">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇺🇸</span>
+              <div>
+                <h3>Austin</h3>
+                <p>Texas, USA</p>
+              </div>
+            </div>
+            <span class="chapter-status forming">Forming</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 5 members</span>
+            <span><i data-lucide="calendar"></i> Getting started</span>
+          </div>
+          <p class="chapter-description">
+            Texas tech scene. Growing interest in post-labor economics among startup community.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Help Build
+            </a>
+          </div>
+        </div>
+        
+        <!-- Sydney -->
+        <div class="chapter-card" data-region="asia">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇦🇺</span>
+              <div>
+                <h3>Sydney</h3>
+                <p>Australia</p>
+              </div>
+            </div>
+            <span class="chapter-status forming">Forming</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 4 members</span>
+            <span><i data-lucide="calendar"></i> Getting started</span>
+          </div>
+          <p class="chapter-description">
+            Australia's first chapter. Connecting the APAC community interested in L/0 ideas.
+          </p>
+          <div class="chapter-actions">
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Help Build
+            </a>
+          </div>
+        </div>
+        
+        <!-- Amsterdam -->
+        <div class="chapter-card" data-region="eu">
+          <div class="chapter-header">
+            <div class="chapter-location">
+              <span class="chapter-flag">🇳🇱</span>
+              <div>
+                <h3>Amsterdam</h3>
+                <p>Netherlands</p>
+              </div>
+            </div>
+            <span class="chapter-status interest">Interest</span>
+          </div>
+          <div class="chapter-stats-row">
+            <span><i data-lucide="users"></i> 4 members</span>
+            <span><i data-lucide="calendar"></i> Seeking organizer</span>
+          </div>
+          <p class="chapter-description">
+            Interest group forming. Need a local organizer to coordinate meetups.
+          </p>
+          <div class="chapter-actions">
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-secondary btn-sm">
+              <i data-lucide="hand"></i> Volunteer to Lead
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Upcoming Meetups -->
+      <div class="upcoming-meetups">
+        <h2>📅 Upcoming In-Person Meetups</h2>
+        <div class="meetup-list">
+          <div class="meetup-item">
+            <div class="meetup-date">
+              <div class="day">15</div>
+              <div class="month">Mar</div>
+            </div>
+            <div class="meetup-info">
+              <h4>Bay Area Meetup</h4>
+              <p><i data-lucide="map-pin"></i> San Francisco, CA • 6:00 PM PST</p>
+            </div>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">RSVP</a>
+          </div>
+          
+          <div class="meetup-item">
+            <div class="meetup-date">
+              <div class="day">22</div>
+              <div class="month">Mar</div>
+            </div>
+            <div class="meetup-info">
+              <h4>London Pub Night</h4>
+              <p><i data-lucide="map-pin"></i> Central London • 7:00 PM GMT</p>
+            </div>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">RSVP</a>
+          </div>
+          
+          <div class="meetup-item">
+            <div class="meetup-date">
+              <div class="day">5</div>
+              <div class="month">Apr</div>
+            </div>
+            <div class="meetup-info">
+              <h4>NYC Coffee & Discussion</h4>
+              <p><i data-lucide="map-pin"></i> Manhattan, NY • 10:00 AM EST</p>
+            </div>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">RSVP</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Start a Chapter CTA -->
+      <div class="start-chapter-cta">
+        <h2>🚀 Start a Chapter in Your City</h2>
+        <p>
+          Don't see your city? You can start a chapter with just 3 interested people.
+          We'll provide resources, support, and connection to the global community.
+        </p>
+        
+        <div class="start-steps">
+          <div class="start-step">
+            <span class="step-number">1</span>
+            <div class="step-content">
+              <h4>Express Interest</h4>
+              <p>Post in the Skool community that you want to start a local chapter</p>
+            </div>
+          </div>
+          <div class="start-step">
+            <span class="step-number">2</span>
+            <div class="step-content">
+              <h4>Find 2+ Others</h4>
+              <p>Connect with other members in your area or nearby</p>
+            </div>
+          </div>
+          <div class="start-step">
+            <span class="step-number">3</span>
+            <div class="step-content">
+              <h4>Get Resources</h4>
+              <p>We'll provide materials, talking points, and ongoing support</p>
+            </div>
+          </div>
+          <div class="start-step">
+            <span class="step-number">4</span>
+            <div class="step-content">
+              <h4>Start Meeting</h4>
+              <p>Coffee shops, video calls, whatever works for your group</p>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+          <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+            <i data-lucide="plus-circle"></i>
+            Start a Chapter
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // Mobile nav
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+    
+    // Filter chapters by region
+    function filterRegion(region) {
+      document.querySelectorAll('.region-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.querySelectorAll('.chapter-card').forEach(card => {
+        if (region === 'all' || card.dataset.region === region) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

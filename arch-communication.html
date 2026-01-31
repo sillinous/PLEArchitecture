@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communication Plan | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Architecture communication plans for stakeholder engagement and change management.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .comm-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - var(--header-height) - 4rem);
+    }
+    
+    .comm-nav {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .nav-section { margin-bottom: 1.5rem; }
+    .nav-section:last-child { margin-bottom: 0; }
+    
+    .nav-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+    
+    .nav-item:hover { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+    .nav-item.active { background: rgba(99, 102, 241, 0.15); color: var(--color-primary); }
+    .nav-item i { width: 16px; height: 16px; }
+    
+    .comm-main { display: flex; flex-direction: column; gap: 2rem; }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .page-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-header p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Communication Plans */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+    
+    .plan-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: all var(--transition-base);
+    }
+    
+    .plan-card:hover {
+      border-color: var(--color-border-hover);
+      transform: translateY(-2px);
+    }
+    
+    .plan-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .plan-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .plan-icon i { width: 20px; height: 20px; color: white; }
+    .plan-icon.executive { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .plan-icon.community { background: linear-gradient(135deg, #ec4899, #f472b6); }
+    .plan-icon.technical { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+    .plan-icon.public { background: linear-gradient(135deg, #10b981, #34d399); }
+    .plan-icon.policy { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    
+    .plan-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .plan-audience { font-size: 0.75rem; color: var(--color-text-muted); }
+    
+    .plan-status {
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: var(--radius-full);
+    }
+    
+    .plan-status.active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .plan-status.draft { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .plan-status.scheduled { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    
+    .plan-body { padding: 1.25rem; }
+    
+    .plan-description {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    
+    .plan-channels {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-bottom: 1rem;
+    }
+    
+    .channel-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .channel-tag i { width: 10px; height: 10px; }
+    
+    .plan-alignment {
+      padding: 0.75rem;
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+    }
+    
+    .alignment-title {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .alignment-title i { width: 12px; height: 12px; }
+    
+    .alignment-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+    }
+    
+    .arch-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.1875rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.625rem;
+      font-weight: 500;
+    }
+    
+    .arch-tag i { width: 9px; height: 9px; }
+    .arch-tag.goal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .arch-tag.strategy { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .arch-tag.capability { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    
+    .plan-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .metric {
+      text-align: center;
+      padding: 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: var(--radius-sm);
+    }
+    
+    .metric-value { font-size: 1rem; font-weight: 700; }
+    .metric-label { font-size: 0.625rem; color: var(--color-text-muted); }
+    
+    .plan-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .plan-schedule {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .plan-schedule i { width: 14px; height: 14px; }
+    
+    /* Message Templates */
+    .templates-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .section-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .section-title i { width: 18px; height: 18px; color: var(--color-text-muted); }
+    
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+    
+    .template-card {
+      padding: 1rem;
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .template-card:hover {
+      border-color: var(--color-border-hover);
+    }
+    
+    .template-name {
+      font-weight: 500;
+      margin-bottom: 0.375rem;
+    }
+    
+    .template-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .template-tags {
+      display: flex;
+      gap: 0.375rem;
+    }
+    
+    @media (max-width: 1024px) {
+      .comm-layout { grid-template-columns: 1fr; }
+      .comm-nav { position: static; }
+    }
+    
+    @media (max-width: 768px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .templates-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Enterprise Architecture</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="comm-layout">
+      <aside class="comm-nav">
+        <div class="nav-section">
+          <div class="nav-title">Communication</div>
+          <a href="#plans" class="nav-item active"><i data-lucide="megaphone"></i> Active Plans</a>
+          <a href="#templates" class="nav-item"><i data-lucide="file-text"></i> Templates</a>
+          <a href="#schedule" class="nav-item"><i data-lucide="calendar"></i> Schedule</a>
+          <a href="#analytics" class="nav-item"><i data-lucide="bar-chart-2"></i> Analytics</a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-title">Audiences</div>
+          <a href="#" class="nav-item"><i data-lucide="briefcase"></i> Executive</a>
+          <a href="#" class="nav-item"><i data-lucide="users"></i> Community</a>
+          <a href="#" class="nav-item"><i data-lucide="code"></i> Technical</a>
+          <a href="#" class="nav-item"><i data-lucide="globe"></i> Public</a>
+          <a href="#" class="nav-item"><i data-lucide="landmark"></i> Policy</a>
+        </div>
+      </aside>
+      
+      <div class="comm-main">
+        <div class="page-header">
+          <div>
+            <h1>Communication Plans</h1>
+            <p>Stakeholder-targeted architecture communication strategies aligned with movement goals and capabilities.</p>
+          </div>
+          <button class="btn btn-primary"><i data-lucide="plus"></i> New Plan</button>
+        </div>
+        
+        <!-- Active Plans -->
+        <div class="plans-grid">
+          <!-- Executive Communication -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <div>
+                <div class="plan-icon executive"><i data-lucide="briefcase"></i></div>
+                <div class="plan-title">Executive Briefing</div>
+                <div class="plan-audience">Leadership & Board Members</div>
+              </div>
+              <span class="plan-status active">Active</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-description">Strategic overview communications for movement leadership, focusing on high-level progress, key decisions, and resource allocation.</p>
+              
+              <div class="plan-channels">
+                <span class="channel-tag"><i data-lucide="mail"></i> Email</span>
+                <span class="channel-tag"><i data-lucide="video"></i> Video Call</span>
+                <span class="channel-tag"><i data-lucide="file-text"></i> Report</span>
+              </div>
+              
+              <div class="plan-alignment">
+                <div class="alignment-title"><i data-lucide="target"></i> Architecture Alignment</div>
+                <div class="alignment-tags">
+                  <span class="arch-tag goal"><i data-lucide="target"></i> All Strategic Goals</span>
+                  <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-001</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-001: Governance</span>
+                </div>
+              </div>
+              
+              <div class="plan-metrics">
+                <div class="metric">
+                  <div class="metric-value" style="color: #818cf8;">12</div>
+                  <div class="metric-label">Recipients</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #10b981;">94%</div>
+                  <div class="metric-label">Open Rate</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #f59e0b;">4</div>
+                  <div class="metric-label">This Quarter</div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <span class="plan-schedule"><i data-lucide="calendar"></i> Monthly - 1st Monday</span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+            </div>
+          </div>
+          
+          <!-- Community Updates -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <div>
+                <div class="plan-icon community"><i data-lucide="users"></i></div>
+                <div class="plan-title">Community Updates</div>
+                <div class="plan-audience">All Community Members</div>
+              </div>
+              <span class="plan-status active">Active</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-description">Regular updates on architecture decisions, new capabilities, and how community contributions align with movement goals.</p>
+              
+              <div class="plan-channels">
+                <span class="channel-tag"><i data-lucide="hash"></i> Discord</span>
+                <span class="channel-tag"><i data-lucide="mail"></i> Newsletter</span>
+                <span class="channel-tag"><i data-lucide="video"></i> Livestream</span>
+              </div>
+              
+              <div class="plan-alignment">
+                <div class="alignment-title"><i data-lucide="target"></i> Architecture Alignment</div>
+                <div class="alignment-tags">
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-004: Movement Building</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-003: Advocacy</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-020: Newsletter</span>
+                </div>
+              </div>
+              
+              <div class="plan-metrics">
+                <div class="metric">
+                  <div class="metric-value" style="color: #f472b6;">847</div>
+                  <div class="metric-label">Recipients</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #10b981;">68%</div>
+                  <div class="metric-label">Engagement</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #f59e0b;">8</div>
+                  <div class="metric-label">This Quarter</div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <span class="plan-schedule"><i data-lucide="calendar"></i> Bi-weekly - Fridays</span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+            </div>
+          </div>
+          
+          <!-- Technical Documentation -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <div>
+                <div class="plan-icon technical"><i data-lucide="code"></i></div>
+                <div class="plan-title">Technical Documentation</div>
+                <div class="plan-audience">Tech Working Group & Contributors</div>
+              </div>
+              <span class="plan-status active">Active</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-description">Technical architecture decisions, standards updates, and implementation guidance for platform development.</p>
+              
+              <div class="plan-channels">
+                <span class="channel-tag"><i data-lucide="github"></i> GitHub</span>
+                <span class="channel-tag"><i data-lucide="book"></i> Docs Site</span>
+                <span class="channel-tag"><i data-lucide="hash"></i> Discord</span>
+              </div>
+              
+              <div class="plan-alignment">
+                <div class="alignment-title"><i data-lucide="target"></i> Architecture Alignment</div>
+                <div class="alignment-tags">
+                  <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-006: Platform Dev</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-010: Tech Infra</span>
+                </div>
+              </div>
+              
+              <div class="plan-metrics">
+                <div class="metric">
+                  <div class="metric-value" style="color: #22d3ee;">45</div>
+                  <div class="metric-label">Recipients</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #10b981;">82%</div>
+                  <div class="metric-label">Adoption</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #f59e0b;">12</div>
+                  <div class="metric-label">ADRs This Q</div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <span class="plan-schedule"><i data-lucide="calendar"></i> As needed</span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+            </div>
+          </div>
+          
+          <!-- Public Outreach -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <div>
+                <div class="plan-icon public"><i data-lucide="globe"></i></div>
+                <div class="plan-title">Public Outreach</div>
+                <div class="plan-audience">General Public & Media</div>
+              </div>
+              <span class="plan-status active">Active</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-description">Public-facing communications about post-labor economics concepts, research findings, and movement progress.</p>
+              
+              <div class="plan-channels">
+                <span class="channel-tag"><i data-lucide="twitter"></i> Twitter/X</span>
+                <span class="channel-tag"><i data-lucide="youtube"></i> YouTube</span>
+                <span class="channel-tag"><i data-lucide="globe"></i> Blog</span>
+                <span class="channel-tag"><i data-lucide="podcast"></i> Podcast</span>
+              </div>
+              
+              <div class="plan-alignment">
+                <div class="alignment-title"><i data-lucide="target"></i> Architecture Alignment</div>
+                <div class="alignment-tags">
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-007: Public Awareness</span>
+                  <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-002: Public Education</span>
+                </div>
+              </div>
+              
+              <div class="plan-metrics">
+                <div class="metric">
+                  <div class="metric-value" style="color: #34d399;">45K</div>
+                  <div class="metric-label">Reach</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #10b981;">12%</div>
+                  <div class="metric-label">Engagement</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #f59e0b;">24</div>
+                  <div class="metric-label">Posts/Month</div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <span class="plan-schedule"><i data-lucide="calendar"></i> Daily posting</span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+            </div>
+          </div>
+          
+          <!-- Policy Engagement -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <div>
+                <div class="plan-icon policy"><i data-lucide="landmark"></i></div>
+                <div class="plan-title">Policy Engagement</div>
+                <div class="plan-audience">Policymakers & Researchers</div>
+              </div>
+              <span class="plan-status scheduled">Scheduled</span>
+            </div>
+            <div class="plan-body">
+              <p class="plan-description">Targeted communications for policy discussions, academic partnerships, and government engagement opportunities.</p>
+              
+              <div class="plan-channels">
+                <span class="channel-tag"><i data-lucide="mail"></i> Direct Email</span>
+                <span class="channel-tag"><i data-lucide="file-text"></i> Policy Briefs</span>
+                <span class="channel-tag"><i data-lucide="presentation"></i> Presentations</span>
+              </div>
+              
+              <div class="plan-alignment">
+                <div class="alignment-title"><i data-lucide="target"></i> Architecture Alignment</div>
+                <div class="alignment-tags">
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-003: Automation Tax</span>
+                  <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-003: Policy Dev</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-007: Policy Analysis</span>
+                </div>
+              </div>
+              
+              <div class="plan-metrics">
+                <div class="metric">
+                  <div class="metric-value" style="color: #fbbf24;">28</div>
+                  <div class="metric-label">Contacts</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #10b981;">3</div>
+                  <div class="metric-label">Meetings</div>
+                </div>
+                <div class="metric">
+                  <div class="metric-value" style="color: #f59e0b;">2</div>
+                  <div class="metric-label">Briefs Sent</div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-footer">
+              <span class="plan-schedule"><i data-lucide="calendar"></i> Q1 Launch</span>
+              <button class="btn btn-ghost btn-sm">Edit</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Message Templates -->
+        <div class="templates-section">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="file-text"></i> Message Templates</span>
+            <button class="btn btn-outline btn-sm"><i data-lucide="plus"></i> New Template</button>
+          </div>
+          <div class="templates-grid">
+            <div class="template-card">
+              <div class="template-name">Architecture Decision Announcement</div>
+              <div class="template-desc">Notify stakeholders of approved architecture decisions</div>
+              <div class="template-tags">
+                <span class="arch-tag goal"><i data-lucide="target"></i> Governance</span>
+              </div>
+            </div>
+            <div class="template-card">
+              <div class="template-name">Capability Launch</div>
+              <div class="template-desc">Announce new capabilities added to the architecture</div>
+              <div class="template-tags">
+                <span class="arch-tag capability"><i data-lucide="boxes"></i> Capabilities</span>
+              </div>
+            </div>
+            <div class="template-card">
+              <div class="template-name">Goal Progress Update</div>
+              <div class="template-desc">Report progress against strategic goals</div>
+              <div class="template-tags">
+                <span class="arch-tag goal"><i data-lucide="target"></i> Goals</span>
+              </div>
+            </div>
+            <div class="template-card">
+              <div class="template-name">Standard Deprecation Notice</div>
+              <div class="template-desc">Notify of standards being phased out</div>
+              <div class="template-tags">
+                <span class="arch-tag strategy"><i data-lucide="route"></i> Standards</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

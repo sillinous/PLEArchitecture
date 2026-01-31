@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Principles | Post-Labor Economics</title>
+  <meta name="description" content="The guiding principles that govern all architectural decisions in the Post-Labor Economics movement.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .page-hero {
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+      padding: calc(var(--header-height) + 4rem) 0 4rem;
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb a { color: var(--color-text-secondary); }
+    .breadcrumb a:hover { color: var(--color-accent); }
+    
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    
+    .page-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 700px;
+    }
+    
+    /* Principles section */
+    .principles-section {
+      padding: 4rem 0;
+    }
+    
+    .principles-intro {
+      max-width: 800px;
+      margin-bottom: 3rem;
+    }
+    
+    .principles-intro h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .principles-intro p {
+      color: var(--color-text-secondary);
+      font-size: 1.0625rem;
+      line-height: 1.7;
+    }
+    
+    /* Principle cards */
+    .principles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .principle-card {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .principle-card:hover {
+      border-color: var(--color-border-light);
+    }
+    
+    .principle-number {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--principle-bg, rgba(99, 102, 241, 0.1));
+      border-radius: 1rem;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--principle-color, #818cf8);
+    }
+    
+    .principle-content h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .principle-badge {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 0.25rem;
+      color: var(--color-text-muted);
+    }
+    
+    .principle-statement {
+      font-size: 1.0625rem;
+      color: var(--color-text-primary);
+      margin-bottom: 1rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--principle-color, #818cf8);
+    }
+    
+    .principle-rationale {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+    
+    .principle-rationale strong {
+      color: var(--color-text-primary);
+    }
+    
+    /* Examples section */
+    .principle-examples {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .principle-examples h4 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .example-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .example-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .example-item i {
+      width: 16px;
+      height: 16px;
+      color: var(--color-accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    /* Categories sidebar */
+    .principles-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 3rem;
+      align-items: start;
+    }
+    
+    .principles-sidebar {
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .sidebar-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .sidebar-card h3 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+    
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .category-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .category-item:hover {
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .category-item.active {
+      background: rgba(99, 102, 241, 0.1);
+      color: #818cf8;
+    }
+    
+    .category-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    
+    .category-count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1024px) {
+      .principles-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .principles-sidebar {
+        position: static;
+        order: -1;
+      }
+      
+      .category-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      
+      .category-item {
+        flex: 1;
+        min-width: 140px;
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .principle-card {
+        grid-template-columns: 1fr;
+      }
+      
+      .principle-number {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/governance.html">Architecture Governance</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/">Home</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <a href="/governance.html">Governance</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <span>Principles</span>
+        </nav>
+        <h1 class="page-title">Architecture Principles</h1>
+        <p class="page-subtitle">
+          The foundational rules and guidelines that govern all architectural decisions. 
+          Principles ensure consistency, quality, and alignment with our mission.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Principles -->
+    <section class="principles-section">
+      <div class="container">
+        <div class="principles-intro">
+          <h2>What Are Architecture Principles?</h2>
+          <p>
+            Architecture principles are fundamental guidelines that inform and constrain architectural 
+            decisions. They translate our values into actionable rules, ensuring that every framework, 
+            policy proposal, and strategic choice aligns with who we are and what we're trying to achieve.
+            Principles should be stable but not immutable—they evolve through our governance process.
+          </p>
+        </div>
+        
+        <div class="principles-layout">
+          <div class="principles-list">
+            <!-- Principle 1 -->
+            <div class="principle-card" style="--principle-bg: rgba(16, 185, 129, 0.1); --principle-color: #34d399;">
+              <div class="principle-number">1</div>
+              <div class="principle-content">
+                <h3>
+                  Human Agency First
+                  <span class="principle-badge">Core</span>
+                </h3>
+                <p class="principle-statement">
+                  Every architectural element must enhance, not diminish, individual human agency and autonomy.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> Post-labor economics aims to free people from coerced labor, not to 
+                  create new forms of dependency. Frameworks must empower individuals to make meaningful choices 
+                  about their lives, work, and participation in society.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>UBI with no strings attached (vs. conditional benefits)</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Opt-in collective ownership (vs. mandatory participation)</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Transparency tools that inform (vs. surveillance that controls)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 2 -->
+            <div class="principle-card" style="--principle-bg: rgba(99, 102, 241, 0.1); --principle-color: #818cf8;">
+              <div class="principle-number">2</div>
+              <div class="principle-content">
+                <h3>
+                  Evidence Over Ideology
+                  <span class="principle-badge">Core</span>
+                </h3>
+                <p class="principle-statement">
+                  Architectural decisions must be grounded in empirical evidence, research, and real-world data 
+                  rather than ideological assumptions.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> The transition to post-labor economics is too important to be driven 
+                  by wishful thinking. We must be willing to update our frameworks when evidence contradicts our 
+                  assumptions, and we must clearly distinguish between proven mechanisms and theoretical proposals.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Citing UBI pilot results when proposing income levels</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Referencing Norway's sovereign wealth fund performance</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Marking theoretical elements as "proposed" vs. "validated"</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 3 -->
+            <div class="principle-card" style="--principle-bg: rgba(245, 158, 11, 0.1); --principle-color: #fbbf24;">
+              <div class="principle-number">3</div>
+              <div class="principle-content">
+                <h3>
+                  Incremental Transition
+                  <span class="principle-badge">Strategic</span>
+                </h3>
+                <p class="principle-statement">
+                  Frameworks must support gradual, phased transitions rather than revolutionary overnight changes.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> Abrupt economic transitions cause suffering and resistance. Our 
+                  architecture must provide pathways that allow individuals, organizations, and societies to 
+                  adapt progressively. This makes adoption politically feasible and minimizes disruption.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>UBI starting at supplemental levels, scaling over decades</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Pilot programs before national rollouts</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Transition support for workers in declining industries</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 4 -->
+            <div class="principle-card" style="--principle-bg: rgba(236, 72, 153, 0.1); --principle-color: #f472b6;">
+              <div class="principle-number">4</div>
+              <div class="principle-content">
+                <h3>
+                  Coalition Compatibility
+                  <span class="principle-badge">Strategic</span>
+                </h3>
+                <p class="principle-statement">
+                  Architectural elements should be designed to attract support from diverse stakeholders, 
+                  not alienate potential allies.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> Transformation at scale requires broad coalitions. Frameworks 
+                  framed in partisan terms or that benefit only one group will fail. We must find formulations 
+                  that workers, business owners, policymakers, and researchers can all support—even if for 
+                  different reasons.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Framing UBI as "freedom dividend" not just "welfare"</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Showing how automation taxes benefit business stability</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Avoiding loaded political terminology in frameworks</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 5 -->
+            <div class="principle-card" style="--principle-bg: rgba(6, 182, 212, 0.1); --principle-color: #22d3ee;">
+              <div class="principle-number">5</div>
+              <div class="principle-content">
+                <h3>
+                  Global Applicability
+                  <span class="principle-badge">Scope</span>
+                </h3>
+                <p class="principle-statement">
+                  Frameworks must be adaptable to different cultural, economic, and political contexts worldwide.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> Automation and AI affect all economies. Our architecture cannot 
+                  be US-centric or assume Western democratic institutions. Core principles should be universal 
+                  while allowing local adaptation of specific mechanisms.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Multiple currency/payment approaches (not just USD)</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Examples from diverse economies (Global South included)</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Governance models for varying political systems</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 6 -->
+            <div class="principle-card" style="--principle-bg: rgba(139, 92, 246, 0.1); --principle-color: #a78bfa;">
+              <div class="principle-number">6</div>
+              <div class="principle-content">
+                <h3>
+                  Open Architecture
+                  <span class="principle-badge">Process</span>
+                </h3>
+                <p class="principle-statement">
+                  All architectural elements must be publicly documented, openly licensed, and subject to 
+                  community contribution and scrutiny.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> The future of economics belongs to everyone. Our frameworks 
+                  should be freely available for adoption, criticism, and improvement. Proprietary control 
+                  would contradict our values and limit adoption.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>CC BY-SA licensing for all published content</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Public ADR process for architectural decisions</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Community contribution pathways via Skool and GitHub</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 7 -->
+            <div class="principle-card" style="--principle-bg: rgba(34, 197, 94, 0.1); --principle-color: #4ade80;">
+              <div class="principle-number">7</div>
+              <div class="principle-content">
+                <h3>
+                  Sustainability & Resilience
+                  <span class="principle-badge">Quality</span>
+                </h3>
+                <p class="principle-statement">
+                  Frameworks must be economically sustainable, environmentally conscious, and resilient to 
+                  shocks and disruptions.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> Post-labor systems must work long-term, not just in ideal 
+                  conditions. We must design for inflation, recessions, technological disruption, and 
+                  climate change. Mechanisms that require perpetual growth or ignore environmental limits 
+                  are not acceptable.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Funding mechanisms independent of continuous growth</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Automatic stabilizers for economic downturns</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Integration with environmental sustainability goals</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Principle 8 -->
+            <div class="principle-card" style="--principle-bg: rgba(251, 146, 60, 0.1); --principle-color: #fb923c;">
+              <div class="principle-number">8</div>
+              <div class="principle-content">
+                <h3>
+                  Preserve Meaningful Work
+                  <span class="principle-badge">Quality</span>
+                </h3>
+                <p class="principle-statement">
+                  While eliminating obligatory labor, frameworks must protect and enhance opportunities 
+                  for meaningful, voluntary work and contribution.
+                </p>
+                <p class="principle-rationale">
+                  <strong>Rationale:</strong> Work provides more than income—it offers purpose, social 
+                  connection, and identity. Post-labor economics isn't anti-work; it's anti-coerced-labor. 
+                  Our architecture must support people who want to work while freeing those who don't.
+                </p>
+                <div class="principle-examples">
+                  <h4>Application Examples</h4>
+                  <div class="example-list">
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>"Residual wages" layer preserving market work incentives</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Support for caregiving, volunteering, creative work</span>
+                    </div>
+                    <div class="example-item">
+                      <i data-lucide="check"></i>
+                      <span>Cooperative and community enterprise pathways</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Sidebar -->
+          <aside class="principles-sidebar">
+            <div class="sidebar-card">
+              <h3>Categories</h3>
+              <div class="category-list">
+                <div class="category-item active">
+                  <span class="category-dot"></span>
+                  All Principles
+                  <span class="category-count">8</span>
+                </div>
+                <div class="category-item" style="color: #34d399;">
+                  <span class="category-dot"></span>
+                  Core
+                  <span class="category-count">2</span>
+                </div>
+                <div class="category-item" style="color: #fbbf24;">
+                  <span class="category-dot"></span>
+                  Strategic
+                  <span class="category-count">2</span>
+                </div>
+                <div class="category-item" style="color: #22d3ee;">
+                  <span class="category-dot"></span>
+                  Scope
+                  <span class="category-count">1</span>
+                </div>
+                <div class="category-item" style="color: #a78bfa;">
+                  <span class="category-dot"></span>
+                  Process
+                  <span class="category-count">1</span>
+                </div>
+                <div class="category-item" style="color: #4ade80;">
+                  <span class="category-dot"></span>
+                  Quality
+                  <span class="category-count">2</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="sidebar-card" style="margin-top: 1.5rem;">
+              <h3>Governance</h3>
+              <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin-bottom: 1rem;">
+                Principles are adopted through our ADR process and reviewed annually.
+              </p>
+              <a href="/arch-decisions.html" class="btn btn-outline btn-sm" style="width: 100%;">
+                View Decision Records
+              </a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+        </div>
+        <div class="footer-nav">
+          <h4>Governance</h4>
+          <ul>
+            <li><a href="/arch-mission.html">Mission & Vision</a></li>
+            <li><a href="/arch-principles.html">Principles</a></li>
+            <li><a href="/arch-decisions.html">Decision Records</a></li>
+            <li><a href="/arch-contributing.html">Contributing</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool</a></li>
+            <li><a href="/chapters.html">Chapters</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Whiteboard | Post-Labor Economics</title>
+  <meta name="description" content="Collaborative whiteboard for architecture design sessions. Draw, diagram, and brainstorm together in real-time.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Whiteboard Styles */
+    .whiteboard-container {
+      display: grid;
+      grid-template-columns: 64px 1fr 300px;
+      height: calc(100vh - var(--header-height));
+      background: var(--color-bg-primary);
+    }
+    
+    /* Toolbar */
+    .wb-toolbar {
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      padding: 1rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .tool-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      position: relative;
+    }
+    
+    .tool-btn:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .tool-btn.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .tool-btn i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .tool-btn[title]::after {
+      content: attr(title);
+      position: absolute;
+      left: 100%;
+      margin-left: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+      font-size: 0.75rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+      z-index: 100;
+    }
+    
+    .tool-btn:hover[title]::after {
+      opacity: 1;
+    }
+    
+    .tool-divider {
+      width: 32px;
+      height: 1px;
+      background: var(--color-border);
+      margin: 0.5rem 0;
+    }
+    
+    /* Color Picker */
+    .color-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      width: 44px;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+    
+    .color-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    
+    .color-swatch:hover,
+    .color-swatch.active {
+      transform: scale(1.2);
+      border-color: white;
+    }
+    
+    /* Canvas Area */
+    .wb-canvas-area {
+      position: relative;
+      overflow: hidden;
+      background: 
+        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+    
+    .wb-canvas {
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+    
+    /* Zoom Controls */
+    .zoom-controls {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      display: flex;
+      gap: 0.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+    }
+    
+    .zoom-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 0.375rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    
+    .zoom-btn:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .zoom-level {
+      padding: 0 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+    }
+    
+    /* Minimap */
+    .minimap {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      width: 150px;
+      height: 100px;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .minimap-viewport {
+      position: absolute;
+      border: 2px solid var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 2px;
+    }
+    
+    /* Right Panel */
+    .wb-panel {
+      background: var(--color-bg-secondary);
+      border-left: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .panel-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .panel-header h3 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+    }
+    
+    .panel-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .panel-tab {
+      flex: 1;
+      padding: 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    
+    .panel-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .panel-tab.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+    
+    .panel-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    
+    /* Shapes Library */
+    .shapes-library {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .shape-item {
+      aspect-ratio: 1;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      transition: all 0.15s;
+    }
+    
+    .shape-item:hover {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .shape-item i {
+      width: 24px;
+      height: 24px;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Templates */
+    .template-item {
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .template-item:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .template-preview {
+      width: 100%;
+      height: 80px;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .template-preview i {
+      width: 32px;
+      height: 32px;
+      color: var(--color-text-muted);
+    }
+    
+    .template-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .template-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Collaborators */
+    .collaborators-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .collaborator {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: background 0.15s;
+    }
+    
+    .collaborator:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .collaborator-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: white;
+      position: relative;
+    }
+    
+    .collaborator-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 10px;
+      height: 10px;
+      background: #10b981;
+      border: 2px solid var(--color-bg-secondary);
+      border-radius: 50%;
+    }
+    
+    .collaborator-info {
+      flex: 1;
+    }
+    
+    .collaborator-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .collaborator-action {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .collaborator-cursor {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    /* Chat */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .chat-message {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .chat-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+    
+    .chat-bubble {
+      background: var(--color-bg-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem 0.5rem 0.5rem 0;
+      max-width: 200px;
+    }
+    
+    .chat-bubble-name {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .chat-bubble-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .chat-input-area {
+      padding: 1rem;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .chat-input {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+    }
+    
+    .chat-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .chat-send {
+      width: 36px;
+      height: 36px;
+      background: var(--color-primary);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    
+    .chat-send:hover {
+      background: var(--color-primary-dark);
+    }
+    
+    /* Layer Elements */
+    .layers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .layer-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .layer-item:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .layer-item.selected {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .layer-visibility {
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-muted);
+      cursor: pointer;
+    }
+    
+    .layer-visibility.hidden {
+      opacity: 0.3;
+    }
+    
+    .layer-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-secondary);
+    }
+    
+    .layer-name {
+      flex: 1;
+      font-size: 0.8125rem;
+    }
+    
+    .layer-lock {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    
+    .layer-item:hover .layer-lock {
+      opacity: 1;
+    }
+    
+    /* Session Info */
+    .session-info {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .session-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .session-meta {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Header bar */
+    .wb-header {
+      position: fixed;
+      top: var(--header-height);
+      left: 64px;
+      right: 300px;
+      height: 48px;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 10;
+    }
+    
+    .wb-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .wb-title input {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      width: 250px;
+    }
+    
+    .wb-title input:hover {
+      border-color: var(--color-border);
+    }
+    
+    .wb-title input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background: var(--color-bg-primary);
+    }
+    
+    .wb-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .wb-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      color: var(--color-text-secondary);
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .wb-action-btn:hover {
+      border-color: var(--color-text-muted);
+      color: var(--color-text-primary);
+    }
+    
+    .wb-action-btn i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .wb-action-btn.primary {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    .wb-action-btn.primary:hover {
+      background: var(--color-primary-dark);
+    }
+    
+    /* Cursors */
+    .remote-cursor {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1000;
+      transition: transform 0.1s ease-out;
+    }
+    
+    .cursor-pointer {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 12px solid var(--cursor-color);
+      transform: rotate(-45deg);
+    }
+    
+    .cursor-label {
+      margin-left: 12px;
+      margin-top: -4px;
+      padding: 2px 6px;
+      background: var(--cursor-color);
+      color: white;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    
+    @media (max-width: 1024px) {
+      .whiteboard-container {
+        grid-template-columns: 56px 1fr;
+      }
+      
+      .wb-panel {
+        display: none;
+      }
+      
+      .wb-header {
+        right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/governance.html">← Back to Governance</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Whiteboard Header -->
+  <div class="wb-header">
+    <div class="wb-title">
+      <i data-lucide="layout-dashboard" style="width: 20px; height: 20px; color: var(--color-primary);"></i>
+      <input type="text" value="Pyramid of Prosperity - Layer Design Session" placeholder="Untitled Whiteboard">
+    </div>
+    <div class="wb-actions">
+      <button class="wb-action-btn">
+        <i data-lucide="undo"></i>
+      </button>
+      <button class="wb-action-btn">
+        <i data-lucide="redo"></i>
+      </button>
+      <button class="wb-action-btn">
+        <i data-lucide="share-2"></i>
+        Share
+      </button>
+      <button class="wb-action-btn">
+        <i data-lucide="download"></i>
+        Export
+      </button>
+      <button class="wb-action-btn primary">
+        <i data-lucide="save"></i>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="whiteboard-container" style="margin-top: calc(var(--header-height) + 48px);">
+    <!-- Left Toolbar -->
+    <div class="wb-toolbar">
+      <button class="tool-btn active" title="Select">
+        <i data-lucide="mouse-pointer-2"></i>
+      </button>
+      <button class="tool-btn" title="Pan">
+        <i data-lucide="hand"></i>
+      </button>
+      
+      <div class="tool-divider"></div>
+      
+      <button class="tool-btn" title="Rectangle">
+        <i data-lucide="square"></i>
+      </button>
+      <button class="tool-btn" title="Circle">
+        <i data-lucide="circle"></i>
+      </button>
+      <button class="tool-btn" title="Triangle">
+        <i data-lucide="triangle"></i>
+      </button>
+      <button class="tool-btn" title="Arrow">
+        <i data-lucide="arrow-up-right"></i>
+      </button>
+      <button class="tool-btn" title="Line">
+        <i data-lucide="minus"></i>
+      </button>
+      
+      <div class="tool-divider"></div>
+      
+      <button class="tool-btn" title="Pen">
+        <i data-lucide="pencil"></i>
+      </button>
+      <button class="tool-btn" title="Highlighter">
+        <i data-lucide="highlighter"></i>
+      </button>
+      <button class="tool-btn" title="Eraser">
+        <i data-lucide="eraser"></i>
+      </button>
+      
+      <div class="tool-divider"></div>
+      
+      <button class="tool-btn" title="Text">
+        <i data-lucide="type"></i>
+      </button>
+      <button class="tool-btn" title="Sticky Note">
+        <i data-lucide="sticky-note"></i>
+      </button>
+      <button class="tool-btn" title="Image">
+        <i data-lucide="image"></i>
+      </button>
+      
+      <div class="tool-divider"></div>
+      
+      <!-- Color Picker -->
+      <div class="color-picker">
+        <div class="color-swatch active" style="background: #ef4444;"></div>
+        <div class="color-swatch" style="background: #f59e0b;"></div>
+        <div class="color-swatch" style="background: #10b981;"></div>
+        <div class="color-swatch" style="background: #3b82f6;"></div>
+        <div class="color-swatch" style="background: #8b5cf6;"></div>
+        <div class="color-swatch" style="background: #ffffff;"></div>
+      </div>
+    </div>
+    
+    <!-- Canvas Area -->
+    <div class="wb-canvas-area">
+      <canvas class="wb-canvas" id="whiteboard-canvas"></canvas>
+      
+      <!-- Remote Cursors (Demo) -->
+      <div class="remote-cursor" style="--cursor-color: #10b981; transform: translate(200px, 150px);">
+        <div class="cursor-pointer"></div>
+        <div class="cursor-label">David S.</div>
+      </div>
+      <div class="remote-cursor" style="--cursor-color: #f59e0b; transform: translate(400px, 300px);">
+        <div class="cursor-pointer"></div>
+        <div class="cursor-label">Maria K.</div>
+      </div>
+      
+      <!-- Zoom Controls -->
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="zoom-out"><i data-lucide="minus"></i></button>
+        <span class="zoom-level">100%</span>
+        <button class="zoom-btn" id="zoom-in"><i data-lucide="plus"></i></button>
+        <button class="zoom-btn" id="zoom-fit"><i data-lucide="maximize-2"></i></button>
+      </div>
+      
+      <!-- Minimap -->
+      <div class="minimap">
+        <div class="minimap-viewport" style="width: 60px; height: 40px; top: 20px; left: 30px;"></div>
+      </div>
+    </div>
+    
+    <!-- Right Panel -->
+    <div class="wb-panel">
+      <div class="panel-header">
+        <h3>Session</h3>
+        <button style="background: none; border: none; color: var(--color-text-muted); cursor: pointer;">
+          <i data-lucide="settings" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+      
+      <div class="panel-tabs">
+        <button class="panel-tab active">Shapes</button>
+        <button class="panel-tab">Layers</button>
+        <button class="panel-tab">Chat</button>
+      </div>
+      
+      <div class="panel-content" id="panel-shapes">
+        <div class="session-info">
+          <div class="session-title">Layer Design Session</div>
+          <div class="session-meta">Started 45 min ago • 4 participants</div>
+        </div>
+        
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.75rem;">Architecture Shapes</h4>
+        <div class="shapes-library">
+          <div class="shape-item" draggable="true"><i data-lucide="triangle"></i></div>
+          <div class="shape-item" draggable="true"><i data-lucide="square"></i></div>
+          <div class="shape-item" draggable="true"><i data-lucide="circle"></i></div>
+          <div class="shape-item" draggable="true"><i data-lucide="hexagon"></i></div>
+          <div class="shape-item" draggable="true"><i data-lucide="diamond"></i></div>
+          <div class="shape-item" draggable="true"><i data-lucide="octagon"></i></div>
+        </div>
+        
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted); margin: 1.5rem 0 0.75rem;">Templates</h4>
+        
+        <div class="template-item">
+          <div class="template-preview"><i data-lucide="triangle"></i></div>
+          <div class="template-name">Pyramid Template</div>
+          <div class="template-desc">5-layer pyramid structure</div>
+        </div>
+        
+        <div class="template-item">
+          <div class="template-preview"><i data-lucide="git-branch"></i></div>
+          <div class="template-name">Flow Diagram</div>
+          <div class="template-desc">Process flow with decisions</div>
+        </div>
+        
+        <div class="template-item">
+          <div class="template-preview"><i data-lucide="users"></i></div>
+          <div class="template-name">Stakeholder Map</div>
+          <div class="template-desc">Connection diagram</div>
+        </div>
+        
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted); margin: 1.5rem 0 0.75rem;">Collaborators</h4>
+        <div class="collaborators-list">
+          <div class="collaborator">
+            <div class="collaborator-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+            <div class="collaborator-info">
+              <div class="collaborator-name">David Shapiro</div>
+              <div class="collaborator-action">Drawing...</div>
+            </div>
+            <div class="collaborator-cursor" style="background: #10b981;"></div>
+          </div>
+          <div class="collaborator">
+            <div class="collaborator-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">MK</div>
+            <div class="collaborator-info">
+              <div class="collaborator-name">Maria K.</div>
+              <div class="collaborator-action">Viewing</div>
+            </div>
+            <div class="collaborator-cursor" style="background: #f59e0b;"></div>
+          </div>
+          <div class="collaborator">
+            <div class="collaborator-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">You</div>
+            <div class="collaborator-info">
+              <div class="collaborator-name">You</div>
+              <div class="collaborator-action">Active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel-content" id="panel-layers" style="display: none;">
+        <div class="layers-list">
+          <div class="layer-item selected">
+            <i data-lucide="eye" class="layer-visibility"></i>
+            <i data-lucide="triangle" class="layer-icon"></i>
+            <span class="layer-name">Pyramid Structure</span>
+            <i data-lucide="lock" class="layer-lock"></i>
+          </div>
+          <div class="layer-item">
+            <i data-lucide="eye" class="layer-visibility"></i>
+            <i data-lucide="type" class="layer-icon"></i>
+            <span class="layer-name">Labels</span>
+            <i data-lucide="lock" class="layer-lock"></i>
+          </div>
+          <div class="layer-item">
+            <i data-lucide="eye" class="layer-visibility"></i>
+            <i data-lucide="arrow-right" class="layer-icon"></i>
+            <span class="layer-name">Connections</span>
+            <i data-lucide="lock" class="layer-lock"></i>
+          </div>
+          <div class="layer-item">
+            <i data-lucide="eye-off" class="layer-visibility hidden"></i>
+            <i data-lucide="sticky-note" class="layer-icon"></i>
+            <span class="layer-name">Notes (Hidden)</span>
+            <i data-lucide="lock" class="layer-lock"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="panel-content" id="panel-chat" style="display: none; padding: 0; display: flex; flex-direction: column;">
+        <div class="chat-messages">
+          <div class="chat-message">
+            <div class="chat-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+            <div class="chat-bubble">
+              <div class="chat-bubble-name">David S.</div>
+              <div class="chat-bubble-text">Should we add data dividends to Layer 3?</div>
+            </div>
+          </div>
+          <div class="chat-message">
+            <div class="chat-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">MK</div>
+            <div class="chat-bubble">
+              <div class="chat-bubble-name">Maria K.</div>
+              <div class="chat-bubble-text">Yes, I think it fits well with collective ownership</div>
+            </div>
+          </div>
+          <div class="chat-message">
+            <div class="chat-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+            <div class="chat-bubble">
+              <div class="chat-bubble-name">David S.</div>
+              <div class="chat-bubble-text">Let me sketch it out</div>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" placeholder="Type a message...">
+          <button class="chat-send"><i data-lucide="send" style="width: 16px; height: 16px;"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    // Tool selection
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    
+    // Color selection
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+      });
+    });
+    
+    // Panel tabs
+    document.querySelectorAll('.panel-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const tabName = tab.textContent.toLowerCase();
+        document.querySelectorAll('.panel-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById(`panel-${tabName}`).style.display = tabName === 'chat' ? 'flex' : 'block';
+      });
+    });
+    
+    // Layer selection
+    document.querySelectorAll('.layer-item').forEach(layer => {
+      layer.addEventListener('click', () => {
+        document.querySelectorAll('.layer-item').forEach(l => l.classList.remove('selected'));
+        layer.classList.add('selected');
+      });
+    });
+    
+    // Canvas setup
+    const canvas = document.getElementById('whiteboard-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Basic drawing functionality
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+    
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      ctx.strokeStyle = '#6366f1';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+    
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+  </script>
+</body>
+</html>

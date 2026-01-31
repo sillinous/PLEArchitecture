@@ -1,4 +1,531 @@
----
-layout: home
-title: Home
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post-Labor Economics | Building the Post-Work Future</title>
+  <meta name="description" content="Frameworks for navigating humanity's transition from labor-based to ownership-based income. Exploring how society will function when AI and automation can perform most productive work.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/index.html">
+  <meta property="og:title" content="Post-Labor Economics | Building the Post-Work Future">
+  <meta property="og:description" content="Frameworks for humanity's transition from labor-based to ownership-based income. Join the L/0 movement.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-home.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/index.html">
+  <meta name="twitter:title" content="Post-Labor Economics | Building the Post-Work Future">
+  <meta name="twitter:description" content="Frameworks for humanity's transition from labor-based to ownership-based income. Join the L/0 movement.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-home.png">
+
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/styles/main.css">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Home-specific styles */
+    .hero {
+      text-align: center;
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(99, 102, 241, 0.1) 100%);
+      border-radius: 1rem;
+      margin-bottom: 3rem;
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--color-accent);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin: 0 0 1rem 0;
+      line-height: 1.1;
+    }
+    
+    .hero .tagline {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    
+    .hero-links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+      margin-top: 2rem;
+    }
+    
+    .hero-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    
+    .hero-link:hover {
+      color: var(--color-accent);
+    }
+    
+    .hero-link i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    /* Quick Start Section */
+    .quick-start {
+      margin-bottom: 3rem;
+    }
+    
+    .quick-start h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .quick-start-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .quick-start-card {
+      background: var(--color-bg-secondary);
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .quick-start-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .quick-start-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .quick-start-card h3 {
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .quick-start-card p {
+      color: var(--color-text-secondary);
+      margin: 0 0 1rem 0;
+      font-size: 0.9rem;
+    }
+    
+    /* Features Grid */
+    .features {
+      margin-bottom: 3rem;
+    }
+    
+    .features h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .feature-card {
+      background: var(--color-bg-secondary);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .feature-icon i {
+      width: 24px;
+      height: 24px;
+      color: var(--color-accent);
+    }
+    
+    .feature-content h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+    }
+    
+    .feature-content p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      padding: 3rem;
+      border-radius: 1rem;
+      text-align: center;
+    }
+    
+    .cta-section h2 {
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .cta-section p {
+      color: var(--color-text-secondary);
+      margin: 0 0 1.5rem 0;
+    }
+    
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon">
+          <span class="l0-text">L/0</span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <!-- Hero -->
+      <section class="hero">
+        <span class="hero-badge">
+          <i data-lucide="zap"></i>
+          L/0 Movement
+        </span>
+        <h1>Building the Post-Work Future</h1>
+        <p class="tagline">
+          AI and automation will eliminate obligatory labor. We're building the frameworks 
+          to ensure this transition benefits everyone—not just the few.
+        </p>
+        <div class="hero-cta">
+          <a href="/concepts.html" class="btn btn-primary">
+            <i data-lucide="book-open"></i>
+            Learn the Concepts
+          </a>
+          <a href="/get-involved.html" class="btn btn-secondary">
+            <i data-lucide="users"></i>
+            Get Involved
+          </a>
+        </div>
+        <div class="hero-links">
+          <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="hero-link">
+            <i data-lucide="users"></i>
+            Join Community
+          </a>
+          <a href="https://daveshap.substack.com" target="_blank" class="hero-link">
+            <i data-lucide="mail"></i>
+            Subscribe Free
+          </a>
+          <a href="https://www.youtube.com/@DaveShap" target="_blank" class="hero-link">
+            <i data-lucide="youtube"></i>
+            YouTube
+          </a>
+        </div>
+      </section>
+      
+      <!-- Quick Start -->
+      <section class="quick-start">
+        <h2>🚀 Start Your Journey</h2>
+        <div class="quick-start-grid">
+          <a href="/concepts.html" class="quick-start-card">
+            <div class="icon">📖</div>
+            <h3>Learn the Language</h3>
+            <p>Understand L/0, laborism, the Economic Agency Paradox, and other core concepts.</p>
+            <span class="btn btn-outline btn-sm">Key Concepts →</span>
+          </a>
+          <a href="/prosperity.html" class="quick-start-card">
+            <div class="icon">🔺</div>
+            <h3>Explore the Pyramids</h3>
+            <p>Two frameworks for income distribution and democratic power after jobs disappear.</p>
+            <span class="btn btn-outline btn-sm">Frameworks →</span>
+          </a>
+          <a href="/theory-of-change.html" class="quick-start-card">
+            <div class="icon">🗺️</div>
+            <h3>See the Roadmap</h3>
+            <p>How we get from here to a world where no one has to work to survive.</p>
+            <span class="btn btn-outline btn-sm">Theory of Change →</span>
+          </a>
+        </div>
+      </section>
+      
+      <!-- Features -->
+      <section class="features">
+        <h2>📚 What You'll Find Here</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="layers"></i>
+            </div>
+            <div class="feature-content">
+              <h3>The Pyramids</h3>
+              <p>Two complementary frameworks: Prosperity (how income flows) and Power (how democracy works) in a post-labor world.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="help-circle"></i>
+            </div>
+            <div class="feature-content">
+              <h3>FAQ & Objections</h3>
+              <p>Honest answers to common criticisms: "People will be lazy," "We can't afford it," "Human nature," and more.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="activity"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Live Dashboard</h3>
+              <p>Real-time metrics tracking our progress: community size, reach, milestones achieved and upcoming.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="sliders"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Pyramid Builder</h3>
+              <p>Interactive tool to design your own post-labor transition framework with proven policy mechanisms.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="book"></i>
+            </div>
+            <div class="feature-content">
+              <h3>The Book</h3>
+              <p>Preview the upcoming book on Post-Labor Economics with table of contents and chapter excerpts.</p>
+            </div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i data-lucide="file-text"></i>
+            </div>
+            <div class="feature-content">
+              <h3>Press Kit</h3>
+              <p>Resources for journalists and podcasters: bios, logos, key messages, and interview questions.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- CTA -->
+      <section class="cta-section">
+        <h2>Join the Movement</h2>
+        <p>Connect with thousands exploring the post-labor transition.</p>
+        <div class="cta-actions">
+          <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+            <i data-lucide="users"></i>
+            Join Community ($5/mo)
+          </a>
+          <a href="https://daveshap.substack.com" target="_blank" class="btn btn-secondary">
+            <i data-lucide="mail"></i>
+            Subscribe Free
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Mobile nav toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    
+    // Dropdown handling for mobile
+    const dropdownItems = document.querySelectorAll('.has-dropdown');
+    dropdownItems.forEach(item => {
+      const link = item.querySelector('a');
+      link.addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

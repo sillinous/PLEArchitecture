@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Hub | PLE Platform</title>
+  <meta name="description" content="Create, manage, and publish content aligned with Post-Labor Economics goals and architecture.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .content-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .content-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+    }
+    
+    .stat-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+    }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Content Controls */
+    .content-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .control-tabs {
+      display: flex;
+      gap: 0.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.25rem;
+    }
+    
+    .control-tab {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .control-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .control-tab.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .control-filters {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .filter-select {
+      padding: 0.5rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-primary);
+    }
+    
+    .search-box {
+      position: relative;
+    }
+    
+    .search-box i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+    
+    .search-box input {
+      padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-primary);
+      width: 220px;
+    }
+    
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.25rem;
+    }
+    
+    /* Content Card */
+    .content-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    
+    .content-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+    
+    .content-card-banner {
+      height: 8px;
+    }
+    
+    .content-card-banner.article { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+    .content-card-banner.research { background: linear-gradient(90deg, #10b981, #06b6d4); }
+    .content-card-banner.policy { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .content-card-banner.video { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .content-card-banner.educational { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    
+    .content-card-body {
+      padding: 1.25rem;
+    }
+    
+    .content-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .content-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .content-type-badge i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .content-type-badge.article { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .content-type-badge.research { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .content-type-badge.policy { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .content-type-badge.video { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .content-type-badge.educational { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    
+    .content-status {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .content-status.published { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .content-status.draft { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .content-status.review { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .content-status.scheduled { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    
+    .content-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .content-card-excerpt {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    /* Architecture Alignment Tags */
+    .alignment-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+      margin-bottom: 1rem;
+    }
+    
+    .alignment-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 4px;
+      font-size: 0.625rem;
+      color: var(--color-text-muted);
+    }
+    
+    .alignment-tag i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .alignment-tag.goal { color: #06b6d4; }
+    .alignment-tag.strategy { color: #a855f7; }
+    .alignment-tag.capability { color: #ec4899; }
+    .alignment-tag.principle { color: #6366f1; }
+    
+    .content-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .content-author {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .author-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .author-info {
+      font-size: 0.75rem;
+    }
+    
+    .author-name {
+      font-weight: 600;
+    }
+    
+    .author-date {
+      color: var(--color-text-muted);
+    }
+    
+    .content-metrics {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .content-metric {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .content-metric i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Create Content Modal Trigger Styles */
+    .create-modal-trigger {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+      transition: all 0.2s;
+    }
+    
+    .create-modal-trigger:hover {
+      transform: scale(1.1);
+    }
+    
+    .create-modal-trigger i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    @media (max-width: 1024px) {
+      .stats-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .content-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .control-tabs {
+        justify-content: center;
+      }
+      
+      .control-filters {
+        flex-wrap: wrap;
+      }
+      
+      .search-box input {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Community Platform</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/platform.html">← Platform</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="content-header">
+      <div>
+        <h1>Content Hub</h1>
+        <p class="content-header-desc">Create, manage, and publish content aligned with movement goals. Every piece connects to our architecture.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline"><i data-lucide="upload"></i> Import</button>
+        <button class="btn btn-primary"><i data-lucide="plus"></i> Create Content</button>
+      </div>
+    </div>
+    
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;"><i data-lucide="file-text"></i></div>
+        <div class="stat-value" style="color: #818cf8;">247</div>
+        <div class="stat-label">Total Content</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i data-lucide="check-circle"></i></div>
+        <div class="stat-value" style="color: #10b981;">189</div>
+        <div class="stat-label">Published</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i data-lucide="file-edit"></i></div>
+        <div class="stat-value" style="color: #f59e0b;">18</div>
+        <div class="stat-label">In Draft</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;"><i data-lucide="clock"></i></div>
+        <div class="stat-value" style="color: #a855f7;">12</div>
+        <div class="stat-label">Scheduled</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;"><i data-lucide="target"></i></div>
+        <div class="stat-value" style="color: #06b6d4;">94%</div>
+        <div class="stat-label">Goal Aligned</div>
+      </div>
+    </div>
+    
+    <!-- Quick Tools -->
+    <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <a href="/content-articles.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#10b981';this.style.color='#10b981'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="file-text" style="width:16px;height:16px"></i> Articles
+      </a>
+      <a href="/content-research.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#10b981';this.style.color='#10b981'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="microscope" style="width:16px;height:16px"></i> Research
+      </a>
+      <a href="/content-policies.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#10b981';this.style.color='#10b981'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="shield" style="width:16px;height:16px"></i> Policies
+      </a>
+      <a href="/content-media.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#10b981';this.style.color='#10b981'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="image" style="width:16px;height:16px"></i> Media Library
+      </a>
+      <a href="/content-create.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 8px; color: white; text-decoration: none; font-size: 0.8125rem; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+        <i data-lucide="plus" style="width:16px;height:16px"></i> Create Content
+      </a>
+    </div>
+    
+    <!-- Controls -->
+    <div class="content-controls">
+      <div class="control-tabs">
+        <button class="control-tab active">All</button>
+        <button class="control-tab">Articles</button>
+        <button class="control-tab">Research</button>
+        <button class="control-tab">Policy</button>
+        <button class="control-tab">Video</button>
+      </div>
+      <div class="control-filters">
+        <select class="filter-select">
+          <option>All Status</option>
+          <option>Published</option>
+          <option>Draft</option>
+          <option>In Review</option>
+          <option>Scheduled</option>
+        </select>
+        <select class="filter-select">
+          <option>All Goals</option>
+          <option>GOAL-001: UBI</option>
+          <option>GOAL-002: Data Ownership</option>
+          <option>GOAL-003: Automation Tax</option>
+          <option>GOAL-004: Meaningful Work</option>
+        </select>
+        <div class="search-box">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search content...">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <div class="content-card">
+        <div class="content-card-banner article"></div>
+        <div class="content-card-body">
+          <div class="content-card-header">
+            <span class="content-type-badge article"><i data-lucide="file-text"></i> Article</span>
+            <span class="content-status published">Published</span>
+          </div>
+          <h3 class="content-card-title">The Economic Agency Paradox: Why Automation Creates Both Abundance and Scarcity</h3>
+          <p class="content-card-excerpt">Exploring the fundamental contradiction at the heart of technological unemployment and why traditional economic thinking fails to address it.</p>
+          <div class="alignment-tags">
+            <span class="alignment-tag goal"><i data-lucide="target"></i> GOAL-001: UBI</span>
+            <span class="alignment-tag strategy"><i data-lucide="route"></i> STRAT-001</span>
+            <span class="alignment-tag capability"><i data-lucide="boxes"></i> CAP-Pol-01</span>
+          </div>
+          <div class="content-card-footer">
+            <div class="content-author">
+              <div class="author-avatar">DS</div>
+              <div class="author-info">
+                <div class="author-name">David Shapiro</div>
+                <div class="author-date">Jan 27, 2026</div>
+              </div>
+            </div>
+            <div class="content-metrics">
+              <span class="content-metric"><i data-lucide="eye"></i> 4.2k</span>
+              <span class="content-metric"><i data-lucide="heart"></i> 312</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <div class="content-card-banner research"></div>
+        <div class="content-card-body">
+          <div class="content-card-header">
+            <span class="content-type-badge research"><i data-lucide="book-open"></i> Research</span>
+            <span class="content-status published">Published</span>
+          </div>
+          <h3 class="content-card-title">Data Dividends: A Framework for Collective Data Ownership</h3>
+          <p class="content-card-excerpt">A comprehensive analysis of how personal data generates value and a proposed mechanism for returning that value to individuals.</p>
+          <div class="alignment-tags">
+            <span class="alignment-tag goal"><i data-lucide="target"></i> GOAL-002: Data Ownership</span>
+            <span class="alignment-tag principle"><i data-lucide="scale"></i> PRIN-002</span>
+          </div>
+          <div class="content-card-footer">
+            <div class="content-author">
+              <div class="author-avatar" style="background: linear-gradient(135deg, #10b981, #06b6d4);">MK</div>
+              <div class="author-info">
+                <div class="author-name">Maria K.</div>
+                <div class="author-date">Jan 24, 2026</div>
+              </div>
+            </div>
+            <div class="content-metrics">
+              <span class="content-metric"><i data-lucide="eye"></i> 2.8k</span>
+              <span class="content-metric"><i data-lucide="download"></i> 156</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <div class="content-card-banner policy"></div>
+        <div class="content-card-body">
+          <div class="content-card-header">
+            <span class="content-type-badge policy"><i data-lucide="scroll"></i> Policy</span>
+            <span class="content-status review">In Review</span>
+          </div>
+          <h3 class="content-card-title">Municipal UBI Pilot Program: Implementation Guidelines</h3>
+          <p class="content-card-excerpt">Detailed framework for local governments considering UBI pilot programs, including funding mechanisms and success metrics.</p>
+          <div class="alignment-tags">
+            <span class="alignment-tag goal"><i data-lucide="target"></i> GOAL-001: UBI</span>
+            <span class="alignment-tag strategy"><i data-lucide="route"></i> STRAT-001</span>
+            <span class="alignment-tag capability"><i data-lucide="boxes"></i> CAP-Pol-02</span>
+          </div>
+          <div class="content-card-footer">
+            <div class="content-author">
+              <div class="author-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">PW</div>
+              <div class="author-info">
+                <div class="author-name">Policy WG</div>
+                <div class="author-date">Jan 22, 2026</div>
+              </div>
+            </div>
+            <div class="content-metrics">
+              <span class="content-metric"><i data-lucide="message-circle"></i> 8 comments</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <div class="content-card-banner video"></div>
+        <div class="content-card-body">
+          <div class="content-card-header">
+            <span class="content-type-badge video"><i data-lucide="video"></i> Video</span>
+            <span class="content-status published">Published</span>
+          </div>
+          <h3 class="content-card-title">L/0 Livestream #47: Discussing Data Dividends with Guest Economist</h3>
+          <p class="content-card-excerpt">Live discussion exploring the economic implications of collective data ownership with Dr. Sarah Chen from MIT.</p>
+          <div class="alignment-tags">
+            <span class="alignment-tag goal"><i data-lucide="target"></i> GOAL-002</span>
+            <span class="alignment-tag capability"><i data-lucide="boxes"></i> CAP-Comm-03</span>
+          </div>
+          <div class="content-card-footer">
+            <div class="content-author">
+              <div class="author-avatar">DS</div>
+              <div class="author-info">
+                <div class="author-name">David Shapiro</div>
+                <div class="author-date">Jan 20, 2026</div>
+              </div>
+            </div>
+            <div class="content-metrics">
+              <span class="content-metric"><i data-lucide="eye"></i> 8.7k</span>
+              <span class="content-metric"><i data-lucide="clock"></i> 1:42:15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <div class="content-card-banner article"></div>
+        <div class="content-card-body">
+          <div class="content-card-header">
+            <span class="content-type-badge article"><i data-lucide="file-text"></i> Article</span>
+            <span class="content-status draft">Draft</span>
+          </div>
+          <h3 class="content-card-title">The Automation Tax: A Comprehensive Framework for the Age of AI</h3>
+          <p class="content-card-excerpt">How to structure taxation policy to capture automation gains while incentivizing responsible AI deployment.</p>
+          <div class="alignment-tags">
+            <span class="alignment-tag goal"><i data-lucide="target"></i> GOAL-003: Automation Tax</span>
+            <span class="alignment-tag strategy"><i data-lucide="route"></i> STRAT-002</span>
+          </div>
+          <div class="content-card-footer">
+            <div class="content-author">
+              <div class="author-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6);">TC</div>
+              <div class="author-info">
+                <div class="author-name">Thomas C.</div>
+                <div class="author-date">Editing</div>
+              </div>
+            </div>
+            <div class="content-metrics">
+              <span class="content-metric"><i data-lucide="edit-3"></i> 65% complete</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="content-card">
+        <div class="content-card-banner educational"></div>
+        <div class="content-card-body">
+          <div class="content-card-header">
+            <span class="content-type-badge educational"><i data-lucide="graduation-cap"></i> Educational</span>
+            <span class="content-status scheduled">Scheduled</span>
+          </div>
+          <h3 class="content-card-title">Introduction to Post-Labor Economics: A Beginner's Guide</h3>
+          <p class="content-card-excerpt">A comprehensive introduction to the core concepts, terminology, and vision of the post-labor economics movement.</p>
+          <div class="alignment-tags">
+            <span class="alignment-tag capability"><i data-lucide="boxes"></i> CAP-Comm-01</span>
+            <span class="alignment-tag capability"><i data-lucide="boxes"></i> CAP-Edu-01</span>
+          </div>
+          <div class="content-card-footer">
+            <div class="content-author">
+              <div class="author-avatar" style="background: linear-gradient(135deg, #a855f7, #c084fc);">EW</div>
+              <div class="author-info">
+                <div class="author-name">Education WG</div>
+                <div class="author-date">Feb 3, 2026</div>
+              </div>
+            </div>
+            <div class="content-metrics">
+              <span class="content-metric"><i data-lucide="clock"></i> in 5 days</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <button class="create-modal-trigger"><i data-lucide="plus"></i></button>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.control-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.control-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Alignment | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Track community consensus, voting patterns, and alignment metrics across architecture governance.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Dashboard Styles */
+    .dashboard-header {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.15) 100%);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    
+    .dashboard-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .dashboard-header p {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+    }
+    
+    .date-range {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .date-btn {
+      padding: 0.5rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .date-btn:hover {
+      border-color: var(--color-text-muted);
+    }
+    
+    .date-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    /* Health Score */
+    .health-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .health-score-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .health-score-ring {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+    }
+    
+    .health-score-ring svg {
+      transform: rotate(-90deg);
+    }
+    
+    .health-score-ring circle {
+      fill: none;
+      stroke-width: 12;
+    }
+    
+    .health-score-ring .bg {
+      stroke: var(--color-border);
+    }
+    
+    .health-score-ring .progress {
+      stroke: url(#health-gradient);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease;
+    }
+    
+    .health-score-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    
+    .health-score-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .health-score-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .health-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .health-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    .health-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 1rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .health-change i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Health Breakdown */
+    .health-breakdown {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+    }
+    
+    .breakdown-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    
+    .breakdown-item {
+      padding: 1.25rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+    }
+    
+    .breakdown-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    
+    .breakdown-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .breakdown-label i {
+      width: 18px;
+      height: 18px;
+      color: var(--metric-color);
+    }
+    
+    .breakdown-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--metric-color);
+    }
+    
+    .breakdown-bar {
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .breakdown-fill {
+      height: 100%;
+      background: var(--metric-color);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    
+    .breakdown-detail {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Voting Analytics */
+    .analytics-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .analytics-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .analytics-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .analytics-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .analytics-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .analytics-title {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .analytics-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .analytics-change {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8125rem;
+    }
+    
+    .analytics-change.positive { color: #10b981; }
+    .analytics-change.negative { color: #ef4444; }
+    
+    .analytics-change i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Consensus Trends */
+    .trends-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .trends-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+    }
+    
+    .trends-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .trends-header h3 {
+      font-size: 1.125rem;
+    }
+    
+    .chart-container {
+      height: 250px;
+      position: relative;
+    }
+    
+    .chart-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      padding: 1rem 0;
+    }
+    
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.8) 0%, rgba(16, 185, 129, 0.3) 100%);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.3s ease;
+      position: relative;
+    }
+    
+    .chart-bar:hover {
+      background: linear-gradient(180deg, #10b981 0%, rgba(16, 185, 129, 0.5) 100%);
+    }
+    
+    .chart-bar::after {
+      content: attr(data-value);
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    
+    .chart-bar:hover::after {
+      opacity: 1;
+    }
+    
+    .chart-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Vote Distribution */
+    .distribution-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+    }
+    
+    .distribution-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .donut-container {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+    }
+    
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    
+    .donut-total {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    
+    .donut-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .distribution-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .legend-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .legend-value {
+      font-weight: 600;
+    }
+    
+    /* Active Proposals */
+    .proposals-section {
+      margin-bottom: 2rem;
+    }
+    
+    .proposals-section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .proposals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1rem;
+    }
+    
+    .proposal-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+    
+    .proposal-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .proposal-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .proposal-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .proposal-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .proposal-info {
+      flex: 1;
+    }
+    
+    .proposal-id {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+    
+    .proposal-title {
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+    
+    .proposal-consensus {
+      margin-bottom: 1rem;
+    }
+    
+    .consensus-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    
+    .consensus-label {
+      color: var(--color-text-muted);
+    }
+    
+    .consensus-value {
+      font-weight: 600;
+    }
+    
+    .consensus-bar {
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+    
+    .consensus-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    
+    .consensus-segment.approve { background: #10b981; }
+    .consensus-segment.changes { background: #fbbf24; }
+    .consensus-segment.reject { background: #ef4444; }
+    
+    .proposal-stats {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .proposal-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .proposal-stat i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Participation Heatmap */
+    .heatmap-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .heatmap-section h3 {
+      font-size: 1.125rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: auto repeat(12, 1fr);
+      gap: 4px;
+      font-size: 0.75rem;
+    }
+    
+    .heatmap-label {
+      padding: 0.25rem 0.5rem;
+      color: var(--color-text-muted);
+      text-align: right;
+    }
+    
+    .heatmap-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      background: var(--cell-color);
+      min-height: 24px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    
+    .heatmap-cell:hover {
+      transform: scale(1.1);
+      z-index: 1;
+    }
+    
+    .heatmap-months {
+      display: grid;
+      grid-template-columns: auto repeat(12, 1fr);
+      gap: 4px;
+      margin-top: 0.5rem;
+    }
+    
+    .heatmap-months span {
+      text-align: center;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 1024px) {
+      .health-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .analytics-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .trends-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .breakdown-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .proposals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/governance.html">Governance <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/governance.html">Overview</a></li>
+              <li><a href="/arch-artifacts.html">Artifacts</a></li>
+              <li><a href="/arch-review.html">Review</a></li>
+              <li><a href="/arch-collaborate.html">Collaborate</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <div>
+        <h1>Community Alignment</h1>
+        <p>Track consensus levels, voting patterns, and community health across architecture governance.</p>
+      </div>
+      <div class="date-range">
+        <button class="date-btn">7 Days</button>
+        <button class="date-btn active">30 Days</button>
+        <button class="date-btn">90 Days</button>
+        <button class="date-btn">All Time</button>
+      </div>
+    </div>
+    
+    <!-- Health Score Section -->
+    <section class="health-section">
+      <div class="health-score-card">
+        <div class="health-score-ring">
+          <svg width="180" height="180">
+            <defs>
+              <linearGradient id="health-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#10b981" />
+                <stop offset="100%" style="stop-color:#06b6d4" />
+              </linearGradient>
+            </defs>
+            <circle class="bg" cx="90" cy="90" r="78" />
+            <circle class="progress" cx="90" cy="90" r="78" 
+              stroke-dasharray="490" 
+              stroke-dashoffset="73" />
+          </svg>
+          <div class="health-score-value">
+            <div class="health-score-number">85</div>
+            <div class="health-score-label">out of 100</div>
+          </div>
+        </div>
+        <h3 class="health-title">Community Health Score</h3>
+        <p class="health-desc">Overall measure of governance engagement, consensus, and participation</p>
+        <span class="health-change">
+          <i data-lucide="trending-up"></i>
+          +5 from last month
+        </span>
+      </div>
+      
+      <div class="health-breakdown">
+        <h3 class="breakdown-title">Health Score Breakdown</h3>
+        <div class="breakdown-grid">
+          <div class="breakdown-item" style="--metric-color: #10b981;">
+            <div class="breakdown-header">
+              <span class="breakdown-label">
+                <i data-lucide="check-circle"></i>
+                Consensus Rate
+              </span>
+              <span class="breakdown-value">92%</span>
+            </div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" style="width: 92%;"></div>
+            </div>
+            <div class="breakdown-detail">
+              <span>Decisions reaching consensus</span>
+              <span>Target: 80%</span>
+            </div>
+          </div>
+          
+          <div class="breakdown-item" style="--metric-color: #6366f1;">
+            <div class="breakdown-header">
+              <span class="breakdown-label">
+                <i data-lucide="users"></i>
+                Participation
+              </span>
+              <span class="breakdown-value">78%</span>
+            </div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" style="width: 78%;"></div>
+            </div>
+            <div class="breakdown-detail">
+              <span>Active contributors voting</span>
+              <span>Target: 70%</span>
+            </div>
+          </div>
+          
+          <div class="breakdown-item" style="--metric-color: #f59e0b;">
+            <div class="breakdown-header">
+              <span class="breakdown-label">
+                <i data-lucide="clock"></i>
+                Response Time
+              </span>
+              <span class="breakdown-value">2.3d</span>
+            </div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" style="width: 85%;"></div>
+            </div>
+            <div class="breakdown-detail">
+              <span>Avg time to first review</span>
+              <span>Target: 3 days</span>
+            </div>
+          </div>
+          
+          <div class="breakdown-item" style="--metric-color: #ec4899;">
+            <div class="breakdown-header">
+              <span class="breakdown-label">
+                <i data-lucide="message-square"></i>
+                Discussion Quality
+              </span>
+              <span class="breakdown-value">87%</span>
+            </div>
+            <div class="breakdown-bar">
+              <div class="breakdown-fill" style="width: 87%;"></div>
+            </div>
+            <div class="breakdown-detail">
+              <span>Constructive comments</span>
+              <span>Target: 85%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Analytics Cards -->
+    <section class="analytics-section">
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <div class="analytics-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+            <i data-lucide="vote"></i>
+          </div>
+          <div>
+            <div class="analytics-title">Total Votes Cast</div>
+            <div class="analytics-value">1,247</div>
+          </div>
+        </div>
+        <span class="analytics-change positive">
+          <i data-lucide="trending-up"></i>
+          +23% from last month
+        </span>
+      </div>
+      
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <div class="analytics-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+            <i data-lucide="file-check"></i>
+          </div>
+          <div>
+            <div class="analytics-title">Proposals Resolved</div>
+            <div class="analytics-value">24</div>
+          </div>
+        </div>
+        <span class="analytics-change positive">
+          <i data-lucide="trending-up"></i>
+          +8 from last month
+        </span>
+      </div>
+      
+      <div class="analytics-card">
+        <div class="analytics-header">
+          <div class="analytics-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+            <i data-lucide="users"></i>
+          </div>
+          <div>
+            <div class="analytics-title">Active Reviewers</div>
+            <div class="analytics-value">156</div>
+          </div>
+        </div>
+        <span class="analytics-change positive">
+          <i data-lucide="trending-up"></i>
+          +12 new this month
+        </span>
+      </div>
+    </section>
+    
+    <!-- Trends Section -->
+    <section class="trends-section">
+      <div class="trends-card">
+        <div class="trends-header">
+          <h3>Consensus Trend (30 Days)</h3>
+          <select style="padding: 0.375rem 0.75rem; background: var(--color-bg-primary); border: 1px solid var(--color-border); border-radius: 0.375rem; color: var(--color-text-secondary); font-size: 0.8125rem;">
+            <option>All Categories</option>
+            <option>Principles</option>
+            <option>Frameworks</option>
+            <option>Policies</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <div class="chart-placeholder">
+            <div class="chart-bar" style="height: 65%;" data-value="72%"></div>
+            <div class="chart-bar" style="height: 70%;" data-value="78%"></div>
+            <div class="chart-bar" style="height: 68%;" data-value="75%"></div>
+            <div class="chart-bar" style="height: 75%;" data-value="82%"></div>
+            <div class="chart-bar" style="height: 72%;" data-value="79%"></div>
+            <div class="chart-bar" style="height: 78%;" data-value="85%"></div>
+            <div class="chart-bar" style="height: 80%;" data-value="87%"></div>
+            <div class="chart-bar" style="height: 82%;" data-value="89%"></div>
+            <div class="chart-bar" style="height: 79%;" data-value="86%"></div>
+            <div class="chart-bar" style="height: 85%;" data-value="92%"></div>
+            <div class="chart-bar" style="height: 88%;" data-value="95%"></div>
+            <div class="chart-bar" style="height: 85%;" data-value="92%"></div>
+          </div>
+          <div class="chart-labels">
+            <span>Jan 1</span>
+            <span>Jan 15</span>
+            <span>Jan 29</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="distribution-card">
+        <h3>Vote Distribution</h3>
+        <div class="donut-container">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#10b981" stroke-width="20" 
+              stroke-dasharray="226 377" stroke-dashoffset="0" />
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#fbbf24" stroke-width="20" 
+              stroke-dasharray="60 377" stroke-dashoffset="-226" />
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#ef4444" stroke-width="20" 
+              stroke-dasharray="30 377" stroke-dashoffset="-286" />
+          </svg>
+          <div class="donut-center">
+            <div class="donut-total">1,247</div>
+            <div class="donut-label">Total Votes</div>
+          </div>
+        </div>
+        <div class="distribution-legend">
+          <div class="legend-row">
+            <span class="legend-label">
+              <span class="legend-dot" style="background: #10b981;"></span>
+              Approve
+            </span>
+            <span class="legend-value">750 (60%)</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-label">
+              <span class="legend-dot" style="background: #fbbf24;"></span>
+              Request Changes
+            </span>
+            <span class="legend-value">312 (25%)</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-label">
+              <span class="legend-dot" style="background: #ef4444;"></span>
+              Reject
+            </span>
+            <span class="legend-value">185 (15%)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Active Proposals -->
+    <section class="proposals-section">
+      <h2>Active Proposals Seeking Consensus</h2>
+      <div class="proposals-grid">
+        <div class="proposal-card">
+          <div class="proposal-header">
+            <div class="proposal-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+              <i data-lucide="lightbulb"></i>
+            </div>
+            <div class="proposal-info">
+              <span class="proposal-id">PROP-015</span>
+              <h4 class="proposal-title">Data Dividends Integration</h4>
+            </div>
+          </div>
+          <div class="proposal-consensus">
+            <div class="consensus-header">
+              <span class="consensus-label">Consensus</span>
+              <span class="consensus-value" style="color: #10b981;">78%</span>
+            </div>
+            <div class="consensus-bar">
+              <div class="consensus-segment approve" style="width: 62%;"></div>
+              <div class="consensus-segment changes" style="width: 16%;"></div>
+              <div class="consensus-segment reject" style="width: 7%;"></div>
+            </div>
+          </div>
+          <div class="proposal-stats">
+            <span class="proposal-stat"><i data-lucide="vote"></i> 64 votes</span>
+            <span class="proposal-stat"><i data-lucide="message-square"></i> 47 comments</span>
+            <span class="proposal-stat"><i data-lucide="clock"></i> 5 days left</span>
+          </div>
+        </div>
+        
+        <div class="proposal-card">
+          <div class="proposal-header">
+            <div class="proposal-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+              <i data-lucide="file-text"></i>
+            </div>
+            <div class="proposal-info">
+              <span class="proposal-id">ADR-009</span>
+              <h4 class="proposal-title">Expand Stakeholder Categories</h4>
+            </div>
+          </div>
+          <div class="proposal-consensus">
+            <div class="consensus-header">
+              <span class="consensus-label">Consensus</span>
+              <span class="consensus-value" style="color: #10b981;">85%</span>
+            </div>
+            <div class="consensus-bar">
+              <div class="consensus-segment approve" style="width: 72%;"></div>
+              <div class="consensus-segment changes" style="width: 13%;"></div>
+              <div class="consensus-segment reject" style="width: 5%;"></div>
+            </div>
+          </div>
+          <div class="proposal-stats">
+            <span class="proposal-stat"><i data-lucide="vote"></i> 38 votes</span>
+            <span class="proposal-stat"><i data-lucide="message-square"></i> 21 comments</span>
+            <span class="proposal-stat"><i data-lucide="clock"></i> 12 days left</span>
+          </div>
+        </div>
+        
+        <div class="proposal-card">
+          <div class="proposal-header">
+            <div class="proposal-icon" style="background: rgba(167, 139, 250, 0.15); color: #a78bfa;">
+              <i data-lucide="compass"></i>
+            </div>
+            <div class="proposal-info">
+              <span class="proposal-id">PRIN-009</span>
+              <h4 class="proposal-title">Intergenerational Equity</h4>
+            </div>
+          </div>
+          <div class="proposal-consensus">
+            <div class="consensus-header">
+              <span class="consensus-label">Consensus</span>
+              <span class="consensus-value" style="color: #fbbf24;">68%</span>
+            </div>
+            <div class="consensus-bar">
+              <div class="consensus-segment approve" style="width: 52%;"></div>
+              <div class="consensus-segment changes" style="width: 16%;"></div>
+              <div class="consensus-segment reject" style="width: 12%;"></div>
+            </div>
+          </div>
+          <div class="proposal-stats">
+            <span class="proposal-stat"><i data-lucide="vote"></i> 29 votes</span>
+            <span class="proposal-stat"><i data-lucide="message-square"></i> 34 comments</span>
+            <span class="proposal-stat"><i data-lucide="clock"></i> 30 days left</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Participation Heatmap -->
+    <section class="heatmap-section">
+      <h3>Participation Activity (Last 12 Months)</h3>
+      <div class="heatmap-grid">
+        <div class="heatmap-label">Mon</div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.2);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.4);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.6);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.3);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.5);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.7);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.4);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.8);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.5);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.9);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.6);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 1);"></div>
+        
+        <div class="heatmap-label">Wed</div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.3);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.5);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.4);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.6);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.7);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.5);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.8);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.6);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.9);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.7);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.85);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.95);"></div>
+        
+        <div class="heatmap-label">Fri</div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.15);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.3);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.45);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.35);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.5);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.4);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.55);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.65);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.5);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.7);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.6);"></div>
+        <div class="heatmap-cell" style="--cell-color: rgba(16, 185, 129, 0.75);"></div>
+      </div>
+      <div class="heatmap-months">
+        <span></span>
+        <span>Feb</span>
+        <span>Mar</span>
+        <span>Apr</span>
+        <span>May</span>
+        <span>Jun</span>
+        <span>Jul</span>
+        <span>Aug</span>
+        <span>Sep</span>
+        <span>Oct</span>
+        <span>Nov</span>
+        <span>Dec</span>
+        <span>Jan</span>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    // Date range buttons
+    document.querySelectorAll('.date-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

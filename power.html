@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pyramid of Power | Post-Labor Economics</title>
+  <meta name="description" content="Pyramid of Power - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/power.html">
+  <meta property="og:title" content="Pyramid of Power | Post-Labor Economics">
+  <meta property="og:description" content="Five-layer framework for democratic leverage without labor power: civic bedrock, payment rails, transparency, direct democracy, metagovernance.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-power.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/power.html">
+  <meta name="twitter:title" content="Pyramid of Power | Post-Labor Economics">
+  <meta name="twitter:description" content="Five-layer framework for democratic leverage without labor power: civic bedrock, payment rails, transparency, direct democracy, metagovernance.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-power.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.power-hero {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(49, 46, 129, 0.2) 100%);
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.power-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.power-hero .subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Problem Statement */
+.problem-section {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(185, 28, 28, 0.1) 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 3rem;
+  border-left: 4px solid #ef4444;
+}
+
+.problem-section h3 {
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+/* Pyramid Visualization */
+.pyramid-container {
+  max-width: 900px;
+  margin: 3rem auto;
+  position: relative;
+}
+
+.pyramid-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pyramid-layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+}
+
+.pyramid-layer:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.pyramid-layer.active {
+  transform: scale(1.05);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+
+.layer-5 { width: 30%; background: linear-gradient(135deg, #f59e0b, #d97706); }
+.layer-4 { width: 45%; background: linear-gradient(135deg, #ec4899, #db2777); }
+.layer-3 { width: 60%; background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.layer-2 { width: 75%; background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.layer-1 { width: 90%; background: linear-gradient(135deg, #6366f1, #4f46e5); }
+
+.layer-number {
+  position: absolute;
+  left: 1rem;
+  width: 2rem;
+  height: 2rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.layer-title {
+  flex: 1;
+}
+
+/* Layer Details */
+.layer-details {
+  margin-top: 3rem;
+}
+
+.layer-detail-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-left: 4px solid;
+  display: none;
+}
+
+.layer-detail-card.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.layer-detail-card.layer-1-detail { border-color: #6366f1; }
+.layer-detail-card.layer-2-detail { border-color: #3b82f6; }
+.layer-detail-card.layer-3-detail { border-color: #8b5cf6; }
+.layer-detail-card.layer-4-detail { border-color: #ec4899; }
+.layer-detail-card.layer-5-detail { border-color: #f59e0b; }
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.detail-level {
+  background: var(--bg-tertiary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.mechanisms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.mechanism-item {
+  background: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mechanism-item i {
+  color: var(--accent);
+  width: 20px;
+  height: 20px;
+}
+
+.examples-section {
+  margin-top: 1.5rem;
+}
+
+.examples-section h4 {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.example-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.example-tag {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+}
+
+/* Labor Power Comparison */
+.comparison-section {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 3rem 0;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.comparison-col h4 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid;
+}
+
+.comparison-col.labor h4 { border-color: #ef4444; color: #ef4444; }
+.comparison-col.algorithmic h4 { border-color: #6366f1; color: #6366f1; }
+
+.comparison-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.comparison-item i {
+  margin-top: 0.25rem;
+  width: 18px;
+  height: 18px;
+}
+
+.comparison-col.labor .comparison-item i { color: #ef4444; }
+.comparison-col.algorithmic .comparison-item i { color: #6366f1; }
+
+/* Paradox Box */
+.paradox-box {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.15) 100%);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 3rem 0;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.paradox-box h3 {
+  color: #f59e0b;
+  margin-bottom: 1rem;
+}
+
+.paradox-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.paradox-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.step-number {
+  width: 2rem;
+  height: 2rem;
+  background: #f59e0b;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* CTA */
+.power-cta {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+.power-cta h3 {
+  margin-bottom: 1rem;
+}
+
+.power-cta p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .pyramid-layer {
+    width: 100% !important;
+    padding: 1rem;
+  }
+  
+  .layer-number {
+    position: static;
+    margin-right: 0.5rem;
+  }
+  
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Architecture / Civic Framework</span>
+  <h1>Pyramid of Power</h1>
+  <p class="page-description">Five layers for democratic leverage via algorithmic systems</p>
+</div>
+
+<div class="power-hero">
+  <h1>How Do We Retain Power When We're All "Useless Eaters"?</h1>
+  <p class="subtitle">
+    If AI, automation, and robotics eliminate jobs, what utility do citizens have? 
+    Throughout history, when labor power wanes, civil protections follow. 
+    We need a new foundation for democratic leverage.
+  </p>
+</div>
+
+<div class="problem-section">
+  <h3>⚠️ The Problem</h3>
+  <p>
+    Right now, the social contract is based on citizens being obedient workers and consumers. 
+    If our labor value is trashed, we lose the ability to drive the economy with consumption. 
+    It's an economic death spiral—the <strong>Economic Agency Paradox</strong>.
+  </p>
+  <p style="margin-top: 1rem; margin-bottom: 0;">
+    The real problem of Post-Labor Economics is not "how do we produce enough abundance"—market forces 
+    guarantee that. <strong>The scarcity is leverage.</strong>
+  </p>
+</div>
+
+<div class="comparison-section">
+  <h3 style="text-align: center; margin-bottom: 0.5rem;">Why Labor Has Power</h3>
+  <p style="text-align: center; color: var(--text-secondary);">...and what can replace it</p>
+  
+  <div class="comparison-grid">
+    <div class="comparison-col labor">
+      <h4>Labor Power</h4>
+      <div class="comparison-item">
+        <i data-lucide="user"></i>
+        <div><strong>Inalienable</strong> — Cannot be separated from the human body</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="clock"></i>
+        <div><strong>Perishable</strong> — Cannot be stored; must be present to provision</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="hand"></i>
+        <div><strong>Refusable</strong> — Can always say "no" (strikes, collective action)</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="factory"></i>
+        <div><strong>Mandatory</strong> — States need soldiers; firms need employees</div>
+      </div>
+    </div>
+    
+    <div class="comparison-col algorithmic">
+      <h4>Algorithmic Power</h4>
+      <div class="comparison-item">
+        <i data-lucide="network"></i>
+        <div><strong>Decentralized</strong> — No single node or weak point</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="lock"></i>
+        <div><strong>Immutable</strong> — Cannot be erased, tampered, or hijacked</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="key"></i>
+        <div><strong>Permissionless</strong> — Create and run without government approval</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="file-code"></i>
+        <div><strong>Enforceable</strong> — Smart contracts, quadratic voting, resource control</div>
+      </div>
+      <div class="comparison-item">
+        <i data-lucide="shield-check"></i>
+        <div><strong>Zero-Trust</strong> — "Never trust, always verify"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pyramid-container">
+  <div class="pyramid-visual">
+    <div class="pyramid-layer layer-5" data-layer="5">
+      <span class="layer-number">5</span>
+      <span class="layer-title">Metagovernance</span>
+    </div>
+    <div class="pyramid-layer layer-4" data-layer="4">
+      <span class="layer-number">4</span>
+      <span class="layer-title">Direct Democracy</span>
+    </div>
+    <div class="pyramid-layer layer-3" data-layer="3">
+      <span class="layer-number">3</span>
+      <span class="layer-title">Radical Transparency</span>
+    </div>
+    <div class="pyramid-layer layer-2" data-layer="2">
+      <span class="layer-number">2</span>
+      <span class="layer-title">Open Payment Rails</span>
+    </div>
+    <div class="pyramid-layer layer-1 active" data-layer="1">
+      <span class="layer-number">1</span>
+      <span class="layer-title">Immutable Civic Bedrock</span>
+    </div>
+  </div>
+  
+  <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+    <i data-lucide="mouse-pointer-click" style="width: 16px; height: 16px; display: inline;"></i>
+    Click any layer to explore
+  </p>
+</div>
+
+<div class="layer-details">
+  <!-- Layer 1: Immutable Civic Bedrock -->
+  <div class="layer-detail-card layer-1-detail active" data-detail="1">
+    <div class="detail-header">
+      <h2>Layer 1: Immutable Civic Bedrock</h2>
+      <span class="detail-level">Foundation Layer</span>
+    </div>
+    <p>
+      Blockchain-based identity, records, and property that cannot be tampered with. 
+      This forms the substrate of a new social contract based on algorithmic power rather than 
+      labor and trust in government. It normalizes blockchain-based governance and sets the 
+      stage for tamper-proof civic infrastructure.
+    </p>
+    <div class="mechanisms-grid">
+      <div class="mechanism-item">
+        <i data-lucide="fingerprint"></i>
+        <span>Decentralized Identity</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="file-text"></i>
+        <span>Blockchain Property Registries</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="scroll"></i>
+        <span>Immutable Civic Records</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="vote"></i>
+        <span>Verifiable Credentials</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="shield"></i>
+        <span>Self-Sovereign Identity</span>
+      </div>
+    </div>
+    <div class="examples-section">
+      <h4>Real-World Examples</h4>
+      <div class="example-tags">
+        <span class="example-tag">Estonia e-Residency</span>
+        <span class="example-tag">Georgia Blockchain Land Registry</span>
+        <span class="example-tag">Worldcoin ID</span>
+        <span class="example-tag">Ceramic Network</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 2: Open Payment Rails -->
+  <div class="layer-detail-card layer-2-detail" data-detail="2">
+    <div class="detail-header">
+      <h2>Layer 2: Open Payment Rails</h2>
+      <span class="detail-level">Financial Freedom</span>
+    </div>
+    <p>
+      Democratic access to financial transactions that shatters banking hegemony. 
+      We wouldn't have thought this possible until we learned that two nations—including 
+      <strong>the most populous nation on the planet</strong>—already had implemented it. 
+      This creates a "freedom to transact" that takes power away from institutions.
+    </p>
+    <div class="mechanisms-grid">
+      <div class="mechanism-item">
+        <i data-lucide="smartphone"></i>
+        <span>Instant Payment Systems</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="bitcoin"></i>
+        <span>Cryptocurrency Rails</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="landmark"></i>
+        <span>Central Bank Digital Currencies</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="qr-code"></i>
+        <span>Universal QR Payments</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="globe"></i>
+        <span>Cross-Border Instant Transfer</span>
+      </div>
+    </div>
+    <div class="examples-section">
+      <h4>Real-World Examples</h4>
+      <div class="example-tags">
+        <span class="example-tag">India UPI (1 Billion Users)</span>
+        <span class="example-tag">Brazil Pix</span>
+        <span class="example-tag">China Digital Yuan</span>
+        <span class="example-tag">Nigeria eNaira</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 3: Radical Transparency -->
+  <div class="layer-detail-card layer-3-detail" data-detail="3">
+    <div class="detail-header">
+      <h2>Layer 3: Radical Transparency</h2>
+      <span class="detail-level">Sunlight Disinfectant</span>
+    </div>
+    <p>
+      As they say, <em>sunlight is the best disinfectant</em> (and democracy dies in darkness). 
+      Radical transparency is built upon the first layers—blockchain guarantees immutability 
+      of property records and government actions. We take it one step further and operationalize it.
+    </p>
+    <div class="mechanisms-grid">
+      <div class="mechanism-item">
+        <i data-lucide="package-search"></i>
+        <span>Open Procurement Platforms</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="pie-chart"></i>
+        <span>Transparent Budgeting</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="bot"></i>
+        <span>Public AI Audit Trails</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="file-search"></i>
+        <span>Open Data Portals</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="users"></i>
+        <span>Beneficial Ownership Registries</span>
+      </div>
+    </div>
+    <div class="examples-section">
+      <h4>Real-World Examples</h4>
+      <div class="example-tags">
+        <span class="example-tag">Ukraine ProZorro</span>
+        <span class="example-tag">Open Contracting Data Standard</span>
+        <span class="example-tag">Taiwan vTaiwan</span>
+        <span class="example-tag">UK Spending Data</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 4: Direct Democracy -->
+  <div class="layer-detail-card layer-4-detail" data-detail="4">
+    <div class="detail-header">
+      <h2>Layer 4: Direct Democracy</h2>
+      <span class="detail-level">Citizen Expression</span>
+    </div>
+    <p>
+      Citizen participation beyond just "voting for a corrupt politician"—the direct expression 
+      of the will of the people. This includes participatory budgeting, tighter feedback loops, 
+      and collective decision-making. With the first three layers in place, it becomes easier, 
+      automatic, and perhaps even inevitable.
+    </p>
+    <div class="mechanisms-grid">
+      <div class="mechanism-item">
+        <i data-lucide="wallet"></i>
+        <span>Participatory Budgeting</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="square-check"></i>
+        <span>Quadratic Voting</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="git-branch"></i>
+        <span>Liquid Democracy</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="users"></i>
+        <span>Citizens Assemblies</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="message-circle"></i>
+        <span>Digital Town Halls</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="vote"></i>
+        <span>Binding Referendums</span>
+      </div>
+    </div>
+    <div class="examples-section">
+      <h4>Real-World Examples</h4>
+      <div class="example-tags">
+        <span class="example-tag">Porto Alegre (Brazil)</span>
+        <span class="example-tag">Taiwan Digital Democracy</span>
+        <span class="example-tag">Irish Citizens Assembly</span>
+        <span class="example-tag">Swiss Direct Democracy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 5: Metagovernance -->
+  <div class="layer-detail-card layer-5-detail" data-detail="5">
+    <div class="detail-header">
+      <h2>Layer 5: Metagovernance</h2>
+      <span class="detail-level">Rules for Rules</span>
+    </div>
+    <p>
+      Rules for changing the rules. Perhaps a Constitution written when AI didn't exist and 
+      horses were the fastest mode of communication could be a bit out of date? The combination 
+      of AI, automation, robotics, and blockchain affords entirely new modalities of government. 
+      We need to get there incrementally without throwing the baby out with the bathwater.
+    </p>
+    <div class="mechanisms-grid">
+      <div class="mechanism-item">
+        <i data-lucide="scroll"></i>
+        <span>Constitutional Conventions</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="cpu"></i>
+        <span>Algorithmic Governance Frameworks</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="brain"></i>
+        <span>AI-Assisted Policy Evaluation</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="git-merge"></i>
+        <span>Forking Governance</span>
+      </div>
+      <div class="mechanism-item">
+        <i data-lucide="refresh-cw"></i>
+        <span>Sunset Clauses by Default</span>
+      </div>
+    </div>
+    <div class="examples-section">
+      <h4>Early Experiments</h4>
+      <div class="example-tags">
+        <span class="example-tag">Iceland Constitutional Crowdsourcing</span>
+        <span class="example-tag">Estonia Algorithmic Governance</span>
+        <span class="example-tag">DAO Governance Experiments</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="paradox-box">
+  <h3>🔄 The Economic Agency Paradox</h3>
+  <div class="paradox-steps">
+    <div class="paradox-step">
+      <span class="step-number">1</span>
+      <div>Technology is deflationary—it lowers costs, increasing economic agency (dollars go further)</div>
+    </div>
+    <div class="paradox-step">
+      <span class="step-number">2</span>
+      <div>HOWEVER, this technological progress destroys jobs and labor income—you get no dollars in the first place</div>
+    </div>
+    <div class="paradox-step">
+      <span class="step-number">3</span>
+      <div>Automating more to lower costs further makes it WORSE—hiring humans becomes irrational (10,000x more expensive)</div>
+    </div>
+  </div>
+  <p style="margin-top: 1.5rem; font-weight: 600;">
+    Breaking this paradox requires completely renegotiating power and the social contract. 
+    That's what the Pyramid of Power is for.
+  </p>
+</div>
+
+<div class="power-cta">
+  <h3>Stack the Layers</h3>
+  <p>When you stack these together, they create a framework that renegotiates the social contract and rebalances civic equilibrium.</p>
+  <div class="cta-actions">
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+      <i data-lucide="users"></i>
+      Join the Community
+    </a>
+    <a href="/prosperity.html" class="btn btn-secondary">
+      <i data-lucide="trending-up"></i>
+      Explore Pyramid of Prosperity
+    </a>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const layers = document.querySelectorAll('.pyramid-layer');
+  const details = document.querySelectorAll('.layer-detail-card');
+  
+  layers.forEach(layer => {
+    layer.addEventListener('click', function() {
+      const layerNum = this.dataset.layer;
+      
+      layers.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      
+      details.forEach(d => d.classList.remove('active'));
+      document.querySelector(`[data-detail="${layerNum}"]`).classList.add('active');
+      
+      if (window.innerWidth < 768) {
+        document.querySelector('.layer-details').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+});
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

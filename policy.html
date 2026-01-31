@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Framework | Post-Labor Economics</title>
+  <meta name="description" content="Policy Framework - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/policy.html">
+  <meta property="og:title" content="Policy Framework | Post-Labor Economics">
+  <meta property="og:description" content="Concrete policy proposals for the post-labor transition. UBI, sovereign wealth funds, and more.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-policy.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/policy.html">
+  <meta name="twitter:title" content="Policy Framework | Post-Labor Economics">
+  <meta name="twitter:description" content="Concrete policy proposals for the post-labor transition. UBI, sovereign wealth funds, and more.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-policy.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.policy-hero {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.2) 100%);
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.policy-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.policy-tracks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.policy-track {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.track-header {
+  padding: 1.5rem;
+  color: white;
+}
+
+.track-header.prosperity { background: linear-gradient(135deg, #10b981, #059669); }
+.track-header.power { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+
+.track-header h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.track-header p {
+  margin: 0.5rem 0 0 0;
+  opacity: 0.9;
+  font-size: 0.875rem;
+}
+
+.track-content {
+  padding: 1.5rem;
+}
+
+.policy-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.policy-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.policy-layer {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.track-content.prosperity .policy-layer { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.track-content.power .policy-layer { background: rgba(99, 102, 241, 0.2); color: #6366f1; }
+
+.policy-details h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+}
+
+.policy-details p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.timeline-section {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 3rem 0;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin-top: 1.5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -1.75rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg-secondary);
+}
+
+.timeline-item.current .timeline-marker {
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.timeline-item.future .timeline-marker {
+  background: var(--bg-tertiary);
+  border: 2px solid var(--border);
+}
+
+.timeline-date {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.timeline-content h4 {
+  margin: 0 0 0.5rem 0;
+}
+
+.timeline-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.action-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 3rem 0;
+}
+
+.action-card {
+  background: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.action-card i {
+  width: 48px;
+  height: 48px;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.action-card h4 {
+  margin-bottom: 0.5rem;
+}
+
+.action-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.cta-section {
+  text-align: center;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Architecture / Implementation</span>
+  <h1>Policy Framework</h1>
+  <p class="page-description">Concrete mechanisms for implementing the post-labor transition</p>
+</div>
+
+<div class="policy-hero">
+  <h1>From Vision to Implementation</h1>
+  <p style="font-size: 1.25rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto;">
+    The Pyramids aren't just theory—they're implementation guides. Each layer has specific 
+    policy mechanisms that can be advocated for, piloted, and scaled.
+  </p>
+</div>
+
+<div class="policy-tracks">
+  <div class="policy-track">
+    <div class="track-header prosperity">
+      <h3>
+        <i data-lucide="trending-up" style="width: 24px; height: 24px;"></i>
+        Pyramid of Prosperity
+      </h3>
+      <p>Income distribution policies</p>
+    </div>
+    <div class="track-content prosperity">
+      <div class="policy-item">
+        <span class="policy-layer">1</span>
+        <div class="policy-details">
+          <h4>Universal Basic Services</h4>
+          <p>Healthcare, education, housing guarantees, public transit expansion</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">2</span>
+        <div class="policy-details">
+          <h4>Sovereign Wealth Funds</h4>
+          <p>National investment funds with citizen dividends, data trusts, carbon pricing revenue</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">3</span>
+        <div class="policy-details">
+          <h4>Cooperative Incentives</h4>
+          <p>ESOP tax advantages, DAO legal frameworks, community land trust support</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">4</span>
+        <div class="policy-details">
+          <h4>Capital Access Programs</h4>
+          <p>Baby bonds, universal capital grants, investment account matching</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">5</span>
+        <div class="policy-details">
+          <h4>Labor Protections</h4>
+          <p>High minimum wages, portable benefits, strong worker rights</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="policy-track">
+    <div class="track-header power">
+      <h3>
+        <i data-lucide="shield" style="width: 24px; height: 24px;"></i>
+        Pyramid of Power
+      </h3>
+      <p>Democratic leverage policies</p>
+    </div>
+    <div class="track-content power">
+      <div class="policy-item">
+        <span class="policy-layer">1</span>
+        <div class="policy-details">
+          <h4>Digital Identity Standards</h4>
+          <p>Self-sovereign identity systems, blockchain property registries</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">2</span>
+        <div class="policy-details">
+          <h4>Open Payment Infrastructure</h4>
+          <p>Public instant payment systems (like India's UPI), interoperability mandates</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">3</span>
+        <div class="policy-details">
+          <h4>Transparency Mandates</h4>
+          <p>Open procurement requirements, algorithmic accountability, beneficial ownership</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">4</span>
+        <div class="policy-details">
+          <h4>Participatory Democracy</h4>
+          <p>Participatory budgeting pilots, citizens assemblies, digital town halls</p>
+        </div>
+      </div>
+      <div class="policy-item">
+        <span class="policy-layer">5</span>
+        <div class="policy-details">
+          <h4>Governance Innovation</h4>
+          <p>Constitutional review processes, sunset clause requirements, policy experimentation</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="timeline-section">
+  <h2 style="text-align: center;">Implementation Timeline</h2>
+  <p style="text-align: center; color: var(--text-secondary);">A phased approach to building the post-labor infrastructure</p>
+  
+  <div class="timeline">
+    <div class="timeline-item current">
+      <div class="timeline-marker"></div>
+      <div class="timeline-date">Now - 2027</div>
+      <div class="timeline-content">
+        <h4>Foundation Phase</h4>
+        <p>Build coalition, develop detailed policy papers, expand community, engage early-adopter policymakers</p>
+      </div>
+    </div>
+    
+    <div class="timeline-item future">
+      <div class="timeline-marker"></div>
+      <div class="timeline-date">2027 - 2030</div>
+      <div class="timeline-content">
+        <h4>Pilot Phase</h4>
+        <p>Municipal and state-level pilots, sovereign wealth fund proposals, participatory budgeting expansion</p>
+      </div>
+    </div>
+    
+    <div class="timeline-item future">
+      <div class="timeline-marker"></div>
+      <div class="timeline-date">2030 - 2035</div>
+      <div class="timeline-content">
+        <h4>Scaling Phase</h4>
+        <p>National-level policy adoption, international coordination, multiple Pyramid layers operational</p>
+      </div>
+    </div>
+    
+    <div class="timeline-item future">
+      <div class="timeline-marker"></div>
+      <div class="timeline-date">2035+</div>
+      <div class="timeline-content">
+        <h4>Transition Phase</h4>
+        <p>Capital ownership broadly distributed, labor no longer primary income source, post-labor economy operational</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 style="text-align: center; margin: 3rem 0 2rem;">Take Action</h2>
+
+<div class="action-section">
+  <div class="action-card">
+    <i data-lucide="message-square"></i>
+    <h4>Contact Representatives</h4>
+    <p>Share the L/0 framework with your local, state, and national representatives</p>
+    <a href="https://www.skool.com/postlaboreconomics" class="btn btn-outline btn-sm">Get Templates</a>
+  </div>
+  
+  <div class="action-card">
+    <i data-lucide="users"></i>
+    <h4>Join Local Chapters</h4>
+    <p>Connect with others in your area working on post-labor policy advocacy</p>
+    <a href="https://www.skool.com/postlaboreconomics" class="btn btn-outline btn-sm">Find Chapters</a>
+  </div>
+  
+  <div class="action-card">
+    <i data-lucide="pen-tool"></i>
+    <h4>Write & Share</h4>
+    <p>Op-eds, blog posts, and social content spreading awareness of the frameworks</p>
+    <a href="/docs/" class="btn btn-outline btn-sm">Get Resources</a>
+  </div>
+  
+  <div class="action-card">
+    <i data-lucide="dollar-sign"></i>
+    <h4>Support the Movement</h4>
+    <p>Join the paid community to fund research and advocacy</p>
+    <a href="https://www.skool.com/postlaboreconomics" class="btn btn-outline btn-sm">Join ($5/mo)</a>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h3>Policy Proposals & Research</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+    Detailed policy papers and implementation guides are developed collaboratively with the community.
+  </p>
+  <div class="cta-actions">
+    <a href="https://daveshap.substack.com" target="_blank" class="btn btn-primary">
+      <i data-lucide="file-text"></i>
+      Read Policy Papers
+    </a>
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-secondary">
+      <i data-lucide="users"></i>
+      Join Policy Discussions
+    </a>
+  </div>
+</div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

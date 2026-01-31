@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Principles | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Guiding principles that inform and constrain all architecture decisions within the PLE community.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .principles-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .principles-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .principles-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Category Tabs */
+    .category-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .category-tab {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .category-tab:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .category-tab.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    .category-tab i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .tab-count {
+      padding: 0.125rem 0.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+    }
+    
+    .category-tab:not(.active) .tab-count {
+      background: var(--color-bg-tertiary);
+    }
+    
+    /* Principle Card */
+    .principle-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    
+    .principle-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .principle-card.expanded {
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.1);
+    }
+    
+    .principle-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+    
+    .principle-main {
+      flex: 1;
+    }
+    
+    .principle-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .principle-id {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      background: var(--color-bg-primary);
+      border-radius: 4px;
+      color: var(--color-text-muted);
+    }
+    
+    .principle-category {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+    }
+    
+    .principle-category.business { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .principle-category.data { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .principle-category.application { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .principle-category.technology { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .principle-category.governance { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    
+    .principle-status {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .principle-status.ratified { color: #10b981; }
+    .principle-status.proposed { color: #fbbf24; }
+    .principle-status.deprecated { color: #ef4444; }
+    
+    .principle-status i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .principle-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.375rem;
+    }
+    
+    .principle-statement {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    
+    .principle-toggle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-left: 1rem;
+      transition: all 0.2s;
+    }
+    
+    .principle-toggle i {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+      transition: transform 0.2s;
+    }
+    
+    .principle-card.expanded .principle-toggle {
+      background: var(--color-primary);
+    }
+    
+    .principle-card.expanded .principle-toggle i {
+      color: white;
+      transform: rotate(180deg);
+    }
+    
+    /* Expanded Content */
+    .principle-body {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .principle-card.expanded .principle-body {
+      display: block;
+    }
+    
+    .principle-section {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .principle-section:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .section-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.625rem;
+    }
+    
+    .section-content {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .section-content ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    
+    .section-content li {
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Implications Grid */
+    .implications-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .implication-card {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+    }
+    
+    .implication-type {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    
+    .implication-type.benefit { color: #10b981; }
+    .implication-type.cost { color: #f59e0b; }
+    
+    .implication-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    
+    /* Related Items */
+    .related-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .related-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .related-item:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    .related-item i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Principle Footer */
+    .principle-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      margin-top: 0.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .principle-dates {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .principle-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stat-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 768px) {
+      .principles-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .implications-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-bar {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="principles-header">
+      <div>
+        <h1>Architecture Principles</h1>
+        <p class="principles-header-desc">General rules and guidelines that inform and constrain architecture decisions. All initiatives must align with these principles or obtain an approved exception.</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> Propose Principle</button>
+    </div>
+    
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+          <i data-lucide="check-circle"></i>
+        </div>
+        <div>
+          <div class="stat-value">12</div>
+          <div class="stat-label">Ratified</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+          <i data-lucide="clock"></i>
+        </div>
+        <div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">Proposed</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+          <i data-lucide="percent"></i>
+        </div>
+        <div>
+          <div class="stat-value">89%</div>
+          <div class="stat-label">Compliance</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+          <i data-lucide="file-warning"></i>
+        </div>
+        <div>
+          <div class="stat-value">2</div>
+          <div class="stat-label">Exceptions</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="category-tabs">
+      <button class="category-tab active"><i data-lucide="layers"></i> All <span class="tab-count">12</span></button>
+      <button class="category-tab"><i data-lucide="briefcase"></i> Business <span class="tab-count">3</span></button>
+      <button class="category-tab"><i data-lucide="database"></i> Data <span class="tab-count">3</span></button>
+      <button class="category-tab"><i data-lucide="layout-grid"></i> Application <span class="tab-count">2</span></button>
+      <button class="category-tab"><i data-lucide="server"></i> Technology <span class="tab-count">2</span></button>
+      <button class="category-tab"><i data-lucide="shield"></i> Governance <span class="tab-count">2</span></button>
+    </div>
+    
+    <!-- Principle Cards -->
+    <div class="principle-card expanded">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-001</span>
+            <span class="principle-category governance">Governance</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Open by Default</h3>
+          <p class="principle-statement">All architecture artifacts, decisions, and discussions are open and accessible to the community unless there's a compelling reason for restriction.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            The Post-Labor Economics movement is built on collective action and shared understanding. Transparency builds trust, enables participation, and ensures that architectural decisions can be scrutinized and improved by the community. Closed decision-making contradicts our core values of democratized governance and collective ownership.
+          </div>
+        </div>
+        
+        <div class="principle-section">
+          <div class="section-label">Implications</div>
+          <div class="implications-grid">
+            <div class="implication-card">
+              <div class="implication-type benefit">Benefits</div>
+              <div class="implication-text">
+                <ul style="margin: 0; padding-left: 1rem;">
+                  <li>Increased community trust and engagement</li>
+                  <li>Better decision quality through diverse input</li>
+                  <li>Easier onboarding for new contributors</li>
+                </ul>
+              </div>
+            </div>
+            <div class="implication-card">
+              <div class="implication-type cost">Costs & Constraints</div>
+              <div class="implication-text">
+                <ul style="margin: 0; padding-left: 1rem;">
+                  <li>Additional effort to document decisions</li>
+                  <li>Need for clear communication guidelines</li>
+                  <li>Must manage sensitive information carefully</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="principle-section">
+          <div class="section-label">Related Elements</div>
+          <div class="related-items">
+            <span class="related-item"><i data-lucide="target"></i> GOAL-001: Community Trust</span>
+            <span class="related-item"><i data-lucide="puzzle"></i> ABB-003: Knowledge Base</span>
+            <span class="related-item"><i data-lucide="book-check"></i> STD-007: Documentation Standard</span>
+            <span class="related-item"><i data-lucide="scale"></i> PRIN-008: Audit Trail</span>
+          </div>
+        </div>
+        
+        <div class="principle-footer">
+          <div class="principle-dates">
+            Ratified: Jan 15, 2026 • Last reviewed: Jan 28, 2026
+          </div>
+          <div class="principle-actions">
+            <button class="btn btn-ghost btn-sm"><i data-lucide="history"></i> History</button>
+            <button class="btn btn-outline btn-sm"><i data-lucide="edit-3"></i> Propose Change</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-002</span>
+            <span class="principle-category data">Data</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Data Sovereignty</h3>
+          <p class="principle-statement">Individuals maintain ownership and control over their personal data. Systems must enable data portability and explicit consent for any data use.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            As advocates for data dividends and collective data ownership, we must model these values in our own systems. This principle ensures our architecture embodies the data rights we advocate for society.
+          </div>
+        </div>
+        <div class="principle-section">
+          <div class="section-label">Related Elements</div>
+          <div class="related-items">
+            <span class="related-item"><i data-lucide="target"></i> GOAL-002: Data Ownership</span>
+            <span class="related-item"><i data-lucide="boxes"></i> CAP-015: Privacy Management</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-003</span>
+            <span class="principle-category business">Business</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Decentralized Decision Making</h3>
+          <p class="principle-statement">Decision authority is distributed to the lowest appropriate level. Working groups have autonomy within their domains while aligning with shared principles.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            Centralized control contradicts post-labor values. By enabling distributed decision-making, we model the democratic governance structures we advocate and increase community engagement and ownership.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-004</span>
+            <span class="principle-category application">Application</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Interoperability First</h3>
+          <p class="principle-statement">Systems must use open standards and APIs. Avoid vendor lock-in and ensure data and services can integrate with the broader ecosystem.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            The movement must be able to grow and adapt. Interoperable systems enable coalition-building with other organizations, reduce switching costs, and prevent dependency on any single vendor or platform.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-005</span>
+            <span class="principle-category technology">Technology</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Prefer Open Source</h3>
+          <p class="principle-statement">When evaluating technology options, open-source solutions are preferred unless proprietary alternatives provide significant and justified advantages.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            Open source aligns with our values of transparency and collective ownership. It reduces costs, enables customization, and supports the broader open-source ecosystem that benefits society.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-006</span>
+            <span class="principle-category business">Business</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Stakeholder Inclusivity</h3>
+          <p class="principle-statement">Architecture decisions must consider impacts on all stakeholder groups, especially those traditionally marginalized in economic systems.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            Post-labor economics aims to benefit everyone, not just those with current economic power. Our architecture must enable broad participation and avoid creating new barriers or inequities.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-007</span>
+            <span class="principle-category data">Data</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Evidence-Based Decisions</h3>
+          <p class="principle-statement">Architecture decisions must be supported by evidence, research, or well-reasoned analysis. Assertions require supporting rationale.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            As a movement grounded in economic research and policy analysis, we must apply the same rigor to our own organizational decisions. This builds credibility and improves decision quality.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-008</span>
+            <span class="principle-category governance">Governance</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Complete Audit Trail</h3>
+          <p class="principle-statement">All significant decisions, changes, and transactions must be recorded with sufficient context to understand what happened, when, why, and by whom.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            Accountability requires traceability. Complete audit trails enable learning from past decisions, support governance processes, and maintain trust through transparency.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-009</span>
+            <span class="principle-category application">Application</span>
+            <span class="principle-status ratified"><i data-lucide="check-circle"></i> Ratified</span>
+          </div>
+          <h3 class="principle-name">Accessibility by Design</h3>
+          <p class="principle-statement">All systems and content must be designed to be accessible to people with disabilities from the outset, not as an afterthought.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            Economic justice must include accessibility justice. Retrofitting accessibility is costly and often inadequate. Designing for accessibility from the start ensures everyone can participate.
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="principle-card">
+      <div class="principle-header" onclick="togglePrinciple(this)">
+        <div class="principle-main">
+          <div class="principle-meta">
+            <span class="principle-id">PRIN-010</span>
+            <span class="principle-category technology">Technology</span>
+            <span class="principle-status proposed"><i data-lucide="clock"></i> Proposed</span>
+          </div>
+          <h3 class="principle-name">Climate-Conscious Technology</h3>
+          <p class="principle-statement">Technology choices should minimize environmental impact. Prefer energy-efficient solutions and providers committed to sustainability.</p>
+        </div>
+        <div class="principle-toggle"><i data-lucide="chevron-down"></i></div>
+      </div>
+      <div class="principle-body">
+        <div class="principle-section">
+          <div class="section-label">Rationale</div>
+          <div class="section-content">
+            Post-labor economics must be sustainable economics. Our technology choices should reflect our values regarding environmental stewardship and long-term thinking.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    function togglePrinciple(header) {
+      const card = header.closest('.principle-card');
+      card.classList.toggle('expanded');
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

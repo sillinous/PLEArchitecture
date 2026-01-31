@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Decision Records | Post-Labor Economics</title>
+  <meta name="description" content="Documented architectural decisions for the Post-Labor Economics movement.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .page-hero {
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, transparent 100%);
+      padding: calc(var(--header-height) + 4rem) 0 4rem;
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+    
+    .breadcrumb a { color: var(--color-text-secondary); }
+    
+    .page-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .page-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      max-width: 700px;
+    }
+    
+    .adr-section { padding: 4rem 0; }
+    
+    .adr-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 900px;
+    }
+    
+    .adr-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .adr-card:hover { border-color: var(--color-border-light); }
+    
+    .adr-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .adr-id {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 0.375rem;
+      color: var(--color-text-muted);
+    }
+    
+    .adr-main { flex: 1; }
+    
+    .adr-title {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    
+    .adr-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      flex-wrap: wrap;
+    }
+    
+    .adr-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .adr-meta i { width: 14px; height: 14px; }
+    
+    .status {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.25rem 0.625rem;
+      border-radius: 1rem;
+    }
+    
+    .status.adopted { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .status.proposed { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .status.draft { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    
+    .adr-content {
+      display: none;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .adr-card.expanded .adr-content { display: block; }
+    
+    .adr-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin: 1.5rem 0 0.75rem;
+    }
+    
+    .adr-section-title:first-child { margin-top: 0; }
+    
+    .adr-text {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+    
+    .adr-text ul { margin-left: 1.25rem; }
+    .adr-text li { list-style: disc; margin-bottom: 0.375rem; }
+    
+    .stats-row {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+    }
+    
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 700; }
+    .stat-label { font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation"><i data-lucide="menu"></i></button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/governance.html">Governance <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/arch-mission.html">Mission & Vision</a></li>
+              <li><a href="/arch-principles.html">Principles</a></li>
+              <li><a href="/arch-decisions.html">Decision Records</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">Join</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="/">Home</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <a href="/governance.html">Governance</a>
+          <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+          <span>Decision Records</span>
+        </nav>
+        <h1 class="page-title">Architecture Decision Records</h1>
+        <p class="page-subtitle">
+          Transparent documentation of architectural decisions—what we decided, why, and what alternatives we considered.
+        </p>
+      </div>
+    </section>
+    
+    <section class="adr-section">
+      <div class="container">
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-value">9</div>
+            <div class="stat-label">Total ADRs</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color: #4ade80;">7</div>
+            <div class="stat-label">Adopted</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color: #818cf8;">1</div>
+            <div class="stat-label">Proposed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" style="color: #fbbf24;">1</div>
+            <div class="stat-label">Draft</div>
+          </div>
+        </div>
+        
+        <div class="adr-list">
+          <article class="adr-card" id="adr-001" onclick="this.classList.toggle('expanded')">
+            <div class="adr-header">
+              <span class="adr-id">ADR-001</span>
+              <div class="adr-main">
+                <h3 class="adr-title">Establish Mission, Vision, and Goals <span class="status adopted">Adopted</span></h3>
+                <div class="adr-meta">
+                  <span><i data-lucide="calendar"></i> Jan 2024</span>
+                  <span><i data-lucide="tag"></i> Foundation</span>
+                </div>
+              </div>
+            </div>
+            <div class="adr-content">
+              <h4 class="adr-section-title">Decision</h4>
+              <div class="adr-text">
+                <p>Established foundational mission, vision, and six strategic goals for 2024-2030.</p>
+                <ul>
+                  <li><strong>Mission:</strong> Enable humanity's transition from labor-based to ownership-based economics</li>
+                  <li><strong>Vision:</strong> A world where no one must work for survival</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+          
+          <article class="adr-card" id="adr-002" onclick="this.classList.toggle('expanded')">
+            <div class="adr-header">
+              <span class="adr-id">ADR-002</span>
+              <div class="adr-main">
+                <h3 class="adr-title">Dual Pyramid Framework Architecture <span class="status adopted">Adopted</span></h3>
+                <div class="adr-meta">
+                  <span><i data-lucide="calendar"></i> Feb 2024</span>
+                  <span><i data-lucide="tag"></i> Conceptual</span>
+                </div>
+              </div>
+            </div>
+            <div class="adr-content">
+              <h4 class="adr-section-title">Decision</h4>
+              <div class="adr-text">
+                <ul>
+                  <li><strong>Pyramid of Prosperity:</strong> Five-layer income distribution model</li>
+                  <li><strong>Pyramid of Power:</strong> Five-layer democratic infrastructure model</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+          
+          <article class="adr-card" id="adr-003" onclick="this.classList.toggle('expanded')">
+            <div class="adr-header">
+              <span class="adr-id">ADR-003</span>
+              <div class="adr-main">
+                <h3 class="adr-title">Define Architecture Principles <span class="status adopted">Adopted</span></h3>
+                <div class="adr-meta">
+                  <span><i data-lucide="calendar"></i> Mar 2024</span>
+                  <span><i data-lucide="tag"></i> Governance</span>
+                </div>
+              </div>
+            </div>
+            <div class="adr-content">
+              <h4 class="adr-section-title">Decision</h4>
+              <div class="adr-text">
+                <p>Established 8 core principles: Human Agency First, Evidence Over Ideology, Incremental Transition, Coalition Compatibility, Global Applicability, Open Architecture, Sustainability & Resilience, Preserve Meaningful Work.</p>
+              </div>
+            </div>
+          </article>
+          
+          <article class="adr-card" id="adr-007" onclick="this.classList.toggle('expanded')">
+            <div class="adr-header">
+              <span class="adr-id">ADR-007</span>
+              <div class="adr-main">
+                <h3 class="adr-title">Pyramid of Prosperity Layer Definitions <span class="status adopted">Adopted</span></h3>
+                <div class="adr-meta">
+                  <span><i data-lucide="calendar"></i> Jan 2026</span>
+                  <span><i data-lucide="tag"></i> Conceptual</span>
+                </div>
+              </div>
+            </div>
+            <div class="adr-content">
+              <h4 class="adr-section-title">Decision</h4>
+              <div class="adr-text">
+                <ul>
+                  <li><strong>Layer 1 - UBI:</strong> Universal unconditional floor (~$12K/year)</li>
+                  <li><strong>Layer 2 - Public Assets:</strong> Healthcare, education, infrastructure</li>
+                  <li><strong>Layer 3 - Collective Ownership:</strong> Sovereign wealth dividends</li>
+                  <li><strong>Layer 4 - Individual Assets:</strong> Personal investments</li>
+                  <li><strong>Layer 5 - Residual Wages:</strong> Voluntary market labor</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+          
+          <article class="adr-card" id="adr-008" onclick="this.classList.toggle('expanded')">
+            <div class="adr-header">
+              <span class="adr-id">ADR-008</span>
+              <div class="adr-main">
+                <h3 class="adr-title">Expand Stakeholder Categories <span class="status proposed">Proposed</span></h3>
+                <div class="adr-meta">
+                  <span><i data-lucide="calendar"></i> Jan 2026</span>
+                  <span><i data-lucide="tag"></i> Coalition</span>
+                </div>
+              </div>
+            </div>
+            <div class="adr-content">
+              <h4 class="adr-section-title">Proposed</h4>
+              <div class="adr-text">
+                <p>Expand taxonomy to include: Caregivers & Parents, Creative Workers, Environmental Advocates, Disability Rights Activists.</p>
+                <p><strong>Status:</strong> In community discussion. 23 comments received.</p>
+              </div>
+            </div>
+          </article>
+          
+          <article class="adr-card" id="adr-009" onclick="this.classList.toggle('expanded')">
+            <div class="adr-header">
+              <span class="adr-id">ADR-009</span>
+              <div class="adr-main">
+                <h3 class="adr-title">Add Data Dividends to Prosperity Pyramid <span class="status draft">Draft</span></h3>
+                <div class="adr-meta">
+                  <span><i data-lucide="calendar"></i> Jan 2026</span>
+                  <span><i data-lucide="tag"></i> Conceptual</span>
+                </div>
+              </div>
+            </div>
+            <div class="adr-content">
+              <h4 class="adr-section-title">Proposal</h4>
+              <div class="adr-text">
+                <p>Add "Data Dividends" to Layer 3 (Collective Ownership)—payments from collective bargaining of data rights.</p>
+                <p><strong>Open Questions:</strong> Significance? Layer placement? Evidence for feasibility?</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Index | PLE Community Platform</title>
+  <meta name="description" content="Complete index of all PLE Platform components - architecture, content, community, and publishing tools.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .index-header {
+      text-align: center;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+    }
+    
+    .index-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .index-header p {
+      font-size: 1.125rem;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Suite Sections */
+    .suite-section {
+      margin-bottom: 3rem;
+    }
+    
+    .suite-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+    
+    .suite-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .suite-icon i {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .suite-icon.architecture { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+    .suite-icon.content { background: linear-gradient(135deg, #10b981, #06b6d4); color: white; }
+    .suite-icon.community { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+    .suite-icon.publishing { background: linear-gradient(135deg, #ec4899, #f472b6); color: white; }
+    .suite-icon.platform { background: linear-gradient(135deg, #6366f1, #ec4899); color: white; }
+    
+    .suite-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .suite-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Tool Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    
+    .tool-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+    }
+    
+    .tool-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.1);
+    }
+    
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .tool-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .tool-icon.architecture { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .tool-icon.content { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .tool-icon.community { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .tool-icon.publishing { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .tool-icon.platform { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    
+    .tool-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .tool-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .tool-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+    
+    .tool-badge {
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.625rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+    
+    .tool-badge.new { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .tool-badge.core { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .tool-badge.hub { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    
+    /* Stats Summary */
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+    }
+    
+    .stat-item {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    @media (max-width: 768px) {
+      .stats-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .suite-header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Community Platform</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/platform-home.html">Platform Home</a></li>
+          <li class="nav-item"><a href="/ea-hub.html">Architecture</a></li>
+          <li class="nav-item"><a href="/content-hub.html">Content</a></li>
+          <li class="nav-item"><a href="/community-hub.html">Community</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="index-header">
+      <h1>PLE Platform Index</h1>
+      <p>Complete suite of tools for managing the Post-Labor Economics movement — architecture, content, community, and publishing unified in one platform.</p>
+    </div>
+    
+    <!-- Stats Summary -->
+    <div class="stats-summary">
+      <div class="stat-item">
+        <div class="stat-value">24</div>
+        <div class="stat-label">Total Tools</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">16</div>
+        <div class="stat-label">Architecture Tools</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Content Tools</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Community Tools</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Publishing Tools</div>
+      </div>
+    </div>
+    
+    <!-- Platform Core -->
+    <section class="suite-section">
+      <div class="suite-header">
+        <div class="suite-icon platform"><i data-lucide="layout-dashboard"></i></div>
+        <div>
+          <h2 class="suite-title">Platform Core</h2>
+          <p class="suite-desc">Main entry points and unified dashboards</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <a href="/platform-home.html" class="tool-card">
+          <div class="tool-icon platform"><i data-lucide="layout-dashboard"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Platform Home</div>
+            <div class="tool-desc">Unified dashboard with all suites, activity feed, and tasks</div>
+            <span class="tool-badge hub">Hub</span>
+          </div>
+        </a>
+        <a href="/platform.html" class="tool-card">
+          <div class="tool-icon platform"><i data-lucide="layout-grid"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Platform Overview</div>
+            <div class="tool-desc">Suite cards with sidebar navigation shell</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/platform-index.html" class="tool-card">
+          <div class="tool-icon platform"><i data-lucide="list"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Platform Index</div>
+            <div class="tool-desc">Complete sitemap of all platform tools</div>
+            <span class="tool-badge new">New</span>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Enterprise Architecture -->
+    <section class="suite-section">
+      <div class="suite-header">
+        <div class="suite-icon architecture"><i data-lucide="layers"></i></div>
+        <div>
+          <h2 class="suite-title">Enterprise Architecture</h2>
+          <p class="suite-desc">TOGAF-aligned architecture management and governance — 16 specialized tools</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <a href="/ea-hub.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="hexagon"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">EA Hub</div>
+            <div class="tool-desc">Central dashboard for architecture management</div>
+            <span class="tool-badge hub">Hub</span>
+          </div>
+        </a>
+        <a href="/ea-bmm.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="compass"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Business Motivation Model</div>
+            <div class="tool-desc">Vision, mission, goals, and strategies</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/ea-principles.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="scale"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Architecture Principles</div>
+            <div class="tool-desc">12 guiding principles with rationale</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/ea-capabilities.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="boxes"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Capability Model</div>
+            <div class="tool-desc">47 capabilities with maturity tracking</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/ea-building-blocks.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="puzzle"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Building Blocks Catalog</div>
+            <div class="tool-desc">18 ABBs and 16 SBBs with mappings</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/ea-standards.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="book-check"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Standards Catalog</div>
+            <div class="tool-desc">28 standards with lifecycle management</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/ea-governance.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="shield-check"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Architecture Governance</div>
+            <div class="tool-desc">Compliance, exceptions, and approvals</div>
+            <span class="tool-badge core">Core</span>
+          </div>
+        </a>
+        <a href="/ea-stakeholders.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="users"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Stakeholder Map</div>
+            <div class="tool-desc">18 stakeholders with power/interest grid</div>
+          </div>
+        </a>
+        <a href="/ea-alignment.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="check-square"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Initiative Alignment</div>
+            <div class="tool-desc">Check alignment against principles & goals</div>
+          </div>
+        </a>
+        <a href="/ea-viewpoints.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="eye"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Viewpoints & Views</div>
+            <div class="tool-desc">6 architecture viewpoints</div>
+          </div>
+        </a>
+        <a href="/ea-gap-analysis.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="git-pull-request"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Gap Analysis</div>
+            <div class="tool-desc">Current vs target state assessment</div>
+            <span class="tool-badge new">New</span>
+          </div>
+        </a>
+        <a href="/ea-impact.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="git-compare"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Impact Analysis</div>
+            <div class="tool-desc">Change impact assessment tool</div>
+          </div>
+        </a>
+        <a href="/ea-roadmap.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="gantt-chart"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Architecture Roadmap</div>
+            <div class="tool-desc">Timeline of planned changes</div>
+            <span class="tool-badge new">New</span>
+          </div>
+        </a>
+        <a href="/ea-metamodel.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="workflow"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Metamodel Reference</div>
+            <div class="tool-desc">Entity types and relationships</div>
+            <span class="tool-badge new">New</span>
+          </div>
+        </a>
+        <a href="/ea-repository.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="archive"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Architecture Repository</div>
+            <div class="tool-desc">Searchable artifact store</div>
+          </div>
+        </a>
+        <a href="/ea-value-streams.html" class="tool-card">
+          <div class="tool-icon architecture"><i data-lucide="workflow"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Value Streams</div>
+            <div class="tool-desc">4 value streams with stages</div>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Content Suite -->
+    <section class="suite-section">
+      <div class="suite-header">
+        <div class="suite-icon content"><i data-lucide="file-text"></i></div>
+        <div>
+          <h2 class="suite-title">Content Suite</h2>
+          <p class="suite-desc">Create, manage, and organize content with architecture alignment</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <a href="/content-hub.html" class="tool-card">
+          <div class="tool-icon content"><i data-lucide="file-text"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Content Hub</div>
+            <div class="tool-desc">Central content management with goal alignment</div>
+            <span class="tool-badge hub">Hub</span>
+          </div>
+        </a>
+        <a href="/content-create.html" class="tool-card">
+          <div class="tool-icon content"><i data-lucide="pen-square"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Content Editor</div>
+            <div class="tool-desc">Rich editor with architecture tagging</div>
+            <span class="tool-badge new">New</span>
+          </div>
+        </a>
+        <a href="/content-articles.html" class="tool-card">
+          <div class="tool-icon content"><i data-lucide="newspaper"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Articles</div>
+            <div class="tool-desc">Blog posts and thought leadership</div>
+          </div>
+        </a>
+        <a href="/content-research.html" class="tool-card">
+          <div class="tool-icon content"><i data-lucide="book-open"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Research</div>
+            <div class="tool-desc">Academic papers and analysis</div>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Community Suite -->
+    <section class="suite-section">
+      <div class="suite-header">
+        <div class="suite-icon community"><i data-lucide="users"></i></div>
+        <div>
+          <h2 class="suite-title">Community Suite</h2>
+          <p class="suite-desc">Member management, working groups, and engagement</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <a href="/community-hub.html" class="tool-card">
+          <div class="tool-icon community"><i data-lucide="users"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Community Hub</div>
+            <div class="tool-desc">Members, groups, events, and discussions</div>
+            <span class="tool-badge hub">Hub</span>
+          </div>
+        </a>
+        <a href="/community-members.html" class="tool-card">
+          <div class="tool-icon community"><i data-lucide="user"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Member Directory</div>
+            <div class="tool-desc">Browse and manage community members</div>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Publishing Suite -->
+    <section class="suite-section">
+      <div class="suite-header">
+        <div class="suite-icon publishing"><i data-lucide="globe"></i></div>
+        <div>
+          <h2 class="suite-title">Publishing Suite</h2>
+          <p class="suite-desc">Public presence, newsletters, and multi-channel distribution</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <a href="/publish-hub.html" class="tool-card">
+          <div class="tool-icon publishing"><i data-lucide="send"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Publishing Hub</div>
+            <div class="tool-desc">Multi-channel publishing with analytics</div>
+            <span class="tool-badge hub">Hub</span>
+          </div>
+        </a>
+        <a href="/publish-analytics.html" class="tool-card">
+          <div class="tool-icon publishing"><i data-lucide="bar-chart-2"></i></div>
+          <div class="tool-info">
+            <div class="tool-name">Analytics</div>
+            <div class="tool-desc">Performance metrics across channels</div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

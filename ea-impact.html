@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impact Analysis | Enterprise Architecture | Post-Labor Economics</title>
+  <meta name="description" content="Analyze the impact of proposed changes across architecture elements, capabilities, and stakeholders.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .impact-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .impact-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .impact-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+    }
+    
+    /* Analysis Setup */
+    .analysis-setup {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .setup-title {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .setup-title i {
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+    }
+    
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 1rem;
+      align-items: end;
+    }
+    
+    .setup-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .setup-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+    }
+    
+    .setup-select {
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.9375rem;
+    }
+    
+    /* Impact Results */
+    .impact-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 1.5rem;
+    }
+    
+    /* Change Source Card */
+    .change-source {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .change-source-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .change-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--color-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .change-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .change-title {
+      flex: 1;
+    }
+    
+    .change-title h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .change-type {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .change-desc {
+      font-size: 0.9375rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Impact Categories */
+    .impact-section {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    
+    .impact-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .impact-section-header {
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .impact-section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .impact-section-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .impact-section-icon i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .impact-count {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .count-badge {
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .count-badge.high { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .count-badge.medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .count-badge.low { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    
+    .toggle-icon {
+      color: var(--color-text-muted);
+      transition: transform 0.2s;
+    }
+    
+    .toggle-icon i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .impact-section.expanded .toggle-icon {
+      transform: rotate(180deg);
+    }
+    
+    .impact-section-body {
+      display: none;
+      padding: 1rem 1.25rem;
+    }
+    
+    .impact-section.expanded .impact-section-body {
+      display: block;
+    }
+    
+    /* Impact Items */
+    .impact-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.875rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      margin-bottom: 0.625rem;
+      transition: all 0.15s;
+    }
+    
+    .impact-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .impact-item:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .impact-severity {
+      width: 4px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    
+    .impact-severity.high { background: #ef4444; }
+    .impact-severity.medium { background: #f59e0b; }
+    .impact-severity.low { background: #10b981; }
+    
+    .impact-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .impact-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .impact-detail {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.4;
+    }
+    
+    .impact-tags {
+      display: flex;
+      gap: 0.375rem;
+      margin-top: 0.5rem;
+    }
+    
+    .impact-tag {
+      padding: 0.25rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Summary Panel */
+    .summary-panel {
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .summary-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .summary-header {
+      padding: 1rem 1.25rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 700;
+    }
+    
+    .summary-body {
+      padding: 1.25rem;
+    }
+    
+    /* Impact Score */
+    .impact-score {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .score-circle::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: 4px;
+      background: conic-gradient(#f59e0b 0deg 252deg, var(--color-bg-tertiary) 252deg 360deg);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+    }
+    
+    .score-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #f59e0b;
+    }
+    
+    .score-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .score-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Breakdown */
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+    
+    .breakdown-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .breakdown-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .breakdown-dot.high { background: #ef4444; }
+    .breakdown-dot.medium { background: #f59e0b; }
+    .breakdown-dot.low { background: #10b981; }
+    
+    .breakdown-value {
+      font-weight: 600;
+    }
+    
+    /* Recommendations */
+    .recommendation {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .recommendation:last-child {
+      margin-bottom: 0;
+    }
+    
+    .rec-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .rec-icon i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .rec-text {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+    
+    @media (max-width: 1024px) {
+      .impact-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .summary-panel {
+        position: static;
+      }
+      
+      .setup-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/ea-hub.html">← EA Hub</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="impact-header">
+      <div>
+        <h1>Impact Analysis</h1>
+        <p class="impact-header-desc">Assess the ripple effects of proposed changes across the architecture. Understand which capabilities, stakeholders, and systems will be affected.</p>
+      </div>
+      <button class="btn btn-primary"><i data-lucide="plus"></i> New Analysis</button>
+    </div>
+    
+    <!-- Analysis Setup -->
+    <div class="analysis-setup">
+      <div class="setup-title"><i data-lucide="settings-2"></i> Analysis Configuration</div>
+      <div class="setup-grid">
+        <div class="setup-field">
+          <span class="setup-label">Change Type</span>
+          <select class="setup-select">
+            <option>Standard Change</option>
+            <option>Principle Change</option>
+            <option selected>Technology Change</option>
+            <option>Capability Change</option>
+            <option>Process Change</option>
+          </select>
+        </div>
+        <div class="setup-field">
+          <span class="setup-label">Source Element</span>
+          <select class="setup-select">
+            <option selected>STD-009: Slack → Discord Migration</option>
+            <option>PRIN-010: Climate-Conscious Tech</option>
+            <option>CAP-012: Data Governance</option>
+          </select>
+        </div>
+        <div class="setup-field">
+          <span class="setup-label">Analysis Depth</span>
+          <select class="setup-select">
+            <option>Direct impacts only</option>
+            <option selected>Include secondary impacts</option>
+            <option>Full dependency chain</option>
+          </select>
+        </div>
+        <button class="btn btn-primary"><i data-lucide="play"></i> Run Analysis</button>
+      </div>
+    </div>
+    
+    <div class="impact-layout">
+      <!-- Main Results -->
+      <div class="impact-main">
+        <!-- Change Source -->
+        <div class="change-source">
+          <div class="change-source-header">
+            <div class="change-icon"><i data-lucide="git-compare"></i></div>
+            <div class="change-title">
+              <h3>Slack to Discord Migration</h3>
+              <span class="change-type">Standard Change • STD-009 Retirement</span>
+            </div>
+          </div>
+          <p class="change-desc">Migrating community communication from Slack (retiring standard) to Discord (approved standard). Affects all real-time collaboration, integrations, and member workflows.</p>
+        </div>
+        
+        <!-- Capabilities Impact -->
+        <div class="impact-section expanded">
+          <div class="impact-section-header" onclick="toggleSection(this)">
+            <div class="impact-section-title">
+              <div class="impact-section-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="boxes"></i>
+              </div>
+              <span>Capabilities</span>
+            </div>
+            <div class="impact-count">
+              <span class="count-badge high">2 High</span>
+              <span class="count-badge medium">3 Medium</span>
+              <span class="count-badge low">1 Low</span>
+              <span class="toggle-icon"><i data-lucide="chevron-down"></i></span>
+            </div>
+          </div>
+          <div class="impact-section-body">
+            <div class="impact-item">
+              <div class="impact-severity high"></div>
+              <div class="impact-content">
+                <div class="impact-name">CAP-Comm-01: Real-time Communication</div>
+                <div class="impact-detail">Core communication capability. Requires full platform migration, new workflows, and member re-training.</div>
+                <div class="impact-tags">
+                  <span class="impact-tag">Direct Impact</span>
+                  <span class="impact-tag">Training Required</span>
+                </div>
+              </div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-severity high"></div>
+              <div class="impact-content">
+                <div class="impact-name">CAP-Comm-02: Working Group Coordination</div>
+                <div class="impact-detail">All working group channels and workflows need migration. Historical context must be preserved.</div>
+                <div class="impact-tags">
+                  <span class="impact-tag">Direct Impact</span>
+                  <span class="impact-tag">Data Migration</span>
+                </div>
+              </div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-severity medium"></div>
+              <div class="impact-content">
+                <div class="impact-name">CAP-Tech-03: Integration Management</div>
+                <div class="impact-detail">Bot integrations and automations need to be rebuilt for Discord APIs.</div>
+                <div class="impact-tags">
+                  <span class="impact-tag">Development Work</span>
+                </div>
+              </div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-severity medium"></div>
+              <div class="impact-content">
+                <div class="impact-name">CAP-Gov-02: Decision Communication</div>
+                <div class="impact-detail">Governance announcements and voting notifications need new channels.</div>
+                <div class="impact-tags">
+                  <span class="impact-tag">Process Change</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Building Blocks Impact -->
+        <div class="impact-section">
+          <div class="impact-section-header" onclick="toggleSection(this)">
+            <div class="impact-section-title">
+              <div class="impact-section-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="puzzle"></i>
+              </div>
+              <span>Building Blocks</span>
+            </div>
+            <div class="impact-count">
+              <span class="count-badge high">1 High</span>
+              <span class="count-badge medium">2 Medium</span>
+              <span class="toggle-icon"><i data-lucide="chevron-down"></i></span>
+            </div>
+          </div>
+          <div class="impact-section-body">
+            <div class="impact-item">
+              <div class="impact-severity high"></div>
+              <div class="impact-content">
+                <div class="impact-name">SBB-004: Slack Integration Layer</div>
+                <div class="impact-detail">Complete replacement required. New SBB for Discord integration needed.</div>
+              </div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-severity medium"></div>
+              <div class="impact-content">
+                <div class="impact-name">ABB-004: Collaboration Platform</div>
+                <div class="impact-detail">ABB specification update to reflect Discord as implementing SBB.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Stakeholders Impact -->
+        <div class="impact-section">
+          <div class="impact-section-header" onclick="toggleSection(this)">
+            <div class="impact-section-title">
+              <div class="impact-section-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">
+                <i data-lucide="users"></i>
+              </div>
+              <span>Stakeholders</span>
+            </div>
+            <div class="impact-count">
+              <span class="count-badge medium">4 Medium</span>
+              <span class="toggle-icon"><i data-lucide="chevron-down"></i></span>
+            </div>
+          </div>
+          <div class="impact-section-body">
+            <div class="impact-item">
+              <div class="impact-severity medium"></div>
+              <div class="impact-content">
+                <div class="impact-name">All Community Members (847)</div>
+                <div class="impact-detail">Need to create Discord accounts, learn new platform, migrate presence.</div>
+              </div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-severity medium"></div>
+              <div class="impact-content">
+                <div class="impact-name">Working Group Leads (12)</div>
+                <div class="impact-detail">Must recreate channels, permissions, and communication workflows.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Principles Impact -->
+        <div class="impact-section">
+          <div class="impact-section-header" onclick="toggleSection(this)">
+            <div class="impact-section-title">
+              <div class="impact-section-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                <i data-lucide="scale"></i>
+              </div>
+              <span>Principles</span>
+            </div>
+            <div class="impact-count">
+              <span class="count-badge low">2 Positive</span>
+              <span class="toggle-icon"><i data-lucide="chevron-down"></i></span>
+            </div>
+          </div>
+          <div class="impact-section-body">
+            <div class="impact-item">
+              <div class="impact-severity low"></div>
+              <div class="impact-content">
+                <div class="impact-name">PRIN-005: Prefer Open Source</div>
+                <div class="impact-detail">Neutral impact - neither platform is fully open source.</div>
+              </div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-severity low"></div>
+              <div class="impact-content">
+                <div class="impact-name">PRIN-006: Stakeholder Inclusivity</div>
+                <div class="impact-detail">Positive - Discord's free tier is more accessible than Slack's limitations.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Summary Panel -->
+      <div class="summary-panel">
+        <div class="summary-card">
+          <div class="summary-header">Impact Score</div>
+          <div class="summary-body">
+            <div class="impact-score">
+              <div class="score-circle">
+                <div class="score-value">70</div>
+                <div class="score-label">/100</div>
+              </div>
+              <div class="score-desc">Medium-High Impact<br>Significant coordination required</div>
+            </div>
+            
+            <div class="breakdown-item">
+              <span class="breakdown-label"><span class="breakdown-dot high"></span> High Impact</span>
+              <span class="breakdown-value">3 elements</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label"><span class="breakdown-dot medium"></span> Medium Impact</span>
+              <span class="breakdown-value">9 elements</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label"><span class="breakdown-dot low"></span> Low Impact</span>
+              <span class="breakdown-value">4 elements</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-header">Recommendations</div>
+          <div class="summary-body">
+            <div class="recommendation">
+              <div class="rec-icon"><i data-lucide="calendar"></i></div>
+              <div class="rec-text">Plan 4-6 week migration window with parallel operation period</div>
+            </div>
+            <div class="recommendation">
+              <div class="rec-icon"><i data-lucide="users"></i></div>
+              <div class="rec-text">Assign Discord champions in each working group</div>
+            </div>
+            <div class="recommendation">
+              <div class="rec-icon"><i data-lucide="archive"></i></div>
+              <div class="rec-text">Export and archive all Slack history before migration</div>
+            </div>
+            <div class="recommendation">
+              <div class="rec-icon"><i data-lucide="book-open"></i></div>
+              <div class="rec-text">Create Discord onboarding guide for members</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-outline" style="flex: 1;"><i data-lucide="download"></i> Export</button>
+          <button class="btn btn-primary" style="flex: 1;"><i data-lucide="check"></i> Approve</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    function toggleSection(header) {
+      const section = header.closest('.impact-section');
+      section.classList.toggle('expanded');
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

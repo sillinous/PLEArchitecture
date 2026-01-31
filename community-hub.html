@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Hub | PLE Platform</title>
+  <meta name="description" content="Manage community members, working groups, and engagement for the Post-Labor Economics movement.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .community-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .community-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .community-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+    }
+    
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stat-icon i {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .stat-content {
+      flex: 1;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .stat-change {
+      font-size: 0.6875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+    }
+    
+    .stat-change.positive { color: #10b981; }
+    
+    .stat-change i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    /* Main Layout */
+    .community-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    /* Working Groups Section */
+    .section-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    
+    .section-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .section-title i {
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+    }
+    
+    .section-body {
+      padding: 1.25rem;
+    }
+    
+    /* Working Group Cards */
+    .wg-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .wg-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .wg-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .wg-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .wg-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .wg-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .wg-name {
+      font-weight: 700;
+      margin-bottom: 0.125rem;
+    }
+    
+    .wg-members {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .wg-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    
+    .wg-capabilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    
+    .wg-cap-tag {
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      font-size: 0.625rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Member List */
+    .member-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+    }
+    
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: white;
+    }
+    
+    .member-info {
+      flex: 1;
+    }
+    
+    .member-name {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+    
+    .member-role {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .member-groups {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .member-group-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .member-group-badge i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Events Section */
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .event-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      border-left: 3px solid var(--color-primary);
+    }
+    
+    .event-date {
+      text-align: center;
+      min-width: 50px;
+    }
+    
+    .event-day {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+    
+    .event-month {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+    
+    .event-info {
+      flex: 1;
+    }
+    
+    .event-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .event-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .event-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .event-meta i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Discussions */
+    .discussion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .discussion-item {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+    }
+    
+    .discussion-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .discussion-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .discussion-replies {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .discussion-replies i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Activity Feed */
+    .activity-item {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .activity-icon i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .activity-text {
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+    
+    .activity-text strong {
+      color: var(--color-text-primary);
+    }
+    
+    .activity-time {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    @media (max-width: 1024px) {
+      .community-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .wg-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Community Platform</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/platform.html">← Platform</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="community-header">
+      <div>
+        <h1>Community Hub</h1>
+        <p class="community-header-desc">Manage members, working groups, events, and discussions. Every group connects to organizational capabilities.</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-outline"><i data-lucide="download"></i> Export</button>
+        <button class="btn btn-primary"><i data-lucide="user-plus"></i> Invite Members</button>
+      </div>
+    </div>
+    
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;"><i data-lucide="users"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" style="color: #818cf8;">847</div>
+          <div class="stat-label">Total Members</div>
+          <div class="stat-change positive"><i data-lucide="trending-up"></i> +42 this month</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white;"><i data-lucide="users-round"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" style="color: #10b981;">12</div>
+          <div class="stat-label">Working Groups</div>
+          <div class="stat-change positive"><i data-lucide="trending-up"></i> +1 new</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white;"><i data-lucide="flame"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" style="color: #f59e0b;">23</div>
+          <div class="stat-label">Active Contributors</div>
+          <div class="stat-change positive"><i data-lucide="trending-up"></i> 78% engaged</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background: linear-gradient(135deg, #ec4899, #f472b6); color: white;"><i data-lucide="calendar"></i></div>
+        <div class="stat-content">
+          <div class="stat-value" style="color: #ec4899;">8</div>
+          <div class="stat-label">Events This Month</div>
+          <div class="stat-change positive"><i data-lucide="trending-up"></i> 2 upcoming</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick Tools -->
+    <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <a href="/community-members.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#f59e0b';this.style.color='#f59e0b'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="users" style="width:16px;height:16px"></i> Members
+      </a>
+      <a href="/community-groups.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#f59e0b';this.style.color='#f59e0b'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="users-round" style="width:16px;height:16px"></i> Working Groups
+      </a>
+      <a href="/community-discussions.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#f59e0b';this.style.color='#f59e0b'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="message-circle" style="width:16px;height:16px"></i> Discussions
+      </a>
+      <a href="/community-events.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#f59e0b';this.style.color='#f59e0b'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="calendar" style="width:16px;height:16px"></i> Events
+      </a>
+    </div>
+    
+    <!-- Main Layout -->
+    <div class="community-layout">
+      <div>
+        <!-- Working Groups -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="users-round"></i> Working Groups</span>
+            <button class="btn btn-outline btn-sm"><i data-lucide="plus"></i> Create Group</button>
+          </div>
+          <div class="section-body">
+            <div class="wg-grid">
+              <div class="wg-card">
+                <div class="wg-header">
+                  <div class="wg-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;"><i data-lucide="scroll"></i></div>
+                  <div>
+                    <div class="wg-name">Policy Working Group</div>
+                    <div class="wg-members">14 members • 3 active threads</div>
+                  </div>
+                </div>
+                <p class="wg-desc">Developing policy frameworks for UBI, automation taxation, and data ownership.</p>
+                <div class="wg-capabilities">
+                  <span class="wg-cap-tag">CAP-Pol-01</span>
+                  <span class="wg-cap-tag">CAP-Pol-02</span>
+                  <span class="wg-cap-tag">CAP-Pol-03</span>
+                </div>
+              </div>
+              
+              <div class="wg-card">
+                <div class="wg-header">
+                  <div class="wg-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i data-lucide="code"></i></div>
+                  <div>
+                    <div class="wg-name">Technology Working Group</div>
+                    <div class="wg-members">8 members • 2 active threads</div>
+                  </div>
+                </div>
+                <p class="wg-desc">Building and maintaining community platforms, tools, and technical infrastructure.</p>
+                <div class="wg-capabilities">
+                  <span class="wg-cap-tag">CAP-Tech-01</span>
+                  <span class="wg-cap-tag">CAP-Tech-02</span>
+                </div>
+              </div>
+              
+              <div class="wg-card">
+                <div class="wg-header">
+                  <div class="wg-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i data-lucide="megaphone"></i></div>
+                  <div>
+                    <div class="wg-name">Communications WG</div>
+                    <div class="wg-members">11 members • 4 active threads</div>
+                  </div>
+                </div>
+                <p class="wg-desc">Managing public presence, social media, newsletters, and community outreach.</p>
+                <div class="wg-capabilities">
+                  <span class="wg-cap-tag">CAP-Comm-01</span>
+                  <span class="wg-cap-tag">CAP-Comm-03</span>
+                </div>
+              </div>
+              
+              <div class="wg-card">
+                <div class="wg-header">
+                  <div class="wg-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i data-lucide="book-open"></i></div>
+                  <div>
+                    <div class="wg-name">Research Working Group</div>
+                    <div class="wg-members">9 members • 1 active thread</div>
+                  </div>
+                </div>
+                <p class="wg-desc">Conducting economic research, data analysis, and academic partnerships.</p>
+                <div class="wg-capabilities">
+                  <span class="wg-cap-tag">CAP-Pol-01</span>
+                  <span class="wg-cap-tag">CAP-Res-01</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Active Discussions -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="message-circle"></i> Active Discussions</span>
+            <a href="/community-discussions.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div class="section-body">
+            <div class="discussion-list">
+              <div class="discussion-item">
+                <div class="discussion-title">Approaches to measuring automation impact in municipal economies</div>
+                <div class="discussion-meta">
+                  <span>Policy WG • Started by Maria K.</span>
+                  <span class="discussion-replies"><i data-lucide="message-circle"></i> 34 replies</span>
+                </div>
+              </div>
+              <div class="discussion-item">
+                <div class="discussion-title">Proposal: Discord bot for tracking capability references in discussions</div>
+                <div class="discussion-meta">
+                  <span>Tech WG • Started by Alex R.</span>
+                  <span class="discussion-replies"><i data-lucide="message-circle"></i> 12 replies</span>
+                </div>
+              </div>
+              <div class="discussion-item">
+                <div class="discussion-title">Newsletter content strategy for Q1 2026</div>
+                <div class="discussion-meta">
+                  <span>Comm WG • Started by Jamie L.</span>
+                  <span class="discussion-replies"><i data-lucide="message-circle"></i> 8 replies</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <!-- Upcoming Events -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="calendar"></i> Upcoming Events</span>
+            <button class="btn btn-ghost btn-sm"><i data-lucide="plus"></i></button>
+          </div>
+          <div class="section-body">
+            <div class="event-list">
+              <div class="event-item">
+                <div class="event-date">
+                  <div class="event-day">30</div>
+                  <div class="event-month">Jan</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-title">Policy WG Monthly Meeting</div>
+                  <div class="event-meta">
+                    <span><i data-lucide="clock"></i> 2:00 PM EST</span>
+                    <span><i data-lucide="users"></i> 14</span>
+                  </div>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-date">
+                  <div class="event-day">2</div>
+                  <div class="event-month">Feb</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-title">L/0 Livestream #48</div>
+                  <div class="event-meta">
+                    <span><i data-lucide="clock"></i> 7:00 PM EST</span>
+                    <span><i data-lucide="video"></i> Public</span>
+                  </div>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-date">
+                  <div class="event-day">5</div>
+                  <div class="event-month">Feb</div>
+                </div>
+                <div class="event-info">
+                  <div class="event-title">Architecture Board Review</div>
+                  <div class="event-meta">
+                    <span><i data-lucide="clock"></i> 10:00 AM EST</span>
+                    <span><i data-lucide="shield"></i> Governance</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="activity"></i> Recent Activity</span>
+          </div>
+          <div class="section-body">
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i data-lucide="user-plus"></i></div>
+              <div>
+                <div class="activity-text"><strong>Sarah M.</strong> joined the community</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;"><i data-lucide="users"></i></div>
+              <div>
+                <div class="activity-text"><strong>Alex R.</strong> joined Tech WG</div>
+                <div class="activity-time">5 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i data-lucide="message-circle"></i></div>
+              <div>
+                <div class="activity-text"><strong>Maria K.</strong> started a new discussion in Policy WG</div>
+                <div class="activity-time">1 day ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i data-lucide="calendar"></i></div>
+              <div>
+                <div class="activity-text"><strong>David S.</strong> scheduled L/0 Livestream #48</div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- New Members -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="user-plus"></i> New Members</span>
+            <a href="/community-members.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div class="section-body">
+            <div class="member-list">
+              <div class="member-item">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">SM</div>
+                <div class="member-info">
+                  <div class="member-name">Sarah M.</div>
+                  <div class="member-role">Policy Researcher</div>
+                </div>
+              </div>
+              <div class="member-item">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #10b981, #06b6d4);">JP</div>
+                <div class="member-info">
+                  <div class="member-name">Jordan P.</div>
+                  <div class="member-role">Software Developer</div>
+                </div>
+              </div>
+              <div class="member-item">
+                <div class="member-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">KL</div>
+                <div class="member-info">
+                  <div class="member-name">Kim L.</div>
+                  <div class="member-role">Economics Student</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

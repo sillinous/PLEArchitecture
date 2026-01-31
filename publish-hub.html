@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publishing Hub | PLE Platform</title>
+  <meta name="description" content="Manage public presence, newsletters, social media, and outreach for Post-Labor Economics.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .publish-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+    
+    .publish-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .publish-header-desc {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+    }
+    
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+    }
+    
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .stat-label {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stat-icon i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+    
+    .stat-change {
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .stat-change.positive { color: #10b981; }
+    .stat-change.negative { color: #ef4444; }
+    
+    .stat-change i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Main Layout */
+    .publish-layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    /* Section Cards */
+    .section-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    
+    .section-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .section-title {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .section-title i {
+      width: 18px;
+      height: 18px;
+      color: var(--color-text-muted);
+    }
+    
+    .section-body {
+      padding: 1.25rem;
+    }
+    
+    /* Channels Grid */
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .channel-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .channel-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .channel-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .channel-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .channel-icon i {
+      width: 22px;
+      height: 22px;
+    }
+    
+    .channel-icon.substack { background: #ff6719; color: white; }
+    .channel-icon.youtube { background: #ff0000; color: white; }
+    .channel-icon.twitter { background: #1da1f2; color: white; }
+    .channel-icon.website { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+    
+    .channel-name {
+      font-weight: 700;
+    }
+    
+    .channel-status {
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .channel-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .channel-stat {
+      text-align: center;
+      padding: 0.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.5rem;
+    }
+    
+    .channel-stat-value {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    
+    .channel-stat-label {
+      font-size: 0.625rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Queue Items */
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .queue-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      border-left: 3px solid;
+    }
+    
+    .queue-item.ready { border-left-color: #10b981; }
+    .queue-item.scheduled { border-left-color: #a855f7; }
+    .queue-item.draft { border-left-color: #f59e0b; }
+    
+    .queue-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .queue-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .queue-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .queue-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .queue-meta i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .queue-channels {
+      display: flex;
+      gap: 0.375rem;
+      margin-top: 0.5rem;
+    }
+    
+    .queue-channel {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .queue-channel i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .queue-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    
+    /* Analytics Preview */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .analytics-card {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+    
+    .analytics-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+    
+    .analytics-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .analytics-chart {
+      height: 60px;
+      background: linear-gradient(to top, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+      border-radius: 0.5rem;
+      margin-top: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .analytics-chart::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+    }
+    
+    /* Campaign Cards */
+    .campaign-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .campaign-item {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+    }
+    
+    .campaign-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .campaign-name {
+      font-weight: 600;
+    }
+    
+    .campaign-status {
+      font-size: 0.625rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .campaign-status.active { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .campaign-status.planned { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+    
+    .campaign-progress {
+      margin-bottom: 0.5rem;
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: var(--color-bg-secondary);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    }
+    
+    .campaign-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    /* Architecture Alignment */
+    .alignment-preview {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .alignment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+    }
+    
+    .alignment-label {
+      font-size: 0.8125rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .alignment-label i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    .alignment-value {
+      font-weight: 700;
+    }
+    
+    .alignment-value.good { color: #10b981; }
+    .alignment-value.warning { color: #f59e0b; }
+    
+    @media (max-width: 1024px) {
+      .publish-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .channels-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Community Platform</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/platform.html">← Platform</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="publish-header">
+      <div>
+        <h1>Publishing Hub</h1>
+        <p class="publish-header-desc">Manage public presence across all channels. Schedule, publish, and track performance aligned with movement goals.</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="btn btn-outline"><i data-lucide="bar-chart-2"></i> Analytics</button>
+        <button class="btn btn-primary"><i data-lucide="send"></i> Publish Now</button>
+      </div>
+    </div>
+    
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Total Subscribers</span>
+          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;"><i data-lucide="users"></i></div>
+        </div>
+        <div class="stat-value" style="color: #818cf8;">12.4k</div>
+        <div class="stat-change positive"><i data-lucide="trending-up"></i> +847 this month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Monthly Views</span>
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;"><i data-lucide="eye"></i></div>
+        </div>
+        <div class="stat-value" style="color: #10b981;">89k</div>
+        <div class="stat-change positive"><i data-lucide="trending-up"></i> +12% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Engagement Rate</span>
+          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;"><i data-lucide="heart"></i></div>
+        </div>
+        <div class="stat-value" style="color: #f59e0b;">4.2%</div>
+        <div class="stat-change positive"><i data-lucide="trending-up"></i> +0.3% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Content Published</span>
+          <div class="stat-icon" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;"><i data-lucide="file-text"></i></div>
+        </div>
+        <div class="stat-value" style="color: #ec4899;">156</div>
+        <div class="stat-change positive"><i data-lucide="trending-up"></i> +8 this month</div>
+      </div>
+    </div>
+    
+    <!-- Quick Tools -->
+    <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+      <a href="/publish-drafts.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#ec4899';this.style.color='#ec4899'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="file-edit" style="width:16px;height:16px"></i> Drafts
+      </a>
+      <a href="/publish-schedule.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#ec4899';this.style.color='#ec4899'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="calendar-clock" style="width:16px;height:16px"></i> Schedule
+      </a>
+      <a href="/publish-channels.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#ec4899';this.style.color='#ec4899'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="share-2" style="width:16px;height:16px"></i> Channels
+      </a>
+      <a href="/publish-analytics.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1rem; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-text-secondary); text-decoration: none; font-size: 0.8125rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#ec4899';this.style.color='#ec4899'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <i data-lucide="bar-chart-3" style="width:16px;height:16px"></i> Analytics
+      </a>
+    </div>
+    
+    <!-- Main Layout -->
+    <div class="publish-layout">
+      <div>
+        <!-- Channels -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="share-2"></i> Publishing Channels</span>
+            <button class="btn btn-outline btn-sm"><i data-lucide="plus"></i> Add Channel</button>
+          </div>
+          <div class="section-body">
+            <div class="channels-grid">
+              <div class="channel-card">
+                <div class="channel-header">
+                  <div class="channel-icon substack"><i data-lucide="mail"></i></div>
+                  <div>
+                    <div class="channel-name">Substack Newsletter</div>
+                    <span class="channel-status">Connected</span>
+                  </div>
+                </div>
+                <div class="channel-stats">
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">8.2k</div>
+                    <div class="channel-stat-label">Subscribers</div>
+                  </div>
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">42%</div>
+                    <div class="channel-stat-label">Open Rate</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="channel-card">
+                <div class="channel-header">
+                  <div class="channel-icon youtube"><i data-lucide="youtube"></i></div>
+                  <div>
+                    <div class="channel-name">YouTube Channel</div>
+                    <span class="channel-status">Connected</span>
+                  </div>
+                </div>
+                <div class="channel-stats">
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">24.6k</div>
+                    <div class="channel-stat-label">Subscribers</div>
+                  </div>
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">156k</div>
+                    <div class="channel-stat-label">Views/mo</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="channel-card">
+                <div class="channel-header">
+                  <div class="channel-icon twitter"><i data-lucide="twitter"></i></div>
+                  <div>
+                    <div class="channel-name">Twitter/X</div>
+                    <span class="channel-status">Connected</span>
+                  </div>
+                </div>
+                <div class="channel-stats">
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">18.3k</div>
+                    <div class="channel-stat-label">Followers</div>
+                  </div>
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">3.8%</div>
+                    <div class="channel-stat-label">Engagement</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="channel-card">
+                <div class="channel-header">
+                  <div class="channel-icon website"><i data-lucide="globe"></i></div>
+                  <div>
+                    <div class="channel-name">Website</div>
+                    <span class="channel-status">Connected</span>
+                  </div>
+                </div>
+                <div class="channel-stats">
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">45k</div>
+                    <div class="channel-stat-label">Visitors/mo</div>
+                  </div>
+                  <div class="channel-stat">
+                    <div class="channel-stat-value">3:24</div>
+                    <div class="channel-stat-label">Avg Session</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Publishing Queue -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="list"></i> Publishing Queue</span>
+            <a href="/publish-schedule.html" class="btn btn-ghost btn-sm">View Schedule</a>
+          </div>
+          <div class="section-body">
+            <div class="queue-list">
+              <div class="queue-item ready">
+                <div class="queue-content">
+                  <div class="queue-title">The Economic Agency Paradox: Why Automation Creates Both Abundance and Scarcity</div>
+                  <div class="queue-meta">
+                    <span><i data-lucide="user"></i> David S.</span>
+                    <span><i data-lucide="target"></i> GOAL-001</span>
+                  </div>
+                  <div class="queue-channels">
+                    <div class="queue-channel" style="background: #ff6719; color: white;"><i data-lucide="mail"></i></div>
+                    <div class="queue-channel" style="background: #1da1f2; color: white;"><i data-lucide="twitter"></i></div>
+                    <div class="queue-channel" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;"><i data-lucide="globe"></i></div>
+                  </div>
+                </div>
+                <div class="queue-actions">
+                  <button class="btn btn-primary btn-sm">Publish</button>
+                  <button class="btn btn-ghost btn-sm">Edit</button>
+                </div>
+              </div>
+              
+              <div class="queue-item scheduled">
+                <div class="queue-content">
+                  <div class="queue-title">Newsletter #48: Data Dividends and the Future of Collective Ownership</div>
+                  <div class="queue-meta">
+                    <span><i data-lucide="clock"></i> Feb 3, 2026 9:00 AM</span>
+                    <span><i data-lucide="target"></i> GOAL-002</span>
+                  </div>
+                  <div class="queue-channels">
+                    <div class="queue-channel" style="background: #ff6719; color: white;"><i data-lucide="mail"></i></div>
+                  </div>
+                </div>
+                <div class="queue-actions">
+                  <button class="btn btn-outline btn-sm">Reschedule</button>
+                  <button class="btn btn-ghost btn-sm">Edit</button>
+                </div>
+              </div>
+              
+              <div class="queue-item draft">
+                <div class="queue-content">
+                  <div class="queue-title">L/0 Livestream #48 Announcement</div>
+                  <div class="queue-meta">
+                    <span><i data-lucide="edit-3"></i> Draft</span>
+                    <span><i data-lucide="boxes"></i> CAP-Comm-03</span>
+                  </div>
+                  <div class="queue-channels">
+                    <div class="queue-channel" style="background: #1da1f2; color: white;"><i data-lucide="twitter"></i></div>
+                    <div class="queue-channel" style="background: #ff0000; color: white;"><i data-lucide="youtube"></i></div>
+                  </div>
+                </div>
+                <div class="queue-actions">
+                  <button class="btn btn-outline btn-sm">Complete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <!-- Analytics Preview -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="bar-chart-2"></i> This Week</span>
+            <a href="/publish-analytics.html" class="btn btn-ghost btn-sm">Details</a>
+          </div>
+          <div class="section-body">
+            <div class="analytics-grid">
+              <div class="analytics-card">
+                <div class="analytics-value" style="color: #818cf8;">23.4k</div>
+                <div class="analytics-label">Page Views</div>
+              </div>
+              <div class="analytics-card">
+                <div class="analytics-value" style="color: #10b981;">1.2k</div>
+                <div class="analytics-label">New Subscribers</div>
+              </div>
+              <div class="analytics-card">
+                <div class="analytics-value" style="color: #f59e0b;">847</div>
+                <div class="analytics-label">Social Shares</div>
+              </div>
+              <div class="analytics-card">
+                <div class="analytics-value" style="color: #ec4899;">42%</div>
+                <div class="analytics-label">Email Opens</div>
+              </div>
+            </div>
+            <div class="analytics-chart"></div>
+          </div>
+        </div>
+        
+        <!-- Active Campaigns -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="megaphone"></i> Campaigns</span>
+            <button class="btn btn-ghost btn-sm"><i data-lucide="plus"></i></button>
+          </div>
+          <div class="section-body">
+            <div class="campaign-list">
+              <div class="campaign-item">
+                <div class="campaign-header">
+                  <span class="campaign-name">UBI Awareness Month</span>
+                  <span class="campaign-status active">Active</span>
+                </div>
+                <div class="campaign-progress">
+                  <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
+                </div>
+                <div class="campaign-meta">
+                  <span>65% complete</span>
+                  <span>→ GOAL-001</span>
+                </div>
+              </div>
+              
+              <div class="campaign-item">
+                <div class="campaign-header">
+                  <span class="campaign-name">Data Rights Series</span>
+                  <span class="campaign-status active">Active</span>
+                </div>
+                <div class="campaign-progress">
+                  <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+                </div>
+                <div class="campaign-meta">
+                  <span>40% complete</span>
+                  <span>→ GOAL-002</span>
+                </div>
+              </div>
+              
+              <div class="campaign-item">
+                <div class="campaign-header">
+                  <span class="campaign-name">Automation Tax Push</span>
+                  <span class="campaign-status planned">Planned</span>
+                </div>
+                <div class="campaign-progress">
+                  <div class="progress-bar"><div class="progress-fill" style="width: 0%;"></div></div>
+                </div>
+                <div class="campaign-meta">
+                  <span>Starts Feb 15</span>
+                  <span>→ GOAL-003</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Architecture Alignment -->
+        <div class="section-card">
+          <div class="section-header">
+            <span class="section-title"><i data-lucide="target"></i> Content Alignment</span>
+          </div>
+          <div class="section-body">
+            <div class="alignment-preview">
+              <div class="alignment-item">
+                <span class="alignment-label"><i data-lucide="target"></i> Content → Goals</span>
+                <span class="alignment-value good">94%</span>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-label"><i data-lucide="scale"></i> Messaging → Principles</span>
+                <span class="alignment-value good">91%</span>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-label"><i data-lucide="boxes"></i> Channels → Capabilities</span>
+                <span class="alignment-value warning">78%</span>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-label"><i data-lucide="book-check"></i> Tools → Standards</span>
+                <span class="alignment-value good">86%</span>
+              </div>
+            </div>
+            <a href="/ea-alignment.html" class="btn btn-outline btn-sm" style="width: 100%; margin-top: 1rem;">Check Alignment</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Interactive onboarding guide for new contributors to the PLE governance ecosystem.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .onboarding-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    /* Progress Header */
+    .onboarding-progress {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    
+    .progress-stats {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #06b6d4);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .step-indicator {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-bg-primary);
+      border: 2px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .progress-step.completed .step-indicator {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+    
+    .progress-step.active .step-indicator {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    .step-indicator i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .step-label {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+    
+    .progress-step.completed .step-label,
+    .progress-step.active .step-label {
+      color: var(--color-text-primary);
+    }
+    
+    /* Step Content */
+    .step-content {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.5rem;
+      overflow: hidden;
+    }
+    
+    .step-header {
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.15) 100%);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.875rem;
+      background: rgba(16, 185, 129, 0.2);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #10b981;
+      margin-bottom: 1rem;
+    }
+    
+    .step-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .step-subtitle {
+      color: var(--color-text-secondary);
+      font-size: 1.0625rem;
+    }
+    
+    .step-body {
+      padding: 2rem;
+    }
+    
+    /* Welcome Step */
+    .welcome-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .welcome-feature {
+      padding: 1.25rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+    
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 0.75rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .feature-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .feature-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .feature-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Profile Setup */
+    .profile-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .form-input {
+      padding: 0.875rem 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      color: var(--color-text-primary);
+      font-size: 0.9375rem;
+      transition: all 0.15s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .avatar-upload {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .avatar-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .avatar-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    /* Interest Selection */
+    .interests-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    
+    .interest-card {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 2px solid var(--color-border);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    
+    .interest-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .interest-card.selected {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .interest-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .interest-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .interest-card.selected .interest-name {
+      color: var(--color-primary);
+    }
+    
+    /* Tour Interactive */
+    .tour-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .tour-card {
+      display: flex;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .tour-card:hover {
+      border-color: var(--color-primary);
+      transform: translateX(4px);
+    }
+    
+    .tour-card.visited {
+      border-color: #10b981;
+    }
+    
+    .tour-card.visited::before {
+      content: '';
+      position: absolute;
+      left: -1px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #10b981;
+      border-radius: 3px 0 0 3px;
+    }
+    
+    .tour-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .tour-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .tour-content {
+      flex: 1;
+    }
+    
+    .tour-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .tour-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .tour-status {
+      display: flex;
+      align-items: center;
+      color: var(--color-text-muted);
+    }
+    
+    .tour-status i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .tour-card.visited .tour-status {
+      color: #10b981;
+    }
+    
+    /* First Task */
+    .task-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .task-option {
+      padding: 1.5rem;
+      background: var(--color-bg-primary);
+      border: 2px solid var(--color-border);
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .task-option:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .task-option.selected {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .task-option-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    
+    .task-option-icon i {
+      width: 28px;
+      height: 28px;
+    }
+    
+    .task-option-title {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .task-option-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+    
+    .task-option-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+    
+    /* Completion */
+    .completion-celebration {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    
+    .celebration-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .completion-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .completion-subtitle {
+      color: var(--color-text-secondary);
+      margin-bottom: 2rem;
+    }
+    
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-primary);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .completion-stat {
+      text-align: center;
+    }
+    
+    .completion-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    
+    .completion-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .next-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: left;
+    }
+    
+    .next-step {
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .next-step:hover {
+      transform: translateY(-2px);
+    }
+    
+    .next-step-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+    
+    .next-step-icon i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .next-step-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .next-step-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Navigation */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .step-nav-hint {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .step-nav-hint i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .step-nav-buttons {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    @media (max-width: 768px) {
+      .welcome-features,
+      .interests-grid,
+      .task-options,
+      .next-steps {
+        grid-template-columns: 1fr;
+      }
+      
+      .progress-steps {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="onboarding-container">
+      <!-- Progress -->
+      <div class="onboarding-progress">
+        <div class="progress-header">
+          <span class="progress-title">Getting Started</span>
+          <span class="progress-stats">Step <span id="current-step">1</span> of 5</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 20%;"></div>
+        </div>
+        <div class="progress-steps">
+          <div class="progress-step active" data-step="1">
+            <div class="step-indicator">1</div>
+            <span class="step-label">Welcome</span>
+          </div>
+          <div class="progress-step" data-step="2">
+            <div class="step-indicator">2</div>
+            <span class="step-label">Profile</span>
+          </div>
+          <div class="progress-step" data-step="3">
+            <div class="step-indicator">3</div>
+            <span class="step-label">Interests</span>
+          </div>
+          <div class="progress-step" data-step="4">
+            <div class="step-indicator">4</div>
+            <span class="step-label">Tour</span>
+          </div>
+          <div class="progress-step" data-step="5">
+            <div class="step-indicator">5</div>
+            <span class="step-label">First Task</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 1: Welcome -->
+      <div class="step-content" id="step-1">
+        <div class="step-header">
+          <span class="step-number"><i data-lucide="sparkles"></i> Step 1</span>
+          <h1 class="step-title">Welcome to PLE Governance!</h1>
+          <p class="step-subtitle">You're about to join a community working to build economic systems for a post-labor future.</p>
+        </div>
+        <div class="step-body">
+          <div class="welcome-features">
+            <div class="welcome-feature">
+              <div class="feature-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="file-text"></i>
+              </div>
+              <h3 class="feature-title">Contribute</h3>
+              <p class="feature-desc">Create proposals, ADRs, and documentation</p>
+            </div>
+            <div class="welcome-feature">
+              <div class="feature-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="vote"></i>
+              </div>
+              <h3 class="feature-title">Participate</h3>
+              <p class="feature-desc">Vote on decisions and join discussions</p>
+            </div>
+            <div class="welcome-feature">
+              <div class="feature-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+                <i data-lucide="users"></i>
+              </div>
+              <h3 class="feature-title">Collaborate</h3>
+              <p class="feature-desc">Work with others on shared goals</p>
+            </div>
+          </div>
+          <p style="color: var(--color-text-secondary); text-align: center;">This quick setup will help you get the most out of your experience. It takes about 3 minutes.</p>
+        </div>
+        <div class="step-nav">
+          <span class="step-nav-hint"><i data-lucide="clock"></i> ~3 minutes to complete</span>
+          <div class="step-nav-buttons">
+            <button class="btn btn-primary" onclick="nextStep()">Get Started <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 2: Profile -->
+      <div class="step-content" id="step-2" style="display: none;">
+        <div class="step-header">
+          <span class="step-number"><i data-lucide="user"></i> Step 2</span>
+          <h1 class="step-title">Set Up Your Profile</h1>
+          <p class="step-subtitle">Help the community know who you are and what you bring.</p>
+        </div>
+        <div class="step-body">
+          <div class="profile-form">
+            <div class="form-group">
+              <label class="form-label">Profile Picture</label>
+              <div class="avatar-upload">
+                <div class="avatar-preview">SM</div>
+                <div class="avatar-actions">
+                  <button class="btn btn-outline btn-sm">Upload Image</button>
+                  <span class="form-hint">Or we'll use your initials</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input type="text" class="form-input" placeholder="How should we call you?" value="Sarah Mitchell">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bio</label>
+              <textarea class="form-input" rows="3" placeholder="Tell us a bit about yourself...">Economist and policy researcher interested in automation's impact on labor markets.</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location (optional)</label>
+              <input type="text" class="form-input" placeholder="City, Country" value="London, UK">
+              <span class="form-hint">Helps connect you with local community members</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-outline" onclick="prevStep()"><i data-lucide="arrow-left"></i> Back</button>
+          <div class="step-nav-buttons">
+            <button class="btn btn-ghost" onclick="nextStep()">Skip</button>
+            <button class="btn btn-primary" onclick="nextStep()">Continue <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 3: Interests -->
+      <div class="step-content" id="step-3" style="display: none;">
+        <div class="step-header">
+          <span class="step-number"><i data-lucide="heart"></i> Step 3</span>
+          <h1 class="step-title">What Are You Interested In?</h1>
+          <p class="step-subtitle">Select topics you'd like to follow and contribute to.</p>
+        </div>
+        <div class="step-body">
+          <div class="interests-grid">
+            <div class="interest-card selected" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">💰</span>
+              <span class="interest-name">UBI & Income</span>
+            </div>
+            <div class="interest-card selected" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">🤖</span>
+              <span class="interest-name">Automation</span>
+            </div>
+            <div class="interest-card" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">📊</span>
+              <span class="interest-name">Data Ownership</span>
+            </div>
+            <div class="interest-card" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">⚖️</span>
+              <span class="interest-name">Policy Design</span>
+            </div>
+            <div class="interest-card selected" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">🏛️</span>
+              <span class="interest-name">Governance</span>
+            </div>
+            <div class="interest-card" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">🌍</span>
+              <span class="interest-name">Global Impact</span>
+            </div>
+            <div class="interest-card" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">💡</span>
+              <span class="interest-name">Philosophy</span>
+            </div>
+            <div class="interest-card" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">📚</span>
+              <span class="interest-name">Research</span>
+            </div>
+            <div class="interest-card" onclick="this.classList.toggle('selected')">
+              <span class="interest-icon">🔧</span>
+              <span class="interest-name">Implementation</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-outline" onclick="prevStep()"><i data-lucide="arrow-left"></i> Back</button>
+          <div class="step-nav-buttons">
+            <button class="btn btn-ghost" onclick="nextStep()">Skip</button>
+            <button class="btn btn-primary" onclick="nextStep()">Continue <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 4: Tour -->
+      <div class="step-content" id="step-4" style="display: none;">
+        <div class="step-header">
+          <span class="step-number"><i data-lucide="compass"></i> Step 4</span>
+          <h1 class="step-title">Quick Tour</h1>
+          <p class="step-subtitle">Explore the key areas of the governance platform.</p>
+        </div>
+        <div class="step-body">
+          <div class="tour-cards">
+            <div class="tour-card visited" style="position: relative;">
+              <div class="tour-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="layout-grid"></i>
+              </div>
+              <div class="tour-content">
+                <h4 class="tour-title">Architecture Hub</h4>
+                <p class="tour-desc">Browse all artifacts, proposals, ADRs, and principles in one place.</p>
+              </div>
+              <div class="tour-status"><i data-lucide="check-circle"></i></div>
+            </div>
+            <div class="tour-card" style="position: relative;">
+              <div class="tour-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="vote"></i>
+              </div>
+              <div class="tour-content">
+                <h4 class="tour-title">Voting Center</h4>
+                <p class="tour-desc">Participate in decisions using various voting mechanisms.</p>
+              </div>
+              <div class="tour-status"><i data-lucide="chevron-right"></i></div>
+            </div>
+            <div class="tour-card" style="position: relative;">
+              <div class="tour-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+                <i data-lucide="users"></i>
+              </div>
+              <div class="tour-content">
+                <h4 class="tour-title">Working Groups</h4>
+                <p class="tour-desc">Join teams focused on specific topics or projects.</p>
+              </div>
+              <div class="tour-status"><i data-lucide="chevron-right"></i></div>
+            </div>
+            <div class="tour-card" style="position: relative;">
+              <div class="tour-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                <i data-lucide="book-open"></i>
+              </div>
+              <div class="tour-content">
+                <h4 class="tour-title">Knowledge Base</h4>
+                <p class="tour-desc">Learn about PLE concepts, frameworks, and history.</p>
+              </div>
+              <div class="tour-status"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-outline" onclick="prevStep()"><i data-lucide="arrow-left"></i> Back</button>
+          <div class="step-nav-buttons">
+            <button class="btn btn-ghost" onclick="nextStep()">Skip Tour</button>
+            <button class="btn btn-primary" onclick="nextStep()">Continue <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Step 5: First Task -->
+      <div class="step-content" id="step-5" style="display: none;">
+        <div class="step-header">
+          <span class="step-number"><i data-lucide="rocket"></i> Step 5</span>
+          <h1 class="step-title">Your First Contribution</h1>
+          <p class="step-subtitle">Choose how you'd like to get started.</p>
+        </div>
+        <div class="step-body">
+          <div class="task-options">
+            <div class="task-option selected" onclick="selectTask(this)">
+              <div class="task-option-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                <i data-lucide="message-square"></i>
+              </div>
+              <h4 class="task-option-title">Join a Discussion</h4>
+              <p class="task-option-desc">Comment on an active proposal or discussion thread to share your perspective.</p>
+              <span class="task-option-badge"><i data-lucide="clock" style="width: 10px; height: 10px;"></i> ~2 min</span>
+            </div>
+            <div class="task-option" onclick="selectTask(this)">
+              <div class="task-option-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                <i data-lucide="vote"></i>
+              </div>
+              <h4 class="task-option-title">Cast a Vote</h4>
+              <p class="task-option-desc">Review and vote on a pending proposal to help shape community decisions.</p>
+              <span class="task-option-badge"><i data-lucide="clock" style="width: 10px; height: 10px;"></i> ~5 min</span>
+            </div>
+            <div class="task-option" onclick="selectTask(this)">
+              <div class="task-option-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+                <i data-lucide="file-plus"></i>
+              </div>
+              <h4 class="task-option-title">Create a Draft</h4>
+              <p class="task-option-desc">Start working on your own proposal using one of our templates.</p>
+              <span class="task-option-badge"><i data-lucide="clock" style="width: 10px; height: 10px;"></i> ~15 min</span>
+            </div>
+            <div class="task-option" onclick="selectTask(this)">
+              <div class="task-option-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                <i data-lucide="users"></i>
+              </div>
+              <h4 class="task-option-title">Join a Group</h4>
+              <p class="task-option-desc">Connect with a working group focused on your interests.</p>
+              <span class="task-option-badge"><i data-lucide="clock" style="width: 10px; height: 10px;"></i> ~3 min</span>
+            </div>
+          </div>
+        </div>
+        <div class="step-nav">
+          <button class="btn btn-outline" onclick="prevStep()"><i data-lucide="arrow-left"></i> Back</button>
+          <div class="step-nav-buttons">
+            <button class="btn btn-ghost" onclick="showCompletion()">Skip for now</button>
+            <button class="btn btn-primary" onclick="showCompletion()">Complete Setup <i data-lucide="arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Completion -->
+      <div class="step-content" id="step-complete" style="display: none;">
+        <div class="step-body">
+          <div class="completion-celebration">
+            <div class="celebration-icon">🎉</div>
+            <h1 class="completion-title">You're All Set!</h1>
+            <p class="completion-subtitle">Welcome to the PLE community. Here's what you've earned:</p>
+            
+            <div class="completion-stats">
+              <div class="completion-stat">
+                <div class="completion-stat-value">100</div>
+                <div class="completion-stat-label">Starting Voting Power</div>
+              </div>
+              <div class="completion-stat">
+                <div class="completion-stat-value">🏆</div>
+                <div class="completion-stat-label">Newcomer Badge</div>
+              </div>
+              <div class="completion-stat">
+                <div class="completion-stat-value">1</div>
+                <div class="completion-stat-label">Day Streak Started</div>
+              </div>
+            </div>
+            
+            <h3 style="margin-bottom: 1rem;">Recommended Next Steps</h3>
+            <div class="next-steps">
+              <div class="next-step">
+                <div class="next-step-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                  <i data-lucide="book-open"></i>
+                </div>
+                <h4 class="next-step-title">Read the Manifesto</h4>
+                <p class="next-step-desc">Understand our core vision</p>
+              </div>
+              <div class="next-step">
+                <div class="next-step-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                  <i data-lucide="vote"></i>
+                </div>
+                <h4 class="next-step-title">Active Votes</h4>
+                <p class="next-step-desc">4 votes need your input</p>
+              </div>
+              <div class="next-step">
+                <div class="next-step-icon" style="background: rgba(244, 114, 182, 0.15); color: #f472b6;">
+                  <i data-lucide="users"></i>
+                </div>
+                <h4 class="next-step-title">Find Your Group</h4>
+                <p class="next-step-desc">12 groups match your interests</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-nav" style="justify-content: center;">
+          <button class="btn btn-primary btn-lg" onclick="window.location.href='/governance.html'">
+            Enter Governance Hub <i data-lucide="arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    let currentStep = 1;
+    const totalSteps = 5;
+    
+    function updateProgress() {
+      const percent = (currentStep / totalSteps) * 100;
+      document.getElementById('progress-fill').style.width = percent + '%';
+      document.getElementById('current-step').textContent = currentStep;
+      
+      document.querySelectorAll('.progress-step').forEach((step, index) => {
+        step.classList.remove('active', 'completed');
+        if (index + 1 < currentStep) {
+          step.classList.add('completed');
+          step.querySelector('.step-indicator').innerHTML = '<i data-lucide="check"></i>';
+        } else if (index + 1 === currentStep) {
+          step.classList.add('active');
+        }
+      });
+      lucide.createIcons();
+    }
+    
+    function showStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
+      document.getElementById('step-' + step).style.display = 'block';
+      updateProgress();
+    }
+    
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+    
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+    
+    function showCompletion() {
+      document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
+      document.getElementById('step-complete').style.display = 'block';
+      document.getElementById('progress-fill').style.width = '100%';
+    }
+    
+    function selectTask(el) {
+      document.querySelectorAll('.task-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  </script>
+</body>
+</html>

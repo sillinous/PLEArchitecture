@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post-Labor Economics | Community Platform</title>
+  <meta name="description" content="The unified platform for the Post-Labor Economics movement - community, content, and architecture working together.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --sidebar-width: 260px;
+      --topbar-height: 60px;
+    }
+    
+    body {
+      display: flex;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* Sidebar Navigation */
+    .platform-sidebar {
+      width: var(--sidebar-width);
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+    
+    .sidebar-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.875rem;
+      color: white;
+    }
+    
+    .logo-text-main {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+    }
+    
+    .logo-text-sub {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem 0;
+    }
+    
+    .nav-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .nav-section-title {
+      padding: 0.5rem 1.25rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 1.25rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: all 0.15s;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .nav-item:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-primary);
+    }
+    
+    .nav-item.active {
+      color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--color-primary);
+      border-radius: 0 2px 2px 0;
+    }
+    
+    .nav-item i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .nav-badge {
+      margin-left: auto;
+      padding: 0.125rem 0.5rem;
+      background: var(--color-primary);
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 600;
+      border-radius: 9999px;
+    }
+    
+    .nav-badge.warning { background: #f59e0b; }
+    .nav-badge.success { background: #10b981; }
+    
+    /* Submenu */
+    .nav-submenu {
+      display: none;
+      padding-left: 2.5rem;
+    }
+    
+    .nav-submenu.open {
+      display: block;
+    }
+    
+    .nav-submenu .nav-item {
+      padding: 0.5rem 1rem;
+      font-size: 0.8125rem;
+    }
+    
+    .nav-item .expand-icon {
+      margin-left: auto;
+      transition: transform 0.2s;
+    }
+    
+    .nav-item.expanded .expand-icon {
+      transform: rotate(90deg);
+    }
+    
+    /* Sidebar Footer */
+    .sidebar-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    
+    .user-menu:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: white;
+    }
+    
+    .user-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .user-role {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Main Content Area */
+    .platform-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    /* Top Bar */
+    .platform-topbar {
+      height: var(--topbar-height);
+      background: var(--color-bg-primary);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    
+    .topbar-search {
+      flex: 1;
+      max-width: 400px;
+      position: relative;
+    }
+    
+    .topbar-search i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+    
+    .topbar-search input {
+      width: 100%;
+      padding: 0.625rem 1rem 0.625rem 2.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-primary);
+    }
+    
+    .topbar-search input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+    
+    .topbar-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: all 0.15s;
+    }
+    
+    .topbar-btn:hover {
+      background: var(--color-bg-secondary);
+      color: var(--color-text-primary);
+    }
+    
+    .topbar-btn i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .notification-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 2px solid var(--color-bg-primary);
+    }
+    
+    /* Content Area */
+    .platform-content {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      background: var(--color-bg-primary);
+    }
+    
+    /* Dashboard Welcome */
+    .dashboard-welcome {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.1) 100%);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .welcome-content h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .welcome-content p {
+      color: var(--color-text-secondary);
+      max-width: 500px;
+    }
+    
+    .welcome-stats {
+      display: flex;
+      gap: 2rem;
+    }
+    
+    .welcome-stat {
+      text-align: center;
+    }
+    
+    .welcome-stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+    
+    .welcome-stat-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Suite Cards */
+    .suite-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .suite-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    .suite-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+    }
+    
+    .suite-card.architecture::before { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+    .suite-card.content::before { background: linear-gradient(90deg, #10b981, #06b6d4); }
+    .suite-card.community::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .suite-card.publishing::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    
+    .suite-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
+    }
+    
+    .suite-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .suite-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .suite-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .suite-card.architecture .suite-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+    .suite-card.content .suite-icon { background: linear-gradient(135deg, #10b981, #06b6d4); color: white; }
+    .suite-card.community .suite-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+    .suite-card.publishing .suite-icon { background: linear-gradient(135deg, #ec4899, #f472b6); color: white; }
+    
+    .suite-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.125rem;
+    }
+    
+    .suite-subtitle {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .suite-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    .suite-stats {
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .suite-stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .suite-card.architecture .suite-stat-value { color: #818cf8; }
+    .suite-card.content .suite-stat-value { color: #10b981; }
+    .suite-card.community .suite-stat-value { color: #f59e0b; }
+    .suite-card.publishing .suite-stat-value { color: #ec4899; }
+    
+    .suite-stat-label {
+      font-size: 0.625rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Activity Row */
+    .activity-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .panel {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .panel-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .panel-title i {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+    
+    .panel-body {
+      padding: 1rem 1.25rem;
+    }
+    
+    /* Activity Items */
+    .activity-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+    
+    .activity-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .activity-icon i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .activity-icon.architecture { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .activity-icon.content { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .activity-icon.community { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .activity-icon.publishing { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    
+    .activity-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .activity-text {
+      font-size: 0.875rem;
+      margin-bottom: 0.125rem;
+    }
+    
+    .activity-text strong {
+      color: var(--color-text-primary);
+    }
+    
+    .activity-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    /* Alignment Panel */
+    .alignment-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .alignment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+    }
+    
+    .alignment-label {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .alignment-value {
+      font-weight: 700;
+    }
+    
+    .alignment-value.good { color: #10b981; }
+    .alignment-value.warning { color: #f59e0b; }
+    
+    /* Mobile Toggle */
+    .mobile-toggle {
+      display: none;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-primary);
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+    
+    .mobile-toggle i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    @media (max-width: 1024px) {
+      .suite-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .activity-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .welcome-stats {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .platform-sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .platform-sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .platform-main {
+        margin-left: 0;
+      }
+      
+      .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .dashboard-welcome {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .alignment-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="platform-sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="/platform.html" class="sidebar-logo">
+        <div class="logo-mark">L/0</div>
+        <div>
+          <div class="logo-text-main">Post-Labor Economics</div>
+          <div class="logo-text-sub">Community Platform</div>
+        </div>
+      </a>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="/platform.html" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a href="/platform-activity.html" class="nav-item"><i data-lucide="activity"></i> Activity Feed</a>
+        <a href="/platform-calendar.html" class="nav-item"><i data-lucide="calendar"></i> Calendar</a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Content</div>
+        <a href="/content-hub.html" class="nav-item"><i data-lucide="file-text"></i> Content Hub</a>
+        <a href="/content-articles.html" class="nav-item"><i data-lucide="newspaper"></i> Articles</a>
+        <a href="/content-research.html" class="nav-item"><i data-lucide="book-open"></i> Research</a>
+        <a href="/content-policies.html" class="nav-item"><i data-lucide="scroll"></i> Policy Papers</a>
+        <a href="/content-media.html" class="nav-item"><i data-lucide="video"></i> Media Library</a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Community</div>
+        <a href="/community-hub.html" class="nav-item"><i data-lucide="users"></i> Community Hub</a>
+        <a href="/community-members.html" class="nav-item"><i data-lucide="user"></i> Members</a>
+        <a href="/community-groups.html" class="nav-item"><i data-lucide="users-round"></i> Working Groups</a>
+        <a href="/community-discussions.html" class="nav-item"><i data-lucide="message-circle"></i> Discussions <span class="nav-badge">12</span></a>
+        <a href="/community-events.html" class="nav-item"><i data-lucide="calendar-days"></i> Events</a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Publishing</div>
+        <a href="/publish-hub.html" class="nav-item"><i data-lucide="send"></i> Publishing Hub</a>
+        <a href="/publish-drafts.html" class="nav-item"><i data-lucide="file-edit"></i> Drafts <span class="nav-badge warning">3</span></a>
+        <a href="/publish-schedule.html" class="nav-item"><i data-lucide="clock"></i> Schedule</a>
+        <a href="/publish-channels.html" class="nav-item"><i data-lucide="share-2"></i> Channels</a>
+        <a href="/publish-analytics.html" class="nav-item"><i data-lucide="bar-chart-2"></i> Analytics</a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Architecture</div>
+        <a href="/ea-hub.html" class="nav-item"><i data-lucide="hexagon"></i> EA Hub</a>
+        <div class="nav-item" onclick="toggleSubmenu('arch-repo')"><i data-lucide="layers"></i> Repository <i data-lucide="chevron-right" class="expand-icon"></i></div>
+        <div class="nav-submenu" id="arch-repo">
+          <a href="/ea-bmm.html" class="nav-item"><i data-lucide="compass"></i> Business Motivation</a>
+          <a href="/ea-capabilities.html" class="nav-item"><i data-lucide="boxes"></i> Capabilities</a>
+          <a href="/ea-principles.html" class="nav-item"><i data-lucide="scale"></i> Principles</a>
+          <a href="/ea-standards.html" class="nav-item"><i data-lucide="book-check"></i> Standards</a>
+          <a href="/ea-building-blocks.html" class="nav-item"><i data-lucide="puzzle"></i> Building Blocks</a>
+        </div>
+        <div class="nav-item" onclick="toggleSubmenu('arch-tools')"><i data-lucide="wrench"></i> Tools <i data-lucide="chevron-right" class="expand-icon"></i></div>
+        <div class="nav-submenu" id="arch-tools">
+          <a href="/ea-alignment.html" class="nav-item"><i data-lucide="check-square"></i> Alignment Check</a>
+          <a href="/ea-impact.html" class="nav-item"><i data-lucide="git-compare"></i> Impact Analysis</a>
+          <a href="/ea-gap-analysis.html" class="nav-item"><i data-lucide="git-pull-request"></i> Gap Analysis</a>
+        </div>
+        <a href="/ea-governance.html" class="nav-item"><i data-lucide="shield-check"></i> Governance</a>
+        <a href="/ea-roadmap.html" class="nav-item"><i data-lucide="gantt-chart"></i> Roadmap</a>
+        <div class="nav-item" onclick="toggleSubmenu('arch-collab')"><i data-lucide="users"></i> Collaboration <i data-lucide="chevron-right" class="expand-icon"></i></div>
+        <div class="nav-submenu" id="arch-collab">
+          <a href="/arch-dashboard.html" class="nav-item"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+          <a href="/arch-create.html" class="nav-item"><i data-lucide="plus-circle"></i> Create Element</a>
+          <a href="/arch-explorer.html" class="nav-item"><i data-lucide="compass"></i> Explorer</a>
+          <a href="/arch-review.html" class="nav-item"><i data-lucide="check-circle"></i> Reviews</a>
+          <a href="/arch-workflow.html" class="nav-item"><i data-lucide="git-branch"></i> Workflows</a>
+          <a href="/arch-voting.html" class="nav-item"><i data-lucide="vote"></i> Voting</a>
+          <a href="/arch-deliberation.html" class="nav-item"><i data-lucide="message-square"></i> Deliberation</a>
+          <a href="/arch-meetings.html" class="nav-item"><i data-lucide="video"></i> Meetings</a>
+        </div>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Settings</div>
+        <a href="/settings-profile.html" class="nav-item"><i data-lucide="user-cog"></i> Profile</a>
+        <a href="/settings-platform.html" class="nav-item"><i data-lucide="settings"></i> Platform</a>
+        <a href="/settings-integrations.html" class="nav-item"><i data-lucide="plug"></i> Integrations</a>
+      </div>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <div class="user-menu">
+        <div class="user-avatar">TM</div>
+        <div class="user-info">
+          <div class="user-name">Travis M.</div>
+          <div class="user-role">Core Team • Admin</div>
+        </div>
+        <i data-lucide="chevron-up" style="width: 16px; height: 16px; color: var(--color-text-muted);"></i>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="platform-main">
+    <header class="platform-topbar">
+      <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+      <div class="topbar-search">
+        <i data-lucide="search"></i>
+        <input type="text" placeholder="Search content, members, architecture...">
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn"><i data-lucide="plus"></i></button>
+        <button class="topbar-btn">
+          <i data-lucide="bell"></i>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="topbar-btn"><i data-lucide="help-circle"></i></button>
+      </div>
+    </header>
+    
+    <div class="platform-content">
+      <!-- Welcome Banner -->
+      <div class="dashboard-welcome">
+        <div class="welcome-content">
+          <h1>Welcome back, Travis</h1>
+          <p>You have 3 draft articles awaiting review and 2 upcoming working group meetings this week.</p>
+        </div>
+        <div class="welcome-stats">
+          <div class="welcome-stat">
+            <div class="welcome-stat-value">847</div>
+            <div class="welcome-stat-label">Members</div>
+          </div>
+          <div class="welcome-stat">
+            <div class="welcome-stat-value">156</div>
+            <div class="welcome-stat-label">Publications</div>
+          </div>
+          <div class="welcome-stat">
+            <div class="welcome-stat-value">89%</div>
+            <div class="welcome-stat-label">Arch Health</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Suite Cards -->
+      <div class="suite-grid">
+        <a href="/ea-hub.html" class="suite-card architecture">
+          <div class="suite-header">
+            <div class="suite-icon"><i data-lucide="building-2"></i></div>
+            <div>
+              <h2 class="suite-title">Enterprise Architecture</h2>
+              <span class="suite-subtitle">Foundation & Governance</span>
+            </div>
+          </div>
+          <p class="suite-desc">Principles, capabilities, standards, and building blocks that guide all organizational activities.</p>
+          <div class="suite-stats">
+            <div class="suite-stat"><div class="suite-stat-value">12</div><div class="suite-stat-label">Principles</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">47</div><div class="suite-stat-label">Capabilities</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">89%</div><div class="suite-stat-label">Compliance</div></div>
+          </div>
+        </a>
+        
+        <a href="/content-hub.html" class="suite-card content">
+          <div class="suite-header">
+            <div class="suite-icon"><i data-lucide="pen-tool"></i></div>
+            <div>
+              <h2 class="suite-title">Content Studio</h2>
+              <span class="suite-subtitle">Create & Manage</span>
+            </div>
+          </div>
+          <p class="suite-desc">Create, organize, and manage all movement content aligned to strategic goals.</p>
+          <div class="suite-stats">
+            <div class="suite-stat"><div class="suite-stat-value">247</div><div class="suite-stat-label">Items</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">18</div><div class="suite-stat-label">In Draft</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">94%</div><div class="suite-stat-label">Aligned</div></div>
+          </div>
+        </a>
+        
+        <a href="/community-hub.html" class="suite-card community">
+          <div class="suite-header">
+            <div class="suite-icon"><i data-lucide="users"></i></div>
+            <div>
+              <h2 class="suite-title">Community Hub</h2>
+              <span class="suite-subtitle">Engage & Organize</span>
+            </div>
+          </div>
+          <p class="suite-desc">Manage community members, working groups, events, and engagement activities.</p>
+          <div class="suite-stats">
+            <div class="suite-stat"><div class="suite-stat-value">847</div><div class="suite-stat-label">Members</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">12</div><div class="suite-stat-label">Groups</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">23</div><div class="suite-stat-label">Contributors</div></div>
+          </div>
+        </a>
+        
+        <a href="/publish-hub.html" class="suite-card publishing">
+          <div class="suite-header">
+            <div class="suite-icon"><i data-lucide="globe"></i></div>
+            <div>
+              <h2 class="suite-title">Publishing & Presence</h2>
+              <span class="suite-subtitle">Share & Grow</span>
+            </div>
+          </div>
+          <p class="suite-desc">Manage public-facing presence across website, newsletters, and social channels.</p>
+          <div class="suite-stats">
+            <div class="suite-stat"><div class="suite-stat-value">12.4k</div><div class="suite-stat-label">Subscribers</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">89k</div><div class="suite-stat-label">Views/mo</div></div>
+            <div class="suite-stat"><div class="suite-stat-value">4</div><div class="suite-stat-label">Campaigns</div></div>
+          </div>
+        </a>
+      </div>
+      
+      <!-- Activity Row -->
+      <div class="activity-row">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title"><i data-lucide="activity"></i> Recent Activity</span>
+            <a href="/platform-activity.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div class="panel-body">
+            <div class="activity-item">
+              <div class="activity-icon content"><i data-lucide="file-plus"></i></div>
+              <div class="activity-info">
+                <div class="activity-text"><strong>"Automation Tax Framework v2"</strong> published</div>
+                <div class="activity-meta">
+                  <span>David S. • 2 hours ago</span>
+                  <span>→ GOAL-001</span>
+                </div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon architecture"><i data-lucide="check-circle"></i></div>
+              <div class="activity-info">
+                <div class="activity-text"><strong>PRIN-010: Climate-Conscious Tech</strong> approved</div>
+                <div class="activity-meta">
+                  <span>Architecture Board • 5 hours ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon community"><i data-lucide="users"></i></div>
+              <div class="activity-info">
+                <div class="activity-text"><strong>Data Rights Working Group</strong> created</div>
+                <div class="activity-meta">
+                  <span>Maria K. • 1 day ago</span>
+                  <span>→ CAP-Tech-02</span>
+                </div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon publishing"><i data-lucide="send"></i></div>
+              <div class="activity-info">
+                <div class="activity-text"><strong>Newsletter #47</strong> sent to 12,400 subscribers</div>
+                <div class="activity-meta">
+                  <span>Auto • 2 days ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title"><i data-lucide="target"></i> Architecture Alignment</span>
+          </div>
+          <div class="panel-body">
+            <div class="alignment-grid">
+              <div class="alignment-item">
+                <span class="alignment-label">Content → Goals</span>
+                <span class="alignment-value good">94%</span>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-label">Tools → Principles</span>
+                <span class="alignment-value good">89%</span>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-label">Platforms → Standards</span>
+                <span class="alignment-value warning">78%</span>
+              </div>
+              <div class="alignment-item">
+                <span class="alignment-label">Activities → Capabilities</span>
+                <span class="alignment-value good">86%</span>
+              </div>
+            </div>
+            <a href="/ea-alignment.html" class="btn btn-outline btn-sm" style="width: 100%; margin-top: 1rem;">Check Alignment</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+    
+    function toggleSubmenu(id) {
+      const submenu = document.getElementById(id);
+      const item = submenu.previousElementSibling;
+      submenu.classList.toggle('open');
+      item.classList.toggle('expanded');
+    }
+  </script>
+</body>
+</html>

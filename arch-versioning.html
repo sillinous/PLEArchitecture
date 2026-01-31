@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Version Control | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Track artifact versions, view changes, manage branches, and handle merge requests for architecture governance.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Version Control Styles */
+    .vc-container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - var(--header-height) - 6rem);
+    }
+    
+    /* Sidebar */
+    .vc-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .artifact-selector {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .artifact-selector h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+    
+    .selected-artifact {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .selected-artifact:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .selected-artifact-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .selected-artifact-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .selected-artifact-info {
+      flex: 1;
+    }
+    
+    .selected-artifact-id {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .selected-artifact-name {
+      font-weight: 600;
+    }
+    
+    /* Branch Selector */
+    .branch-selector {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .branch-selector h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .branch-selector h3 button {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      cursor: pointer;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .branch-selector h3 button i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .branch-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .branch-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .branch-item:hover {
+      border-color: var(--color-text-muted);
+    }
+    
+    .branch-item.active {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+    
+    .branch-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg-secondary);
+    }
+    
+    .branch-icon i {
+      width: 14px;
+      height: 14px;
+      color: var(--color-text-muted);
+    }
+    
+    .branch-item.active .branch-icon {
+      background: var(--color-primary);
+    }
+    
+    .branch-item.active .branch-icon i {
+      color: white;
+    }
+    
+    .branch-info {
+      flex: 1;
+    }
+    
+    .branch-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .branch-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .branch-badge {
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .branch-badge.main { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .branch-badge.draft { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .branch-badge.review { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    
+    /* Version Timeline */
+    .version-timeline {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .version-timeline h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+    
+    .timeline-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    .timeline-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+    
+    .timeline-item:hover {
+      background: rgba(255, 255, 255, 0.02);
+      margin: 0 -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .timeline-item.selected {
+      background: rgba(99, 102, 241, 0.1);
+      margin: 0 -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .timeline-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-border);
+      margin-top: 4px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    
+    .timeline-item:not(:last-child) .timeline-dot::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: calc(100% + 12px);
+      background: var(--color-border);
+    }
+    
+    .timeline-item.selected .timeline-dot {
+      background: var(--color-primary);
+    }
+    
+    .timeline-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .timeline-version {
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .timeline-message {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      margin-top: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .timeline-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .timeline-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .timeline-meta i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Main Content */
+    .vc-main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    /* Diff Header */
+    .diff-header {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .diff-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .diff-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .diff-subtitle {
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+    }
+    
+    .diff-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Version Compare Selector */
+    .compare-selector {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+    }
+    
+    .compare-version {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+    }
+    
+    .compare-version select {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+    }
+    
+    .compare-version select:focus {
+      outline: none;
+    }
+    
+    .compare-arrow {
+      color: var(--color-text-muted);
+    }
+    
+    .compare-arrow i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    /* Diff Stats */
+    .diff-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .diff-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .diff-stat.additions { color: #10b981; }
+    .diff-stat.deletions { color: #ef4444; }
+    .diff-stat.changes { color: #f59e0b; }
+    
+    .diff-stat i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Diff Viewer */
+    .diff-viewer {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      flex: 1;
+    }
+    
+    .diff-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .diff-tabs {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    .diff-tab {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .diff-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .diff-tab.active {
+      background: var(--color-bg-secondary);
+      color: var(--color-text-primary);
+    }
+    
+    .diff-options {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .diff-option {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .diff-option:hover {
+      border-color: var(--color-text-muted);
+    }
+    
+    .diff-option.active {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    
+    .diff-option i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Diff Content */
+    .diff-content {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      overflow: auto;
+      max-height: 500px;
+    }
+    
+    .diff-section {
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .diff-section:last-child {
+      border-bottom: none;
+    }
+    
+    .diff-section-header {
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-tertiary);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .diff-section-header i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .diff-line {
+      display: flex;
+      padding: 0 1rem;
+      min-height: 24px;
+    }
+    
+    .diff-line:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .diff-line-number {
+      width: 50px;
+      color: var(--color-text-muted);
+      text-align: right;
+      padding-right: 1rem;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    
+    .diff-line-content {
+      flex: 1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .diff-line.addition {
+      background: rgba(16, 185, 129, 0.1);
+    }
+    
+    .diff-line.addition .diff-line-content::before {
+      content: '+';
+      color: #10b981;
+      margin-right: 0.5rem;
+    }
+    
+    .diff-line.deletion {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .diff-line.deletion .diff-line-content::before {
+      content: '-';
+      color: #ef4444;
+      margin-right: 0.5rem;
+    }
+    
+    .diff-line.modification {
+      background: rgba(251, 191, 36, 0.1);
+    }
+    
+    .diff-highlight {
+      background: rgba(99, 102, 241, 0.3);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+    
+    /* Merge Request Panel */
+    .merge-panel {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    
+    .merge-panel h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .merge-panel h3 i {
+      width: 20px;
+      height: 20px;
+      color: var(--color-primary);
+    }
+    
+    .merge-status {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .merge-status-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .merge-status-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .merge-status-icon.ready {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .merge-status-icon.conflicts {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+    
+    .merge-status-info h4 {
+      font-size: 0.9375rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .merge-status-info p {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .merge-checks {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .merge-check {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .merge-check i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .merge-check.passed i { color: #10b981; }
+    .merge-check.failed i { color: #ef4444; }
+    .merge-check.pending i { color: #f59e0b; }
+    
+    .merge-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .merge-actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+    
+    @media (max-width: 1024px) {
+      .vc-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .vc-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .version-timeline {
+        grid-column: span 2;
+        max-height: 300px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .vc-sidebar {
+        grid-template-columns: 1fr;
+      }
+      
+      .version-timeline {
+        grid-column: span 1;
+      }
+      
+      .compare-selector {
+        flex-direction: column;
+      }
+      
+      .compare-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/arch-artifacts.html">← Back to Artifacts</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="vc-container">
+      <!-- Sidebar -->
+      <aside class="vc-sidebar">
+        <!-- Artifact Selector -->
+        <div class="artifact-selector">
+          <h3>Selected Artifact</h3>
+          <div class="selected-artifact">
+            <div class="selected-artifact-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+              <i data-lucide="boxes"></i>
+            </div>
+            <div class="selected-artifact-info">
+              <span class="selected-artifact-id">FWK-001</span>
+              <div class="selected-artifact-name">Pyramid of Prosperity</div>
+            </div>
+            <i data-lucide="chevron-down" style="width: 16px; height: 16px; color: var(--color-text-muted);"></i>
+          </div>
+        </div>
+        
+        <!-- Branch Selector -->
+        <div class="branch-selector">
+          <h3>
+            Branches
+            <button><i data-lucide="plus"></i> New</button>
+          </h3>
+          <div class="branch-list">
+            <div class="branch-item active">
+              <div class="branch-icon"><i data-lucide="git-branch"></i></div>
+              <div class="branch-info">
+                <div class="branch-name">main</div>
+                <div class="branch-meta">v2.1.0 • 3 days ago</div>
+              </div>
+              <span class="branch-badge main">Default</span>
+            </div>
+            <div class="branch-item">
+              <div class="branch-icon"><i data-lucide="git-branch"></i></div>
+              <div class="branch-info">
+                <div class="branch-name">feature/data-dividends</div>
+                <div class="branch-meta">2 commits ahead</div>
+              </div>
+              <span class="branch-badge draft">Draft</span>
+            </div>
+            <div class="branch-item">
+              <div class="branch-icon"><i data-lucide="git-branch"></i></div>
+              <div class="branch-info">
+                <div class="branch-name">proposal/layer-5-revision</div>
+                <div class="branch-meta">In review</div>
+              </div>
+              <span class="branch-badge review">Review</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Version Timeline -->
+        <div class="version-timeline">
+          <h3>Version History</h3>
+          <div class="timeline-list">
+            <div class="timeline-item selected">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-version">v2.1.0</div>
+                <div class="timeline-message">Add Data Dividends to Layer 3</div>
+                <div class="timeline-meta">
+                  <span><i data-lucide="user"></i> David S.</span>
+                  <span><i data-lucide="clock"></i> 3 days ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-version">v2.0.3</div>
+                <div class="timeline-message">Clarify UBI funding mechanisms</div>
+                <div class="timeline-meta">
+                  <span><i data-lucide="user"></i> Maria K.</span>
+                  <span><i data-lucide="clock"></i> 1 week ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-version">v2.0.2</div>
+                <div class="timeline-message">Fix terminology in Layer 4</div>
+                <div class="timeline-meta">
+                  <span><i data-lucide="user"></i> James R.</span>
+                  <span><i data-lucide="clock"></i> 2 weeks ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-version">v2.0.1</div>
+                <div class="timeline-message">Add implementation timeline</div>
+                <div class="timeline-meta">
+                  <span><i data-lucide="user"></i> Sarah M.</span>
+                  <span><i data-lucide="clock"></i> 3 weeks ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-version">v2.0.0</div>
+                <div class="timeline-message">Major revision: 5-layer model</div>
+                <div class="timeline-meta">
+                  <span><i data-lucide="user"></i> David S.</span>
+                  <span><i data-lucide="clock"></i> 1 month ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <div class="vc-main">
+        <!-- Diff Header -->
+        <div class="diff-header">
+          <div class="diff-header-top">
+            <div>
+              <h1 class="diff-title">Version Comparison</h1>
+              <p class="diff-subtitle">Pyramid of Prosperity • FWK-001</p>
+            </div>
+            <div class="diff-actions">
+              <button class="btn btn-outline btn-sm">
+                <i data-lucide="download"></i>
+                Export
+              </button>
+              <button class="btn btn-outline btn-sm">
+                <i data-lucide="share-2"></i>
+                Share
+              </button>
+            </div>
+          </div>
+          
+          <div class="compare-selector">
+            <div class="compare-version">
+              <i data-lucide="git-commit" style="width: 16px; height: 16px; color: var(--color-text-muted);"></i>
+              <select>
+                <option>v2.0.3 (Previous)</option>
+                <option>v2.0.2</option>
+                <option>v2.0.1</option>
+                <option>v2.0.0</option>
+                <option>v1.5.0</option>
+              </select>
+            </div>
+            <div class="compare-arrow">
+              <i data-lucide="arrow-right"></i>
+            </div>
+            <div class="compare-version">
+              <i data-lucide="git-commit" style="width: 16px; height: 16px; color: var(--color-primary);"></i>
+              <select>
+                <option>v2.1.0 (Current)</option>
+                <option>v2.0.3</option>
+                <option>v2.0.2</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="diff-stats">
+            <span class="diff-stat additions">
+              <i data-lucide="plus"></i>
+              24 additions
+            </span>
+            <span class="diff-stat deletions">
+              <i data-lucide="minus"></i>
+              8 deletions
+            </span>
+            <span class="diff-stat changes">
+              <i data-lucide="edit-3"></i>
+              3 sections modified
+            </span>
+          </div>
+        </div>
+        
+        <!-- Diff Viewer -->
+        <div class="diff-viewer">
+          <div class="diff-toolbar">
+            <div class="diff-tabs">
+              <button class="diff-tab active">Unified</button>
+              <button class="diff-tab">Split</button>
+              <button class="diff-tab">Rich Text</button>
+            </div>
+            <div class="diff-options">
+              <button class="diff-option active">
+                <i data-lucide="eye"></i>
+                Show changes
+              </button>
+              <button class="diff-option">
+                <i data-lucide="file-text"></i>
+                Full document
+              </button>
+            </div>
+          </div>
+          
+          <div class="diff-content">
+            <div class="diff-section">
+              <div class="diff-section-header">
+                <i data-lucide="file-text"></i>
+                Layer 3: Collective Ownership
+              </div>
+              <div class="diff-line">
+                <span class="diff-line-number">45</span>
+                <span class="diff-line-content">## Layer 3: Collective Ownership</span>
+              </div>
+              <div class="diff-line">
+                <span class="diff-line-number">46</span>
+                <span class="diff-line-content"></span>
+              </div>
+              <div class="diff-line">
+                <span class="diff-line-number">47</span>
+                <span class="diff-line-content">Citizens hold equity stakes in national and regional assets, generating</span>
+              </div>
+              <div class="diff-line">
+                <span class="diff-line-number">48</span>
+                <span class="diff-line-content">dividend income from collective wealth.</span>
+              </div>
+              <div class="diff-line">
+                <span class="diff-line-number">49</span>
+                <span class="diff-line-content"></span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">50</span>
+                <span class="diff-line-content">### Components</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">51</span>
+                <span class="diff-line-content"></span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">52</span>
+                <span class="diff-line-content">1. **Sovereign Wealth Fund Dividends**: Annual distributions from</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">53</span>
+                <span class="diff-line-content">   nationally-owned resource and investment portfolios.</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">54</span>
+                <span class="diff-line-content"></span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">55</span>
+                <span class="diff-line-content">2. **<span class="diff-highlight">Data Dividends</span>**: Compensation for the collective value</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">56</span>
+                <span class="diff-line-content">   generated from citizens' personal data used by corporations.</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">57</span>
+                <span class="diff-line-content"></span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">58</span>
+                <span class="diff-line-content">3. **Infrastructure Returns**: Revenue sharing from publicly-funded</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">59</span>
+                <span class="diff-line-content">   infrastructure projects and utilities.</span>
+              </div>
+            </div>
+            
+            <div class="diff-section">
+              <div class="diff-section-header">
+                <i data-lucide="file-text"></i>
+                Implementation Timeline
+              </div>
+              <div class="diff-line deletion">
+                <span class="diff-line-number">112</span>
+                <span class="diff-line-content">Phase 2 (Years 5-10): Expand sovereign wealth fund</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">112</span>
+                <span class="diff-line-content">Phase 2 (Years 5-10): Expand sovereign wealth fund and establish</span>
+              </div>
+              <div class="diff-line addition">
+                <span class="diff-line-number">113</span>
+                <span class="diff-line-content">data dividend collection mechanisms</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Merge Panel -->
+        <div class="merge-panel">
+          <h3>
+            <i data-lucide="git-merge"></i>
+            Merge Request
+          </h3>
+          
+          <div class="merge-status">
+            <div class="merge-status-icon ready">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="merge-status-info">
+              <h4>Ready to merge</h4>
+              <p>All checks have passed. This branch can be merged.</p>
+            </div>
+          </div>
+          
+          <div class="merge-checks">
+            <div class="merge-check passed">
+              <i data-lucide="check-circle"></i>
+              <span>No merge conflicts</span>
+            </div>
+            <div class="merge-check passed">
+              <i data-lucide="check-circle"></i>
+              <span>Principle alignment verified (92%)</span>
+            </div>
+            <div class="merge-check passed">
+              <i data-lucide="check-circle"></i>
+              <span>Community review approved (12 votes)</span>
+            </div>
+            <div class="merge-check passed">
+              <i data-lucide="check-circle"></i>
+              <span>Steward approval received</span>
+            </div>
+          </div>
+          
+          <div class="merge-actions">
+            <button class="btn btn-outline">
+              <i data-lucide="x"></i>
+              Close
+            </button>
+            <button class="btn btn-primary">
+              <i data-lucide="git-merge"></i>
+              Merge Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    // Timeline item selection
+    document.querySelectorAll('.timeline-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.timeline-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+      });
+    });
+    
+    // Branch selection
+    document.querySelectorAll('.branch-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.branch-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    
+    // Diff tabs
+    document.querySelectorAll('.diff-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.diff-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    
+    // Diff options
+    document.querySelectorAll('.diff-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        opt.classList.toggle('active');
+      });
+    });
+  </script>
+</body>
+</html>

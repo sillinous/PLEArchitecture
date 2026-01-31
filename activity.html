@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity Feed | PLE Platform</title>
+  <meta name="description" content="Real-time activity feed with architecture element references across the platform.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .activity-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2rem;
+      min-height: calc(100vh - var(--header-height) - 4rem);
+    }
+    
+    .filters-sidebar {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--header-height) + 2rem);
+    }
+    
+    .filter-section { margin-bottom: 1.5rem; }
+    .filter-section:last-child { margin-bottom: 0; }
+    
+    .filter-title {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .filter-title i { width: 14px; height: 14px; }
+    
+    .filter-options { display: flex; flex-direction: column; gap: 0.375rem; }
+    
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .filter-option:hover { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+    .filter-option.active { background: rgba(99, 102, 241, 0.15); color: var(--color-primary); }
+    .filter-option input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--color-primary); }
+    
+    .filter-count {
+      margin-left: auto;
+      font-size: 0.6875rem;
+      padding: 0.125rem 0.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-full);
+      color: var(--color-text-muted);
+    }
+    
+    .arch-filter {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--color-bg-tertiary);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.375rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .arch-filter:hover { background: rgba(99, 102, 241, 0.1); }
+    .arch-filter.active { background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); }
+    
+    .arch-filter-icon {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    .arch-filter-icon i { width: 12px; height: 12px; color: white; }
+    .arch-filter-icon.goal { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .arch-filter-icon.strategy { background: linear-gradient(135deg, #10b981, #06b6d4); }
+    .arch-filter-icon.capability { background: linear-gradient(135deg, #ec4899, #f472b6); }
+    .arch-filter-icon.principle { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .arch-filter-icon.standard { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+    
+    .arch-filter-text { flex: 1; font-size: 0.8125rem; }
+    
+    .activity-main { display: flex; flex-direction: column; gap: 1.5rem; }
+    
+    .activity-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .activity-header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.75rem; }
+    .activity-header h1 i { width: 28px; height: 28px; color: var(--color-primary); }
+    .activity-controls { display: flex; gap: 0.5rem; }
+    
+    .search-input {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      min-width: 280px;
+    }
+    
+    .search-input i { width: 16px; height: 16px; color: var(--color-text-muted); }
+    .search-input input { flex: 1; background: transparent; border: none; color: var(--color-text-primary); font-size: 0.875rem; }
+    .search-input input::placeholder { color: var(--color-text-muted); }
+    .search-input input:focus { outline: none; }
+    
+    .activity-feed {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    
+    .feed-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    
+    .feed-tabs { display: flex; gap: 0.25rem; }
+    
+    .feed-tab {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .feed-tab:hover { background: var(--color-bg-tertiary); }
+    .feed-tab.active { background: rgba(99, 102, 241, 0.15); color: var(--color-primary); }
+    
+    .feed-body { max-height: calc(100vh - 300px); overflow-y: auto; }
+    
+    .activity-item {
+      display: flex; gap: 1rem;
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      transition: background var(--transition-fast);
+    }
+    
+    .activity-item:last-child { border-bottom: none; }
+    .activity-item:hover { background: rgba(99, 102, 241, 0.04); }
+    
+    .activity-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 0.875rem;
+      color: white; flex-shrink: 0;
+    }
+    
+    .activity-content { flex: 1; min-width: 0; }
+    .activity-text { font-size: 0.9375rem; line-height: 1.5; margin-bottom: 0.5rem; }
+    .activity-text strong { color: var(--color-text-primary); font-weight: 600; }
+    .activity-text .highlight { color: var(--color-primary); font-weight: 500; }
+    
+    .activity-meta {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+      font-size: 0.75rem; color: var(--color-text-muted);
+    }
+    
+    .activity-meta span { display: flex; align-items: center; gap: 0.25rem; }
+    .activity-meta i { width: 12px; height: 12px; }
+    
+    .activity-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.75rem; }
+    
+    .arch-tag {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.6875rem; font-weight: 500;
+    }
+    
+    .arch-tag i { width: 10px; height: 10px; }
+    .arch-tag.goal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .arch-tag.strategy { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .arch-tag.capability { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .arch-tag.principle { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .arch-tag.standard { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+    .arch-tag.objective { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    
+    .activity-type {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.6875rem; font-weight: 500;
+    }
+    
+    .activity-type.architecture { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .activity-type.content { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .activity-type.community { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .activity-type.publishing { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .activity-type.governance { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    
+    .load-more { padding: 1.25rem; text-align: center; border-top: 1px solid var(--color-border); }
+    
+    .load-more-btn {
+      padding: 0.75rem 2rem;
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .load-more-btn:hover { background: var(--color-bg-tertiary); border-color: var(--color-border-hover); color: var(--color-primary); }
+    
+    .activity-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    
+    .stat-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem; text-align: center;
+    }
+    
+    .stat-value { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .stat-label { font-size: 0.75rem; color: var(--color-text-muted); }
+    .stat-change { font-size: 0.6875rem; margin-top: 0.5rem; }
+    .stat-change.positive { color: #10b981; }
+    
+    @media (max-width: 1024px) {
+      .activity-layout { grid-template-columns: 1fr; }
+      .filters-sidebar { position: static; }
+      .activity-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    
+    @media (max-width: 640px) {
+      .activity-stats { grid-template-columns: 1fr; }
+      .activity-controls { flex-direction: column; }
+      .search-input { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Community Platform</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/platform-home.html">← Platform Home</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="activity-stats" style="margin-bottom: 2rem;">
+      <div class="stat-card">
+        <div class="stat-value" style="color: #818cf8;">247</div>
+        <div class="stat-label">Activities Today</div>
+        <div class="stat-change positive">↑ 18% from yesterday</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: #34d399;">89</div>
+        <div class="stat-label">Architecture References</div>
+        <div class="stat-change positive">↑ 24% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: #f472b6;">34</div>
+        <div class="stat-label">Active Contributors</div>
+        <div class="stat-change positive">↑ 5 new members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: #fbbf24;">96%</div>
+        <div class="stat-label">Alignment Score</div>
+        <div class="stat-change positive">↑ 2% improvement</div>
+      </div>
+    </div>
+    
+    <div class="activity-layout">
+      <aside class="filters-sidebar">
+        <div class="filter-section">
+          <div class="filter-title"><i data-lucide="layout-grid"></i> Suite</div>
+          <div class="filter-options">
+            <label class="filter-option active"><input type="checkbox" checked> All Activity <span class="filter-count">247</span></label>
+            <label class="filter-option"><input type="checkbox" checked> Architecture <span class="filter-count">89</span></label>
+            <label class="filter-option"><input type="checkbox" checked> Content <span class="filter-count">67</span></label>
+            <label class="filter-option"><input type="checkbox" checked> Community <span class="filter-count">54</span></label>
+            <label class="filter-option"><input type="checkbox" checked> Publishing <span class="filter-count">37</span></label>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-title"><i data-lucide="target"></i> Architecture Elements</div>
+          <div class="arch-filter active">
+            <div class="arch-filter-icon goal"><i data-lucide="target"></i></div>
+            <span class="arch-filter-text">Goals</span>
+            <span class="filter-count">42</span>
+          </div>
+          <div class="arch-filter">
+            <div class="arch-filter-icon strategy"><i data-lucide="route"></i></div>
+            <span class="arch-filter-text">Strategies</span>
+            <span class="filter-count">28</span>
+          </div>
+          <div class="arch-filter">
+            <div class="arch-filter-icon capability"><i data-lucide="boxes"></i></div>
+            <span class="arch-filter-text">Capabilities</span>
+            <span class="filter-count">35</span>
+          </div>
+          <div class="arch-filter">
+            <div class="arch-filter-icon principle"><i data-lucide="scale"></i></div>
+            <span class="arch-filter-text">Principles</span>
+            <span class="filter-count">19</span>
+          </div>
+          <div class="arch-filter">
+            <div class="arch-filter-icon standard"><i data-lucide="book-check"></i></div>
+            <span class="arch-filter-text">Standards</span>
+            <span class="filter-count">12</span>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-title"><i data-lucide="calendar"></i> Time Range</div>
+          <div class="filter-options">
+            <label class="filter-option active"><input type="radio" name="time" checked> Today</label>
+            <label class="filter-option"><input type="radio" name="time"> This Week</label>
+            <label class="filter-option"><input type="radio" name="time"> This Month</label>
+            <label class="filter-option"><input type="radio" name="time"> All Time</label>
+          </div>
+        </div>
+      </aside>
+      
+      <div class="activity-main">
+        <div class="activity-header">
+          <h1><i data-lucide="activity"></i> Activity Feed</h1>
+          <div class="activity-controls">
+            <div class="search-input">
+              <i data-lucide="search"></i>
+              <input type="text" placeholder="Search activities...">
+            </div>
+            <button class="btn btn-outline"><i data-lucide="download"></i> Export</button>
+          </div>
+        </div>
+        
+        <div class="activity-feed">
+          <div class="feed-header">
+            <div class="feed-tabs">
+              <div class="feed-tab active">All</div>
+              <div class="feed-tab">Architecture</div>
+              <div class="feed-tab">Content</div>
+              <div class="feed-tab">Community</div>
+            </div>
+            <button class="btn btn-ghost btn-sm"><i data-lucide="refresh-cw"></i> Refresh</button>
+          </div>
+          
+          <div class="feed-body">
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--gradient-primary);">DS</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>David Shapiro</strong> published <span class="highlight">"The Economic Agency Paradox"</span> to blog and newsletter</div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> 2 hours ago</span>
+                  <span class="activity-type publishing"><i data-lucide="globe"></i> Publishing</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-001: Universal Basic Income</span>
+                  <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-002: Public Education</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-006: Content Production</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--gradient-success);">MK</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Maria K.</strong> added <span class="highlight">Data Dividends</span> capability to the Capability Model</div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> 4 hours ago</span>
+                  <span class="activity-type architecture"><i data-lucide="layers"></i> Architecture</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-024: Data Dividends</span>
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-002: Data Ownership</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--gradient-warning);">TC</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Tech Working Group</strong> proposed <span class="highlight">Castopod</span> as podcast hosting standard</div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> Yesterday 3:45 PM</span>
+                  <span class="activity-type governance"><i data-lucide="gavel"></i> Governance</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag standard"><i data-lucide="book-check"></i> STD-014: Podcast Platform</span>
+                  <span class="arch-tag principle"><i data-lucide="scale"></i> PRIN-005: Open Source First</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: linear-gradient(135deg, #a855f7, #c084fc);">PW</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Policy Working Group</strong> completed draft of <span class="highlight">Automation Tax Framework</span></div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> Yesterday 11:20 AM</span>
+                  <span class="activity-type content"><i data-lucide="file-text"></i> Content</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag strategy"><i data-lucide="route"></i> STRAT-003: Policy Development</span>
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-003: Automation Taxation</span>
+                  <span class="arch-tag objective"><i data-lucide="flag"></i> OBJ-012: Tax Framework Q1</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: linear-gradient(135deg, #06b6d4, #0ea5e9);">RW</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Research Working Group</strong> updated <span class="highlight">UBI Trial Analysis</span> with Finland results</div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> 2 days ago</span>
+                  <span class="activity-type content"><i data-lucide="file-text"></i> Content</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-002: Research & Analysis</span>
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-006: Evidence Base</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: linear-gradient(135deg, #ec4899, #f472b6);">JM</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Jennifer M.</strong> created working group: <span class="highlight">Labor Transition Support</span></div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> 2 days ago</span>
+                  <span class="activity-type community"><i data-lucide="users"></i> Community</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-025: Transition Support</span>
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-008: Workforce Transition</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: var(--gradient-primary);">DS</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>David Shapiro</strong> approved principle: <span class="highlight">Federated Governance Model</span></div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> 3 days ago</span>
+                  <span class="activity-type governance"><i data-lucide="gavel"></i> Governance</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag principle"><i data-lucide="scale"></i> PRIN-008: Federated Governance</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-item">
+              <div class="activity-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);">OW</div>
+              <div class="activity-content">
+                <div class="activity-text"><strong>Outreach WG</strong> launched <span class="highlight">UBI Awareness Campaign</span> across all channels</div>
+                <div class="activity-meta">
+                  <span><i data-lucide="clock"></i> 3 days ago</span>
+                  <span class="activity-type publishing"><i data-lucide="globe"></i> Publishing</span>
+                </div>
+                <div class="activity-tags">
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-001: Universal Basic Income</span>
+                  <span class="arch-tag goal"><i data-lucide="target"></i> GOAL-007: Public Awareness</span>
+                  <span class="arch-tag capability"><i data-lucide="boxes"></i> CAP-003: Advocacy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="load-more">
+            <button class="load-more-btn">Load More Activities</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    document.querySelectorAll('.arch-filter').forEach(f => f.addEventListener('click', () => f.classList.toggle('active')));
+    document.querySelectorAll('.feed-tab').forEach(t => t.addEventListener('click', () => {
+      document.querySelectorAll('.feed-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    }));
+  </script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Base | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Comprehensive documentation and knowledge base for the Post-Labor Economics movement.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Wiki Layout */
+    .wiki-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 260px;
+      min-height: calc(100vh - var(--header-height));
+    }
+    
+    /* Left Navigation */
+    .wiki-nav {
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .wiki-nav-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .wiki-search {
+      position: relative;
+    }
+    
+    .wiki-search input {
+      width: 100%;
+      padding: 0.625rem 1rem 0.625rem 2.5rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+    }
+    
+    .wiki-search input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    .wiki-search i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+    
+    .wiki-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem;
+    }
+    
+    .tree-section {
+      margin-bottom: 0.5rem;
+    }
+    
+    .tree-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      transition: all 0.15s;
+    }
+    
+    .tree-section-header:hover {
+      background: var(--color-bg-primary);
+    }
+    
+    .tree-section-header i {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+      transition: transform 0.15s;
+    }
+    
+    .tree-section.collapsed .tree-section-header i.chevron {
+      transform: rotate(-90deg);
+    }
+    
+    .tree-section-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .tree-section-count {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .tree-items {
+      padding-left: 1.5rem;
+    }
+    
+    .tree-section.collapsed .tree-items {
+      display: none;
+    }
+    
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .tree-item:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .tree-item.active {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--color-primary);
+    }
+    
+    .tree-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Main Content */
+    .wiki-main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .wiki-header {
+      padding: 1.25rem 2rem;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .wiki-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .wiki-breadcrumb a {
+      color: var(--color-primary);
+    }
+    
+    .wiki-breadcrumb i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .wiki-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .wiki-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+    
+    .wiki-article {
+      max-width: 800px;
+    }
+    
+    .wiki-article-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .wiki-article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .wiki-category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .wiki-category-badge i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .wiki-category-badge.concepts {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+    
+    .wiki-category-badge.frameworks {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .wiki-category-badge.governance {
+      background: rgba(244, 114, 182, 0.15);
+      color: #f472b6;
+    }
+    
+    .wiki-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+    
+    .wiki-article-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    
+    .wiki-article-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      line-height: 1.5;
+    }
+    
+    .wiki-article-info {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .wiki-article-info-item {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .wiki-article-info-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Article Body */
+    .wiki-article-body {
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      color: var(--color-text-secondary);
+    }
+    
+    .wiki-article-body h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .wiki-article-body h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .wiki-article-body p {
+      margin-bottom: 1rem;
+    }
+    
+    .wiki-article-body ul, .wiki-article-body ol {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+    
+    .wiki-article-body li {
+      margin-bottom: 0.5rem;
+    }
+    
+    .wiki-article-body blockquote {
+      border-left: 3px solid var(--color-primary);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      color: var(--color-text-primary);
+      font-style: italic;
+    }
+    
+    .wiki-article-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+      padding: 0.125rem 0.375rem;
+      background: var(--color-bg-secondary);
+      border-radius: 4px;
+      color: #f472b6;
+    }
+    
+    .wiki-article-body a {
+      color: var(--color-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    
+    /* Info Boxes */
+    .wiki-info-box {
+      padding: 1.25rem;
+      border-radius: 0.75rem;
+      margin: 1.5rem 0;
+    }
+    
+    .wiki-info-box.definition {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 3px solid var(--color-primary);
+    }
+    
+    .wiki-info-box.example {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid #10b981;
+    }
+    
+    .wiki-info-box.warning {
+      background: rgba(251, 191, 36, 0.1);
+      border-left: 3px solid #fbbf24;
+    }
+    
+    .wiki-info-box-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .wiki-info-box-title i {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .wiki-info-box-content {
+      font-size: 0.9375rem;
+    }
+    
+    /* Diagram */
+    .wiki-diagram {
+      padding: 2rem;
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    
+    .pyramid-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .pyramid-layer {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+      text-align: center;
+    }
+    
+    .pyramid-layer:nth-child(1) { width: 50%; background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+    .pyramid-layer:nth-child(2) { width: 60%; background: linear-gradient(135deg, #f472b6, #ec4899); }
+    .pyramid-layer:nth-child(3) { width: 70%; background: linear-gradient(135deg, #22d3ee, #06b6d4); }
+    .pyramid-layer:nth-child(4) { width: 80%; background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+    .pyramid-layer:nth-child(5) { width: 90%; background: linear-gradient(135deg, #34d399, #10b981); }
+    
+    .wiki-diagram-caption {
+      margin-top: 1rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    /* Right Sidebar - Table of Contents */
+    .wiki-toc {
+      background: var(--color-bg-secondary);
+      border-left: 1px solid var(--color-border);
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .wiki-toc-header {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+    
+    .toc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .toc-item {
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+    
+    .toc-item:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-primary);
+    }
+    
+    .toc-item.active {
+      color: var(--color-primary);
+      border-left-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .toc-item.level-3 {
+      padding-left: 1.5rem;
+      font-size: 0.75rem;
+    }
+    
+    /* Related Articles */
+    .wiki-related {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .wiki-related-header {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .wiki-related-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .wiki-related-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .wiki-related-item:hover {
+      background: var(--color-bg-primary);
+      color: var(--color-primary);
+    }
+    
+    .wiki-related-item i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    /* Contributors */
+    .wiki-contributors {
+      margin-top: 1.5rem;
+    }
+    
+    .wiki-contributors-header {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .wiki-contributors-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.375rem;
+    }
+    
+    .wiki-contributor {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    
+    .wiki-contributor:hover {
+      transform: scale(1.1);
+    }
+    
+    @media (max-width: 1200px) {
+      .wiki-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .wiki-nav, .wiki-toc {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/governance.html">← Governance</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wiki-container" style="margin-top: var(--header-height);">
+    <!-- Left Navigation -->
+    <aside class="wiki-nav">
+      <div class="wiki-nav-header">
+        <div class="wiki-search">
+          <i data-lucide="search"></i>
+          <input type="text" placeholder="Search knowledge base...">
+        </div>
+      </div>
+      
+      <div class="wiki-tree">
+        <div class="tree-section">
+          <div class="tree-section-header">
+            <i data-lucide="chevron-down" class="chevron"></i>
+            <i data-lucide="lightbulb" style="color: #818cf8;"></i>
+            <span class="tree-section-title">Core Concepts</span>
+            <span class="tree-section-count">12</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item"><i data-lucide="file-text"></i> Post-Labor Economics</div>
+            <div class="tree-item active"><i data-lucide="file-text"></i> Laborism</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> L/0 Thesis</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Economic Agency Paradox</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Automation Dividend</div>
+          </div>
+        </div>
+        
+        <div class="tree-section">
+          <div class="tree-section-header">
+            <i data-lucide="chevron-down" class="chevron"></i>
+            <i data-lucide="triangle" style="color: #10b981;"></i>
+            <span class="tree-section-title">Pyramid of Prosperity</span>
+            <span class="tree-section-count">8</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item"><i data-lucide="file-text"></i> Overview</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Layer 1: Universal Basic Income</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Layer 2: Essential Services</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Layer 3: Collective Ownership</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Layer 4: Market Participation</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Layer 5: Meaningful Work</div>
+          </div>
+        </div>
+        
+        <div class="tree-section">
+          <div class="tree-section-header">
+            <i data-lucide="chevron-down" class="chevron"></i>
+            <i data-lucide="landmark" style="color: #f472b6;"></i>
+            <span class="tree-section-title">Pyramid of Power</span>
+            <span class="tree-section-count">6</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item"><i data-lucide="file-text"></i> Overview</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Algorithmic Governance</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Blockchain Identity</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Direct Democracy</div>
+          </div>
+        </div>
+        
+        <div class="tree-section">
+          <div class="tree-section-header">
+            <i data-lucide="chevron-down" class="chevron"></i>
+            <i data-lucide="scale" style="color: #fbbf24;"></i>
+            <span class="tree-section-title">Policy Mechanisms</span>
+            <span class="tree-section-count">9</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item"><i data-lucide="file-text"></i> Automation Tax</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Data Dividends</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Sovereign Wealth Funds</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> Universal Services</div>
+          </div>
+        </div>
+        
+        <div class="tree-section">
+          <div class="tree-section-header">
+            <i data-lucide="chevron-down" class="chevron"></i>
+            <i data-lucide="users" style="color: #22d3ee;"></i>
+            <span class="tree-section-title">Stakeholder Guides</span>
+            <span class="tree-section-count">5</span>
+          </div>
+          <div class="tree-items">
+            <div class="tree-item"><i data-lucide="file-text"></i> For Workers</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> For Business Leaders</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> For Policymakers</div>
+            <div class="tree-item"><i data-lucide="file-text"></i> For Researchers</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="wiki-main">
+      <div class="wiki-header">
+        <div class="wiki-breadcrumb">
+          <a href="#">Knowledge Base</a>
+          <i data-lucide="chevron-right"></i>
+          <a href="#">Core Concepts</a>
+          <i data-lucide="chevron-right"></i>
+          <span>Laborism</span>
+        </div>
+        <div class="wiki-actions">
+          <button class="btn btn-outline btn-sm">
+            <i data-lucide="pencil"></i> Edit
+          </button>
+          <button class="btn btn-outline btn-sm">
+            <i data-lucide="history"></i> History
+          </button>
+          <button class="btn btn-outline btn-sm">
+            <i data-lucide="share-2"></i> Share
+          </button>
+        </div>
+      </div>
+      
+      <div class="wiki-content">
+        <article class="wiki-article">
+          <header class="wiki-article-header">
+            <div class="wiki-article-meta">
+              <span class="wiki-category-badge concepts">
+                <i data-lucide="lightbulb"></i> Core Concept
+              </span>
+              <span class="wiki-status">Published</span>
+            </div>
+            <h1 class="wiki-article-title">Laborism</h1>
+            <p class="wiki-article-subtitle">The deeply embedded belief system that ties human worth, identity, and societal contribution to paid employment.</p>
+            <div class="wiki-article-info">
+              <span class="wiki-article-info-item"><i data-lucide="clock"></i> 8 min read</span>
+              <span class="wiki-article-info-item"><i data-lucide="calendar"></i> Updated Jan 25, 2026</span>
+              <span class="wiki-article-info-item"><i data-lucide="eye"></i> 2,847 views</span>
+            </div>
+          </header>
+          
+          <div class="wiki-article-body">
+            <div class="wiki-info-box definition">
+              <div class="wiki-info-box-title">
+                <i data-lucide="book-open" style="color: var(--color-primary);"></i>
+                Definition
+              </div>
+              <div class="wiki-info-box-content">
+                <strong>Laborism</strong> is the cultural and philosophical belief that paid work is inherently virtuous, necessary for moral standing, and the primary legitimate source of income and social value. It encompasses both the individual internalization that one must work to be worthy, and the systemic structures that enforce this through policy, social norms, and economic design.
+              </div>
+            </div>
+            
+            <h2 id="overview">Overview</h2>
+            <p>Laborism represents one of the most pervasive yet rarely examined ideological frameworks in modern society. Unlike explicit political ideologies, laborism operates largely beneath conscious awareness, shaping everything from individual self-worth to national policy.</p>
+            
+            <p>The Post-Labor Economics movement identifies laborism as the primary ideological barrier to building economic systems that can function in an age of increasing automation. By making the dismantling of laborism a central goal, the movement seeks to free humanity from outdated constraints and enable new forms of human flourishing.</p>
+            
+            <h2 id="historical-origins">Historical Origins</h2>
+            <p>Laborism emerged from the confluence of several historical developments:</p>
+            
+            <h3 id="religious-foundations">Religious Foundations</h3>
+            <p>The Protestant Work Ethic, articulated by Max Weber, established work as a form of divine calling. This religious framing transformed labor from mere survival necessity into a moral imperative, creating the foundation for modern laborism.</p>
+            
+            <h3 id="industrial-revolution">Industrial Revolution</h3>
+            <p>The factory system required predictable, disciplined labor. Laborism served the needs of industrial capitalism by creating workers who found meaning in employment and viewed unemployment as personal failure rather than systemic outcome.</p>
+            
+            <div class="wiki-info-box example">
+              <div class="wiki-info-box-title">
+                <i data-lucide="lightbulb" style="color: #10b981;"></i>
+                Historical Example
+              </div>
+              <div class="wiki-info-box-content">
+                During the Great Depression, many unemployed workers reported feelings of shame and worthlessness despite unemployment being clearly systemic. This illustrates how deeply laborism had become internalized by the 1930s.
+              </div>
+            </div>
+            
+            <h2 id="manifestations">Manifestations of Laborism</h2>
+            <p>Laborism manifests across multiple dimensions of society:</p>
+            
+            <h3 id="individual-level">Individual Level</h3>
+            <ul>
+              <li><strong>Identity fusion:</strong> People define themselves primarily by their occupation ("I am a teacher" vs. "I teach")</li>
+              <li><strong>Guilt and shame:</strong> Periods of unemployment trigger psychological distress beyond financial concerns</li>
+              <li><strong>Busyness as virtue:</strong> Being constantly occupied is treated as inherently valuable</li>
+            </ul>
+            
+            <h3 id="social-level">Social Level</h3>
+            <ul>
+              <li><strong>Status hierarchies:</strong> Social standing correlates strongly with job prestige</li>
+              <li><strong>Judgment of others:</strong> Unemployed individuals face social stigma</li>
+              <li><strong>Caregiving devaluation:</strong> Unpaid labor (child-rearing, elder care) receives less recognition</li>
+            </ul>
+            
+            <h3 id="policy-level">Policy Level</h3>
+            <ul>
+              <li><strong>Work requirements:</strong> Social benefits often require employment or job-seeking</li>
+              <li><strong>Job creation focus:</strong> Economic policy prioritizes employment over outcomes</li>
+              <li><strong>Anti-UBI sentiment:</strong> Unconditional income faces resistance as "something for nothing"</li>
+            </ul>
+            
+            <h2 id="pyramid-connection">Connection to the Pyramid of Prosperity</h2>
+            <p>The <a href="#">Pyramid of Prosperity</a> framework directly addresses laborism by establishing income sources that are explicitly decoupled from labor:</p>
+            
+            <div class="wiki-diagram">
+              <div class="pyramid-visual">
+                <div class="pyramid-layer">Layer 5: Meaningful Work</div>
+                <div class="pyramid-layer">Layer 4: Market Participation</div>
+                <div class="pyramid-layer">Layer 3: Collective Ownership</div>
+                <div class="pyramid-layer">Layer 2: Essential Services</div>
+                <div class="pyramid-layer">Layer 1: Universal Basic Income</div>
+              </div>
+              <p class="wiki-diagram-caption">The Pyramid of Prosperity provides multiple non-labor income sources</p>
+            </div>
+            
+            <p>Layers 1-3 of the Pyramid explicitly provide income without requiring labor, while Layer 5 reframes work as a protected right rather than an obligation.</p>
+            
+            <h2 id="dismantling">Dismantling Laborism</h2>
+            <p>The Post-Labor Economics movement advocates for dismantling laborism through:</p>
+            
+            <ol>
+              <li><strong>Narrative change:</strong> Shifting cultural stories about work, worth, and contribution</li>
+              <li><strong>Policy reform:</strong> Removing work requirements and establishing universal programs</li>
+              <li><strong>Valuation expansion:</strong> Recognizing non-market contributions (caregiving, community building, art)</li>
+              <li><strong>Identity diversification:</strong> Encouraging multi-faceted human identity beyond occupation</li>
+            </ol>
+            
+            <div class="wiki-info-box warning">
+              <div class="wiki-info-box-title">
+                <i data-lucide="alert-triangle" style="color: #fbbf24;"></i>
+                Important Distinction
+              </div>
+              <div class="wiki-info-box-content">
+                Dismantling laborism does not mean opposing work itself. Many people find deep meaning in productive activity. The goal is ending the <em>compulsion</em> to work for survival and the <em>moral judgment</em> of those who don't or can't work.
+              </div>
+            </div>
+            
+            <h2 id="references">References & Further Reading</h2>
+            <ul>
+              <li>Shapiro, David. "Post-Labor Economics" (2024)</li>
+              <li>Weber, Max. "The Protestant Ethic and the Spirit of Capitalism" (1905)</li>
+              <li>Graeber, David. "Bullshit Jobs" (2018)</li>
+              <li>Weeks, Kathi. "The Problem with Work" (2011)</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </main>
+    
+    <!-- Right Sidebar - Table of Contents -->
+    <aside class="wiki-toc">
+      <div class="wiki-toc-header">On This Page</div>
+      <div class="toc-list">
+        <div class="toc-item active">Overview</div>
+        <div class="toc-item">Historical Origins</div>
+        <div class="toc-item level-3">Religious Foundations</div>
+        <div class="toc-item level-3">Industrial Revolution</div>
+        <div class="toc-item">Manifestations of Laborism</div>
+        <div class="toc-item level-3">Individual Level</div>
+        <div class="toc-item level-3">Social Level</div>
+        <div class="toc-item level-3">Policy Level</div>
+        <div class="toc-item">Connection to the Pyramid</div>
+        <div class="toc-item">Dismantling Laborism</div>
+        <div class="toc-item">References</div>
+      </div>
+      
+      <div class="wiki-related">
+        <div class="wiki-related-header">Related Articles</div>
+        <div class="wiki-related-list">
+          <div class="wiki-related-item">
+            <i data-lucide="file-text"></i>
+            Post-Labor Economics
+          </div>
+          <div class="wiki-related-item">
+            <i data-lucide="file-text"></i>
+            L/0 Thesis
+          </div>
+          <div class="wiki-related-item">
+            <i data-lucide="file-text"></i>
+            Pyramid of Prosperity
+          </div>
+          <div class="wiki-related-item">
+            <i data-lucide="file-text"></i>
+            Universal Basic Income
+          </div>
+        </div>
+      </div>
+      
+      <div class="wiki-contributors">
+        <div class="wiki-contributors-header">Contributors</div>
+        <div class="wiki-contributors-list">
+          <div class="wiki-contributor" style="background: linear-gradient(135deg, #10b981, #059669);" title="David Shapiro">DS</div>
+          <div class="wiki-contributor" style="background: linear-gradient(135deg, #6366f1, #4f46e5);" title="Maria Kowalski">MK</div>
+          <div class="wiki-contributor" style="background: linear-gradient(135deg, #ec4899, #db2777);" title="Sarah Mitchell">SM</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    // Tree section collapse
+    document.querySelectorAll('.tree-section-header').forEach(header => {
+      header.addEventListener('click', () => {
+        header.parentElement.classList.toggle('collapsed');
+      });
+    });
+    
+    // Tree item selection
+    document.querySelectorAll('.tree-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.tree-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+    
+    // TOC item selection
+    document.querySelectorAll('.toc-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.toc-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

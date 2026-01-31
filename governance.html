@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Collaborative governance for the Post-Labor Economics architecture. Mission, vision, principles, decision records, and contribution guidelines.">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/governance.html">
+  <meta property="og:title" content="Architecture Governance | Post-Labor Economics">
+  <meta property="og:description" content="Collaborative governance for the Post-Labor Economics architecture. Mission, vision, principles, decision records, and contribution guidelines.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-governance.png">
+  <meta property="og:site_name" content="Post-Labor Economics">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Architecture Governance | Post-Labor Economics">
+  <meta name="twitter:description" content="Collaborative governance for the Post-Labor Economics architecture.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-governance.png">
+
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Governance-specific styles */
+    .governance-hero {
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+      padding: calc(var(--header-height) + 4rem) 0 4rem;
+    }
+    
+    .governance-hero-content {
+      max-width: 800px;
+    }
+    
+    .governance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      color: #818cf8;
+      margin-bottom: 1.5rem;
+    }
+    
+    .governance-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    
+    .governance-subtitle {
+      font-size: 1.25rem;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      max-width: 600px;
+    }
+    
+    /* Architecture overview diagram */
+    .arch-overview {
+      padding: 4rem 0;
+    }
+    
+    .arch-diagram {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .arch-pillar {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .arch-pillar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--pillar-color, var(--color-accent));
+    }
+    
+    .arch-pillar:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+      border-color: var(--pillar-color, var(--color-accent));
+    }
+    
+    .arch-pillar.mission { --pillar-color: #10b981; }
+    .arch-pillar.principles { --pillar-color: #6366f1; }
+    .arch-pillar.governance { --pillar-color: #f59e0b; }
+    
+    .pillar-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      color: var(--pillar-color, var(--color-accent));
+    }
+    
+    .pillar-icon i {
+      width: 32px;
+      height: 32px;
+    }
+    
+    .arch-pillar h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .arch-pillar p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Governance sections grid */
+    .governance-sections {
+      padding: 4rem 0;
+      background: var(--color-bg-secondary);
+    }
+    
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .section-header h2 {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .section-header p {
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .governance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .governance-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    
+    .governance-card:hover {
+      border-color: var(--color-border-light);
+      transform: translateY(-2px);
+    }
+    
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-color, rgba(99, 102, 241, 0.15));
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+      color: var(--card-accent, #818cf8);
+    }
+    
+    .card-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .governance-card h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .governance-card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      flex: 1;
+      margin-bottom: 1rem;
+    }
+    
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--card-accent, #818cf8);
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    
+    .card-link i {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s;
+    }
+    
+    .governance-card:hover .card-link i {
+      transform: translateX(4px);
+    }
+    
+    /* Status indicators */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .status-badge.active {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+    
+    .status-badge.draft {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+    
+    .status-badge.proposed {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    
+    /* Recent activity */
+    .activity-section {
+      padding: 4rem 0;
+    }
+    
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .activity-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      align-items: flex-start;
+    }
+    
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-bg-tertiary);
+      border-radius: 0.5rem;
+      color: var(--color-text-secondary);
+      flex-shrink: 0;
+    }
+    
+    .activity-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .activity-content {
+      flex: 1;
+    }
+    
+    .activity-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .activity-meta {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .activity-time {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+    
+    /* Contribution CTA */
+    .contribution-cta {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
+    }
+    
+    .cta-content {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .cta-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-content p {
+      color: var(--color-text-secondary);
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    /* Decision flow diagram */
+    .decision-flow {
+      padding: 4rem 0;
+      background: var(--color-bg-secondary);
+    }
+    
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      min-width: 140px;
+      text-align: center;
+    }
+    
+    .flow-step-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--step-color, rgba(99, 102, 241, 0.15));
+      border-radius: 50%;
+      color: var(--step-accent, #818cf8);
+    }
+    
+    .flow-step-icon i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .flow-step h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .flow-step p {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .flow-arrow {
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+    
+    .flow-arrow i {
+      width: 24px;
+      height: 24px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .arch-diagram {
+        grid-template-columns: 1fr;
+      }
+      
+      .flow-diagram {
+        flex-direction: column;
+      }
+      
+      .flow-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/governance.html">Architecture Governance</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="governance-hero">
+      <div class="container">
+        <div class="governance-hero-content">
+          <div class="governance-badge">
+            <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+            Architecture Governance
+          </div>
+          <h1 class="governance-title">Building the L/0 Architecture Together</h1>
+          <p class="governance-subtitle">
+            Collaborative governance for the intellectual and strategic architecture of the Post-Labor Economics movement. 
+            Transparent processes for proposing, debating, and adopting architectural decisions.
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Three Pillars -->
+    <section class="arch-overview">
+      <div class="container">
+        <div class="arch-diagram">
+          <div class="arch-pillar mission">
+            <div class="pillar-icon">
+              <i data-lucide="compass"></i>
+            </div>
+            <h3>Mission & Vision</h3>
+            <p>Our foundational purpose, aspirational future state, and guiding goals that shape all architectural decisions.</p>
+            <a href="/arch-mission.html" class="btn btn-outline btn-sm">
+              Explore <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+          </div>
+          
+          <div class="arch-pillar principles">
+            <div class="pillar-icon">
+              <i data-lucide="scale"></i>
+            </div>
+            <h3>Principles & Values</h3>
+            <p>The non-negotiable beliefs and ethical commitments that guide how we design, develop, and evolve the architecture.</p>
+            <a href="/arch-principles.html" class="btn btn-outline btn-sm">
+              Explore <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+          </div>
+          
+          <div class="arch-pillar governance">
+            <div class="pillar-icon">
+              <i data-lucide="git-branch"></i>
+            </div>
+            <h3>Decision Records</h3>
+            <p>Documented architectural decisions (ADRs), their rationale, status, and the collaborative process that shaped them.</p>
+            <a href="/arch-decisions.html" class="btn btn-outline btn-sm">
+              Explore <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Governance Areas -->
+    <section class="governance-sections">
+      <div class="container">
+        <div class="section-header">
+          <h2>Governance Areas</h2>
+          <p>The architecture encompasses multiple domains, each with its own governance considerations and decision-making processes.</p>
+        </div>
+        
+        <div class="governance-grid">
+          <!-- Strategic Architecture -->
+          <div class="governance-card" style="--card-color: rgba(16, 185, 129, 0.15); --card-accent: #34d399;">
+            <div class="card-icon">
+              <i data-lucide="target"></i>
+            </div>
+            <span class="status-badge active"><span class="status-dot"></span> Active</span>
+            <h3>Strategic Architecture</h3>
+            <p>Goals, strategies, objectives, and tactics. How we translate mission into action and measure progress toward L/0.</p>
+            <a href="/arch-strategy.html" class="card-link">
+              View Strategy Framework <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+          
+          <!-- Conceptual Architecture -->
+          <div class="governance-card" style="--card-color: rgba(99, 102, 241, 0.15); --card-accent: #818cf8;">
+            <div class="card-icon">
+              <i data-lucide="boxes"></i>
+            </div>
+            <span class="status-badge active"><span class="status-dot"></span> Active</span>
+            <h3>Conceptual Architecture</h3>
+            <p>Core frameworks like the Pyramids of Prosperity and Power. The intellectual models that define post-labor economics.</p>
+            <a href="/architecture.html" class="card-link">
+              View Frameworks <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+          
+          <!-- Policy Architecture -->
+          <div class="governance-card" style="--card-color: rgba(245, 158, 11, 0.15); --card-accent: #fbbf24;">
+            <div class="card-icon">
+              <i data-lucide="scroll-text"></i>
+            </div>
+            <span class="status-badge active"><span class="status-dot"></span> Active</span>
+            <h3>Policy Architecture</h3>
+            <p>Policy proposals, implementation pathways, and evidence-based recommendations for transitioning to post-labor economics.</p>
+            <a href="/policy.html" class="card-link">
+              View Policy Framework <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+          
+          <!-- Coalition Architecture -->
+          <div class="governance-card" style="--card-color: rgba(236, 72, 153, 0.15); --card-accent: #f472b6;">
+            <div class="card-icon">
+              <i data-lucide="handshake"></i>
+            </div>
+            <span class="status-badge active"><span class="status-dot"></span> Active</span>
+            <h3>Coalition Architecture</h3>
+            <p>Stakeholder mapping, bridge-building strategies, and the unlikely alliances that make transformation possible.</p>
+            <a href="/coalition.html" class="card-link">
+              View Coalition Map <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+          
+          <!-- Communication Architecture -->
+          <div class="governance-card" style="--card-color: rgba(6, 182, 212, 0.15); --card-accent: #22d3ee;">
+            <div class="card-icon">
+              <i data-lucide="megaphone"></i>
+            </div>
+            <span class="status-badge draft"><span class="status-dot"></span> Draft</span>
+            <h3>Communication Architecture</h3>
+            <p>Messaging frameworks, narrative strategy, and how we communicate complex ideas to diverse audiences.</p>
+            <a href="/arch-communication.html" class="card-link">
+              View Communication Guide <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+          
+          <!-- Technical Architecture -->
+          <div class="governance-card" style="--card-color: rgba(139, 92, 246, 0.15); --card-accent: #a78bfa;">
+            <div class="card-icon">
+              <i data-lucide="code-2"></i>
+            </div>
+            <span class="status-badge draft"><span class="status-dot"></span> Draft</span>
+            <h3>Technical Architecture</h3>
+            <p>Digital infrastructure, data systems, and technical implementations that support the movement's operations.</p>
+            <a href="/arch-technical.html" class="card-link">
+              View Technical Docs <i data-lucide="arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Decision Flow -->
+    <section class="decision-flow">
+      <div class="container">
+        <div class="section-header">
+          <h2>How Decisions Are Made</h2>
+          <p>Our transparent process for proposing, discussing, and adopting architectural changes.</p>
+        </div>
+        
+        <div class="flow-diagram">
+          <div class="flow-step" style="--step-color: rgba(99, 102, 241, 0.15); --step-accent: #818cf8;">
+            <div class="flow-step-icon">
+              <i data-lucide="lightbulb"></i>
+            </div>
+            <h4>1. Propose</h4>
+            <p>Submit idea via Skool or GitHub</p>
+          </div>
+          
+          <div class="flow-arrow">
+            <i data-lucide="chevron-right"></i>
+          </div>
+          
+          <div class="flow-step" style="--step-color: rgba(6, 182, 212, 0.15); --step-accent: #22d3ee;">
+            <div class="flow-step-icon">
+              <i data-lucide="messages-square"></i>
+            </div>
+            <h4>2. Discuss</h4>
+            <p>Community feedback & refinement</p>
+          </div>
+          
+          <div class="flow-arrow">
+            <i data-lucide="chevron-right"></i>
+          </div>
+          
+          <div class="flow-step" style="--step-color: rgba(245, 158, 11, 0.15); --step-accent: #fbbf24;">
+            <div class="flow-step-icon">
+              <i data-lucide="file-edit"></i>
+            </div>
+            <h4>3. Draft ADR</h4>
+            <p>Formal decision record</p>
+          </div>
+          
+          <div class="flow-arrow">
+            <i data-lucide="chevron-right"></i>
+          </div>
+          
+          <div class="flow-step" style="--step-color: rgba(236, 72, 153, 0.15); --step-accent: #f472b6;">
+            <div class="flow-step-icon">
+              <i data-lucide="vote"></i>
+            </div>
+            <h4>4. Review</h4>
+            <p>Steward review period</p>
+          </div>
+          
+          <div class="flow-arrow">
+            <i data-lucide="chevron-right"></i>
+          </div>
+          
+          <div class="flow-step" style="--step-color: rgba(16, 185, 129, 0.15); --step-accent: #34d399;">
+            <div class="flow-step-icon">
+              <i data-lucide="check-circle-2"></i>
+            </div>
+            <h4>5. Adopt</h4>
+            <p>Published & implemented</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Recent Activity -->
+    <section class="activity-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Recent Architecture Activity</h2>
+          <p>Latest proposals, decisions, and updates to the L/0 architecture.</p>
+        </div>
+        
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+              <i data-lucide="check-circle-2"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">ADR-007: Pyramid of Prosperity Layer Definitions</div>
+              <div class="activity-meta">Adopted • Refined the five-layer income distribution model</div>
+            </div>
+            <div class="activity-time">2 days ago</div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+              <i data-lucide="file-edit"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">ADR-008: Coalition Stakeholder Categories</div>
+              <div class="activity-meta">In Review • Expanding stakeholder taxonomy</div>
+            </div>
+            <div class="activity-time">5 days ago</div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+              <i data-lucide="messages-square"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">Proposal: Add "Data Dividends" to Prosperity Pyramid</div>
+              <div class="activity-meta">Discussion • 23 comments from community members</div>
+            </div>
+            <div class="activity-time">1 week ago</div>
+          </div>
+          
+          <div class="activity-item">
+            <div class="activity-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+              <i data-lucide="check-circle-2"></i>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">ADR-006: Theory of Change Phase Definitions</div>
+              <div class="activity-meta">Adopted • Four-phase transition model established</div>
+            </div>
+            <div class="activity-time">2 weeks ago</div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="/arch-decisions.html" class="btn btn-outline">
+            View All Decisions <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Contribution CTA -->
+    <section class="contribution-cta">
+      <div class="container">
+        <div class="cta-content">
+          <h2>Contribute to the Architecture</h2>
+          <p>
+            The L/0 architecture is a living document, shaped by our community. 
+            Whether you're an economist, policymaker, technologist, or concerned citizen, 
+            your perspective can help build better frameworks for our post-labor future.
+          </p>
+          <div class="cta-buttons">
+            <a href="/arch-contributing.html" class="btn btn-primary btn-lg">
+              <i data-lucide="git-pull-request" style="width: 20px; height: 20px;"></i>
+              Contribution Guide
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-outline btn-lg">
+              <i data-lucide="message-circle" style="width: 20px; height: 20px;"></i>
+              Join Discussion
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Governance</h4>
+          <ul>
+            <li><a href="/arch-mission.html">Mission & Vision</a></li>
+            <li><a href="/arch-principles.html">Principles</a></li>
+            <li><a href="/arch-decisions.html">Decision Records</a></li>
+            <li><a href="/arch-contributing.html">Contributing</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/scripts/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+      
+      // Mobile nav toggle
+      const navToggle = document.querySelector('.nav-toggle');
+      const navMenu = document.querySelector('.nav-menu');
+      
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+          const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+          navToggle.setAttribute('aria-expanded', !expanded);
+          navMenu.classList.toggle('is-open');
+        });
+      }
+      
+      // Dropdown handling
+      document.querySelectorAll('.has-dropdown').forEach(item => {
+        item.querySelector('a').addEventListener('click', (e) => {
+          if (window.innerWidth < 1024) {
+            e.preventDefault();
+            item.classList.toggle('is-open');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

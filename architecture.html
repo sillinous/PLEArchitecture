@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frameworks | Post-Labor Economics</title>
+  <meta name="description" content="The frameworks of Post-Labor Economics - Pyramid of Prosperity and Pyramid of Power.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/architecture.html">
+  <meta property="og:title" content="Framework Overview | Post-Labor Economics">
+  <meta property="og:description" content="The complete architecture of post-labor economics: Pyramids of Prosperity and Power working together.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-architecture.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/architecture.html">
+  <meta name="twitter:title" content="Framework Overview | Post-Labor Economics">
+  <meta name="twitter:description" content="The complete architecture of post-labor economics: Pyramids of Prosperity and Power working together.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-architecture.png">
+
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .framework-hero { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(99, 102, 241, 0.15) 100%); padding: 3rem 2rem; border-radius: 1rem; margin-bottom: 2rem; text-align: center; }
+    .pyramids-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+    .pyramid-card { background: var(--color-bg-secondary); border-radius: 1rem; padding: 2rem; border-top: 4px solid; }
+    .pyramid-card.prosperity { border-color: #10b981; }
+    .pyramid-card.power { border-color: #6366f1; }
+    .pyramid-card h2 { display: flex; align-items: center; gap: 0.75rem; margin: 0 0 1rem 0; font-size: 1.25rem; }
+    .pyramid-card h2 i { width: 24px; height: 24px; }
+    .pyramid-card.prosperity h2 i { color: #10b981; }
+    .pyramid-card.power h2 i { color: #6366f1; }
+    .pyramid-card p { color: var(--color-text-secondary); margin-bottom: 1.5rem; line-height: 1.7; }
+    .layer-list { list-style: none; padding: 0; margin: 0 0 1.5rem 0; }
+    .layer-list li { padding: 0.75rem 1rem; background: var(--color-bg-tertiary); margin-bottom: 0.5rem; border-radius: 0.5rem; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+    .layer-list li span.num { background: var(--color-accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+    .pyramid-card.prosperity .layer-list li span.num { background: #10b981; }
+    .pyramid-card.power .layer-list li span.num { background: #6366f1; }
+    .explore-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 3rem; }
+    .explore-card { background: var(--color-bg-secondary); padding: 1.5rem; border-radius: 0.75rem; text-align: center; transition: transform 0.2s, box-shadow 0.2s; }
+    .explore-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .explore-card i { width: 32px; height: 32px; color: var(--color-accent); margin-bottom: 0.75rem; }
+    .explore-card h3 { margin: 0 0 0.5rem 0; font-size: 1rem; }
+    .explore-card p { color: var(--color-text-secondary); font-size: 0.875rem; margin: 0; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Building the Post-Work Future</span></div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+              <li><a href="/capabilities.html">Capabilities</a></li>
+              <li><a href="/stakeholders.html">Stakeholders</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <div class="page-header"><span class="page-label">Core Concepts</span><h1>Frameworks</h1><p class="page-description">The architectural blueprints for a post-labor world</p></div>
+      
+      <div class="framework-hero">
+        <h2>🔺 Two Pyramids, One Future</h2>
+        <p style="color: var(--color-text-secondary); max-width: 600px; margin: 0 auto;">The Pyramid of Prosperity addresses how income flows. The Pyramid of Power addresses how democracy works. Together, they provide a complete framework for post-labor economics.</p>
+      </div>
+      
+      <div class="pyramids-grid">
+        <div class="pyramid-card prosperity">
+          <h2><i data-lucide="trending-up"></i> Pyramid of Prosperity</h2>
+          <p>How do people receive income when jobs disappear? This five-layer framework shows how ownership replaces wages, ensuring everyone benefits from automated production.</p>
+          <ul class="layer-list">
+            <li><span class="num">5</span> Residual Wages (protected human work)</li>
+            <li><span class="num">4</span> Individual Assets (baby bonds, portfolios)</li>
+            <li><span class="num">3</span> Collective Private (cooperatives, ESOPs)</li>
+            <li><span class="num">2</span> Public Assets (sovereign wealth funds)</li>
+            <li><span class="num">1</span> Universals (UBI, healthcare, services)</li>
+          </ul>
+          <a href="/prosperity.html" class="btn btn-primary btn-sm"><i data-lucide="arrow-right"></i> Explore Prosperity</a>
+        </div>
+        
+        <div class="pyramid-card power">
+          <h2><i data-lucide="vote"></i> Pyramid of Power</h2>
+          <p>How do citizens maintain leverage when labor power disappears? This framework shows how algorithmic systems can replace labor power with new forms of democratic accountability.</p>
+          <ul class="layer-list">
+            <li><span class="num">5</span> Metagovernance (rules for changing rules)</li>
+            <li><span class="num">4</span> Direct Democracy (participatory budgeting)</li>
+            <li><span class="num">3</span> Transparency (open procurement)</li>
+            <li><span class="num">2</span> Payment Rails (open systems like UPI)</li>
+            <li><span class="num">1</span> Civic Bedrock (blockchain identity)</li>
+          </ul>
+          <a href="/power.html" class="btn btn-primary btn-sm"><i data-lucide="arrow-right"></i> Explore Power</a>
+        </div>
+      </div>
+      
+      <h2>🔗 Explore the Framework</h2>
+      <div class="explore-grid">
+        <a href="/pyramid-builder.html" class="explore-card"><i data-lucide="sliders"></i><h3>Pyramid Builder</h3><p>Interactive tool to design your own transition framework</p></a>
+        <a href="/coalition.html" class="explore-card"><i data-lucide="users"></i><h3>Coalition Building</h3><p>How we bridge traditional divides to build support</p></a>
+        <a href="/research.html" class="explore-card"><i data-lucide="flask-conical"></i><h3>Research & Evidence</h3><p>The empirical foundation for our frameworks</p></a>
+        <a href="/capabilities.html" class="explore-card"><i data-lucide="boxes"></i><h3>Movement Capabilities</h3><p>Infrastructure and capabilities for change</p></a>
+        <a href="/stakeholders.html" class="explore-card"><i data-lucide="users-round"></i><h3>Stakeholders</h3><p>Key groups and their roles in the transition</p></a>
+        <a href="/policy.html" class="explore-card"><i data-lucide="file-text"></i><h3>Policy Framework</h3><p>Concrete policy recommendations and implementation</p></a>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+  <script>lucide.createIcons();const navToggle=document.querySelector('.nav-toggle'),navMenu=document.querySelector('.nav-menu');navToggle&&navMenu&&navToggle.addEventListener('click',()=>{const e=navToggle.getAttribute('aria-expanded')==='true';navToggle.setAttribute('aria-expanded',!e);navMenu.classList.toggle('is-open')});document.querySelectorAll('.has-dropdown').forEach(i=>{i.querySelector('a').addEventListener('click',e=>{window.innerWidth<768&&(e.preventDefault(),i.classList.toggle('is-open'))})});</script>
+</body>
+</html>

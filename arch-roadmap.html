@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Track governance milestones, upcoming initiatives, and long-term goals.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    .roadmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .roadmap-header h1 {
+      font-size: 1.75rem;
+    }
+    
+    .view-options {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .view-option {
+      padding: 0.625rem 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      transition: all 0.15s;
+    }
+    
+    .view-option:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .view-option.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+    
+    .view-option i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Timeline View */
+    .timeline-container {
+      position: relative;
+      padding-left: 2rem;
+    }
+    
+    .timeline-line {
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--color-primary), #10b981);
+    }
+    
+    .timeline-section {
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    
+    .timeline-marker {
+      position: absolute;
+      left: -2rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-bg-primary);
+      border: 3px solid var(--color-primary);
+    }
+    
+    .timeline-marker.completed {
+      background: var(--color-primary);
+    }
+    
+    .timeline-marker.current {
+      background: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+    }
+    
+    .timeline-date {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .timeline-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .timeline-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    /* Milestone Card */
+    .milestone-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      transition: all 0.2s;
+    }
+    
+    .milestone-card:hover {
+      border-color: var(--color-primary);
+    }
+    
+    .milestone-card.completed {
+      opacity: 0.7;
+    }
+    
+    .milestone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .milestone-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .milestone-type i {
+      width: 10px;
+      height: 10px;
+    }
+    
+    .milestone-type.proposal { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .milestone-type.launch { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .milestone-type.vote { background: rgba(244, 114, 182, 0.15); color: #f472b6; }
+    .milestone-type.research { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    .milestone-type.event { background: rgba(6, 182, 212, 0.15); color: #06b6d4; }
+    
+    .milestone-status {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+    
+    .milestone-status.completed { color: #10b981; }
+    .milestone-status.in-progress { color: #fbbf24; }
+    .milestone-status.upcoming { color: var(--color-text-muted); }
+    
+    .milestone-status i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .milestone-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .milestone-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    .milestone-progress {
+      margin-bottom: 0.75rem;
+    }
+    
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.375rem;
+      font-size: 0.75rem;
+    }
+    
+    .progress-label {
+      color: var(--color-text-muted);
+    }
+    
+    .progress-value {
+      font-weight: 600;
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: var(--color-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    
+    .progress-fill.green { background: #10b981; }
+    .progress-fill.yellow { background: #fbbf24; }
+    .progress-fill.blue { background: #6366f1; }
+    
+    .milestone-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .milestone-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .milestone-meta-item i {
+      width: 12px;
+      height: 12px;
+    }
+    
+    /* Quarters View */
+    .quarters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    
+    .quarter-column {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .quarter-header {
+      padding: 1rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+      text-align: center;
+    }
+    
+    .quarter-name {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .quarter-range {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .quarter-header.current {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+    }
+    
+    .quarter-header.current .quarter-name {
+      color: var(--color-primary);
+    }
+    
+    .quarter-items {
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-height: 300px;
+    }
+    
+    .quarter-item {
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    
+    .quarter-item:hover {
+      transform: translateX(2px);
+    }
+    
+    .quarter-item.proposal { border-left-color: #818cf8; }
+    .quarter-item.launch { border-left-color: #10b981; }
+    .quarter-item.vote { border-left-color: #f472b6; }
+    .quarter-item.research { border-left-color: #fbbf24; }
+    .quarter-item.event { border-left-color: #06b6d4; }
+    
+    .quarter-item-title {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+    
+    .quarter-item-date {
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .quarter-item.completed {
+      opacity: 0.6;
+    }
+    
+    .quarter-item.completed .quarter-item-title {
+      text-decoration: line-through;
+    }
+    
+    /* Legend */
+    .roadmap-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    @media (max-width: 1024px) {
+      .quarters-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .quarters-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/governance.html">← Governance</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="roadmap-header">
+      <h1>Roadmap</h1>
+      <div class="view-options">
+        <button class="view-option active" onclick="showView('timeline')"><i data-lucide="git-branch"></i> Timeline</button>
+        <button class="view-option" onclick="showView('quarters')"><i data-lucide="layout-grid"></i> Quarters</button>
+      </div>
+    </div>
+    
+    <div class="roadmap-legend">
+      <div class="legend-item"><span class="legend-dot" style="background: #818cf8;"></span> Proposal</div>
+      <div class="legend-item"><span class="legend-dot" style="background: #10b981;"></span> Launch</div>
+      <div class="legend-item"><span class="legend-dot" style="background: #f472b6;"></span> Vote</div>
+      <div class="legend-item"><span class="legend-dot" style="background: #fbbf24;"></span> Research</div>
+      <div class="legend-item"><span class="legend-dot" style="background: #06b6d4;"></span> Event</div>
+    </div>
+    
+    <!-- Timeline View -->
+    <div id="timeline-view">
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        
+        <!-- Q1 2026 -->
+        <div class="timeline-section">
+          <div class="timeline-marker current"></div>
+          <div class="timeline-date">Q1 2026 (Current)</div>
+          <div class="timeline-title">Foundation & Framework</div>
+          <div class="timeline-items">
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type vote"><i data-lucide="vote"></i> Vote</span>
+                <span class="milestone-status in-progress"><i data-lucide="loader"></i> In Progress</span>
+              </div>
+              <h3 class="milestone-name">PROP-015: Data Dividends Framework</h3>
+              <p class="milestone-desc">Establish the foundational framework for data dividends including valuation methodology and distribution mechanisms.</p>
+              <div class="milestone-progress">
+                <div class="progress-header">
+                  <span class="progress-label">Voting Progress</span>
+                  <span class="progress-value">68%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width: 68%;"></div>
+                </div>
+              </div>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Ends Feb 5</span>
+                <span class="milestone-meta-item"><i data-lucide="users"></i> 89 voters</span>
+              </div>
+            </div>
+            
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type launch"><i data-lucide="rocket"></i> Launch</span>
+                <span class="milestone-status in-progress"><i data-lucide="loader"></i> In Progress</span>
+              </div>
+              <h3 class="milestone-name">Governance Platform v2.0</h3>
+              <p class="milestone-desc">Launch enhanced governance platform with advanced voting mechanisms, collaboration tools, and analytics dashboard.</p>
+              <div class="milestone-progress">
+                <div class="progress-header">
+                  <span class="progress-label">Development Progress</span>
+                  <span class="progress-value">85%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill green" style="width: 85%;"></div>
+                </div>
+              </div>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Target: Feb 15</span>
+                <span class="milestone-meta-item"><i data-lucide="git-branch"></i> 23 features</span>
+              </div>
+            </div>
+            
+            <div class="milestone-card completed">
+              <div class="milestone-header">
+                <span class="milestone-type proposal"><i data-lucide="file-text"></i> Proposal</span>
+                <span class="milestone-status completed"><i data-lucide="check-circle"></i> Completed</span>
+              </div>
+              <h3 class="milestone-name">Pyramid of Prosperity v3 Ratification</h3>
+              <p class="milestone-desc">Community ratification of updated Pyramid framework with refined layer definitions.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Jan 15, 2026</span>
+                <span class="milestone-meta-item"><i data-lucide="check"></i> 94% approval</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Q2 2026 -->
+        <div class="timeline-section">
+          <div class="timeline-marker"></div>
+          <div class="timeline-date">Q2 2026</div>
+          <div class="timeline-title">Expansion & Partnerships</div>
+          <div class="timeline-items">
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type event"><i data-lucide="calendar"></i> Event</span>
+                <span class="milestone-status upcoming"><i data-lucide="clock"></i> Upcoming</span>
+              </div>
+              <h3 class="milestone-name">Post-Labor Economics Summit 2026</h3>
+              <p class="milestone-desc">Annual gathering of the PLE community featuring keynotes, workshops, and collaborative sessions.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> April 15-17</span>
+                <span class="milestone-meta-item"><i data-lucide="map-pin"></i> San Francisco + Virtual</span>
+              </div>
+            </div>
+            
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type research"><i data-lucide="flask"></i> Research</span>
+                <span class="milestone-status upcoming"><i data-lucide="clock"></i> Upcoming</span>
+              </div>
+              <h3 class="milestone-name">Automation Impact Study</h3>
+              <p class="milestone-desc">Comprehensive research on automation's economic impact across key sectors with policy recommendations.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Target: May 2026</span>
+                <span class="milestone-meta-item"><i data-lucide="users"></i> Research WG</span>
+              </div>
+            </div>
+            
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type proposal"><i data-lucide="file-text"></i> Proposal</span>
+                <span class="milestone-status upcoming"><i data-lucide="clock"></i> Upcoming</span>
+              </div>
+              <h3 class="milestone-name">Automation Tax Model v1</h3>
+              <p class="milestone-desc">First complete proposal for automation taxation including rate structures and implementation guidelines.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Target: June 2026</span>
+                <span class="milestone-meta-item"><i data-lucide="users"></i> Policy WG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Q3 2026 -->
+        <div class="timeline-section">
+          <div class="timeline-marker"></div>
+          <div class="timeline-date">Q3 2026</div>
+          <div class="timeline-title">Implementation Pilots</div>
+          <div class="timeline-items">
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type launch"><i data-lucide="rocket"></i> Launch</span>
+                <span class="milestone-status upcoming"><i data-lucide="clock"></i> Upcoming</span>
+              </div>
+              <h3 class="milestone-name">Municipal Pilot Program</h3>
+              <p class="milestone-desc">Partner with forward-thinking municipalities to pilot UBI and data dividend programs.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Target: July 2026</span>
+                <span class="milestone-meta-item"><i data-lucide="map-pin"></i> 3 pilot cities</span>
+              </div>
+            </div>
+            
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type vote"><i data-lucide="vote"></i> Vote</span>
+                <span class="milestone-status upcoming"><i data-lucide="clock"></i> Upcoming</span>
+              </div>
+              <h3 class="milestone-name">Pyramid of Power v2</h3>
+              <p class="milestone-desc">Major update to governance framework incorporating lessons from pilot implementations.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Target: Sept 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Q4 2026 -->
+        <div class="timeline-section">
+          <div class="timeline-marker"></div>
+          <div class="timeline-date">Q4 2026</div>
+          <div class="timeline-title">Scale & Advocacy</div>
+          <div class="timeline-items">
+            <div class="milestone-card">
+              <div class="milestone-header">
+                <span class="milestone-type event"><i data-lucide="megaphone"></i> Event</span>
+                <span class="milestone-status upcoming"><i data-lucide="clock"></i> Upcoming</span>
+              </div>
+              <h3 class="milestone-name">Policy Advocacy Campaign</h3>
+              <p class="milestone-desc">Coordinated effort to present PLE frameworks to policymakers at state and federal levels.</p>
+              <div class="milestone-meta">
+                <span class="milestone-meta-item"><i data-lucide="calendar"></i> Oct-Dec 2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quarters View (Hidden by default) -->
+    <div id="quarters-view" style="display: none;">
+      <div class="quarters-grid">
+        <div class="quarter-column">
+          <div class="quarter-header current">
+            <div class="quarter-name">Q1 2026</div>
+            <div class="quarter-range">Jan - Mar</div>
+          </div>
+          <div class="quarter-items">
+            <div class="quarter-item completed proposal">
+              <div class="quarter-item-title">Pyramid v3 Ratification</div>
+              <div class="quarter-item-date">Jan 15 ✓</div>
+            </div>
+            <div class="quarter-item vote">
+              <div class="quarter-item-title">PROP-015 Data Dividends</div>
+              <div class="quarter-item-date">Feb 5 (Voting)</div>
+            </div>
+            <div class="quarter-item launch">
+              <div class="quarter-item-title">Platform v2.0 Launch</div>
+              <div class="quarter-item-date">Feb 15 (85%)</div>
+            </div>
+            <div class="quarter-item research">
+              <div class="quarter-item-title">UBI Literature Review</div>
+              <div class="quarter-item-date">Mar 1</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quarter-column">
+          <div class="quarter-header">
+            <div class="quarter-name">Q2 2026</div>
+            <div class="quarter-range">Apr - Jun</div>
+          </div>
+          <div class="quarter-items">
+            <div class="quarter-item event">
+              <div class="quarter-item-title">PLE Summit 2026</div>
+              <div class="quarter-item-date">Apr 15-17</div>
+            </div>
+            <div class="quarter-item research">
+              <div class="quarter-item-title">Automation Impact Study</div>
+              <div class="quarter-item-date">May</div>
+            </div>
+            <div class="quarter-item proposal">
+              <div class="quarter-item-title">Automation Tax Model v1</div>
+              <div class="quarter-item-date">June</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quarter-column">
+          <div class="quarter-header">
+            <div class="quarter-name">Q3 2026</div>
+            <div class="quarter-range">Jul - Sep</div>
+          </div>
+          <div class="quarter-items">
+            <div class="quarter-item launch">
+              <div class="quarter-item-title">Municipal Pilot Program</div>
+              <div class="quarter-item-date">July</div>
+            </div>
+            <div class="quarter-item research">
+              <div class="quarter-item-title">Pilot Data Analysis</div>
+              <div class="quarter-item-date">Aug</div>
+            </div>
+            <div class="quarter-item vote">
+              <div class="quarter-item-title">Pyramid of Power v2</div>
+              <div class="quarter-item-date">Sept</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quarter-column">
+          <div class="quarter-header">
+            <div class="quarter-name">Q4 2026</div>
+            <div class="quarter-range">Oct - Dec</div>
+          </div>
+          <div class="quarter-items">
+            <div class="quarter-item event">
+              <div class="quarter-item-title">Policy Advocacy Campaign</div>
+              <div class="quarter-item-date">Oct-Dec</div>
+            </div>
+            <div class="quarter-item research">
+              <div class="quarter-item-title">Annual Impact Report</div>
+              <div class="quarter-item-date">Dec</div>
+            </div>
+            <div class="quarter-item event">
+              <div class="quarter-item-title">Year-End Community Call</div>
+              <div class="quarter-item-date">Dec 15</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    function showView(view) {
+      document.querySelectorAll('.view-option').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.view-option').classList.add('active');
+      
+      if (view === 'timeline') {
+        document.getElementById('timeline-view').style.display = 'block';
+        document.getElementById('quarters-view').style.display = 'none';
+      } else {
+        document.getElementById('timeline-view').style.display = 'none';
+        document.getElementById('quarters-view').style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>

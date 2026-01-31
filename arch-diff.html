@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Version History | Architecture Governance | Post-Labor Economics</title>
+  <meta name="description" content="Track changes, compare versions, and review the evolution of architecture artifacts over time.">
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* Diff Viewer Styles */
+    .diff-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - var(--header-height));
+      background: var(--color-bg-primary);
+    }
+    
+    /* Timeline Sidebar */
+    .timeline-sidebar {
+      background: var(--color-bg-secondary);
+      border-right: 1px solid var(--color-border);
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    
+    .timeline-header {
+      margin-bottom: 1.5rem;
+    }
+    
+    .timeline-header h2 {
+      font-size: 1.125rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .timeline-header p {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .version-list {
+      position: relative;
+    }
+    
+    .version-list::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-border);
+    }
+    
+    .version-item {
+      position: relative;
+      padding-left: 40px;
+      padding-bottom: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .version-item:last-child {
+      padding-bottom: 0;
+    }
+    
+    .version-dot {
+      position: absolute;
+      left: 8px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--color-bg-secondary);
+      border: 3px solid var(--color-border);
+      transition: all 0.15s;
+      z-index: 1;
+    }
+    
+    .version-item:hover .version-dot {
+      border-color: var(--color-primary);
+    }
+    
+    .version-item.selected .version-dot {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    
+    .version-item.current .version-dot {
+      background: #10b981;
+      border-color: #10b981;
+    }
+    
+    .version-card {
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      transition: all 0.15s;
+    }
+    
+    .version-item:hover .version-card {
+      border-color: var(--color-primary);
+    }
+    
+    .version-item.selected .version-card {
+      border-color: var(--color-primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+    
+    .version-number {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .version-date {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .version-author {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+    }
+    
+    .version-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .version-changes {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .change-badge {
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.6875rem;
+      font-weight: 500;
+    }
+    
+    .change-badge.additions { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .change-badge.deletions { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .change-badge.modifications { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    
+    /* Main Content */
+    .diff-main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    /* Diff Header */
+    .diff-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .diff-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .diff-title h1 {
+      font-size: 1.25rem;
+    }
+    
+    .diff-badge {
+      padding: 0.25rem 0.75rem;
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    
+    .diff-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    /* Version Selector */
+    .version-selector {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-primary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .version-select-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .version-select-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+    
+    .version-select {
+      padding: 0.5rem 2rem 0.5rem 0.75rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+    }
+    
+    .version-arrow {
+      color: var(--color-text-muted);
+    }
+    
+    .version-arrow i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .diff-stats {
+      margin-left: auto;
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+    }
+    
+    .diff-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .diff-stat.additions { color: #10b981; }
+    .diff-stat.deletions { color: #ef4444; }
+    
+    /* View Toggle */
+    .view-toggle {
+      display: flex;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .view-toggle button {
+      padding: 0.5rem 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--color-text-muted);
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+    
+    .view-toggle button:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .view-toggle button.active {
+      background: var(--color-primary);
+      color: white;
+    }
+    
+    .view-toggle button i {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Diff Content */
+    .diff-content {
+      flex: 1;
+      overflow: auto;
+      padding: 1.5rem;
+    }
+    
+    /* Split View */
+    .diff-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .diff-pane {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .diff-pane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .diff-pane-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    
+    .diff-pane-meta {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    
+    .diff-pane-body {
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+    
+    /* Unified View */
+    .diff-unified {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    
+    .diff-unified-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-tertiary);
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .diff-unified-body {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+    }
+    
+    .diff-line {
+      display: flex;
+      padding: 0.25rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .diff-line:last-child {
+      border-bottom: none;
+    }
+    
+    .diff-line-number {
+      width: 40px;
+      color: var(--color-text-muted);
+      text-align: right;
+      padding-right: 1rem;
+      user-select: none;
+      flex-shrink: 0;
+    }
+    
+    .diff-line-content {
+      flex: 1;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    
+    .diff-line.addition {
+      background: rgba(16, 185, 129, 0.1);
+    }
+    
+    .diff-line.addition .diff-line-content::before {
+      content: '+ ';
+      color: #10b981;
+    }
+    
+    .diff-line.deletion {
+      background: rgba(239, 68, 68, 0.1);
+    }
+    
+    .diff-line.deletion .diff-line-content::before {
+      content: '- ';
+      color: #ef4444;
+    }
+    
+    .diff-line.modification {
+      background: rgba(251, 191, 36, 0.1);
+    }
+    
+    .diff-line.context {
+      color: var(--color-text-secondary);
+    }
+    
+    /* Section Headers */
+    .diff-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .diff-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .diff-section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .diff-section-header i {
+      width: 18px;
+      height: 18px;
+      color: var(--color-primary);
+    }
+    
+    /* Change Summary */
+    .change-summary {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .change-summary h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .change-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .change-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--color-bg-primary);
+      border-radius: 0.5rem;
+    }
+    
+    .change-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .change-icon i {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .change-icon.addition { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .change-icon.deletion { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .change-icon.modification { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+    
+    .change-text {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .change-text strong {
+      color: var(--color-text-primary);
+    }
+    
+    /* Commit Message */
+    .commit-message {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .commit-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .commit-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+    }
+    
+    .commit-meta {
+      flex: 1;
+    }
+    
+    .commit-author {
+      font-weight: 600;
+    }
+    
+    .commit-date {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+    
+    .commit-body {
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Restore Button */
+    .restore-panel {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .restore-info h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .restore-info p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    @media (max-width: 1024px) {
+      .diff-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .timeline-sidebar {
+        display: none;
+      }
+      
+      .diff-split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav" id="main-nav">
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/arch-artifacts.html">← Back to Artifacts</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="diff-container" style="margin-top: var(--header-height);">
+    <!-- Timeline Sidebar -->
+    <aside class="timeline-sidebar">
+      <div class="timeline-header">
+        <h2>Version History</h2>
+        <p>ADR-007: Layer Definitions</p>
+      </div>
+      
+      <div class="version-list">
+        <div class="version-item current">
+          <div class="version-dot"></div>
+          <div class="version-card">
+            <div class="version-number">v2.3 (Current)</div>
+            <div class="version-date">Jan 28, 2026 • 2:34 PM</div>
+            <div class="version-author">
+              <div class="version-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+              <span>David Shapiro</span>
+            </div>
+            <div class="version-changes">
+              <span class="change-badge additions">+12</span>
+              <span class="change-badge deletions">-3</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="version-item selected">
+          <div class="version-dot"></div>
+          <div class="version-card">
+            <div class="version-number">v2.2</div>
+            <div class="version-date">Jan 25, 2026 • 11:15 AM</div>
+            <div class="version-author">
+              <div class="version-avatar" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">MK</div>
+              <span>Maria Kowalski</span>
+            </div>
+            <div class="version-changes">
+              <span class="change-badge additions">+8</span>
+              <span class="change-badge modifications">~5</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="version-item">
+          <div class="version-dot"></div>
+          <div class="version-card">
+            <div class="version-number">v2.1</div>
+            <div class="version-date">Jan 20, 2026 • 4:22 PM</div>
+            <div class="version-author">
+              <div class="version-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">JR</div>
+              <span>James Rodriguez</span>
+            </div>
+            <div class="version-changes">
+              <span class="change-badge additions">+15</span>
+              <span class="change-badge deletions">-7</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="version-item">
+          <div class="version-dot"></div>
+          <div class="version-card">
+            <div class="version-number">v2.0</div>
+            <div class="version-date">Jan 15, 2026 • 9:00 AM</div>
+            <div class="version-author">
+              <div class="version-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+              <span>David Shapiro</span>
+            </div>
+            <div class="version-changes">
+              <span class="change-badge additions">+45</span>
+              <span class="change-badge modifications">~12</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="version-item">
+          <div class="version-dot"></div>
+          <div class="version-card">
+            <div class="version-number">v1.0</div>
+            <div class="version-date">Dec 10, 2025 • 3:45 PM</div>
+            <div class="version-author">
+              <div class="version-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+              <span>David Shapiro</span>
+            </div>
+            <div class="version-changes">
+              <span class="change-badge additions">+78</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="diff-main">
+      <!-- Diff Header -->
+      <div class="diff-header">
+        <div class="diff-title">
+          <h1>ADR-007: Layer Definitions</h1>
+          <span class="diff-badge">Comparing Versions</span>
+        </div>
+        <div class="diff-actions">
+          <button class="btn btn-outline btn-sm">
+            <i data-lucide="download"></i>
+            Export
+          </button>
+          <button class="btn btn-primary btn-sm">
+            <i data-lucide="rotate-ccw"></i>
+            Restore v2.2
+          </button>
+        </div>
+      </div>
+      
+      <!-- Version Selector -->
+      <div class="version-selector">
+        <div class="version-select-group">
+          <span class="version-select-label">From:</span>
+          <select class="version-select">
+            <option>v2.2 (Jan 25, 2026)</option>
+            <option>v2.1 (Jan 20, 2026)</option>
+            <option>v2.0 (Jan 15, 2026)</option>
+            <option>v1.0 (Dec 10, 2025)</option>
+          </select>
+        </div>
+        
+        <span class="version-arrow"><i data-lucide="arrow-right"></i></span>
+        
+        <div class="version-select-group">
+          <span class="version-select-label">To:</span>
+          <select class="version-select">
+            <option>v2.3 (Current)</option>
+            <option>v2.2 (Jan 25, 2026)</option>
+            <option>v2.1 (Jan 20, 2026)</option>
+            <option>v2.0 (Jan 15, 2026)</option>
+          </select>
+        </div>
+        
+        <div class="diff-stats">
+          <span class="diff-stat additions">
+            <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+            12 additions
+          </span>
+          <span class="diff-stat deletions">
+            <i data-lucide="minus" style="width: 14px; height: 14px;"></i>
+            3 deletions
+          </span>
+        </div>
+        
+        <div class="view-toggle">
+          <button class="active">
+            <i data-lucide="columns"></i>
+            Split
+          </button>
+          <button>
+            <i data-lucide="list"></i>
+            Unified
+          </button>
+        </div>
+      </div>
+      
+      <!-- Diff Content -->
+      <div class="diff-content">
+        <!-- Commit Message -->
+        <div class="commit-message">
+          <div class="commit-header">
+            <div class="commit-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">DS</div>
+            <div class="commit-meta">
+              <div class="commit-author">David Shapiro</div>
+              <div class="commit-date">Jan 28, 2026 at 2:34 PM</div>
+            </div>
+          </div>
+          <div class="commit-body">
+            <p><strong>Enhanced Layer 3 with Data Dividends Component</strong></p>
+            <p style="margin-top: 0.5rem;">Added explicit reference to data dividends as part of the Collective Ownership layer. This change reflects the community consensus from PROP-015 and aligns with our Human Agency First principle by ensuring citizens receive compensation for their data contributions.</p>
+          </div>
+        </div>
+        
+        <!-- Change Summary -->
+        <div class="change-summary">
+          <h3>Change Summary</h3>
+          <div class="change-list">
+            <div class="change-item">
+              <div class="change-icon addition"><i data-lucide="plus"></i></div>
+              <div class="change-text">
+                <strong>Section 3.4:</strong> Added "Data Dividends" as a component of Layer 3 (Collective Ownership)
+              </div>
+            </div>
+            <div class="change-item">
+              <div class="change-icon addition"><i data-lucide="plus"></i></div>
+              <div class="change-text">
+                <strong>Section 3.4.1:</strong> Added definition and implementation guidelines for data dividends
+              </div>
+            </div>
+            <div class="change-item">
+              <div class="change-icon modification"><i data-lucide="pencil"></i></div>
+              <div class="change-text">
+                <strong>Section 3.0:</strong> Updated layer summary to include data dividends reference
+              </div>
+            </div>
+            <div class="change-item">
+              <div class="change-icon deletion"><i data-lucide="minus"></i></div>
+              <div class="change-text">
+                <strong>Section 3.2:</strong> Removed redundant paragraph about asset categories
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Split View -->
+        <div class="diff-split">
+          <!-- Old Version -->
+          <div class="diff-pane">
+            <div class="diff-pane-header">
+              <span class="diff-pane-title">v2.2</span>
+              <span class="diff-pane-meta">Jan 25, 2026</span>
+            </div>
+            <div class="diff-pane-body">
+              <div class="diff-section">
+                <div class="diff-section-header">
+                  <i data-lucide="file-text"></i>
+                  Section 3: Collective Ownership Layer
+                </div>
+                <div class="diff-unified">
+                  <div class="diff-unified-body">
+                    <div class="diff-line context">
+                      <span class="diff-line-number">45</span>
+                      <span class="diff-line-content">## 3.0 Layer Overview</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">46</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line deletion">
+                      <span class="diff-line-number">47</span>
+                      <span class="diff-line-content">The Collective Ownership layer distributes wealth through shared assets including sovereign wealth funds, public infrastructure, and community-owned enterprises.</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">48</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">49</span>
+                      <span class="diff-line-content">### 3.1 Sovereign Wealth Funds</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">50</span>
+                      <span class="diff-line-content">...</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">51</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">52</span>
+                      <span class="diff-line-content">### 3.2 Public Infrastructure</span>
+                    </div>
+                    <div class="diff-line deletion">
+                      <span class="diff-line-number">53</span>
+                      <span class="diff-line-content">Asset categories may overlap with other layers.</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">54</span>
+                      <span class="diff-line-content">...</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">55</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">56</span>
+                      <span class="diff-line-content">### 3.3 Community Enterprises</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- New Version -->
+          <div class="diff-pane">
+            <div class="diff-pane-header">
+              <span class="diff-pane-title">v2.3 (Current)</span>
+              <span class="diff-pane-meta">Jan 28, 2026</span>
+            </div>
+            <div class="diff-pane-body">
+              <div class="diff-section">
+                <div class="diff-section-header">
+                  <i data-lucide="file-text"></i>
+                  Section 3: Collective Ownership Layer
+                </div>
+                <div class="diff-unified">
+                  <div class="diff-unified-body">
+                    <div class="diff-line context">
+                      <span class="diff-line-number">45</span>
+                      <span class="diff-line-content">## 3.0 Layer Overview</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">46</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">47</span>
+                      <span class="diff-line-content">The Collective Ownership layer distributes wealth through shared assets including sovereign wealth funds, public infrastructure, community-owned enterprises, and data dividends.</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">48</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">49</span>
+                      <span class="diff-line-content">### 3.1 Sovereign Wealth Funds</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">50</span>
+                      <span class="diff-line-content">...</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">51</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">52</span>
+                      <span class="diff-line-content">### 3.2 Public Infrastructure</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">53</span>
+                      <span class="diff-line-content">...</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">54</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">55</span>
+                      <span class="diff-line-content">### 3.3 Community Enterprises</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">56</span>
+                      <span class="diff-line-content">...</span>
+                    </div>
+                    <div class="diff-line context">
+                      <span class="diff-line-number">57</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">58</span>
+                      <span class="diff-line-content">### 3.4 Data Dividends</span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">59</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">60</span>
+                      <span class="diff-line-content">Citizens receive compensation for the use of their personal data by corporations. This mechanism recognizes data as a collectively-generated resource.</span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">61</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">62</span>
+                      <span class="diff-line-content">#### 3.4.1 Implementation Guidelines</span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">63</span>
+                      <span class="diff-line-content"></span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">64</span>
+                      <span class="diff-line-content">- Data valuation methodologies</span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">65</span>
+                      <span class="diff-line-content">- Distribution mechanisms</span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">66</span>
+                      <span class="diff-line-content">- Privacy protections</span>
+                    </div>
+                    <div class="diff-line addition">
+                      <span class="diff-line-number">67</span>
+                      <span class="diff-line-content">- Corporate compliance requirements</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Restore Panel -->
+        <div class="restore-panel" style="margin-top: 1.5rem;">
+          <div class="restore-info">
+            <h4>Want to revert these changes?</h4>
+            <p>Restoring will create a new version (v2.4) with v2.2's content</p>
+          </div>
+          <button class="btn btn-outline">
+            <i data-lucide="rotate-ccw"></i>
+            Restore v2.2
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    // Version selection
+    document.querySelectorAll('.version-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.version-item').forEach(i => i.classList.remove('selected'));
+        item.classList.add('selected');
+      });
+    });
+    
+    // View toggle
+    document.querySelectorAll('.view-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

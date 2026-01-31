@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ & Objections | Post-Labor Economics</title>
+  <meta name="description" content="FAQ & Objections - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/faq.html">
+  <meta property="og:title" content="FAQ & Objections | Post-Labor Economics">
+  <meta property="og:description" content="Common questions answered: Will people be lazy? Can we afford it? What about inflation? Is this communism?">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-faq.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/faq.html">
+  <meta name="twitter:title" content="FAQ & Objections | Post-Labor Economics">
+  <meta name="twitter:description" content="Common questions answered: Will people be lazy? Can we afford it? What about inflation? Is this communism?">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-faq.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.faq-hero {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(245, 158, 11, 0.15) 100%);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.faq-hero h1 {
+  margin-bottom: 0.5rem;
+}
+
+.faq-hero p {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Category Tabs */
+.faq-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.75rem;
+  position: sticky;
+  top: 72px;
+  z-index: 100;
+}
+
+.faq-tab {
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.faq-tab i {
+  width: 16px;
+  height: 16px;
+}
+
+.faq-tab:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.faq-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* FAQ Section */
+.faq-section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 150px;
+}
+
+.faq-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.faq-section-header i {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.faq-section-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+/* Accordion */
+.faq-item {
+  background: var(--bg-secondary);
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.faq-item:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.faq-item.open {
+  border-color: var(--accent);
+}
+
+.faq-question {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  gap: 1rem;
+}
+
+.faq-question h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.faq-toggle {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-tertiary);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.faq-toggle i {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.2s;
+}
+
+.faq-item.open .faq-toggle {
+  background: var(--accent);
+  color: white;
+}
+
+.faq-item.open .faq-toggle i {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 1000px;
+}
+
+.faq-answer-content {
+  padding: 0 1.5rem 1.5rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.faq-answer-content p {
+  margin: 0 0 1rem 0;
+}
+
+.faq-answer-content p:last-child {
+  margin-bottom: 0;
+}
+
+.faq-answer-content strong {
+  color: var(--text-primary);
+}
+
+.faq-answer-content ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.faq-answer-content li {
+  margin-bottom: 0.5rem;
+}
+
+.faq-answer-content a {
+  color: var(--accent);
+}
+
+/* Highlight Box */
+.highlight-box {
+  background: var(--bg-tertiary);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  margin: 1rem 0;
+}
+
+.highlight-box.warning {
+  border-left-color: #f59e0b;
+}
+
+.highlight-box.insight {
+  border-left-color: #8b5cf6;
+}
+
+/* Quick Links */
+.quick-objections {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.quick-objections h3 {
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.objection-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.objection-pill {
+  padding: 0.5rem 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-secondary);
+}
+
+.objection-pill:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* Still Have Questions */
+.more-questions {
+  text-align: center;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+.more-questions h3 {
+  margin-bottom: 0.5rem;
+}
+
+.more-questions p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .faq-tabs {
+    position: static;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Understanding</span>
+  <h1>FAQ & Objections</h1>
+  <p class="page-description">Honest answers to common questions and criticisms</p>
+</div>
+
+<div class="faq-hero">
+  <h1>🤔 Your Questions, Answered</h1>
+  <p>
+    Post-labor economics challenges deep assumptions. Here we address the most common 
+    objections head-on—no dodging, no strawmanning.
+  </p>
+</div>
+
+<!-- Quick Objection Pills -->
+<div class="quick-objections">
+  <h3>Jump to Common Objections</h3>
+  <div class="objection-pills">
+    <span class="objection-pill" onclick="jumpTo('lazy')">People will be lazy</span>
+    <span class="objection-pill" onclick="jumpTo('afford')">We can't afford it</span>
+    <span class="objection-pill" onclick="jumpTo('inflation')">It causes inflation</span>
+    <span class="objection-pill" onclick="jumpTo('meaning')">Work gives meaning</span>
+    <span class="objection-pill" onclick="jumpTo('human-nature')">Human nature</span>
+    <span class="objection-pill" onclick="jumpTo('communism')">Sounds like communism</span>
+  </div>
+</div>
+
+<!-- Category Tabs -->
+<div class="faq-tabs">
+  <button class="faq-tab active" onclick="showCategory('all')">
+    <i data-lucide="list"></i>
+    All
+  </button>
+  <button class="faq-tab" onclick="showCategory('basics')">
+    <i data-lucide="help-circle"></i>
+    Basics
+  </button>
+  <button class="faq-tab" onclick="showCategory('objections')">
+    <i data-lucide="message-square"></i>
+    Objections
+  </button>
+  <button class="faq-tab" onclick="showCategory('economics')">
+    <i data-lucide="trending-up"></i>
+    Economics
+  </button>
+  <button class="faq-tab" onclick="showCategory('practical')">
+    <i data-lucide="settings"></i>
+    Practical
+  </button>
+</div>
+
+<!-- Basics Section -->
+<section class="faq-section" data-category="basics">
+  <div class="faq-section-header">
+    <i data-lucide="help-circle"></i>
+    <h2>The Basics</h2>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>What is Post-Labor Economics?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>Post-Labor Economics is the study of how society will function when AI, automation, and robotics can perform most productive work. It addresses three core questions:</p>
+        <ul>
+          <li><strong>Income:</strong> How do people receive money when wages disappear?</li>
+          <li><strong>Power:</strong> How do citizens maintain democratic leverage without labor power?</li>
+          <li><strong>Meaning:</strong> What gives life purpose when work is optional?</li>
+        </ul>
+        <p>It's not about whether this transition will happen—it's about how we navigate it thoughtfully rather than letting it happen to us chaotically.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>What is L/0 (Labor Zero)?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>L/0</strong> is shorthand for the thesis that <em>obligatory</em> human labor is coming to an end. It's not about banning work—it's about making work <em>voluntary</em> rather than <em>coerced</em>.</p>
+        <div class="highlight-box">
+          <strong>Key distinction:</strong> Work ≠ Labor. Work can be meaningful (art, caregiving, craftsmanship). Labor is work you do because you'll starve otherwise. L/0 targets labor, not work.
+        </div>
+        <p>The "/" in L/0 evokes the mathematical concept of division by zero—an operation that breaks normal rules. Just as dividing by zero produces undefined results, dividing our economy by zero labor produces outcomes our current frameworks can't handle.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>Is this actually happening? When?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>Yes, it's already happening.</strong> In 2025 alone, we documented 300,000-500,000 job losses directly attributable to AI. This is accelerating, not slowing.</p>
+        <p>The timeline isn't "robots replace everyone Tuesday." It's a gradual process:</p>
+        <ul>
+          <li><strong>Now-2030:</strong> White-collar knowledge work disrupted (coding, writing, analysis, customer service)</li>
+          <li><strong>2025-2035:</strong> Physical automation advances (warehouses, delivery, basic manufacturing)</li>
+          <li><strong>2030-2040:</strong> Most routine work automatable</li>
+          <li><strong>2035+:</strong> Labor becomes genuinely optional for most people</li>
+        </ul>
+        <p>The question isn't if, but whether we build the infrastructure for a good transition or a catastrophic one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Objections Section -->
+<section class="faq-section" data-category="objections">
+  <div class="faq-section-header">
+    <i data-lucide="message-square"></i>
+    <h2>Common Objections</h2>
+  </div>
+  
+  <div class="faq-item" id="lazy" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"People will just be lazy and do nothing"</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>This is the most common objection, and it's based on a misunderstanding of human nature.</p>
+        <p><strong>The evidence says otherwise:</strong></p>
+        <ul>
+          <li>Retirees don't become couch potatoes—they volunteer, travel, pursue hobbies, care for grandchildren</li>
+          <li>Lottery winners mostly keep working (they just choose <em>what</em> work)</li>
+          <li>UBI experiments show minimal work reduction, and people who do reduce work do so to care for family or pursue education</li>
+          <li>The FIRE movement (Financial Independence, Retire Early) shows people voluntarily pursue meaningful activity after leaving jobs</li>
+        </ul>
+        <div class="highlight-box insight">
+          <strong>The real question:</strong> If people would "do nothing" without coercion, why do retirees stay busy? Why do the wealthy work? Why does anyone volunteer? Humans are wired for activity and contribution—we just don't want to be <em>forced</em>.
+        </div>
+        <p>What people <em>actually</em> do when freed from obligatory labor: care for children and elderly, make art, build community, start passion projects, learn, teach, and yes—sometimes rest. All of these have value.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" id="afford" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"We can't afford UBI / sovereign wealth funds / etc."</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>We can't afford NOT to.</strong> The real question is: what happens to consumer demand when jobs disappear?</p>
+        <p>Consider:</p>
+        <ul>
+          <li>Norway's sovereign wealth fund is worth <strong>$1.7 trillion</strong>—and Norway has only 5 million people</li>
+          <li>Alaska has paid dividends to every resident since 1982 from oil revenues</li>
+          <li>The US already spends trillions on means-tested welfare programs that could be consolidated</li>
+          <li>Automation <em>increases</em> productivity—there's more wealth, it's just distributed badly</li>
+        </ul>
+        <div class="highlight-box warning">
+          <strong>The affordability trap:</strong> "We can't afford it" assumes the current system is sustainable. But if automation eliminates jobs, who buys the products? Businesses need customers with money. The current system becomes <em>unaffordable</em> when demand collapses.
+        </div>
+        <p>The Pyramid of Prosperity isn't about government handouts forever—it's about <strong>ownership</strong>. Citizens own shares in sovereign wealth funds, cooperatives, and data trusts. The returns come from productive capital, not taxes.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" id="inflation" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"Giving everyone money will just cause inflation"</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>This concern is reasonable but misunderstands the mechanism.</p>
+        <p><strong>Inflation happens when:</strong> More money chases the same amount of goods.</p>
+        <p><strong>What's actually happening:</strong> Automation is <em>massively increasing</em> the supply of goods while <em>reducing</em> their cost. Technology is inherently <strong>deflationary</strong>.</p>
+        <ul>
+          <li>Computing power: down 99.9%+ since 1970</li>
+          <li>Solar energy: down 99% since 1976</li>
+          <li>Genome sequencing: down from $3B to $200</li>
+          <li>AI inference costs: dropping 10x per year</li>
+        </ul>
+        <p>The real risk isn't inflation—it's <strong>demand collapse</strong>. If people don't have money, they can't buy things, prices fall, businesses fail, more jobs disappear. This is a deflationary spiral, not an inflationary one.</p>
+        <div class="highlight-box">
+          <strong>Historical note:</strong> Alaska's Permanent Fund Dividend hasn't caused inflation in Alaska. It's been running since 1982.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" id="meaning" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"Work gives life meaning—without it, people will be lost"</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>Some work gives meaning. Most jobs don't.</strong></p>
+        <p>Ask yourself: Do data entry clerks, telemarketers, and warehouse pickers find deep meaning in their work? Or do they do it because they need money?</p>
+        <p>Gallup finds that <strong>only 23% of workers globally are engaged</strong> at work. The rest are either "not engaged" (59%) or "actively disengaged" (18%). Most people are not finding meaning in their jobs.</p>
+        <div class="highlight-box insight">
+          <strong>The meaning myth:</strong> We've conflated "work" (meaningful activity) with "jobs" (paid employment). Parenting is work. Art is work. Community service is work. None require a paycheck to be meaningful.
+        </div>
+        <p>What actually gives meaning:</p>
+        <ul>
+          <li>Relationships and community</li>
+          <li>Creative expression</li>
+          <li>Contributing to something larger than yourself</li>
+          <li>Growth and learning</li>
+          <li>Caring for others</li>
+        </ul>
+        <p>All of these are possible—often <em>more</em> possible—without obligatory labor consuming 40+ hours per week.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" id="human-nature" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"This goes against human nature"</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>Which human nature?</strong></p>
+        <p>For 95% of human history, we lived as hunter-gatherers working about 15-20 hours per week. The 40-hour work week is a <em>recent invention</em>—about 100 years old. "Work or starve" is even more recent.</p>
+        <p>Throughout history, every expansion of freedom was called "against human nature":</p>
+        <ul>
+          <li>"Ending slavery will collapse the economy" (it didn't)</li>
+          <li>"Women can't handle voting" (they can)</li>
+          <li>"The 8-hour day is impossible" (it wasn't)</li>
+          <li>"Weekends will destroy productivity" (they didn't)</li>
+        </ul>
+        <div class="highlight-box">
+          <strong>Real human nature:</strong> Humans are social, curious, creative, and driven to contribute. We're also lazy about things we hate and energetic about things we love. That's not a bug—it's a feature that post-labor economics embraces.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" id="communism" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"This sounds like communism / socialism"</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>It's almost the opposite.</strong></p>
+        <p>Communism sought to abolish private property and have the state own everything. Post-labor economics seeks to <strong>broaden private ownership</strong> so everyone has capital.</p>
+        <ul>
+          <li><strong>Communism:</strong> The state owns the means of production</li>
+          <li><strong>Current capitalism:</strong> A small elite owns the means of production</li>
+          <li><strong>Post-labor economics:</strong> Everyone owns shares in the means of production</li>
+        </ul>
+        <p>The Pyramid of Prosperity includes sovereign wealth funds (like Norway's capitalist fund), ESOPs (employee stock ownership—very American), cooperatives (like REI), and individual portfolios.</p>
+        <div class="highlight-box">
+          <strong>The goal:</strong> Make everyone a capitalist. Give everyone ownership stakes. Use markets and property rights, just distributed more broadly.
+        </div>
+        <p>If anything, this is <em>more</em> capitalist than the current system—it just includes everyone in capitalism rather than just the wealthy.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>"New jobs will be created—they always have been"</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p><strong>This time is different.</strong> Previous automation replaced <em>physical</em> labor. AI replaces <em>cognitive</em> labor.</p>
+        <p>When tractors replaced farm workers, those workers could become factory workers. When robots replaced factory workers, they could become service workers. But when AI replaces <em>thinking</em>—what's left?</p>
+        <p>The new jobs being created are:</p>
+        <ul>
+          <li><strong>AI-adjacent jobs:</strong> Prompt engineering, AI training—but these are few and will themselves be automated</li>
+          <li><strong>"Human touch" jobs:</strong> But even these are shrinking (self-checkout, AI customer service)</li>
+          <li><strong>Creative jobs:</strong> Being disrupted by generative AI right now</li>
+        </ul>
+        <div class="highlight-box warning">
+          <strong>The cost problem:</strong> Even if new jobs exist, why would any company hire a human at $50,000/year when AI can do it for $500/year? The economics don't work. It's not about capability—it's about cost.
+        </div>
+        <p>"New jobs will appear" is faith-based reasoning. We need actual plans, not hope.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Economics Section -->
+<section class="faq-section" data-category="economics">
+  <div class="faq-section-header">
+    <i data-lucide="trending-up"></i>
+    <h2>Economic Questions</h2>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>What is the Economic Agency Paradox?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>The Economic Agency Paradox describes a self-reinforcing spiral:</p>
+        <ol>
+          <li><strong>Technology lowers costs</strong> → Your money goes further (good!)</li>
+          <li><strong>But technology destroys jobs</strong> → You have no money (bad!)</li>
+          <li><strong>Automate more to lower costs?</strong> → Destroys more jobs → Makes it worse</li>
+        </ol>
+        <p>The paradox: The same force that makes things cheaper (automation) also destroys the mechanism by which people get money (jobs). You can't benefit from cheap goods if you have no income.</p>
+        <div class="highlight-box">
+          <strong>Example:</strong> AI can write code 100x cheaper than humans. Great for companies! But if you're a coder who just lost your job, the cheap software doesn't help you pay rent.
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>How do the Pyramids work together?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>The two pyramids address two different problems:</p>
+        <p><strong>Pyramid of Prosperity:</strong> How do people get income?</p>
+        <ul>
+          <li>Layer 1: Universal services (healthcare, education, housing)</li>
+          <li>Layer 2: Public asset dividends (sovereign wealth funds)</li>
+          <li>Layer 3: Collective ownership (cooperatives, ESOPs)</li>
+          <li>Layer 4: Individual assets (baby bonds, portfolios)</li>
+          <li>Layer 5: Residual wages (for remaining human jobs)</li>
+        </ul>
+        <p><strong>Pyramid of Power:</strong> How do citizens maintain leverage?</p>
+        <ul>
+          <li>Layer 1: Immutable civic infrastructure (blockchain ID)</li>
+          <li>Layer 2: Open payment rails (UPI-style systems)</li>
+          <li>Layer 3: Radical transparency (open procurement)</li>
+          <li>Layer 4: Direct democracy (participatory budgeting)</li>
+          <li>Layer 5: Metagovernance (rules for changing rules)</li>
+        </ul>
+        <p>Both are necessary. Prosperity without power means dependence on whoever controls the money. Power without prosperity means democratic structures with nothing to decide about.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Practical Section -->
+<section class="faq-section" data-category="practical">
+  <div class="faq-section-header">
+    <i data-lucide="settings"></i>
+    <h2>Practical Questions</h2>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>What can I actually do about this?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>Depends on your situation and capacity:</p>
+        <p><strong>Everyone:</strong></p>
+        <ul>
+          <li>Learn the concepts and share them (ideas spread through people)</li>
+          <li>Talk to friends and family about what's coming</li>
+          <li>Support politicians who take automation seriously</li>
+        </ul>
+        <p><strong>If you have resources:</strong></p>
+        <ul>
+          <li>Invest in your own "personal sovereign wealth fund"—diversified assets</li>
+          <li>Support worker cooperatives and employee-owned businesses</li>
+          <li>Fund research and advocacy</li>
+        </ul>
+        <p><strong>If you want to go deeper:</strong></p>
+        <ul>
+          <li><a href="/get-involved.html">Join the community</a> and connect with others</li>
+          <li>Create content explaining these ideas to your audience</li>
+          <li>Engage local policymakers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>How is this different from other UBI movements?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>Post-Labor Economics is broader than UBI. UBI is just one tool—Layer 1 of the Pyramid of Prosperity.</p>
+        <p><strong>Key differences:</strong></p>
+        <ul>
+          <li><strong>Ownership, not just payments:</strong> We emphasize capital ownership (sovereign wealth funds, cooperatives, data trusts) rather than just government checks</li>
+          <li><strong>Power, not just money:</strong> The Pyramid of Power addresses democratic leverage, which most UBI movements ignore</li>
+          <li><strong>Systems thinking:</strong> We see this as a civilization-level transition requiring multiple coordinated mechanisms</li>
+          <li><strong>Ideological bridge-building:</strong> We work to build coalitions across traditional political divides</li>
+        </ul>
+        <p>UBI alone, funded by taxes and administered by government, concentrates power dangerously. We want distributed ownership and algorithmic accountability.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-question">
+      <h3>Who is behind this movement?</h3>
+      <span class="faq-toggle"><i data-lucide="chevron-down"></i></span>
+    </div>
+    <div class="faq-answer">
+      <div class="faq-answer-content">
+        <p>Post-Labor Economics was founded by <strong>David Shapiro</strong>, a technologist and writer who has been exploring AI's implications for years through his YouTube channel (150K+ subscribers) and Substack.</p>
+        <p>The movement is intentionally open and decentralized. There's no single organization controlling it—just a growing community of people who recognize what's coming and want to prepare thoughtfully.</p>
+        <p><strong>We're not:</strong></p>
+        <ul>
+          <li>A political party or PAC</li>
+          <li>Funded by any corporation or billionaire</li>
+          <li>Affiliated with any government</li>
+        </ul>
+        <p><strong>We are:</strong></p>
+        <ul>
+          <li>A community of concerned citizens</li>
+          <li>Researchers, technologists, workers, and thinkers</li>
+          <li>People who'd rather plan than panic</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="more-questions">
+  <h3>Still Have Questions?</h3>
+  <p>Join the community to discuss with others exploring these ideas.</p>
+  <div class="cta-actions">
+    <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary">
+      <i data-lucide="users"></i>
+      Join Community
+    </a>
+    <a href="/concepts.html" class="btn btn-secondary">
+      <i data-lucide="book-open"></i>
+      Explore Concepts
+    </a>
+  </div>
+</div>
+
+<script>
+function toggleFaq(item) {
+  // Close others in same section
+  const section = item.closest('.faq-section');
+  section.querySelectorAll('.faq-item.open').forEach(other => {
+    if (other !== item) {
+      other.classList.remove('open');
+    }
+  });
+  
+  // Toggle this one
+  item.classList.toggle('open');
+}
+
+function showCategory(category) {
+  // Update tabs
+  document.querySelectorAll('.faq-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.closest('.faq-tab').classList.add('active');
+  
+  // Show/hide sections
+  document.querySelectorAll('.faq-section').forEach(section => {
+    if (category === 'all' || section.dataset.category === category) {
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
+function jumpTo(id) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+      if (!element.classList.contains('open')) {
+        toggleFaq(element);
+      }
+    }, 500);
+  }
+}
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
