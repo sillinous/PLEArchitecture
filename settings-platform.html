@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Settings | PLE Platform</title>
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .settings-layout { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; min-height: calc(100vh - var(--header-height) - 4rem); }
+    .settings-nav { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1rem; height: fit-content; position: sticky; top: calc(var(--header-height) + 2rem); }
+    .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--color-text-secondary); cursor: pointer; text-decoration: none; transition: all var(--transition-fast); }
+    .nav-item:hover { background: var(--color-bg-tertiary); color: var(--color-text-primary); }
+    .nav-item.active { background: rgba(99, 102, 241, 0.15); color: var(--color-primary); }
+    .nav-item i { width: 18px; height: 18px; }
+    
+    .settings-main h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .settings-main > p { color: var(--color-text-secondary); margin-bottom: 2rem; }
+    
+    .settings-section { background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: var(--radius-lg); margin-bottom: 1.5rem; overflow: hidden; }
+    .section-header { padding: 1.25rem; border-bottom: 1px solid var(--color-border); }
+    .section-title { font-weight: 600; margin-bottom: 0.25rem; }
+    .section-desc { font-size: 0.8125rem; color: var(--color-text-muted); }
+    .section-body { padding: 1.25rem; }
+    
+    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--color-border); }
+    .setting-row:first-child { padding-top: 0; }
+    .setting-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .setting-info h4 { font-size: 0.9375rem; font-weight: 500; margin-bottom: 0.25rem; }
+    .setting-info p { font-size: 0.8125rem; color: var(--color-text-muted); }
+    
+    .toggle { position: relative; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: 24px; transition: all var(--transition-fast); }
+    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: all var(--transition-fast); }
+    .toggle input:checked + .toggle-slider { background: var(--color-primary); border-color: var(--color-primary); }
+    .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+    
+    .form-select { padding: 0.625rem 1rem; background: var(--color-bg-tertiary); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-primary); font-size: 0.875rem; min-width: 180px; cursor: pointer; }
+    .form-select:focus { outline: none; border-color: var(--color-primary); }
+    
+    .arch-prefs { padding: 1rem; background: var(--color-bg-tertiary); border-radius: var(--radius-md); margin-top: 1rem; }
+    .arch-prefs h4 { font-size: 0.8125rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .arch-prefs h4 i { width: 14px; height: 14px; color: var(--color-primary); }
+    
+    .pref-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .pref-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; }
+    .pref-item input { accent-color: var(--color-primary); }
+    
+    .section-footer { padding: 1rem 1.25rem; border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: 0.75rem; }
+    
+    @media (max-width: 768px) { .settings-layout { grid-template-columns: 1fr; } .settings-nav { position: static; } .pref-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="/platform-home.html" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text"><span class="logo-title">Post-Labor Economics</span><span class="logo-subtitle">Platform Settings</span></div>
+      </a>
+      <nav class="main-nav"><ul class="nav-menu"><li class="nav-item"><a href="/platform-home.html">← Platform Home</a></li></ul></nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: calc(var(--header-height) + 2rem); padding-bottom: 3rem;">
+    <div class="settings-layout">
+      <nav class="settings-nav">
+        <a href="/settings-profile.html" class="nav-item"><i data-lucide="user"></i> Profile</a>
+        <a href="/settings-platform.html" class="nav-item active"><i data-lucide="settings"></i> Platform</a>
+        <a href="/settings-integrations.html" class="nav-item"><i data-lucide="plug"></i> Integrations</a>
+      </nav>
+      
+      <div class="settings-main">
+        <h1>Platform Settings</h1>
+        <p>Configure your platform experience, notifications, and architecture display preferences.</p>
+        
+        <div class="settings-section">
+          <div class="section-header">
+            <div class="section-title">Notifications</div>
+            <div class="section-desc">Control how and when you receive updates</div>
+          </div>
+          <div class="section-body">
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Architecture Updates</h4>
+                <p>Get notified when architecture elements you follow are modified</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Working Group Activity</h4>
+                <p>Notifications for new discussions and decisions in your groups</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Content Published</h4>
+                <p>Alert when content aligned to your capabilities is published</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Governance Decisions</h4>
+                <p>Notifications about standards votes and principle approvals</p>
+              </div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Email Digest Frequency</h4>
+                <p>How often to receive email summaries</p>
+              </div>
+              <select class="form-select">
+                <option>Real-time</option>
+                <option selected>Daily Digest</option>
+                <option>Weekly Digest</option>
+                <option>Never</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <div class="section-header">
+            <div class="section-title">Architecture Display</div>
+            <div class="section-desc">Customize how architecture elements appear throughout the platform</div>
+          </div>
+          <div class="section-body">
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Show Architecture Tags</h4>
+                <p>Display Goal, Strategy, and Capability tags on content</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Alignment Scores</h4>
+                <p>Show architecture alignment percentages on items</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Default Architecture View</h4>
+                <p>Preferred view when opening EA tools</p>
+              </div>
+              <select class="form-select">
+                <option selected>Dashboard Overview</option>
+                <option>Business Motivation Model</option>
+                <option>Capability Map</option>
+                <option>Roadmap View</option>
+              </select>
+            </div>
+            
+            <div class="arch-prefs">
+              <h4><i data-lucide="eye"></i> Visible Element Types</h4>
+              <div class="pref-grid">
+                <label class="pref-item"><input type="checkbox" checked> Goals</label>
+                <label class="pref-item"><input type="checkbox" checked> Strategies</label>
+                <label class="pref-item"><input type="checkbox" checked> Objectives</label>
+                <label class="pref-item"><input type="checkbox" checked> Capabilities</label>
+                <label class="pref-item"><input type="checkbox" checked> Principles</label>
+                <label class="pref-item"><input type="checkbox" checked> Standards</label>
+                <label class="pref-item"><input type="checkbox"> Building Blocks</label>
+                <label class="pref-item"><input type="checkbox"> Value Streams</label>
+              </div>
+            </div>
+          </div>
+          <div class="section-footer">
+            <button class="btn btn-outline">Reset to Default</button>
+            <button class="btn btn-primary">Save Changes</button>
+          </div>
+        </div>
+        
+        <div class="settings-section">
+          <div class="section-header">
+            <div class="section-title">Activity Feed</div>
+            <div class="section-desc">Customize your activity feed content</div>
+          </div>
+          <div class="section-body">
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Show All Suites</h4>
+                <p>Display activity from Architecture, Content, Community, and Publishing</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Personalized Feed</h4>
+                <p>Prioritize activity related to your capabilities and groups</p>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-info">
+                <h4>Activity Density</h4>
+                <p>How many items to show per page</p>
+              </div>
+              <select class="form-select">
+                <option>Compact (25 items)</option>
+                <option selected>Normal (15 items)</option>
+                <option>Expanded (10 items)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

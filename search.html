@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search | Post-Labor Economics</title>
+  <meta name="description" content="Search - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/search.html">
+  <meta property="og:title" content="Search | Post-Labor Economics">
+  <meta property="og:description" content="Search all Post-Labor Economics content.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-search.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/search.html">
+  <meta name="twitter:title" content="Search | Post-Labor Economics">
+  <meta name="twitter:description" content="Search all Post-Labor Economics content.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-search.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.search-hero {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  font-size: 1.1rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  width: 20px;
+  height: 20px;
+}
+
+.search-clear {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: none;
+}
+
+.search-clear.visible {
+  display: block;
+}
+
+.search-clear:hover {
+  color: var(--text-primary);
+}
+
+.search-hints {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.search-hint {
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-hint:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Results */
+.search-results {
+  margin-top: 2rem;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.results-count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.results-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-tag {
+  padding: 0.375rem 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-tag:hover,
+.filter-tag.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.result-item {
+  background: var(--bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.result-item:hover {
+  background: var(--bg-tertiary);
+  transform: translateX(4px);
+}
+
+.result-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-type.page { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+.result-type.concept { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+.result-type.framework { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+.result-type.resource { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+
+.result-type i {
+  width: 12px;
+  height: 12px;
+}
+
+.result-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.result-title mark {
+  background: rgba(16, 185, 129, 0.3);
+  color: inherit;
+  padding: 0 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.result-excerpt {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.result-excerpt mark {
+  background: rgba(16, 185, 129, 0.2);
+  color: inherit;
+  padding: 0 0.125rem;
+}
+
+.result-path {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+.no-results i {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.no-results h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Keyboard Navigation */
+.result-item:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Quick Links */
+.quick-links {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+}
+
+.quick-links h3 {
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quick-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+
+.quick-link:hover {
+  background: var(--bg-primary);
+  transform: translateX(4px);
+}
+
+.quick-link i {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Find</span>
+  <h1>Search</h1>
+  <p class="page-description">Search across all Post-Labor Economics content</p>
+</div>
+
+<div class="search-hero">
+  <div class="search-container">
+    <div class="search-box">
+      <i data-lucide="search" class="search-icon"></i>
+      <input 
+        type="text" 
+        class="search-input" 
+        id="search-input" 
+        placeholder="Search concepts, frameworks, resources..."
+        autocomplete="off"
+        autofocus
+      >
+      <button class="search-clear" id="search-clear" onclick="clearSearch()">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    
+    <div class="search-hints">
+      <span class="search-hint" onclick="searchFor('L/0')">L/0</span>
+      <span class="search-hint" onclick="searchFor('Pyramid')">Pyramid</span>
+      <span class="search-hint" onclick="searchFor('UBI')">UBI</span>
+      <span class="search-hint" onclick="searchFor('Laborism')">Laborism</span>
+      <span class="search-hint" onclick="searchFor('Economic Agency')">Economic Agency</span>
+    </div>
+  </div>
+</div>
+
+<div class="search-results" id="search-results" style="display: none;">
+  <div class="results-header">
+    <span class="results-count" id="results-count">0 results</span>
+    <div class="results-filters">
+      <span class="filter-tag active" data-filter="all" onclick="filterResults('all')">All</span>
+      <span class="filter-tag" data-filter="page" onclick="filterResults('page')">Pages</span>
+      <span class="filter-tag" data-filter="concept" onclick="filterResults('concept')">Concepts</span>
+      <span class="filter-tag" data-filter="framework" onclick="filterResults('framework')">Frameworks</span>
+    </div>
+  </div>
+  
+  <div class="results-list" id="results-list"></div>
+</div>
+
+<div class="no-results" id="no-results" style="display: none;">
+  <i data-lucide="search-x"></i>
+  <h3>No results found</h3>
+  <p>Try different keywords or browse the sections below</p>
+</div>
+
+<div class="quick-links" id="quick-links">
+  <h3>📚 Browse by Section</h3>
+  <div class="quick-links-grid">
+    <a href="/concepts.html" class="quick-link">
+      <i data-lucide="book-open"></i>
+      <span>Key Concepts</span>
+    </a>
+    <a href="/prosperity.html" class="quick-link">
+      <i data-lucide="trending-up"></i>
+      <span>Pyramid of Prosperity</span>
+    </a>
+    <a href="/power.html" class="quick-link">
+      <i data-lucide="shield"></i>
+      <span>Pyramid of Power</span>
+    </a>
+    <a href="/resources.html" class="quick-link">
+      <i data-lucide="folder"></i>
+      <span>Resource Hub</span>
+    </a>
+    <a href="/theory-of-change.html" class="quick-link">
+      <i data-lucide="git-branch"></i>
+      <span>Theory of Change</span>
+    </a>
+    <a href="/get-involved.html" class="quick-link">
+      <i data-lucide="users"></i>
+      <span>Get Involved</span>
+    </a>
+  </div>
+</div>
+
+<script>
+// Search index - all searchable content
+const searchIndex = [
+  // Core Concepts
+  {
+    type: 'concept',
+    title: 'L/0 (Labor Zero)',
+    excerpt: 'The elimination of obligatory human labor through AI, automation, and robotics. L/0 is not about banning work—it\'s about making work voluntary rather than coerced.',
+    url: '/concepts/#core',
+    keywords: ['l0', 'labor zero', 'post-labor', 'automation', 'obligatory']
+  },
+  {
+    type: 'concept',
+    title: 'Laborism',
+    excerpt: 'The pervasive belief that work is morally necessary—that people should work regardless of whether they need to. Spans the political spectrum.',
+    url: '/concepts/#problems',
+    keywords: ['laborism', 'work ethic', 'protestant', 'ideology', 'moral']
+  },
+  {
+    type: 'concept',
+    title: 'Economic Agency Paradox',
+    excerpt: 'Technology is deflationary (lowers costs) but destroys jobs. The more we automate to lower costs, the worse it gets. A self-reinforcing spiral.',
+    url: '/concepts/#problems',
+    keywords: ['economic agency paradox', 'deflation', 'automation', 'jobs', 'paradox']
+  },
+  {
+    type: 'concept',
+    title: 'Global Exhaustion',
+    excerpt: 'The worldwide epidemic of worker burnout and disengagement. Manifestations include tang ping, karoshi, quiet quitting, and declining birth rates.',
+    url: '/concepts/#problems',
+    keywords: ['exhaustion', 'burnout', 'tang ping', 'karoshi', 'quiet quitting', 'fertility']
+  },
+  {
+    type: 'concept',
+    title: 'Algorithmic Power',
+    excerpt: 'The new source of citizen leverage in a post-labor world. Decentralized, immutable, permissionless systems that cannot be controlled by states.',
+    url: '/concepts/#frameworks',
+    keywords: ['algorithmic power', 'blockchain', 'decentralized', 'leverage', 'democracy']
+  },
+  
+  // Frameworks
+  {
+    type: 'framework',
+    title: 'Pyramid of Prosperity',
+    excerpt: 'Five-layer framework for distributing income after jobs disappear: Universals, Public Assets, Collective Private, Individual Assets, Residual Wages.',
+    url: '/architecture/prosperity/',
+    keywords: ['pyramid prosperity', 'income', 'distribution', 'ubi', 'ownership', 'capital']
+  },
+  {
+    type: 'framework',
+    title: 'Pyramid of Power',
+    excerpt: 'Five-layer framework for democratic leverage: Civic Bedrock, Payment Rails, Transparency, Direct Democracy, Metagovernance.',
+    url: '/architecture/power/',
+    keywords: ['pyramid power', 'democracy', 'blockchain', 'governance', 'transparency']
+  },
+  {
+    type: 'framework',
+    title: 'Theory of Change',
+    excerpt: 'How we get from the current problem through our activities to outcomes and ultimate impact: a post-labor world where no one has to work to survive.',
+    url: '/theory-of-change/',
+    keywords: ['theory of change', 'roadmap', 'strategy', 'impact', 'outcomes']
+  },
+  
+  // Pages
+  {
+    type: 'page',
+    title: 'Get Involved',
+    excerpt: 'Multiple ways to contribute to the post-labor transition. Find your path based on your background: worker, technologist, business leader, or creator.',
+    url: '/get-involved/',
+    keywords: ['get involved', 'join', 'contribute', 'volunteer', 'action']
+  },
+  {
+    type: 'page',
+    title: 'Resource Hub',
+    excerpt: 'Curated videos, articles, frameworks, and research on post-labor economics. Start with the L/0 manifesto and explore from there.',
+    url: '/resources/',
+    keywords: ['resources', 'videos', 'articles', 'library', 'content']
+  },
+  {
+    type: 'page',
+    title: 'Coalition Building',
+    excerpt: 'How exhausted workers and forward-thinking capitalists find common cause. Neither side wants this marriage anymore—both want labor to end.',
+    url: '/architecture/coalition/',
+    keywords: ['coalition', 'workers', 'capitalists', 'alliance', 'movement']
+  },
+  {
+    type: 'page',
+    title: 'Research & Evidence',
+    excerpt: 'Evidence-based advocacy. Tracking AI job displacement, studying proven mechanisms like Norway\'s sovereign wealth fund and India\'s UPI.',
+    url: '/architecture/research/',
+    keywords: ['research', 'evidence', 'data', 'studies', 'displacement', 'ai jobs']
+  },
+  {
+    type: 'page',
+    title: 'Policy Framework',
+    excerpt: 'Concrete mechanisms for implementing the post-labor transition. Prosperity and Power tracks with specific policy proposals.',
+    url: '/architecture/policy/',
+    keywords: ['policy', 'implementation', 'legislation', 'proposals', 'mechanisms']
+  },
+  {
+    type: 'page',
+    title: 'Live Dashboard',
+    excerpt: 'Real-time progress tracking for the L/0 movement. Community size, YouTube subscribers, book completion, and milestones.',
+    url: '/dashboard/',
+    keywords: ['dashboard', 'metrics', 'progress', 'stats', 'growth']
+  },
+  {
+    type: 'page',
+    title: 'Pyramid Builder',
+    excerpt: 'Interactive tool to design your own post-labor transition framework. Drag policy mechanisms to build your ideal pyramid.',
+    url: '/pyramid-builder/',
+    keywords: ['builder', 'interactive', 'tool', 'customize', 'design']
+  },
+  
+  // Mechanisms
+  {
+    type: 'concept',
+    title: 'Universal Basic Income (UBI)',
+    excerpt: 'Regular cash payments to all citizens with no strings attached. Layer 1 of the Pyramid of Prosperity. Examples: Alaska PFD, GiveDirectly.',
+    url: '/architecture/prosperity/',
+    keywords: ['ubi', 'universal basic income', 'cash', 'payments', 'alaska']
+  },
+  {
+    type: 'concept',
+    title: 'Sovereign Wealth Fund',
+    excerpt: 'State-owned investment fund that generates returns for citizens. Norway\'s $1.7T fund is the gold standard. Layer 2 of Prosperity Pyramid.',
+    url: '/architecture/prosperity/',
+    keywords: ['sovereign wealth fund', 'swf', 'norway', 'investment', 'dividends']
+  },
+  {
+    type: 'concept',
+    title: 'Open Payment Rails (UPI)',
+    excerpt: 'Public infrastructure for instant, free digital payments. India\'s UPI has 1 billion+ users. Layer 2 of Power Pyramid.',
+    url: '/architecture/power/',
+    keywords: ['upi', 'payment rails', 'india', 'pix', 'digital payments']
+  },
+  {
+    type: 'concept',
+    title: 'Participatory Budgeting',
+    excerpt: 'Citizens directly decide how to allocate portions of public budgets. Layer 4 of Power Pyramid. Example: Porto Alegre, Brazil.',
+    url: '/architecture/power/',
+    keywords: ['participatory budgeting', 'democracy', 'budgets', 'voting', 'porto alegre']
+  }
+];
+
+let currentFilter = 'all';
+
+// Search function
+function performSearch(query) {
+  const searchResults = document.getElementById('search-results');
+  const resultsList = document.getElementById('results-list');
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+  const quickLinks = document.getElementById('quick-links');
+  const clearBtn = document.getElementById('search-clear');
+  
+  if (!query || query.length < 2) {
+    searchResults.style.display = 'none';
+    noResults.style.display = 'none';
+    quickLinks.style.display = 'block';
+    clearBtn.classList.remove('visible');
+    return;
+  }
+  
+  clearBtn.classList.add('visible');
+  
+  const queryLower = query.toLowerCase();
+  const queryWords = queryLower.split(/\s+/);
+  
+  // Score and filter results
+  let results = searchIndex.map(item => {
+    let score = 0;
+    const titleLower = item.title.toLowerCase();
+    const excerptLower = item.excerpt.toLowerCase();
+    const keywordsStr = item.keywords.join(' ').toLowerCase();
+    
+    // Exact title match
+    if (titleLower.includes(queryLower)) {
+      score += 100;
+    }
+    
+    // Word matches in title
+    queryWords.forEach(word => {
+      if (titleLower.includes(word)) score += 50;
+      if (excerptLower.includes(word)) score += 20;
+      if (keywordsStr.includes(word)) score += 30;
+    });
+    
+    return { ...item, score };
+  }).filter(item => item.score > 0);
+  
+  // Sort by score
+  results.sort((a, b) => b.score - a.score);
+  
+  // Apply filter
+  if (currentFilter !== 'all') {
+    results = results.filter(item => item.type === currentFilter);
+  }
+  
+  if (results.length === 0) {
+    searchResults.style.display = 'none';
+    noResults.style.display = 'block';
+    quickLinks.style.display = 'block';
+    return;
+  }
+  
+  noResults.style.display = 'none';
+  quickLinks.style.display = 'none';
+  searchResults.style.display = 'block';
+  
+  resultsCount.textContent = `${results.length} result${results.length !== 1 ? 's' : ''}`;
+  
+  // Render results
+  resultsList.innerHTML = results.map(item => {
+    const typeIcons = {
+      page: 'file-text',
+      concept: 'lightbulb',
+      framework: 'layers',
+      resource: 'folder'
+    };
+    
+    // Highlight matches
+    const highlightedTitle = highlightMatches(item.title, queryWords);
+    const highlightedExcerpt = highlightMatches(item.excerpt, queryWords);
+    
+    return `
+      <a href="${item.url}" class="result-item" data-type="${item.type}">
+        <span class="result-type ${item.type}">
+          <i data-lucide="${typeIcons[item.type]}"></i>
+          ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+        </span>
+        <h3 class="result-title">${highlightedTitle}</h3>
+        <p class="result-excerpt">${highlightedExcerpt}</p>
+        <span class="result-path">${item.url}</span>
+      </a>
+    `;
+  }).join('');
+  
+  // Re-init icons
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+}
+
+// Highlight matches in text
+function highlightMatches(text, words) {
+  let result = text;
+  words.forEach(word => {
+    if (word.length >= 2) {
+      const regex = new RegExp(`(${escapeRegex(word)})`, 'gi');
+      result = result.replace(regex, '<mark>$1</mark>');
+    }
+  });
+  return result;
+}
+
+// Escape regex special characters
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Filter results by type
+function filterResults(filter) {
+  currentFilter = filter;
+  
+  document.querySelectorAll('.filter-tag').forEach(tag => {
+    tag.classList.remove('active');
+  });
+  document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+  
+  const query = document.getElementById('search-input').value;
+  performSearch(query);
+}
+
+// Search for a specific term
+function searchFor(term) {
+  const input = document.getElementById('search-input');
+  input.value = term;
+  performSearch(term);
+}
+
+// Clear search
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  performSearch('');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  const input = document.getElementById('search-input');
+  
+  // Debounced search
+  let debounceTimer;
+  input.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      performSearch(this.value);
+    }, 200);
+  });
+  
+  // Keyboard navigation
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      clearSearch();
+    }
+  });
+  
+  // Check for query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const q = urlParams.get('q');
+  if (q) {
+    input.value = q;
+    performSearch(q);
+  }
+});
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -4,842 +4,355 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Platform Home | Post-Labor Economics</title>
-  <meta name="description" content="Unified platform for managing the Post-Labor Economics community.">
-  
   <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/styles/main.css">
+  <link rel="stylesheet" href="/src/styles/brand.css">
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
-    :root {
-      /* Core Colors */
-      --color-bg-primary: #09090b;
-      --color-bg-secondary: #18181b;
-      --color-bg-tertiary: #27272a;
-      --color-bg-elevated: rgba(39, 39, 42, 0.8);
-      --color-border: rgba(63, 63, 70, 0.5);
-      --color-border-hover: rgba(99, 102, 241, 0.5);
-      
-      /* Text */
-      --color-text-primary: #fafafa;
-      --color-text-secondary: #a1a1aa;
-      --color-text-muted: #71717a;
-      
-      /* Accent */
-      --color-primary: #6366f1;
-      --color-primary-hover: #818cf8;
-      --color-primary-glow: rgba(99, 102, 241, 0.25);
-      
-      /* Gradients */
-      --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
-      --gradient-secondary: linear-gradient(135deg, #ec4899, #f472b6);
-      --gradient-success: linear-gradient(135deg, #10b981, #34d399);
-      --gradient-warning: linear-gradient(135deg, #f59e0b, #fbbf24);
-      
-      /* Spacing */
-      --sidebar-width: 260px;
-      --sidebar-collapsed: 72px;
-      --topbar-height: 64px;
-      
-      /* Animation */
-      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-      
-      /* Shadows */
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
-      --shadow-glow: 0 0 40px var(--color-primary-glow);
-      
-      /* Radius */
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--color-bg-primary);
-      color: var(--color-text-primary);
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-    
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: var(--color-border);
-      border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--color-text-muted);
-    }
-    
-    /* Layout */
     .platform-layout {
-      display: flex;
+      display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      gap: var(--space-6);
+      padding-top: calc(var(--header-height) + var(--space-6));
+      padding-bottom: var(--space-8);
       min-height: 100vh;
     }
     
-    /* ==================== SIDEBAR ==================== */
-    .sidebar {
-      width: var(--sidebar-width);
-      background: var(--color-bg-secondary);
-      border-right: 1px solid var(--color-border);
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      z-index: 100;
-      transition: width var(--transition-slow);
+    /* Sidebar Navigation */
+    .platform-sidebar {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+      height: fit-content;
     }
     
-    .sidebar.collapsed {
-      width: var(--sidebar-collapsed);
+    .sidebar-section {
+      margin-bottom: var(--space-6);
     }
     
-    .sidebar-header {
-      padding: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-    
-    .logo {
-      width: 40px;
-      height: 40px;
-      background: var(--gradient-primary);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.8rem;
-      color: white;
-      flex-shrink: 0;
-      box-shadow: var(--shadow-glow);
-    }
-    
-    .logo-text {
-      overflow: hidden;
-      white-space: nowrap;
-      transition: opacity var(--transition-base), width var(--transition-slow);
-    }
-    
-    .sidebar.collapsed .logo-text {
-      opacity: 0;
-      width: 0;
-    }
-    
-    .logo-title {
-      font-weight: 700;
-      font-size: 0.9375rem;
-    }
-    
-    .logo-subtitle {
-      font-size: 0.6875rem;
-      color: var(--color-text-muted);
-    }
-    
-    /* Sidebar Toggle */
-    .sidebar-toggle {
-      position: absolute;
-      right: -12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 24px;
-      height: 24px;
-      background: var(--color-bg-tertiary);
-      border: 1px solid var(--color-border);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--color-text-muted);
-      transition: all var(--transition-base);
-      z-index: 10;
-    }
-    
-    .sidebar-toggle:hover {
-      background: var(--color-primary);
-      border-color: var(--color-primary);
-      color: white;
-    }
-    
-    .sidebar-toggle i {
-      width: 14px;
-      height: 14px;
-      transition: transform var(--transition-base);
-    }
-    
-    .sidebar.collapsed .sidebar-toggle i {
-      transform: rotate(180deg);
-    }
-    
-    /* Navigation */
-    .sidebar-nav {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem 0;
-    }
-    
-    .nav-section {
-      margin-bottom: 1.5rem;
-    }
-    
-    .nav-section-title {
-      padding: 0.5rem 1.25rem;
-      font-size: 0.625rem;
+    .sidebar-title {
+      font-size: var(--text-micro);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--color-text-muted);
-      transition: opacity var(--transition-base);
+      letter-spacing: var(--tracking-wider);
+      color: var(--text-muted);
+      padding: 0 var(--space-3);
+      margin-bottom: var(--space-2);
     }
     
-    .sidebar.collapsed .nav-section-title {
-      opacity: 0;
-    }
-    
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.625rem 1.25rem;
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      font-size: 0.875rem;
-      position: relative;
-      transition: all var(--transition-base);
-      cursor: pointer;
-    }
-    
-    .nav-item::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--color-primary);
-      border-radius: 0 3px 3px 0;
-      transform: scaleY(0);
-      transition: transform var(--transition-base);
-    }
-    
-    .nav-item:hover {
-      color: var(--color-text-primary);
-      background: rgba(99, 102, 241, 0.08);
-    }
-    
-    .nav-item.active {
-      color: var(--color-primary);
-      background: rgba(99, 102, 241, 0.12);
-    }
-    
-    .nav-item.active::before {
-      transform: scaleY(1);
-    }
-    
-    .nav-item i {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-    
-    .nav-item-text {
-      flex: 1;
-      overflow: hidden;
-      white-space: nowrap;
-      transition: opacity var(--transition-base);
-    }
-    
-    .sidebar.collapsed .nav-item-text {
-      opacity: 0;
-    }
-    
-    .nav-badge {
-      padding: 0.125rem 0.5rem;
-      background: var(--color-primary);
-      color: white;
-      font-size: 0.625rem;
-      font-weight: 600;
-      border-radius: 9999px;
-      transition: opacity var(--transition-base);
-    }
-    
-    .sidebar.collapsed .nav-badge {
-      position: absolute;
-      top: 4px;
-      right: 8px;
-      width: 8px;
-      height: 8px;
-      padding: 0;
-      font-size: 0;
-    }
-    
-    .nav-badge.warning { background: #f59e0b; }
-    .nav-badge.success { background: #10b981; }
-    
-    /* Sidebar Footer */
-    .sidebar-footer {
-      padding: 1rem;
-      border-top: 1px solid var(--color-border);
-    }
-    
-    .user-profile {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.625rem;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--transition-base);
-    }
-    
-    .user-profile:hover {
-      background: rgba(99, 102, 241, 0.08);
-    }
-    
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--gradient-success);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 0.8125rem;
-      color: white;
-      flex-shrink: 0;
-    }
-    
-    .user-info {
-      overflow: hidden;
-      transition: opacity var(--transition-base);
-    }
-    
-    .sidebar.collapsed .user-info {
-      opacity: 0;
-      width: 0;
-    }
-    
-    .user-name {
-      font-weight: 600;
-      font-size: 0.875rem;
-    }
-    
-    .user-role {
-      font-size: 0.6875rem;
-      color: var(--color-text-muted);
-    }
-    
-    /* ==================== MAIN CONTENT ==================== */
-    .main-content {
-      flex: 1;
-      margin-left: var(--sidebar-width);
-      transition: margin-left var(--transition-slow);
-      min-height: 100vh;
+    .sidebar-nav {
       display: flex;
       flex-direction: column;
+      gap: 2px;
     }
     
-    .sidebar.collapsed + .main-content {
-      margin-left: var(--sidebar-collapsed);
-    }
-    
-    /* Topbar */
-    .topbar {
-      height: var(--topbar-height);
-      background: rgba(24, 24, 27, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--color-border);
-      padding: 0 2rem;
+    .sidebar-link {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-3);
+      font-size: var(--text-small);
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-fast) var(--ease-out);
     }
     
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .sidebar-link:hover {
+      background: var(--bg-tertiary);
+      color: var(--color-horizon);
     }
     
-    .breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8125rem;
-      color: var(--color-text-muted);
-    }
-    
-    .breadcrumb i {
-      width: 14px;
-      height: 14px;
-    }
-    
-    .breadcrumb-current {
-      color: var(--color-text-primary);
+    .sidebar-link.active {
+      background: rgba(27, 77, 62, 0.08);
+      color: var(--color-horizon);
       font-weight: 500;
     }
     
-    /* Command Palette Trigger */
-    .command-trigger {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem 1rem;
-      background: var(--color-bg-tertiary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      color: var(--color-text-muted);
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: all var(--transition-base);
-      min-width: 280px;
-    }
-    
-    .command-trigger:hover {
-      border-color: var(--color-border-hover);
-      color: var(--color-text-secondary);
-    }
-    
-    .command-trigger i {
-      width: 16px;
-      height: 16px;
-    }
-    
-    .command-trigger span {
-      flex: 1;
-      text-align: left;
-    }
-    
-    .command-shortcut {
-      display: flex;
-      gap: 0.25rem;
-    }
-    
-    .command-key {
-      padding: 0.125rem 0.375rem;
-      background: var(--color-bg-secondary);
-      border-radius: 4px;
-      font-size: 0.6875rem;
-      font-family: 'SF Mono', Monaco, monospace;
-    }
-    
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .topbar-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-md);
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--color-text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      transition: all var(--transition-base);
-    }
-    
-    .topbar-btn:hover {
-      background: var(--color-bg-tertiary);
-      color: var(--color-text-primary);
-    }
-    
-    .topbar-btn i {
-      width: 20px;
-      height: 20px;
-    }
-    
-    .topbar-btn .badge {
-      position: absolute;
-      top: 4px;
-      right: 4px;
+    .sidebar-link i {
       width: 18px;
       height: 18px;
-      background: #ef4444;
-      border-radius: 50%;
-      font-size: 0.625rem;
+      opacity: 0.7;
+    }
+    
+    .sidebar-link.active i {
+      opacity: 1;
+    }
+    
+    .sidebar-badge {
+      margin-left: auto;
+      padding: 2px 8px;
+      font-size: var(--text-micro);
       font-weight: 600;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid var(--color-bg-secondary);
+      background: var(--color-dawn);
+      color: var(--color-midnight);
+      border-radius: var(--radius-full);
     }
     
-    /* Dashboard Content */
-    .dashboard {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
+    /* Main Content */
+    .platform-main {
+      min-width: 0;
     }
     
-    /* Welcome Hero */
-    .welcome-hero {
-      position: relative;
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
+    .welcome-card {
+      background: linear-gradient(135deg, var(--color-horizon) 0%, var(--color-sage) 100%);
       border-radius: var(--radius-xl);
-      padding: 2.5rem;
-      margin-bottom: 2rem;
+      padding: var(--space-7);
+      color: white;
+      margin-bottom: var(--space-6);
+      position: relative;
       overflow: hidden;
     }
     
-    .welcome-hero::before {
+    .welcome-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 50%;
-      height: 100%;
-      background: radial-gradient(ellipse at 100% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    
-    .welcome-hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 20%;
-      width: 30%;
-      height: 60%;
-      background: radial-gradient(ellipse at 50% 100%, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
-      pointer-events: none;
+      top: -50%;
+      right: -20%;
+      width: 60%;
+      height: 200%;
+      background: radial-gradient(ellipse, rgba(244, 162, 97, 0.2) 0%, transparent 60%);
     }
     
     .welcome-content {
       position: relative;
       z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
     
-    .welcome-text h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-text-secondary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .welcome-greeting {
+      font-size: var(--text-small);
+      opacity: 0.9;
+      margin-bottom: var(--space-2);
     }
     
-    .welcome-text p {
-      color: var(--color-text-secondary);
-      font-size: 1rem;
-      max-width: 480px;
-    }
-    
-    .welcome-stats {
-      display: flex;
-      gap: 1rem;
-    }
-    
-    .welcome-stat {
-      padding: 1.25rem 1.5rem;
-      background: rgba(39, 39, 42, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      text-align: center;
-      min-width: 120px;
-      transition: all var(--transition-base);
-    }
-    
-    .welcome-stat:hover {
-      border-color: var(--color-border-hover);
-      transform: translateY(-2px);
-    }
-    
-    .welcome-stat-value {
-      font-size: 1.75rem;
-      font-weight: 800;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .welcome-stat-label {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-      margin-top: 0.25rem;
-    }
-    
-    /* Hub Cards */
-    .hubs-section {
-      margin-bottom: 2rem;
-    }
-    
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.25rem;
-    }
-    
-    .section-title {
-      font-size: 1.125rem;
+    .welcome-title {
+      font-family: var(--font-display);
+      font-size: var(--text-h2);
       font-weight: 700;
+      margin-bottom: var(--space-3);
     }
     
-    .hubs-grid {
+    .welcome-subtitle {
+      font-size: var(--text-body);
+      opacity: 0.9;
+      max-width: 500px;
+    }
+    
+    .quick-stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
     }
     
-    .hub-card {
-      position: relative;
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
+    .quick-stat {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      cursor: pointer;
-      transition: all var(--transition-base);
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
+      padding: var(--space-4);
+      text-align: center;
+      transition: all var(--duration-fast) var(--ease-out);
     }
     
-    .hub-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      opacity: 0;
-      transition: opacity var(--transition-base);
+    .quick-stat:hover {
+      border-color: var(--color-horizon);
+      box-shadow: var(--shadow-md);
     }
     
-    .hub-card.architecture::before { background: var(--gradient-primary); }
-    .hub-card.content::before { background: var(--gradient-success); }
-    .hub-card.community::before { background: var(--gradient-warning); }
-    .hub-card.publishing::before { background: var(--gradient-secondary); }
-    
-    .hub-card:hover {
-      border-color: var(--color-border-hover);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-lg), var(--shadow-glow);
-    }
-    
-    .hub-card:hover::before {
-      opacity: 1;
-    }
-    
-    .hub-card-glow {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0;
-      transition: opacity var(--transition-slow);
-      pointer-events: none;
-    }
-    
-    .hub-card.architecture .hub-card-glow { background: rgba(99, 102, 241, 0.3); }
-    .hub-card.content .hub-card-glow { background: rgba(16, 185, 129, 0.3); }
-    .hub-card.community .hub-card-glow { background: rgba(245, 158, 11, 0.3); }
-    .hub-card.publishing .hub-card-glow { background: rgba(236, 72, 153, 0.3); }
-    
-    .hub-card:hover .hub-card-glow {
-      opacity: 1;
-    }
-    
-    .hub-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto var(--space-3);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
-      position: relative;
-      z-index: 1;
+      border-radius: var(--radius-md);
     }
     
-    .hub-icon i {
+    .stat-icon i {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .stat-icon.goals { background: var(--color-goal-bg); color: var(--color-goal); }
+    .stat-icon.strategies { background: var(--color-strategy-bg); color: var(--color-strategy); }
+    .stat-icon.capabilities { background: var(--color-capability-bg); color: var(--color-capability); }
+    .stat-icon.principles { background: var(--color-principle-bg); color: var(--color-principle); }
+    
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: var(--text-h3);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: var(--space-1);
+    }
+    
+    .stat-name {
+      font-size: var(--text-caption);
+      color: var(--text-muted);
+    }
+    
+    /* Suite Cards */
+    .suite-section {
+      margin-bottom: var(--space-6);
+    }
+    
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--text-h4);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    
+    .section-title i {
+      width: 20px;
+      height: 20px;
+      color: var(--color-horizon);
+    }
+    
+    .suite-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+    
+    .suite-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      transition: all var(--duration-base) var(--ease-out);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    .suite-card:hover {
+      border-color: var(--border-color-strong);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    .suite-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      margin-bottom: var(--space-3);
+    }
+    
+    .suite-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      flex-shrink: 0;
+    }
+    
+    .suite-icon i {
       width: 24px;
       height: 24px;
     }
     
-    .hub-card.architecture .hub-icon { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
-    .hub-card.content .hub-icon { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-    .hub-card.community .hub-icon { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    .hub-card.publishing .hub-icon { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+    .suite-icon.architecture { background: rgba(27, 77, 62, 0.1); color: var(--color-horizon); }
+    .suite-icon.content { background: rgba(99, 102, 241, 0.1); color: var(--color-goal); }
+    .suite-icon.community { background: rgba(5, 150, 105, 0.1); color: var(--color-strategy); }
+    .suite-icon.publishing { background: rgba(219, 39, 119, 0.1); color: var(--color-capability); }
     
-    .hub-name {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-      position: relative;
-      z-index: 1;
+    .suite-info h3 {
+      font-size: var(--text-body);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
     }
     
-    .hub-desc {
-      font-size: 0.8125rem;
-      color: var(--color-text-muted);
+    .suite-info p {
+      font-size: var(--text-small);
+      color: var(--text-muted);
       line-height: 1.4;
-      margin-bottom: 1rem;
-      position: relative;
-      z-index: 1;
     }
     
-    .hub-metrics {
+    .suite-stats {
       display: flex;
-      gap: 1rem;
-      font-size: 0.75rem;
-      position: relative;
-      z-index: 1;
+      gap: var(--space-4);
+      padding-top: var(--space-3);
+      border-top: 1px solid var(--border-color);
+      margin-top: var(--space-3);
     }
     
-    .hub-metric {
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
-      color: var(--color-text-secondary);
+    .suite-stat {
+      font-size: var(--text-caption);
+      color: var(--text-muted);
     }
     
-    .hub-metric i {
-      width: 14px;
-      height: 14px;
-      opacity: 0.7;
+    .suite-stat strong {
+      color: var(--text-primary);
+      font-weight: 600;
     }
     
-    /* Activity & Tasks Grid */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 1.5rem;
+    /* Activity Panel */
+    .activity-panel {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+      height: fit-content;
     }
     
-    /* Panel Styles */
-    .panel {
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
+    .panel-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      overflow: hidden;
+      margin-bottom: var(--space-4);
     }
     
     .panel-header {
-      padding: 1rem 1.25rem;
-      background: rgba(39, 39, 42, 0.5);
-      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-4) var(--space-4);
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
     .panel-title {
+      font-size: var(--text-small);
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: var(--space-2);
     }
     
     .panel-title i {
       width: 16px;
       height: 16px;
-      color: var(--color-text-muted);
-    }
-    
-    .panel-action {
-      padding: 0.375rem 0.75rem;
-      background: transparent;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      color: var(--color-text-muted);
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all var(--transition-base);
-    }
-    
-    .panel-action:hover {
-      border-color: var(--color-border-hover);
-      color: var(--color-primary);
+      color: var(--color-horizon);
     }
     
     .panel-body {
-      padding: 1rem 1.25rem;
+      padding: var(--space-4);
     }
     
-    /* Activity Feed */
-    .activity-feed {
+    .activity-list {
       display: flex;
       flex-direction: column;
+      gap: var(--space-4);
     }
     
     .activity-item {
       display: flex;
-      gap: 0.875rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--color-border);
-      transition: background var(--transition-base);
-    }
-    
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-    
-    .activity-item:hover {
-      background: rgba(99, 102, 241, 0.04);
-      margin: 0 -1.25rem;
-      padding-left: 1.25rem;
-      padding-right: 1.25rem;
+      gap: var(--space-3);
     }
     
     .activity-avatar {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-horizon), var(--color-sage));
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: var(--text-micro);
       font-weight: 600;
-      font-size: 0.8125rem;
       color: white;
       flex-shrink: 0;
     }
@@ -850,158 +363,45 @@
     }
     
     .activity-text {
-      font-size: 0.875rem;
-      line-height: 1.5;
-      margin-bottom: 0.375rem;
+      font-size: var(--text-small);
+      line-height: 1.4;
     }
     
     .activity-text strong {
-      color: var(--color-text-primary);
-      font-weight: 600;
+      font-weight: 500;
+      color: var(--text-primary);
     }
     
     .activity-meta {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
+      gap: var(--space-2);
+      margin-top: var(--space-1);
+      font-size: var(--text-caption);
+      color: var(--text-muted);
     }
     
-    .activity-meta span {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    
-    .activity-meta i {
-      width: 12px;
-      height: 12px;
-    }
-    
-    .activity-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.125rem 0.5rem;
-      background: rgba(99, 102, 241, 0.12);
-      border-radius: 4px;
-      font-size: 0.6875rem;
-      color: var(--color-primary);
-    }
-    
-    .activity-tag i {
-      width: 10px;
-      height: 10px;
-    }
-    
-    /* Task List */
-    .task-list {
+    .quick-links {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .task-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      padding: 0.875rem;
-      background: var(--color-bg-primary);
-      border: 1px solid transparent;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--transition-base);
-    }
-    
-    .task-item:hover {
-      border-color: var(--color-border);
-      transform: translateX(4px);
-    }
-    
-    .task-checkbox {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 2px solid var(--color-border);
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all var(--transition-base);
-    }
-    
-    .task-item:hover .task-checkbox {
-      border-color: var(--color-primary);
-    }
-    
-    .task-checkbox i {
-      width: 12px;
-      height: 12px;
-      opacity: 0;
-      color: var(--color-primary);
-    }
-    
-    .task-item:hover .task-checkbox i {
-      opacity: 0.5;
-    }
-    
-    .task-content {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .task-title {
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-    
-    .task-meta {
-      font-size: 0.6875rem;
-      color: var(--color-text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .task-priority {
-      padding: 0.125rem 0.375rem;
-      border-radius: 4px;
-      font-size: 0.625rem;
-      font-weight: 600;
-    }
-    
-    .task-priority.high { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-    .task-priority.medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    .task-priority.low { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-    
-    /* Quick Links */
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
+      gap: var(--space-2);
     }
     
     .quick-link {
       display: flex;
       align-items: center;
-      gap: 0.625rem;
-      padding: 0.75rem;
-      background: var(--color-bg-primary);
-      border: 1px solid transparent;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--bg-tertiary);
       border-radius: var(--radius-md);
-      color: var(--color-text-secondary);
-      font-size: 0.8125rem;
-      text-decoration: none;
-      transition: all var(--transition-base);
+      font-size: var(--text-small);
+      color: var(--text-secondary);
+      transition: all var(--duration-fast);
     }
     
     .quick-link:hover {
-      background: rgba(99, 102, 241, 0.08);
-      border-color: var(--color-border-hover);
-      color: var(--color-primary);
-      transform: translateX(4px);
+      background: rgba(27, 77, 62, 0.08);
+      color: var(--color-horizon);
     }
     
     .quick-link i {
@@ -1009,645 +409,311 @@
       height: 16px;
     }
     
-    /* ==================== COMMAND PALETTE ==================== */
-    .command-palette-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--transition-base);
-    }
-    
-    .command-palette-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    
-    .command-palette {
-      position: fixed;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%) scale(0.95);
-      width: 560px;
-      max-width: 90vw;
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg);
-      z-index: 1001;
-      opacity: 0;
-      pointer-events: none;
-      transition: all var(--transition-base);
-      overflow: hidden;
-    }
-    
-    .command-palette.open {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateX(-50%) scale(1);
-    }
-    
-    .command-input-wrapper {
-      padding: 1rem;
-      border-bottom: 1px solid var(--color-border);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    
-    .command-input-wrapper i {
-      width: 20px;
-      height: 20px;
-      color: var(--color-text-muted);
-    }
-    
-    .command-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      font-size: 1rem;
-      color: var(--color-text-primary);
-      outline: none;
-    }
-    
-    .command-input::placeholder {
-      color: var(--color-text-muted);
-    }
-    
-    .command-results {
-      max-height: 400px;
-      overflow-y: auto;
-      padding: 0.5rem;
-    }
-    
-    .command-section {
-      margin-bottom: 0.5rem;
-    }
-    
-    .command-section-title {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .command-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.75rem;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--transition-fast);
-    }
-    
-    .command-item:hover,
-    .command-item.selected {
-      background: rgba(99, 102, 241, 0.12);
-    }
-    
-    .command-item-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--color-bg-tertiary);
-      color: var(--color-text-muted);
-    }
-    
-    .command-item-icon i {
-      width: 16px;
-      height: 16px;
-    }
-    
-    .command-item:hover .command-item-icon,
-    .command-item.selected .command-item-icon {
-      background: rgba(99, 102, 241, 0.2);
-      color: var(--color-primary);
-    }
-    
-    .command-item-text {
-      flex: 1;
-    }
-    
-    .command-item-name {
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    
-    .command-item-desc {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-    }
-    
-    .command-item-shortcut {
-      font-size: 0.6875rem;
-      color: var(--color-text-muted);
-      display: flex;
-      gap: 0.25rem;
-    }
-    
-    .command-item-shortcut kbd {
-      padding: 0.125rem 0.375rem;
-      background: var(--color-bg-tertiary);
-      border-radius: 4px;
-      font-family: 'SF Mono', Monaco, monospace;
-    }
-    
     /* Responsive */
     @media (max-width: 1200px) {
-      .hubs-grid {
+      .platform-layout {
+        grid-template-columns: 240px 1fr;
+      }
+      
+      .activity-panel {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 900px) {
+      .platform-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .platform-sidebar {
+        display: none;
+      }
+      
+      .quick-stats {
         grid-template-columns: repeat(2, 1fr);
       }
       
-      .dashboard-grid {
+      .suite-grid {
         grid-template-columns: 1fr;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-      
-      .sidebar.mobile-open {
-        transform: translateX(0);
-      }
-      
-      .main-content {
-        margin-left: 0 !important;
-      }
-      
-      .hubs-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .welcome-content {
-        flex-direction: column;
-        gap: 1.5rem;
-        text-align: center;
-      }
-      
-      .welcome-text p {
-        max-width: none;
-      }
-      
-      .welcome-stats {
-        justify-content: center;
-      }
-      
-      .command-trigger {
-        min-width: auto;
-      }
-      
-      .command-trigger span {
-        display: none;
       }
     }
   </style>
 </head>
 <body>
-  <div class="platform-layout">
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="logo">L/0</div>
-        <div class="logo-text">
-          <div class="logo-title">Post-Labor Economics</div>
-          <div class="logo-subtitle">Community Platform</div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" class="site-logo">
+        <div class="logo-mark">
+          <span class="logo-text-mark">L/0</span>
         </div>
-      </div>
+        <div class="logo-wordmark">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Platform</span>
+        </div>
+      </a>
       
-      <button class="sidebar-toggle" onclick="toggleSidebar()">
-        <i data-lucide="chevron-left"></i>
-      </button>
+      <nav class="main-nav">
+        <ul class="nav-menu">
+          <li><a href="/ea-hub.html" class="nav-link"><i data-lucide="layers"></i> Architecture</a></li>
+          <li><a href="/content-hub.html" class="nav-link"><i data-lucide="file-text"></i> Content</a></li>
+          <li><a href="/community-hub.html" class="nav-link"><i data-lucide="users"></i> Community</a></li>
+          <li><a href="/publish-hub.html" class="nav-link"><i data-lucide="send"></i> Publishing</a></li>
+        </ul>
+        <a href="/settings-profile.html" class="btn btn-ghost">
+          <i data-lucide="settings"></i>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="platform-layout">
+      <!-- Sidebar -->
+      <aside class="platform-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Main</div>
+          <nav class="sidebar-nav">
+            <a href="/platform-home.html" class="sidebar-link active">
+              <i data-lucide="home"></i> Dashboard
+            </a>
+            <a href="/activity.html" class="sidebar-link">
+              <i data-lucide="activity"></i> Activity
+              <span class="sidebar-badge">12</span>
+            </a>
+            <a href="/calendar.html" class="sidebar-link">
+              <i data-lucide="calendar"></i> Calendar
+            </a>
+            <a href="/search.html" class="sidebar-link">
+              <i data-lucide="search"></i> Search
+            </a>
+          </nav>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">Architecture</div>
+          <nav class="sidebar-nav">
+            <a href="/ea-hub.html" class="sidebar-link">
+              <i data-lucide="layout-grid"></i> EA Hub
+            </a>
+            <a href="/ea-bmm.html" class="sidebar-link">
+              <i data-lucide="target"></i> BMM
+            </a>
+            <a href="/ea-capabilities.html" class="sidebar-link">
+              <i data-lucide="boxes"></i> Capabilities
+            </a>
+            <a href="/ea-principles.html" class="sidebar-link">
+              <i data-lucide="shield"></i> Principles
+            </a>
+          </nav>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">Suites</div>
+          <nav class="sidebar-nav">
+            <a href="/content-hub.html" class="sidebar-link">
+              <i data-lucide="file-text"></i> Content
+            </a>
+            <a href="/community-hub.html" class="sidebar-link">
+              <i data-lucide="users"></i> Community
+            </a>
+            <a href="/publish-hub.html" class="sidebar-link">
+              <i data-lucide="send"></i> Publishing
+            </a>
+          </nav>
+        </div>
+      </aside>
       
-      <div class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Overview</div>
-          <a href="/platform-home.html" class="nav-item active">
-            <i data-lucide="layout-dashboard"></i>
-            <span class="nav-item-text">Dashboard</span>
-          </a>
-          <a href="/activity.html" class="nav-item">
-            <i data-lucide="activity"></i>
-            <span class="nav-item-text">Activity</span>
-          </a>
-          <a href="/calendar.html" class="nav-item">
-            <i data-lucide="calendar"></i>
-            <span class="nav-item-text">Calendar</span>
-          </a>
-        </div>
-        
-        <div class="nav-section">
-          <div class="nav-section-title">Suites</div>
-          <a href="/ea-hub.html" class="nav-item">
-            <i data-lucide="layers"></i>
-            <span class="nav-item-text">Architecture</span>
-          </a>
-          <a href="/content-hub.html" class="nav-item">
-            <i data-lucide="file-text"></i>
-            <span class="nav-item-text">Content</span>
-            <span class="nav-badge warning">3</span>
-          </a>
-          <a href="/community-hub.html" class="nav-item">
-            <i data-lucide="users"></i>
-            <span class="nav-item-text">Community</span>
-          </a>
-          <a href="/publish-hub.html" class="nav-item">
-            <i data-lucide="globe"></i>
-            <span class="nav-item-text">Publishing</span>
-          </a>
-        </div>
-        
-        <div class="nav-section">
-          <div class="nav-section-title">Architecture</div>
-          <a href="/ea-bmm.html" class="nav-item">
-            <i data-lucide="compass"></i>
-            <span class="nav-item-text">Business Motivation</span>
-          </a>
-          <a href="/ea-capabilities.html" class="nav-item">
-            <i data-lucide="boxes"></i>
-            <span class="nav-item-text">Capabilities</span>
-          </a>
-          <a href="/ea-principles.html" class="nav-item">
-            <i data-lucide="scale"></i>
-            <span class="nav-item-text">Principles</span>
-          </a>
-          <a href="/ea-standards.html" class="nav-item">
-            <i data-lucide="book-check"></i>
-            <span class="nav-item-text">Standards</span>
-          </a>
-          <a href="/ea-governance.html" class="nav-item">
-            <i data-lucide="shield-check"></i>
-            <span class="nav-item-text">Governance</span>
-            <span class="nav-badge">2</span>
-          </a>
-        </div>
-        
-        <div class="nav-section">
-          <div class="nav-section-title">Tools</div>
-          <a href="/ea-alignment.html" class="nav-item">
-            <i data-lucide="check-square"></i>
-            <span class="nav-item-text">Alignment Check</span>
-          </a>
-          <a href="/ea-roadmap.html" class="nav-item">
-            <i data-lucide="gantt-chart"></i>
-            <span class="nav-item-text">Roadmap</span>
-          </a>
-          <a href="/ea-gap-analysis.html" class="nav-item">
-            <i data-lucide="git-pull-request"></i>
-            <span class="nav-item-text">Gap Analysis</span>
-          </a>
-        </div>
-      </div>
-      
-      <div class="sidebar-footer">
-        <div class="user-profile">
-          <div class="user-avatar">TM</div>
-          <div class="user-info">
-            <div class="user-name">Travis M.</div>
-            <div class="user-role">Core Team • Admin</div>
-          </div>
-        </div>
-      </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="topbar">
-        <div class="topbar-left">
-          <div class="breadcrumb">
-            <span>Platform</span>
-            <i data-lucide="chevron-right"></i>
-            <span class="breadcrumb-current">Dashboard</span>
-          </div>
-        </div>
-        
-        <button class="command-trigger" onclick="openCommandPalette()">
-          <i data-lucide="search"></i>
-          <span>Search or jump to...</span>
-          <div class="command-shortcut">
-            <span class="command-key">⌘</span>
-            <span class="command-key">K</span>
-          </div>
-        </button>
-        
-        <div class="topbar-right">
-          <button class="topbar-btn">
-            <i data-lucide="plus"></i>
-          </button>
-          <button class="topbar-btn">
-            <i data-lucide="bell"></i>
-            <span class="badge">3</span>
-          </button>
-          <button class="topbar-btn">
-            <i data-lucide="settings"></i>
-          </button>
-        </div>
-      </header>
-      
-      <div class="dashboard">
-        <!-- Welcome Hero -->
-        <div class="welcome-hero">
+      <!-- Main Content -->
+      <div class="platform-main">
+        <div class="welcome-card">
           <div class="welcome-content">
-            <div class="welcome-text">
-              <h1>Welcome back, Travis</h1>
-              <p>Your unified workspace for managing the Post-Labor Economics movement. Architecture guides everything we build.</p>
-            </div>
-            <div class="welcome-stats">
-              <div class="welcome-stat">
-                <div class="welcome-stat-value">847</div>
-                <div class="welcome-stat-label">Members</div>
-              </div>
-              <div class="welcome-stat">
-                <div class="welcome-stat-value">89%</div>
-                <div class="welcome-stat-label">Compliance</div>
-              </div>
-              <div class="welcome-stat">
-                <div class="welcome-stat-value">156</div>
-                <div class="welcome-stat-label">Published</div>
-              </div>
-            </div>
+            <p class="welcome-greeting">Welcome back, Travis</p>
+            <h1 class="welcome-title">Let's build the post-labor future</h1>
+            <p class="welcome-subtitle">Your platform for coordinating research, advocacy, and community around economic liberation.</p>
           </div>
         </div>
         
-        <!-- Hub Cards -->
-        <section class="hubs-section">
-          <div class="section-header">
-            <h2 class="section-title">Platform Suites</h2>
+        <div class="quick-stats">
+          <div class="quick-stat">
+            <div class="stat-icon goals"><i data-lucide="target"></i></div>
+            <div class="stat-number">9</div>
+            <div class="stat-name">Goals</div>
           </div>
-          <div class="hubs-grid">
-            <a href="/ea-hub.html" class="hub-card architecture">
-              <div class="hub-card-glow"></div>
-              <div class="hub-icon"><i data-lucide="layers"></i></div>
-              <h3 class="hub-name">Architecture</h3>
-              <p class="hub-desc">Principles, capabilities, standards, and building blocks</p>
-              <div class="hub-metrics">
-                <span class="hub-metric"><i data-lucide="boxes"></i> 47 capabilities</span>
-                <span class="hub-metric"><i data-lucide="scale"></i> 12 principles</span>
+          <div class="quick-stat">
+            <div class="stat-icon strategies"><i data-lucide="route"></i></div>
+            <div class="stat-number">6</div>
+            <div class="stat-name">Strategies</div>
+          </div>
+          <div class="quick-stat">
+            <div class="stat-icon capabilities"><i data-lucide="boxes"></i></div>
+            <div class="stat-number">24</div>
+            <div class="stat-name">Capabilities</div>
+          </div>
+          <div class="quick-stat">
+            <div class="stat-icon principles"><i data-lucide="shield"></i></div>
+            <div class="stat-number">10</div>
+            <div class="stat-name">Principles</div>
+          </div>
+        </div>
+        
+        <section class="suite-section">
+          <h2 class="section-title"><i data-lucide="layout-grid"></i> Platform Suites</h2>
+          
+          <div class="suite-grid">
+            <a href="/ea-hub.html" class="suite-card">
+              <div class="suite-header">
+                <div class="suite-icon architecture"><i data-lucide="layers"></i></div>
+                <div class="suite-info">
+                  <h3>Enterprise Architecture</h3>
+                  <p>TOGAF-based framework management with BMM, capabilities, and governance</p>
+                </div>
+              </div>
+              <div class="suite-stats">
+                <span class="suite-stat"><strong>52</strong> pages</span>
+                <span class="suite-stat"><strong>16</strong> tools</span>
               </div>
             </a>
             
-            <a href="/content-hub.html" class="hub-card content">
-              <div class="hub-card-glow"></div>
-              <div class="hub-icon"><i data-lucide="file-text"></i></div>
-              <h3 class="hub-name">Content</h3>
-              <p class="hub-desc">Articles, research, policy documents, and media</p>
-              <div class="hub-metrics">
-                <span class="hub-metric"><i data-lucide="file"></i> 156 items</span>
-                <span class="hub-metric"><i data-lucide="edit-3"></i> 8 drafts</span>
+            <a href="/content-hub.html" class="suite-card">
+              <div class="suite-header">
+                <div class="suite-icon content"><i data-lucide="file-text"></i></div>
+                <div class="suite-info">
+                  <h3>Content Suite</h3>
+                  <p>Articles, research, and media with architecture alignment tracking</p>
+                </div>
+              </div>
+              <div class="suite-stats">
+                <span class="suite-stat"><strong>47</strong> articles</span>
+                <span class="suite-stat"><strong>156</strong> media</span>
               </div>
             </a>
             
-            <a href="/community-hub.html" class="hub-card community">
-              <div class="hub-card-glow"></div>
-              <div class="hub-icon"><i data-lucide="users"></i></div>
-              <h3 class="hub-name">Community</h3>
-              <p class="hub-desc">Members, working groups, and discussions</p>
-              <div class="hub-metrics">
-                <span class="hub-metric"><i data-lucide="users"></i> 847 members</span>
-                <span class="hub-metric"><i data-lucide="users-2"></i> 12 groups</span>
+            <a href="/community-hub.html" class="suite-card">
+              <div class="suite-header">
+                <div class="suite-icon community"><i data-lucide="users"></i></div>
+                <div class="suite-info">
+                  <h3>Community Suite</h3>
+                  <p>Working groups, discussions, events, and member coordination</p>
+                </div>
+              </div>
+              <div class="suite-stats">
+                <span class="suite-stat"><strong>2.4K</strong> members</span>
+                <span class="suite-stat"><strong>4</strong> groups</span>
               </div>
             </a>
             
-            <a href="/publish-hub.html" class="hub-card publishing">
-              <div class="hub-card-glow"></div>
-              <div class="hub-icon"><i data-lucide="globe"></i></div>
-              <h3 class="hub-name">Publishing</h3>
-              <p class="hub-desc">Website, newsletters, and social channels</p>
-              <div class="hub-metrics">
-                <span class="hub-metric"><i data-lucide="rss"></i> 42 posts</span>
-                <span class="hub-metric"><i data-lucide="eye"></i> 12.4k views</span>
+            <a href="/publish-hub.html" class="suite-card">
+              <div class="suite-header">
+                <div class="suite-icon publishing"><i data-lucide="send"></i></div>
+                <div class="suite-info">
+                  <h3>Publishing Suite</h3>
+                  <p>Multi-channel publishing with goal-aligned campaign management</p>
+                </div>
+              </div>
+              <div class="suite-stats">
+                <span class="suite-stat"><strong>24</strong> drafts</span>
+                <span class="suite-stat"><strong>9</strong> campaigns</span>
               </div>
             </a>
           </div>
         </section>
+      </div>
+      
+      <!-- Activity Panel -->
+      <aside class="activity-panel">
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i data-lucide="activity"></i> Recent Activity</span>
+            <a href="/activity.html" class="btn btn-ghost btn-sm">View All</a>
+          </div>
+          <div class="panel-body">
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-avatar">MK</div>
+                <div class="activity-content">
+                  <div class="activity-text"><strong>Maria K.</strong> published article to GOAL-001</div>
+                  <div class="activity-meta">
+                    <span class="arch-tag goal" style="padding:2px 6px;font-size:10px;"><i data-lucide="target" style="width:8px;height:8px;"></i> GOAL-001</span>
+                    <span>2h ago</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-avatar">JM</div>
+                <div class="activity-content">
+                  <div class="activity-text"><strong>Jennifer M.</strong> added new capability CAP-024</div>
+                  <div class="activity-meta">
+                    <span class="arch-tag capability" style="padding:2px 6px;font-size:10px;"><i data-lucide="boxes" style="width:8px;height:8px;"></i> CAP-024</span>
+                    <span>5h ago</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-avatar">DS</div>
+                <div class="activity-content">
+                  <div class="activity-text"><strong>David S.</strong> proposed standard update</div>
+                  <div class="activity-meta">
+                    <span class="arch-tag principle" style="padding:2px 6px;font-size:10px;"><i data-lucide="shield" style="width:8px;height:8px;"></i> PRIN-005</span>
+                    <span>1d ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         
-        <!-- Activity & Tasks -->
-        <div class="dashboard-grid">
-          <div class="panel">
-            <div class="panel-header">
-              <div class="panel-title"><i data-lucide="activity"></i> Recent Activity</div>
-              <button class="panel-action">View All</button>
-            </div>
-            <div class="panel-body">
-              <div class="activity-feed">
-                <div class="activity-item">
-                  <div class="activity-avatar" style="background: var(--gradient-primary);">DS</div>
-                  <div class="activity-content">
-                    <div class="activity-text"><strong>David Shapiro</strong> published "The Economic Agency Paradox" to the blog</div>
-                    <div class="activity-meta">
-                      <span><i data-lucide="clock"></i> 2 hours ago</span>
-                      <span><i data-lucide="globe"></i> Publishing</span>
-                      <span class="activity-tag"><i data-lucide="target"></i> GOAL-001</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="activity-item">
-                  <div class="activity-avatar" style="background: var(--gradient-success);">MK</div>
-                  <div class="activity-content">
-                    <div class="activity-text"><strong>Maria K.</strong> added Data Dividends capability to the Capability Model</div>
-                    <div class="activity-meta">
-                      <span><i data-lucide="clock"></i> 4 hours ago</span>
-                      <span><i data-lucide="layers"></i> Architecture</span>
-                      <span class="activity-tag"><i data-lucide="boxes"></i> CAP-024</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="activity-item">
-                  <div class="activity-avatar" style="background: var(--gradient-warning);">TC</div>
-                  <div class="activity-content">
-                    <div class="activity-text"><strong>Tech WG</strong> proposed Castopod as standard for podcast hosting</div>
-                    <div class="activity-meta">
-                      <span><i data-lucide="clock"></i> Yesterday</span>
-                      <span><i data-lucide="layers"></i> Architecture</span>
-                      <span class="activity-tag"><i data-lucide="scale"></i> PRIN-005</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="activity-item">
-                  <div class="activity-avatar" style="background: var(--gradient-secondary);">PW</div>
-                  <div class="activity-content">
-                    <div class="activity-text"><strong>Policy WG</strong> completed draft of Automation Tax Framework</div>
-                    <div class="activity-meta">
-                      <span><i data-lucide="clock"></i> 2 days ago</span>
-                      <span><i data-lucide="file-text"></i> Content</span>
-                      <span class="activity-tag"><i data-lucide="route"></i> STRAT-003</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i data-lucide="zap"></i> Quick Actions</span>
           </div>
-          
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div class="panel">
-              <div class="panel-header">
-                <div class="panel-title"><i data-lucide="check-square"></i> Your Tasks</div>
-              </div>
-              <div class="panel-body">
-                <div class="task-list">
-                  <div class="task-item">
-                    <div class="task-checkbox"><i data-lucide="check"></i></div>
-                    <div class="task-content">
-                      <div class="task-title">Review exception request EXC-2026-007</div>
-                      <div class="task-meta">Due today</div>
-                    </div>
-                    <span class="task-priority high">High</span>
-                  </div>
-                  
-                  <div class="task-item">
-                    <div class="task-checkbox"><i data-lucide="check"></i></div>
-                    <div class="task-content">
-                      <div class="task-title">Complete Discord migration docs</div>
-                      <div class="task-meta">Due tomorrow</div>
-                    </div>
-                    <span class="task-priority medium">Med</span>
-                  </div>
-                  
-                  <div class="task-item">
-                    <div class="task-checkbox"><i data-lucide="check"></i></div>
-                    <div class="task-content">
-                      <div class="task-title">Draft Q1 architecture roadmap</div>
-                      <div class="task-meta">Due this week</div>
-                    </div>
-                    <span class="task-priority low">Low</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="panel">
-              <div class="panel-header">
-                <div class="panel-title"><i data-lucide="zap"></i> Quick Links</div>
-              </div>
-              <div class="panel-body">
-                <div class="quick-links">
-                  <a href="/ea-alignment.html" class="quick-link"><i data-lucide="check-square"></i> Check Alignment</a>
-                  <a href="/content-create.html" class="quick-link"><i data-lucide="plus"></i> New Article</a>
-                  <a href="/ea-principles.html" class="quick-link"><i data-lucide="scale"></i> Principles</a>
-                  <a href="/ea-standards.html" class="quick-link"><i data-lucide="book-check"></i> Standards</a>
-                </div>
-              </div>
+          <div class="panel-body">
+            <div class="quick-links">
+              <a href="/content-create.html" class="quick-link">
+                <i data-lucide="plus"></i> Create Content
+              </a>
+              <a href="/community-discussions.html" class="quick-link">
+                <i data-lucide="message-square"></i> New Discussion
+              </a>
+              <a href="/ea-bmm.html" class="quick-link">
+                <i data-lucide="target"></i> View Goals
+              </a>
+              <a href="/publish-drafts.html" class="quick-link">
+                <i data-lucide="file-edit"></i> View Drafts
+              </a>
             </div>
           </div>
         </div>
-      </div>
-    </main>
-  </div>
+        
+        <div class="panel-card">
+          <div class="panel-header">
+            <span class="panel-title"><i data-lucide="calendar"></i> Upcoming</span>
+          </div>
+          <div class="panel-body">
+            <div class="quick-links">
+              <a href="/community-events.html" class="quick-link">
+                <i data-lucide="radio"></i>
+                <span>
+                  <strong style="display:block;font-size:var(--text-small);">L/0 Livestream #49</strong>
+                  <span style="font-size:var(--text-caption);color:var(--text-muted);">Tomorrow, 2:00 PM</span>
+                </span>
+              </a>
+              <a href="/community-events.html" class="quick-link">
+                <i data-lucide="users"></i>
+                <span>
+                  <strong style="display:block;font-size:var(--text-small);">Policy WG Meeting</strong>
+                  <span style="font-size:var(--text-caption);color:var(--text-muted);">Feb 5, 7:00 PM</span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
   
-  <!-- Command Palette -->
-  <div class="command-palette-overlay" id="commandOverlay" onclick="closeCommandPalette()"></div>
-  <div class="command-palette" id="commandPalette">
-    <div class="command-input-wrapper">
-      <i data-lucide="search"></i>
-      <input type="text" class="command-input" placeholder="Search or type a command..." autofocus>
-    </div>
-    <div class="command-results">
-      <div class="command-section">
-        <div class="command-section-title">Quick Actions</div>
-        <div class="command-item selected">
-          <div class="command-item-icon"><i data-lucide="plus"></i></div>
-          <div class="command-item-text">
-            <div class="command-item-name">Create New Content</div>
-            <div class="command-item-desc">Start writing an article or document</div>
-          </div>
-          <div class="command-item-shortcut"><kbd>C</kbd></div>
-        </div>
-        <div class="command-item">
-          <div class="command-item-icon"><i data-lucide="check-square"></i></div>
-          <div class="command-item-text">
-            <div class="command-item-name">Check Alignment</div>
-            <div class="command-item-desc">Verify initiative against principles</div>
-          </div>
-          <div class="command-item-shortcut"><kbd>A</kbd></div>
-        </div>
-        <div class="command-item">
-          <div class="command-item-icon"><i data-lucide="shield-check"></i></div>
-          <div class="command-item-text">
-            <div class="command-item-name">Review Governance</div>
-            <div class="command-item-desc">2 pending approvals</div>
-          </div>
-          <div class="command-item-shortcut"><kbd>G</kbd></div>
-        </div>
-      </div>
-      
-      <div class="command-section">
-        <div class="command-section-title">Navigation</div>
-        <div class="command-item">
-          <div class="command-item-icon"><i data-lucide="layers"></i></div>
-          <div class="command-item-text">
-            <div class="command-item-name">Architecture Hub</div>
-            <div class="command-item-desc">EA management center</div>
-          </div>
-        </div>
-        <div class="command-item">
-          <div class="command-item-icon"><i data-lucide="file-text"></i></div>
-          <div class="command-item-text">
-            <div class="command-item-name">Content Hub</div>
-            <div class="command-item-desc">Manage articles and documents</div>
-          </div>
-        </div>
-        <div class="command-item">
-          <div class="command-item-icon"><i data-lucide="users"></i></div>
-          <div class="command-item-text">
-            <div class="command-item-name">Community Hub</div>
-            <div class="command-item-desc">Members and working groups</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    lucide.createIcons();
-    
-    // Sidebar Toggle
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('collapsed');
-    }
-    
-    // Command Palette
-    function openCommandPalette() {
-      document.getElementById('commandOverlay').classList.add('open');
-      document.getElementById('commandPalette').classList.add('open');
-      document.querySelector('.command-input').focus();
-    }
-    
-    function closeCommandPalette() {
-      document.getElementById('commandOverlay').classList.remove('open');
-      document.getElementById('commandPalette').classList.remove('open');
-    }
-    
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      // Cmd/Ctrl + K for command palette
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        openCommandPalette();
-      }
-      
-      // Escape to close
-      if (e.key === 'Escape') {
-        closeCommandPalette();
-      }
-    });
-    
-    // Prevent overlay click from closing when clicking inside palette
-    document.getElementById('commandPalette').addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-  </script>
+  <script>lucide.createIcons();</script>
 </body>
 </html>
