@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Hub | Post-Labor Economics</title>
+  <meta name="description" content="Resource Hub - Post-Labor Economics movement frameworks and resources.">
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://postlaboreconomics.com/resources.html">
+  <meta property="og:title" content="Resource Hub | Post-Labor Economics">
+  <meta property="og:description" content="Books, papers, videos, and tools for learning about post-labor economics and related topics.">
+  <meta property="og:image" content="https://postlaboreconomics.com/images/og-resources.png">
+  
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://postlaboreconomics.com/resources.html">
+  <meta name="twitter:title" content="Resource Hub | Post-Labor Economics">
+  <meta name="twitter:description" content="Books, papers, videos, and tools for learning about post-labor economics and related topics.">
+  <meta name="twitter:image" content="https://postlaboreconomics.com/images/og-resources.png">
+
+  
+  <link rel="icon" type="image/svg+xml" href="/ple-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+.resources-hero {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.15) 100%);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Filter Tabs */
+.resource-filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.filter-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.filter-btn i {
+  width: 16px;
+  height: 16px;
+}
+
+/* Resource Grid */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.resource-card {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.resource-thumb {
+  height: 180px;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.resource-thumb.video { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.resource-thumb.article { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.resource-thumb.framework { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.resource-thumb.research { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.resource-thumb.book { background: linear-gradient(135deg, #10b981, #059669); }
+
+.resource-thumb i {
+  width: 48px;
+  height: 48px;
+  color: white;
+  opacity: 0.8;
+}
+
+.resource-type-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resource-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-body h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.resource-body p {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.resource-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.resource-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.resource-tag {
+  background: var(--bg-tertiary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.resource-link {
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.resource-link i {
+  width: 14px;
+  height: 14px;
+}
+
+/* Featured Section */
+.featured-section {
+  margin-bottom: 3rem;
+}
+
+.featured-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.featured-main {
+  background: var(--bg-secondary);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.featured-main .resource-thumb {
+  height: 250px;
+}
+
+.featured-main .resource-body {
+  padding: 2rem;
+}
+
+.featured-main h3 {
+  font-size: 1.5rem;
+}
+
+.featured-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.featured-small {
+  background: var(--bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.featured-small-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.featured-small-icon i {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.featured-small-content h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.featured-small-content p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* External Resources */
+.external-section {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 1rem;
+  margin: 3rem 0;
+}
+
+.external-section h3 {
+  margin-bottom: 1.5rem;
+}
+
+.external-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.external-item {
+  background: var(--bg-tertiary);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.external-item i {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+}
+
+.external-item-content h4 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.external-item-content p {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.cta-section {
+  text-align: center;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border-radius: 1rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="site-logo">
+        <div class="logo-icon"><span class="l0-text">L/0</span></div>
+        <div class="logo-text">
+          <span class="logo-title">Post-Labor Economics</span>
+          <span class="logo-subtitle">Building the Post-Work Future</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+        <ul class="nav-menu">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item has-dropdown">
+            <a href="/concepts.html">Learn <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/concepts.html">Key Concepts</a></li>
+              <li><a href="/glossary.html">Glossary</a></li>
+              <li><a href="/faq.html">FAQ & Objections</a></li>
+              <li><a href="/resources.html">Resource Hub</a></li>
+              <li><a href="/newsletter.html">Newsletter Archive</a></li>
+              <li><a href="/news.html">News & Updates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/architecture.html">Frameworks <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/architecture.html">Overview</a></li>
+              <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+              <li><a href="/power.html">Pyramid of Power</a></li>
+              <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+              <li><a href="/calculator.html">Impact Calculator</a></li>
+              <li><a href="/coalition.html">Coalition Building</a></li>
+              <li><a href="/research.html">Research & Evidence</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/about.html">Movement <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/about.html">About L/0</a></li>
+              <li><a href="/book.html">The Book</a></li>
+              <li><a href="/dashboard.html">Live Dashboard</a></li>
+              <li><a href="/theory-of-change.html">Theory of Change</a></li>
+              <li><a href="/press.html">Press Kit</a></li>
+            </ul>
+          </li>
+          <li class="nav-item has-dropdown">
+            <a href="/stories.html">Community <i data-lucide="chevron-down" class="dropdown-icon"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/stories.html">Stories</a></li>
+              <li><a href="/events.html">Events & Calls</a></li>
+              <li><a href="/chapters.html">Local Chapters</a></li>
+              <li><a href="/get-involved.html">Get Involved</a></li>
+            </ul>
+          </li>
+          <li class="nav-item nav-cta">
+            <a href="/search.html" class="nav-search-btn" aria-label="Search"><i data-lucide="search"></i></a>
+            <a href="/platform-home.html" class="btn btn-outline btn-sm">
+              <i data-lucide="layout-dashboard"></i> Platform
+            </a>
+            <a href="https://www.skool.com/postlaboreconomics" target="_blank" class="btn btn-primary btn-sm">
+              <i data-lucide="users"></i> Join
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="page-header">
+  <span class="page-label">Library</span>
+  <h1>Resource Hub</h1>
+  <p class="page-description">Videos, articles, frameworks, and research on post-labor economics</p>
+</div>
+
+<div class="resources-hero">
+  <h1>Learn at Your Own Pace</h1>
+  <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+    Curated content exploring AI, automation, and the transition to a post-labor economy. 
+    Start anywhere—each piece stands alone.
+  </p>
+</div>
+
+<!-- Featured Content -->
+<div class="featured-section">
+  <h2>📌 Start Here</h2>
+  
+  <div class="featured-grid">
+    <a href="https://daveshap.substack.com/p/im-starting-a-movement" target="_blank" class="featured-main">
+      <div class="resource-thumb article">
+        <i data-lucide="file-text"></i>
+        <span class="resource-type-badge">Manifesto</span>
+      </div>
+      <div class="resource-body">
+        <h3>I'm Starting a Movement: Post-Labor Economics and the L/0 Thesis</h3>
+        <p>The founding document of the Post-Labor Economics movement. Explains the L/0 thesis, laborism, and why the transition is coming whether we prepare for it or not.</p>
+        <div class="resource-meta">
+          <span>~15 min read</span>
+          <span class="resource-link">Read on Substack <i data-lucide="external-link"></i></span>
+        </div>
+      </div>
+    </a>
+    
+    <div class="featured-sidebar">
+      <a href="https://daveshap.substack.com/p/the-pyramids-of-prosperity-and-power" target="_blank" class="featured-small">
+        <div class="featured-small-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+          <i data-lucide="layers"></i>
+        </div>
+        <div class="featured-small-content">
+          <h4>The Pyramids of Prosperity and Power</h4>
+          <p>The two core frameworks visualized and explained</p>
+        </div>
+      </a>
+      
+      <a href="/concepts.html" class="featured-small">
+        <div class="featured-small-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+          <i data-lucide="book-open"></i>
+        </div>
+        <div class="featured-small-content">
+          <h4>Key Concepts Glossary</h4>
+          <p>L/0, Laborism, Economic Agency Paradox, and more</p>
+        </div>
+      </a>
+      
+      <a href="/theory-of-change.html" class="featured-small">
+        <div class="featured-small-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+          <i data-lucide="git-branch"></i>
+        </div>
+        <div class="featured-small-content">
+          <h4>Theory of Change</h4>
+          <p>How we get from here to a post-labor world</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="resource-filters">
+  <button class="filter-btn active" data-filter="all" onclick="filterResources('all')">
+    <i data-lucide="grid"></i>
+    All
+  </button>
+  <button class="filter-btn" data-filter="video" onclick="filterResources('video')">
+    <i data-lucide="play-circle"></i>
+    Videos
+  </button>
+  <button class="filter-btn" data-filter="article" onclick="filterResources('article')">
+    <i data-lucide="file-text"></i>
+    Articles
+  </button>
+  <button class="filter-btn" data-filter="framework" onclick="filterResources('framework')">
+    <i data-lucide="layers"></i>
+    Frameworks
+  </button>
+  <button class="filter-btn" data-filter="research" onclick="filterResources('research')">
+    <i data-lucide="search"></i>
+    Research
+  </button>
+</div>
+
+<!-- Resource Grid -->
+<div class="resources-grid">
+  <!-- Framework: Pyramid of Prosperity -->
+  <a href="/prosperity.html" class="resource-card" data-type="framework">
+    <div class="resource-thumb framework">
+      <i data-lucide="trending-up"></i>
+      <span class="resource-type-badge">Framework</span>
+    </div>
+    <div class="resource-body">
+      <h3>Pyramid of Prosperity</h3>
+      <p>Five layers for distributing income after jobs disappear. Interactive visualization with real-world examples.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Income</span>
+          <span class="resource-tag">Policy</span>
+        </div>
+        <span class="resource-link">Explore <i data-lucide="arrow-right"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Framework: Pyramid of Power -->
+  <a href="/power.html" class="resource-card" data-type="framework">
+    <div class="resource-thumb framework">
+      <i data-lucide="shield"></i>
+      <span class="resource-type-badge">Framework</span>
+    </div>
+    <div class="resource-body">
+      <h3>Pyramid of Power</h3>
+      <p>Five layers for maintaining democratic leverage when labor power disappears. Algorithmic power explained.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Democracy</span>
+          <span class="resource-tag">Blockchain</span>
+        </div>
+        <span class="resource-link">Explore <i data-lucide="arrow-right"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Article: Economic Agency Paradox -->
+  <a href="https://daveshap.substack.com/p/the-economic-agency-paradox" target="_blank" class="resource-card" data-type="article">
+    <div class="resource-thumb article">
+      <i data-lucide="file-text"></i>
+      <span class="resource-type-badge">Article</span>
+    </div>
+    <div class="resource-body">
+      <h3>The Economic Agency Paradox</h3>
+      <p>Technology lowers costs but destroys jobs. Understanding the self-reinforcing spiral at the heart of automation anxiety.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Economics</span>
+          <span class="resource-tag">Theory</span>
+        </div>
+        <span class="resource-link">Read <i data-lucide="external-link"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Research: Job Displacement -->
+  <a href="https://daveshap.substack.com/p/the-silent-disruption-unpacking-ais" target="_blank" class="resource-card" data-type="research">
+    <div class="resource-thumb research">
+      <i data-lucide="bar-chart-2"></i>
+      <span class="resource-type-badge">Research</span>
+    </div>
+    <div class="resource-body">
+      <h3>The Silent Disruption: AI Job Displacement in 2025</h3>
+      <p>Data-driven analysis of job losses attributable to AI. 300,000-500,000 jobs shed in 2025 alone.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Data</span>
+          <span class="resource-tag">AI Impact</span>
+        </div>
+        <span class="resource-link">Read <i data-lucide="external-link"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Article: Laborism -->
+  <a href="https://daveshap.substack.com/p/laborism-the-ideology-that-dare-not" target="_blank" class="resource-card" data-type="article">
+    <div class="resource-thumb article">
+      <i data-lucide="file-text"></i>
+      <span class="resource-type-badge">Article</span>
+    </div>
+    <div class="resource-body">
+      <h3>Laborism: The Ideology That Dare Not Speak Its Name</h3>
+      <p>How the belief that everyone should work became invisible common sense—and why we need to name it.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Culture</span>
+          <span class="resource-tag">Ideology</span>
+        </div>
+        <span class="resource-link">Read <i data-lucide="external-link"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Video: YouTube Channel -->
+  <a href="https://www.youtube.com/@DaveShap" target="_blank" class="resource-card" data-type="video">
+    <div class="resource-thumb video">
+      <i data-lucide="play-circle"></i>
+      <span class="resource-type-badge">Video Channel</span>
+    </div>
+    <div class="resource-body">
+      <h3>David Shapiro YouTube Channel</h3>
+      <p>150K+ subscribers. Videos on AI, automation, post-labor economics, and the future of work.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Video</span>
+          <span class="resource-tag">AI</span>
+        </div>
+        <span class="resource-link">Watch <i data-lucide="external-link"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Framework: Coalition -->
+  <a href="/coalition.html" class="resource-card" data-type="framework">
+    <div class="resource-thumb framework">
+      <i data-lucide="users"></i>
+      <span class="resource-type-badge">Framework</span>
+    </div>
+    <div class="resource-body">
+      <h3>Coalition Building</h3>
+      <p>How exhausted workers and forward-thinking capitalists find common cause in ending obligatory labor.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Strategy</span>
+          <span class="resource-tag">Movement</span>
+        </div>
+        <span class="resource-link">Explore <i data-lucide="arrow-right"></i></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Research: Global Exhaustion -->
+  <a href="/research.html" class="resource-card" data-type="research">
+    <div class="resource-thumb research">
+      <i data-lucide="globe"></i>
+      <span class="resource-type-badge">Research</span>
+    </div>
+    <div class="resource-body">
+      <h3>Global Exhaustion: Tang Ping to Deaths of Despair</h3>
+      <p>Evidence that worker burnout is a worldwide phenomenon, not individual failure.</p>
+      <div class="resource-meta">
+        <div class="resource-tags">
+          <span class="resource-tag">Global</span>
+          <span class="resource-tag">Evidence</span>
+        </div>
+        <span class="resource-link">Explore <i data-lucide="arrow-right"></i></span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<!-- External Resources -->
+<div class="external-section">
+  <h3>📚 Related Reading</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">External resources that complement the L/0 framework</p>
+  
+  <div class="external-grid">
+    <a href="https://www.givedirectly.org/research-on-cash-transfers/" target="_blank" class="external-item">
+      <i data-lucide="external-link"></i>
+      <div class="external-item-content">
+        <h4>GiveDirectly Research</h4>
+        <p>Evidence on cash transfers and UBI pilots</p>
+      </div>
+    </a>
+    
+    <a href="https://www.nbim.no/" target="_blank" class="external-item">
+      <i data-lucide="external-link"></i>
+      <div class="external-item-content">
+        <h4>Norway Government Pension Fund</h4>
+        <p>The $1.7T sovereign wealth fund model</p>
+      </div>
+    </a>
+    
+    <a href="https://www.npci.org.in/what-we-do/upi/product-overview" target="_blank" class="external-item">
+      <i data-lucide="external-link"></i>
+      <div class="external-item-content">
+        <h4>India UPI</h4>
+        <p>Open payment rails with 1B+ users</p>
+      </div>
+    </a>
+    
+    <a href="https://www.mondragon-corporation.com/" target="_blank" class="external-item">
+      <i data-lucide="external-link"></i>
+      <div class="external-item-content">
+        <h4>Mondragon Corporation</h4>
+        <p>World's largest worker cooperative</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="cta-section">
+  <h3>Stay Updated</h3>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+    New content published weekly. Subscribe to never miss an update.
+  </p>
+  <div class="cta-actions">
+    <a href="https://daveshap.substack.com" target="_blank" class="btn btn-primary">
+      <i data-lucide="mail"></i>
+      Subscribe to Substack
+    </a>
+    <a href="https://www.youtube.com/@DaveShap?sub_confirmation=1" target="_blank" class="btn btn-secondary">
+      <i data-lucide="youtube"></i>
+      Subscribe on YouTube
+    </a>
+  </div>
+</div>
+
+<script>
+function filterResources(type) {
+  // Update buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-filter="${type}"]`).classList.add('active');
+  
+  // Filter cards
+  document.querySelectorAll('.resource-card').forEach(card => {
+    if (type === 'all' || card.dataset.type === type) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo">
+            <div class="logo-icon"><span class="l0-text">L/0</span></div>
+            <span>Post-Labor Economics</span>
+          </a>
+          <p class="footer-description">Building frameworks for humanity's transition from labor-based to ownership-based income.</p>
+          <div class="footer-social">
+            <a href="https://www.youtube.com/@DaveShap" aria-label="YouTube" target="_blank"><i data-lucide="youtube"></i></a>
+            <a href="https://daveshap.substack.com" aria-label="Substack" target="_blank"><i data-lucide="mail"></i></a>
+            <a href="https://www.skool.com/postlaboreconomics" aria-label="Community" target="_blank"><i data-lucide="users"></i></a>
+          </div>
+        </div>
+        <div class="footer-nav">
+          <h4>Frameworks</h4>
+          <ul>
+            <li><a href="/prosperity.html">Pyramid of Prosperity</a></li>
+            <li><a href="/power.html">Pyramid of Power</a></li>
+            <li><a href="/pyramid-builder.html">Pyramid Builder</a></li>
+            <li><a href="/calculator.html">Impact Calculator</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Learn</h4>
+          <ul>
+            <li><a href="/concepts.html">Key Concepts</a></li>
+            <li><a href="/glossary.html">Glossary</a></li>
+            <li><a href="/faq.html">FAQ & Objections</a></li>
+            <li><a href="/newsletter.html">Newsletter</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Community</h4>
+          <ul>
+            <li><a href="https://www.skool.com/postlaboreconomics" target="_blank">Skool Community</a></li>
+            <li><a href="/chapters.html">Local Chapters</a></li>
+            <li><a href="/events.html">Events</a></li>
+            <li><a href="/stories.html">Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Post-Labor Economics. Founded by <a href="https://daveshap.substack.com" target="_blank">David Shapiro</a>. Published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    if (navToggle && navMenu) {
+      navToggle.addEventListener('click', () => {
+        const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+        navToggle.setAttribute('aria-expanded', !expanded);
+        navMenu.classList.toggle('is-open');
+      });
+    }
+    document.querySelectorAll('.has-dropdown').forEach(item => {
+      item.querySelector('a').addEventListener('click', (e) => {
+        if (window.innerWidth < 768) {
+          e.preventDefault();
+          item.classList.toggle('is-open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
