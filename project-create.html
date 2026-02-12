@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Project | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="proposals.html">Proposals</a>
+        <a href="discussions.html">Discussions</a>
+        <a href="documents.html">Documents</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <div class="user-menu" id="user-menu">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container container-narrow">
+      <div class="page-header">
+        <a href="projects.html" class="back-link">← Back to Projects</a>
+        <h1 id="page-title">Create New Project</h1>
+        <p class="page-subtitle">Launch an initiative to advance post-labor economics</p>
+      </div>
+
+      <form id="project-form" class="form-card">
+        <div class="form-section">
+          <h3>Project Details</h3>
+          
+          <div class="form-group">
+            <label class="form-label required">Project Title</label>
+            <input type="text" id="title" class="form-input" placeholder="e.g., UBI Pilot Research Project" required>
+            <span class="form-hint">Choose a clear, descriptive title</span>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="description" class="form-textarea" rows="3" placeholder="Brief overview of the project..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Objectives</label>
+            <textarea id="objectives" class="form-textarea" rows="4" placeholder="What are the key goals and deliverables?"></textarea>
+            <span class="form-hint">List specific, measurable objectives</span>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Classification</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="status" class="form-select">
+                <option value="planning">Planning</option>
+                <option value="active">Active</option>
+                <option value="on-hold">On Hold</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select id="priority" class="form-select">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Visibility</label>
+              <select id="visibility" class="form-select">
+                <option value="internal">Internal (Members Only)</option>
+                <option value="public">Public</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Timeline</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input type="date" id="start-date" class="form-input">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Target Completion</label>
+              <input type="date" id="target-date" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Connections</h3>
+          
+          <div class="form-group">
+            <label class="form-label">Working Group</label>
+            <select id="working-group" class="form-select">
+              <option value="">None (Independent Project)</option>
+            </select>
+            <span class="form-hint">Associate with a working group for team collaboration</span>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Source Proposal</label>
+            <select id="proposal" class="form-select">
+              <option value="">None</option>
+            </select>
+            <span class="form-hint">Link to an approved proposal this project implements</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a href="projects.html" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary" id="submit-btn">Create Project</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <style>
+    .container-narrow {
+      max-width: 800px;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .back-link:hover {
+      color: var(--color-horizon);
+    }
+    
+    .form-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+    
+    .form-section {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .form-section:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    
+    .form-section h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--color-text-primary);
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    
+    .form-hint {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+    
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { api, getUser, setupAuth, requireAuth } from './src/scripts/api.js';
+    
+    requireAuth();
+    setupAuth();
+    
+    async function loadOptions() {
+      // Load working groups
+      try {
+        const groupsData = await api('/api/working-groups');
+        const groupSelect = document.getElementById('working-group');
+        (groupsData.groups || []).forEach(g => {
+          const opt = document.createElement('option');
+          opt.value = g.id;
+          opt.textContent = g.name;
+          groupSelect.appendChild(opt);
+        });
+      } catch (e) {
+        console.log('No working groups available');
+      }
+      
+      // Load proposals
+      try {
+        const proposalsData = await api('/api/proposals?status=active');
+        const proposalSelect = document.getElementById('proposal');
+        (proposalsData.proposals || []).forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = p.id;
+          opt.textContent = p.title;
+          proposalSelect.appendChild(opt);
+        });
+      } catch (e) {
+        console.log('No proposals available');
+      }
+    }
+    
+    document.getElementById('project-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating...';
+      
+      try {
+        const data = {
+          title: document.getElementById('title').value,
+          description: document.getElementById('description').value || null,
+          objectives: document.getElementById('objectives').value || null,
+          status: document.getElementById('status').value,
+          priority: document.getElementById('priority').value,
+          visibility: document.getElementById('visibility').value,
+          startDate: document.getElementById('start-date').value || null,
+          targetDate: document.getElementById('target-date').value || null,
+          workingGroupId: document.getElementById('working-group').value || null,
+          proposalId: document.getElementById('proposal').value || null
+        };
+        
+        const result = await api('/api/projects', {
+          method: 'POST',
+          body: JSON.stringify(data)
+        });
+        
+        if (result.success) {
+          window.location.href = `project-view.html?id=${result.id}`;
+        } else {
+          alert(result.error || 'Failed to create project');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Project';
+        }
+      } catch (err) {
+        alert('Error creating project: ' + err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Project';
+      }
+    });
+    
+    loadOptions();
+  </script>
+</body>
+</html>

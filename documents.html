@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documents | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="projects.html">Projects</a>
+        <a href="proposals.html">Proposals</a>
+        <a href="discussions.html">Discussions</a>
+        <a href="documents.html" class="active">Documents</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm" id="login-btn">Sign In</a>
+        <a href="register.html" class="btn btn-primary btn-sm" id="register-btn">Join</a>
+        <div class="user-menu" id="user-menu" style="display: none;">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container">
+      <div class="page-header">
+        <div class="page-header-content">
+          <h1>Documents</h1>
+          <p class="page-subtitle">Knowledge base, resources, and collaborative content</p>
+        </div>
+        <div class="page-actions" id="auth-actions" style="display: none;">
+          <button class="btn btn-primary" id="new-doc-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            New Document
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-type="">All</button>
+          <button class="filter-tab" data-type="page">Pages</button>
+          <button class="filter-tab" data-type="article">Articles</button>
+          <button class="filter-tab" data-type="guide">Guides</button>
+          <button class="filter-tab" data-type="report">Reports</button>
+          <button class="filter-tab" data-type="template">Templates</button>
+        </div>
+        <div class="filter-group">
+          <select id="filter-status" class="form-select">
+            <option value="">All Status</option>
+            <option value="draft">Draft</option>
+            <option value="review">In Review</option>
+            <option value="published">Published</option>
+          </select>
+        </div>
+        <div class="filter-search">
+          <input type="text" id="filter-search" class="form-input" placeholder="Search documents...">
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Documents Grid -->
+      <div class="documents-grid" id="documents-grid" style="display: none;"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">📄</div>
+        <h3>No Documents Yet</h3>
+        <p>Start building the knowledge base by creating your first document.</p>
+        <button class="btn btn-primary" id="empty-new-btn">Create Document</button>
+      </div>
+    </div>
+
+    <!-- Document Modal -->
+    <div class="modal" id="doc-modal" style="display: none;">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3 id="modal-title">New Document</h3>
+          <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <form id="doc-form">
+          <div class="form-group">
+            <label class="form-label required">Title</label>
+            <input type="text" id="doc-title" class="form-input" placeholder="Document title..." required>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Type</label>
+              <select id="doc-type" class="form-select">
+                <option value="page">Page</option>
+                <option value="article">Article</option>
+                <option value="guide">Guide</option>
+                <option value="report">Report</option>
+                <option value="template">Template</option>
+                <option value="meeting">Meeting Notes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Visibility</label>
+              <select id="doc-visibility" class="form-select">
+                <option value="internal">Internal (Members)</option>
+                <option value="public">Public</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Content</label>
+            <textarea id="doc-content" class="form-textarea editor" rows="15" placeholder="Write your content here... Markdown is supported."></textarea>
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="cancel-btn">Cancel</button>
+            <button type="button" class="btn btn-secondary" id="save-draft-btn">Save Draft</button>
+            <button type="submit" class="btn btn-primary">Publish</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View Document Modal -->
+    <div class="modal" id="view-modal" style="display: none;">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <div class="view-header-content">
+            <span class="doc-type-badge" id="view-type"></span>
+            <h3 id="view-title"></h3>
+            <div class="view-meta" id="view-meta"></div>
+          </div>
+          <button class="modal-close" id="view-close">&times;</button>
+        </div>
+        <div class="view-content" id="view-content"></div>
+        <div class="modal-actions" id="view-actions"></div>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .filter-tabs {
+      display: flex;
+      gap: 0.25rem;
+      background: var(--color-bg-secondary);
+      padding: 0.25rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--color-border);
+    }
+    
+    .filter-tab {
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .filter-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .filter-tab.active {
+      background: var(--color-horizon);
+      color: white;
+    }
+    
+    .filter-search {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-search .form-input {
+      width: 100%;
+    }
+    
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .doc-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .doc-card:hover {
+      border-color: var(--color-horizon);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .doc-type-badge {
+      padding: 0.25rem 0.5rem;
+      background: var(--color-gray-200);
+      color: var(--color-gray-700);
+      border-radius: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .doc-type-badge.page { background: #DBEAFE; color: #1E40AF; }
+    .doc-type-badge.article { background: #D1FAE5; color: #065F46; }
+    .doc-type-badge.guide { background: #FEF3C7; color: #92400E; }
+    .doc-type-badge.report { background: #E0E7FF; color: #3730A3; }
+    .doc-type-badge.template { background: #FCE7F3; color: #9D174D; }
+    .doc-type-badge.meeting { background: #F3F4F6; color: #374151; }
+    
+    .doc-status {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 1rem;
+    }
+    
+    .doc-status.draft { background: #FEF3C7; color: #92400E; }
+    .doc-status.review { background: #DBEAFE; color: #1E40AF; }
+    .doc-status.published { background: #D1FAE5; color: #065F46; }
+    
+    .doc-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    
+    .doc-excerpt {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    
+    .doc-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .doc-author {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .author-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-horizon);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+    }
+    
+    .modal-lg {
+      max-width: 800px;
+    }
+    
+    .modal-content {
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    
+    .editor {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .view-header-content h3 {
+      margin: 0.5rem 0;
+      font-size: 1.5rem;
+    }
+    
+    .view-meta {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .view-content {
+      padding: 1rem 0;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filter-tabs {
+        overflow-x: auto;
+      }
+      
+      .documents-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { api, getUser, setupAuth } from './src/scripts/api.js';
+    
+    let allDocuments = [];
+    let currentFilter = { type: '', status: '', search: '' };
+    const user = getUser();
+    
+    async function loadDocuments() {
+      const loading = document.getElementById('loading');
+      const grid = document.getElementById('documents-grid');
+      const empty = document.getElementById('empty-state');
+      
+      try {
+        const data = await api('/api/documents');
+        allDocuments = data.documents || [];
+        
+        loading.style.display = 'none';
+        renderDocuments(allDocuments);
+      } catch (err) {
+        loading.innerHTML = '<p class="error">Failed to load documents</p>';
+      }
+    }
+    
+    function renderDocuments(docs) {
+      const grid = document.getElementById('documents-grid');
+      const empty = document.getElementById('empty-state');
+      
+      if (docs.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      grid.style.display = 'grid';
+      
+      grid.innerHTML = docs.map(d => `
+        <div class="doc-card" data-id="${d.id}">
+          <div class="doc-header">
+            <span class="doc-type-badge ${d.documentType}">${d.documentType}</span>
+            <span class="doc-status ${d.status}">${d.status}</span>
+          </div>
+          <h3 class="doc-title">${escapeHtml(d.title)}</h3>
+          <p class="doc-excerpt">${d.content ? escapeHtml(d.content.slice(0, 150)) : 'No content yet...'}</p>
+          <div class="doc-meta">
+            <div class="doc-author">
+              ${d.author ? `
+                <span class="author-avatar">${d.author.name?.charAt(0) || '?'}</span>
+                <span>${escapeHtml(d.author.name)}</span>
+              ` : '<span>Unknown</span>'}
+            </div>
+            <span>${formatDate(d.updatedAt)}</span>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add click handlers
+      grid.querySelectorAll('.doc-card').forEach(card => {
+        card.addEventListener('click', () => viewDocument(card.dataset.id));
+      });
+    }
+    
+    function filterDocuments() {
+      let filtered = allDocuments;
+      
+      if (currentFilter.type) {
+        filtered = filtered.filter(d => d.documentType === currentFilter.type);
+      }
+      if (currentFilter.status) {
+        filtered = filtered.filter(d => d.status === currentFilter.status);
+      }
+      if (currentFilter.search) {
+        const search = currentFilter.search.toLowerCase();
+        filtered = filtered.filter(d => 
+          d.title.toLowerCase().includes(search) ||
+          d.content?.toLowerCase().includes(search)
+        );
+      }
+      
+      renderDocuments(filtered);
+    }
+    
+    async function viewDocument(id) {
+      try {
+        const data = await api(`/api/documents?id=${id}`);
+        const doc = data.document;
+        
+        document.getElementById('view-type').textContent = doc.documentType;
+        document.getElementById('view-type').className = `doc-type-badge ${doc.documentType}`;
+        document.getElementById('view-title').textContent = doc.title;
+        document.getElementById('view-meta').innerHTML = `
+          ${doc.author ? `By ${escapeHtml(doc.author.name)}` : ''} · 
+          ${formatDate(doc.updatedAt)} · 
+          v${doc.version}
+        `;
+        document.getElementById('view-content').textContent = doc.content || 'No content';
+        
+        // Actions
+        const actions = document.getElementById('view-actions');
+        if (user && (doc.author?.id === user.id || user.role === 'admin')) {
+          actions.innerHTML = `
+            <button class="btn btn-secondary" onclick="editDocument('${doc.id}')">Edit</button>
+            ${doc.status !== 'published' ? `
+              <button class="btn btn-primary" onclick="publishDocument('${doc.id}')">Publish</button>
+            ` : ''}
+          `;
+        } else {
+          actions.innerHTML = '';
+        }
+        
+        document.getElementById('view-modal').style.display = 'flex';
+      } catch (err) {
+        alert('Failed to load document');
+      }
+    }
+    
+    async function saveDocument(publish = false) {
+      const title = document.getElementById('doc-title').value;
+      const content = document.getElementById('doc-content').value;
+      const type = document.getElementById('doc-type').value;
+      const visibility = document.getElementById('doc-visibility').value;
+      
+      if (!title) {
+        alert('Title is required');
+        return;
+      }
+      
+      try {
+        const result = await api('/api/documents', {
+          method: 'POST',
+          body: JSON.stringify({
+            title,
+            content,
+            documentType: type,
+            visibility
+          })
+        });
+        
+        if (result.success) {
+          if (publish) {
+            await api(`/api/documents?id=${result.id}&action=publish`, { method: 'POST' });
+          }
+          
+          document.getElementById('doc-modal').style.display = 'none';
+          document.getElementById('doc-form').reset();
+          loadDocuments();
+        }
+      } catch (err) {
+        alert('Failed to save document: ' + err.message);
+      }
+    }
+    
+    window.publishDocument = async (id) => {
+      try {
+        await api(`/api/documents?id=${id}&action=publish`, { method: 'POST' });
+        document.getElementById('view-modal').style.display = 'none';
+        loadDocuments();
+      } catch (err) {
+        alert('Failed to publish');
+      }
+    };
+    
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Event listeners
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter.type = tab.dataset.type;
+        filterDocuments();
+      });
+    });
+    
+    document.getElementById('filter-status').addEventListener('change', (e) => {
+      currentFilter.status = e.target.value;
+      filterDocuments();
+    });
+    
+    document.getElementById('filter-search').addEventListener('input', (e) => {
+      currentFilter.search = e.target.value;
+      filterDocuments();
+    });
+    
+    // Modal handlers
+    const modal = document.getElementById('doc-modal');
+    const viewModal = document.getElementById('view-modal');
+    
+    document.getElementById('new-doc-btn')?.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+    
+    document.getElementById('empty-new-btn')?.addEventListener('click', () => {
+      if (user) {
+        modal.style.display = 'flex';
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+    
+    document.getElementById('modal-close')?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    document.getElementById('view-close')?.addEventListener('click', () => {
+      viewModal.style.display = 'none';
+    });
+    
+    document.getElementById('cancel-btn')?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    document.getElementById('save-draft-btn')?.addEventListener('click', () => {
+      saveDocument(false);
+    });
+    
+    document.getElementById('doc-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveDocument(true);
+    });
+    
+    // Close modals on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+      backdrop.addEventListener('click', () => {
+        modal.style.display = 'none';
+        viewModal.style.display = 'none';
+      });
+    });
+    
+    // Setup
+    setupAuth();
+    
+    if (user) {
+      document.getElementById('auth-actions').style.display = 'flex';
+    }
+    
+    loadDocuments();
+  </script>
+</body>
+</html>

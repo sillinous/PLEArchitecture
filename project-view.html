@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="proposals.html">Proposals</a>
+        <a href="discussions.html">Discussions</a>
+        <a href="documents.html">Documents</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm" id="login-btn">Sign In</a>
+        <div class="user-menu" id="user-menu" style="display: none;">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container">
+      <!-- Loading -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Project Content -->
+      <div id="project-content" style="display: none;">
+        <div class="project-header-section">
+          <a href="projects.html" class="back-link">← All Projects</a>
+          
+          <div class="project-title-row">
+            <div>
+              <h1 id="project-title"></h1>
+              <div class="project-badges" id="project-badges"></div>
+            </div>
+            <div class="project-actions" id="project-actions"></div>
+          </div>
+          
+          <p id="project-desc" class="project-description"></p>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="progress-overview">
+          <div class="progress-stats">
+            <div class="progress-stat">
+              <span class="progress-stat-value" id="progress-percent">0%</span>
+              <span class="progress-stat-label">Complete</span>
+            </div>
+            <div class="progress-stat">
+              <span class="progress-stat-value" id="tasks-done">0</span>
+              <span class="progress-stat-label">Tasks Done</span>
+            </div>
+            <div class="progress-stat">
+              <span class="progress-stat-value" id="tasks-total">0</span>
+              <span class="progress-stat-label">Total Tasks</span>
+            </div>
+            <div class="progress-stat">
+              <span class="progress-stat-value" id="members-count">0</span>
+              <span class="progress-stat-label">Members</span>
+            </div>
+          </div>
+          <div class="progress-bar-large">
+            <div class="progress-fill-large" id="progress-bar"></div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="project-tabs">
+          <button class="tab-btn active" data-tab="tasks">Tasks</button>
+          <button class="tab-btn" data-tab="board">Board</button>
+          <button class="tab-btn" data-tab="milestones">Milestones</button>
+          <button class="tab-btn" data-tab="members">Members</button>
+          <button class="tab-btn" data-tab="details">Details</button>
+        </div>
+
+        <!-- Tab Content: Tasks -->
+        <div class="tab-content active" id="tab-tasks">
+          <div class="tab-header">
+            <h2>Tasks</h2>
+            <button class="btn btn-primary btn-sm" id="add-task-btn" style="display: none;">+ Add Task</button>
+          </div>
+          
+          <div id="tasks-list" class="tasks-list"></div>
+          <div id="tasks-empty" class="empty-state-small" style="display: none;">
+            <p>No tasks yet. Add tasks to track work on this project.</p>
+          </div>
+        </div>
+
+        <!-- Tab Content: Board -->
+        <div class="tab-content" id="tab-board">
+          <div class="kanban-board">
+            <div class="kanban-column">
+              <div class="kanban-header">To Do</div>
+              <div class="kanban-cards" id="board-todo"></div>
+            </div>
+            <div class="kanban-column">
+              <div class="kanban-header">In Progress</div>
+              <div class="kanban-cards" id="board-in_progress"></div>
+            </div>
+            <div class="kanban-column">
+              <div class="kanban-header">Review</div>
+              <div class="kanban-cards" id="board-review"></div>
+            </div>
+            <div class="kanban-column">
+              <div class="kanban-header">Done</div>
+              <div class="kanban-cards" id="board-done"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content: Milestones -->
+        <div class="tab-content" id="tab-milestones">
+          <div class="tab-header">
+            <h2>Milestones</h2>
+            <button class="btn btn-primary btn-sm" id="add-milestone-btn" style="display: none;">+ Add Milestone</button>
+          </div>
+          
+          <div id="milestones-list" class="milestones-list"></div>
+          <div id="milestones-empty" class="empty-state-small" style="display: none;">
+            <p>No milestones set. Add milestones to track key deliverables.</p>
+          </div>
+        </div>
+
+        <!-- Tab Content: Members -->
+        <div class="tab-content" id="tab-members">
+          <div class="tab-header">
+            <h2>Team Members</h2>
+          </div>
+          
+          <div id="members-list" class="members-grid"></div>
+          
+          <div class="join-section" id="join-section" style="display: none;">
+            <p>Want to contribute to this project?</p>
+            <button class="btn btn-primary" id="join-btn">Join Project</button>
+          </div>
+        </div>
+
+        <!-- Tab Content: Details -->
+        <div class="tab-content" id="tab-details">
+          <div class="details-grid">
+            <div class="detail-card">
+              <h3>Objectives</h3>
+              <div id="detail-objectives" class="detail-content"></div>
+            </div>
+            <div class="detail-card">
+              <h3>Timeline</h3>
+              <div class="detail-row">
+                <span class="detail-label">Start Date</span>
+                <span id="detail-start" class="detail-value">-</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Target Date</span>
+                <span id="detail-target" class="detail-value">-</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Created</span>
+                <span id="detail-created" class="detail-value">-</span>
+              </div>
+            </div>
+            <div class="detail-card">
+              <h3>Connections</h3>
+              <div class="detail-row">
+                <span class="detail-label">Working Group</span>
+                <span id="detail-group" class="detail-value">-</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Source Proposal</span>
+                <span id="detail-proposal" class="detail-value">-</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Lead</span>
+                <span id="detail-lead" class="detail-value">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Modal -->
+      <div class="modal" id="task-modal" style="display: none;">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 id="task-modal-title">Add Task</h3>
+            <button class="modal-close" id="task-modal-close">&times;</button>
+          </div>
+          <form id="task-form">
+            <div class="form-group">
+              <label class="form-label required">Title</label>
+              <input type="text" id="task-title" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea id="task-description" class="form-textarea" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Priority</label>
+                <select id="task-priority" class="form-select">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Due Date</label>
+                <input type="date" id="task-due" class="form-input">
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-secondary" id="task-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .back-link:hover { color: var(--color-horizon); }
+    
+    .project-header-section { margin-bottom: 2rem; }
+    
+    .project-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .project-title-row h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+    }
+    
+    .project-badges {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    
+    .badge-planning { background: #E0E7FF; color: #3730A3; }
+    .badge-active { background: #D1FAE5; color: #065F46; }
+    .badge-on-hold { background: #FEF3C7; color: #92400E; }
+    .badge-completed { background: #DBEAFE; color: #1E40AF; }
+    .badge-urgent { background: #FEE2E2; color: #991B1B; }
+    .badge-high { background: #FFEDD5; color: #9A3412; }
+    
+    .project-description {
+      color: var(--color-text-secondary);
+      font-size: 1.1rem;
+      max-width: 800px;
+    }
+    
+    .progress-overview {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .progress-stats {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .progress-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .progress-stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-horizon);
+    }
+    
+    .progress-stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .progress-bar-large {
+      height: 8px;
+      background: var(--color-gray-200);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-fill-large {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-horizon), var(--color-dawn));
+      border-radius: 4px;
+      transition: width 0.5s;
+    }
+    
+    .project-tabs {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 2rem;
+    }
+    
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    
+    .tab-btn:hover { color: var(--color-text-primary); }
+    .tab-btn.active {
+      color: var(--color-horizon);
+      border-bottom-color: var(--color-horizon);
+    }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .tab-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .tab-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    
+    /* Tasks List */
+    .tasks-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+    
+    .task-item:hover {
+      border-color: var(--color-horizon);
+    }
+    
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--color-border);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    
+    .task-item.done .task-checkbox {
+      background: var(--color-horizon);
+      border-color: var(--color-horizon);
+    }
+    
+    .task-item.done .task-checkbox::after {
+      content: '✓';
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+    
+    .task-info { flex: 1; }
+    .task-title-text { font-weight: 500; }
+    .task-item.done .task-title-text {
+      text-decoration: line-through;
+      color: var(--color-text-muted);
+    }
+    
+    .task-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      margin-top: 0.25rem;
+    }
+    
+    /* Kanban Board */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      min-height: 400px;
+    }
+    
+    .kanban-column {
+      background: var(--color-bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+    
+    .kanban-header {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-border);
+    }
+    
+    .kanban-cards { display: flex; flex-direction: column; gap: 0.5rem; }
+    
+    .kanban-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+    
+    /* Members Grid */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .member-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+    }
+    
+    .member-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--color-horizon);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .member-info h4 { margin: 0 0 0.25rem; font-size: 1rem; }
+    .member-role {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      text-transform: capitalize;
+    }
+    
+    /* Details */
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .detail-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+    
+    .detail-card h3 {
+      margin: 0 0 1rem;
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--color-text-secondary); }
+    .detail-value { font-weight: 500; }
+    
+    .detail-content {
+      white-space: pre-wrap;
+      color: var(--color-text-primary);
+      line-height: 1.6;
+    }
+    
+    /* Milestones */
+    .milestones-list { display: flex; flex-direction: column; gap: 1rem; }
+    
+    .milestone-item {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+    }
+    
+    .milestone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .milestone-title { font-weight: 600; }
+    
+    .milestone-date {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+    
+    /* Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      position: relative;
+      background: var(--color-bg-secondary);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-header h3 { margin: 0; }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+    }
+    
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .empty-state-small {
+      text-align: center;
+      padding: 2rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .join-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-tertiary);
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+    
+    .join-section p { margin-bottom: 1rem; }
+    
+    @media (max-width: 768px) {
+      .kanban-board {
+        grid-template-columns: 1fr;
+      }
+      
+      .progress-stats {
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { api, getUser, setupAuth } from './src/scripts/api.js';
+    
+    const params = new URLSearchParams(window.location.search);
+    const projectId = params.get('id');
+    
+    let project = null;
+    let isMember = false;
+    const user = getUser();
+    
+    async function loadProject() {
+      if (!projectId) {
+        window.location.href = 'projects.html';
+        return;
+      }
+      
+      try {
+        const data = await api(`/api/projects?id=${projectId}`);
+        project = data.project;
+        isMember = data.isMember;
+        
+        renderProject(data);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('project-content').style.display = 'block';
+        
+        // Load tasks
+        loadTasks();
+      } catch (err) {
+        document.getElementById('loading').innerHTML = '<p class="error">Project not found</p>';
+      }
+    }
+    
+    function renderProject(data) {
+      const { project, members, taskStats, milestones } = data;
+      
+      document.title = `${project.title} | Post-Labor Economics`;
+      document.getElementById('project-title').textContent = project.title;
+      document.getElementById('project-desc').textContent = project.description || '';
+      
+      // Badges
+      const badges = document.getElementById('project-badges');
+      badges.innerHTML = `
+        <span class="badge badge-${project.status}">${project.status}</span>
+        ${project.priority !== 'medium' ? `<span class="badge badge-${project.priority}">${project.priority}</span>` : ''}
+        <span class="badge">${project.visibility}</span>
+      `;
+      
+      // Progress
+      const done = taskStats.done || 0;
+      const total = Object.values(taskStats).reduce((a, b) => a + b, 0);
+      const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+      
+      document.getElementById('progress-percent').textContent = percent + '%';
+      document.getElementById('tasks-done').textContent = done;
+      document.getElementById('tasks-total').textContent = total;
+      document.getElementById('members-count').textContent = members.length;
+      document.getElementById('progress-bar').style.width = percent + '%';
+      
+      // Members
+      const membersList = document.getElementById('members-list');
+      membersList.innerHTML = members.map(m => `
+        <div class="member-card">
+          <div class="member-avatar">${m.name?.charAt(0) || '?'}</div>
+          <div class="member-info">
+            <h4>${escapeHtml(m.name)}</h4>
+            <span class="member-role">${m.role}</span>
+          </div>
+        </div>
+      `).join('');
+      
+      // Milestones
+      renderMilestones(milestones);
+      
+      // Details
+      document.getElementById('detail-objectives').textContent = project.objectives || 'No objectives set';
+      document.getElementById('detail-start').textContent = project.startDate || '-';
+      document.getElementById('detail-target').textContent = project.targetDate || '-';
+      document.getElementById('detail-created').textContent = new Date(project.createdAt).toLocaleDateString();
+      document.getElementById('detail-group').textContent = project.group?.name || 'None';
+      document.getElementById('detail-proposal').textContent = project.proposal?.title || 'None';
+      document.getElementById('detail-lead').textContent = project.lead?.name || 'Unassigned';
+      
+      // Auth-dependent UI
+      if (user) {
+        document.getElementById('add-task-btn').style.display = 'block';
+        document.getElementById('add-milestone-btn').style.display = 'block';
+        
+        if (!isMember) {
+          document.getElementById('join-section').style.display = 'block';
+        }
+      }
+    }
+    
+    async function loadTasks() {
+      try {
+        const data = await api(`/api/tasks?projectId=${projectId}`);
+        renderTasks(data.tasks || []);
+        
+        // Also load board view
+        const boardData = await api(`/api/tasks?projectId=${projectId}&view=board`);
+        renderBoard(boardData.columns || {});
+      } catch (err) {
+        console.error('Failed to load tasks:', err);
+      }
+    }
+    
+    function renderTasks(tasks) {
+      const list = document.getElementById('tasks-list');
+      const empty = document.getElementById('tasks-empty');
+      
+      if (tasks.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      list.innerHTML = tasks.map(t => `
+        <div class="task-item ${t.status === 'done' ? 'done' : ''}" data-id="${t.id}">
+          <div class="task-checkbox" onclick="toggleTask('${t.id}', '${t.status}')"></div>
+          <div class="task-info">
+            <div class="task-title-text">${escapeHtml(t.title)}</div>
+            <div class="task-meta">
+              ${t.priority !== 'medium' ? `<span class="badge badge-${t.priority}">${t.priority}</span>` : ''}
+              ${t.dueDate ? `<span>Due: ${t.dueDate}</span>` : ''}
+              ${t.assignee ? `<span>@${t.assignee.name}</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderBoard(columns) {
+      ['todo', 'in_progress', 'review', 'done'].forEach(status => {
+        const container = document.getElementById(`board-${status}`);
+        const tasks = columns[status] || [];
+        container.innerHTML = tasks.map(t => `
+          <div class="kanban-card">
+            <div class="task-title-text">${escapeHtml(t.title)}</div>
+          </div>
+        `).join('');
+      });
+    }
+    
+    function renderMilestones(milestones) {
+      const list = document.getElementById('milestones-list');
+      const empty = document.getElementById('milestones-empty');
+      
+      if (!milestones || milestones.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      list.innerHTML = milestones.map(m => `
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-title">${escapeHtml(m.title)}</span>
+            <span class="milestone-date">${m.targetDate || 'No date'}</span>
+          </div>
+          ${m.description ? `<p>${escapeHtml(m.description)}</p>` : ''}
+          <div class="progress-bar" style="height: 4px; margin-top: 0.5rem;">
+            <div class="progress-fill" style="width: ${m.progress || 0}%"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+      });
+    });
+    
+    // Task modal
+    const taskModal = document.getElementById('task-modal');
+    const taskForm = document.getElementById('task-form');
+    
+    document.getElementById('add-task-btn')?.addEventListener('click', () => {
+      taskModal.style.display = 'flex';
+    });
+    
+    document.getElementById('task-modal-close')?.addEventListener('click', () => {
+      taskModal.style.display = 'none';
+    });
+    
+    document.getElementById('task-cancel')?.addEventListener('click', () => {
+      taskModal.style.display = 'none';
+    });
+    
+    taskForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      try {
+        await api('/api/tasks', {
+          method: 'POST',
+          body: JSON.stringify({
+            projectId,
+            title: document.getElementById('task-title').value,
+            description: document.getElementById('task-description').value,
+            priority: document.getElementById('task-priority').value,
+            dueDate: document.getElementById('task-due').value || null
+          })
+        });
+        
+        taskModal.style.display = 'none';
+        taskForm.reset();
+        loadTasks();
+        loadProject(); // Refresh stats
+      } catch (err) {
+        alert('Failed to create task: ' + err.message);
+      }
+    });
+    
+    // Toggle task status
+    window.toggleTask = async (id, currentStatus) => {
+      const newStatus = currentStatus === 'done' ? 'todo' : 'done';
+      try {
+        await api('/api/tasks', {
+          method: 'PUT',
+          body: JSON.stringify({ id, status: newStatus })
+        });
+        loadTasks();
+        loadProject();
+      } catch (err) {
+        console.error('Failed to update task:', err);
+      }
+    };
+    
+    // Join project
+    document.getElementById('join-btn')?.addEventListener('click', async () => {
+      try {
+        await api(`/api/projects?id=${projectId}&action=join`, { method: 'POST' });
+        window.location.reload();
+      } catch (err) {
+        alert('Failed to join project: ' + err.message);
+      }
+    });
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    setupAuth();
+    loadProject();
+  </script>
+</body>
+</html>

@@ -17,6 +17,9 @@ export default async (req, context) => {
       if (action === 'seed-community') {
       return await seedCommunityContent(sql);
     }
+      if (action === 'seed-projects') {
+        return await seedProjectsAndGroups(sql);
+      }
     
     return await getGATOFramework(sql);
     }
@@ -694,6 +697,498 @@ async function getGATOFramework(sql) {
     endpoints: {
       fullPrime: '/api/gato?action=prime',
       note: 'Use ?action=prime to get THE PRIME with full training content'
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SEED PROJECTS AND WORKING GROUPS
+// ═══════════════════════════════════════════════════════════════════════════
+
+async function seedProjectsAndGroups(sql) {
+  // Check if already seeded
+  const existingGroups = await sql`SELECT COUNT(*) as count FROM working_groups WHERE slug LIKE 'wg-%'`;
+  const existingProjects = await sql`SELECT COUNT(*) as count FROM projects WHERE slug LIKE 'proj-%'`;
+  
+  if (existingGroups[0]?.count > 0 || existingProjects[0]?.count > 0) {
+    return jsonResponse({ 
+      message: 'Projects and working groups already seeded',
+      groups: existingGroups[0].count,
+      projects: existingProjects[0].count
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WORKING GROUPS - Core Teams
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const workingGroups = [
+    {
+      slug: 'wg-policy-research',
+      name: 'Policy Research Working Group',
+      description: 'Research team focused on developing evidence-based policy frameworks for post-labor economic transitions.',
+      mission: 'To produce rigorous, actionable research that informs policy decisions around automation, UBI, and economic restructuring. We bridge academic research with practical policy implementation.',
+      status: 'active',
+      visibility: 'public'
+    },
+    {
+      slug: 'wg-ai-alignment',
+      name: 'AI Alignment × Economics Working Group',
+      description: 'Exploring the intersection of AI alignment principles and economic policy design.',
+      mission: 'To ensure that AI systems deployed in economic contexts are aligned with human flourishing. We apply the Heuristic Imperatives to economic AI governance and develop frameworks for beneficial automation.',
+      status: 'active',
+      visibility: 'public'
+    },
+    {
+      slug: 'wg-community-outreach',
+      name: 'Community Outreach & Education',
+      description: 'Building public understanding of post-labor economics through education and engagement.',
+      mission: 'To make post-labor economics accessible to everyone. We develop educational materials, run workshops, and build bridges between academic discourse and community understanding.',
+      status: 'active',
+      visibility: 'public'
+    },
+    {
+      slug: 'wg-platform-dev',
+      name: 'Platform Development',
+      description: 'Technical team building and maintaining the PLE digital infrastructure.',
+      mission: 'To create tools and platforms that enable distributed collaboration on post-labor economic research and action. We build with the Heuristic Imperatives embedded in our technical choices.',
+      status: 'active',
+      visibility: 'internal'
+    },
+    {
+      slug: 'wg-pilot-programs',
+      name: 'Pilot Programs Working Group',
+      description: 'Designing and coordinating real-world experiments in post-labor economics.',
+      mission: 'To move from theory to practice through carefully designed pilot programs. We work with communities and organizations to test UBI implementations, automation transition strategies, and new economic models.',
+      status: 'active',
+      visibility: 'public'
+    }
+  ];
+
+  for (const group of workingGroups) {
+    await sql`
+      INSERT INTO working_groups (slug, name, description, mission, status, visibility)
+      VALUES (${group.slug}, ${group.name}, ${group.description}, ${group.mission}, ${group.status}, ${group.visibility})
+      ON CONFLICT (slug) DO NOTHING
+    `;
+  }
+
+  // Get working group IDs
+  const groups = await sql`SELECT id, slug FROM working_groups WHERE slug LIKE 'wg-%'`;
+  const groupMap = Object.fromEntries(groups.map(g => [g.slug, g.id]));
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PROJECTS - Active Initiatives
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const projects = [
+    {
+      slug: 'proj-automation-impact-framework',
+      title: 'Automation Impact Assessment Framework',
+      description: 'Developing a comprehensive framework for assessing the economic and social impacts of automation before deployment.',
+      objectives: `1. Create standardized metrics for measuring automation impact across employment, wages, and community wellbeing
+2. Build an open-source assessment toolkit usable by policymakers and organizations
+3. Pilot the framework with 3-5 partner organizations
+4. Publish findings and methodology for peer review`,
+      status: 'active',
+      priority: 'high',
+      visibility: 'public',
+      working_group_id: groupMap['wg-policy-research'],
+      start_date: '2026-01-15',
+      target_date: '2026-06-30'
+    },
+    {
+      slug: 'proj-ubi-pilot-design',
+      title: 'UBI Pilot: Research Design & Partnership',
+      description: 'Designing a rigorous UBI pilot program and securing partnerships for implementation.',
+      objectives: `1. Complete literature review of existing UBI pilots and their methodologies
+2. Design statistically robust pilot methodology with control groups
+3. Identify and engage potential partner municipalities or organizations
+4. Secure initial funding commitments for pilot phase
+5. Establish IRB approval pathway`,
+      status: 'planning',
+      priority: 'high',
+      visibility: 'public',
+      working_group_id: groupMap['wg-pilot-programs'],
+      start_date: '2026-02-01',
+      target_date: '2026-12-31'
+    },
+    {
+      slug: 'proj-ple-curriculum',
+      title: 'Post-Labor Economics Educational Curriculum',
+      description: 'Creating a comprehensive, accessible curriculum for understanding post-labor economics.',
+      objectives: `1. Develop 5-module introductory curriculum covering automation, economics, policy, ethics, and action
+2. Create video companions for each module (15-20 minutes each)
+3. Build interactive exercises and discussion guides
+4. Pilot with 3 educational institutions
+5. Release under Creative Commons license`,
+      status: 'active',
+      priority: 'medium',
+      visibility: 'public',
+      working_group_id: groupMap['wg-community-outreach'],
+      start_date: '2026-01-01',
+      target_date: '2026-08-31'
+    },
+    {
+      slug: 'proj-aligned-ai-governance',
+      title: 'Aligned AI Governance Framework',
+      description: 'Developing governance frameworks for AI systems deployed in economic contexts, grounded in Heuristic Imperatives.',
+      objectives: `1. Map existing AI governance frameworks and identify gaps for economic applications
+2. Develop Heuristic Imperative audit methodology for economic AI
+3. Create implementation guidelines for organizations
+4. Engage with policy bodies on standards adoption
+5. Publish framework paper for academic review`,
+      status: 'active',
+      priority: 'high',
+      visibility: 'public',
+      working_group_id: groupMap['wg-ai-alignment'],
+      start_date: '2026-01-20',
+      target_date: '2026-09-30'
+    },
+    {
+      slug: 'proj-automation-tax-model',
+      title: 'Automation Tax Revenue Allocation Model',
+      description: 'Designing an equitable model for allocating revenue from automation taxation.',
+      objectives: `1. Research existing automation tax proposals and implementations
+2. Model different allocation strategies and their impacts
+3. Develop transparent allocation framework aligned with Heuristic Imperatives
+4. Create simulation tools for policy analysis
+5. Publish policy brief with recommendations`,
+      status: 'active',
+      priority: 'medium',
+      visibility: 'public',
+      working_group_id: groupMap['wg-policy-research'],
+      start_date: '2026-02-01',
+      target_date: '2026-07-31'
+    },
+    {
+      slug: 'proj-platform-v2',
+      title: 'Platform v2: Project Management & Collaboration',
+      description: 'Extending the PLE platform with full project management, document collaboration, and working group tools.',
+      objectives: `1. Implement projects module with task tracking
+2. Add working groups with membership management
+3. Build document/content management system
+4. Create dashboard analytics for community health
+5. Deploy and iterate based on user feedback`,
+      status: 'active',
+      priority: 'urgent',
+      visibility: 'internal',
+      working_group_id: groupMap['wg-platform-dev'],
+      start_date: '2026-02-10',
+      target_date: '2026-03-15'
+    },
+    {
+      slug: 'proj-community-podcast',
+      title: 'Voices of Transition: Community Stories Podcast',
+      description: 'A podcast series featuring stories from workers, communities, and innovators navigating automation transitions.',
+      objectives: `1. Develop podcast format and editorial guidelines
+2. Record 12 pilot episodes featuring diverse perspectives
+3. Establish distribution channels and partnerships
+4. Build listener community and feedback loops
+5. Create companion discussion guides`,
+      status: 'planning',
+      priority: 'low',
+      visibility: 'public',
+      working_group_id: groupMap['wg-community-outreach'],
+      start_date: '2026-03-01',
+      target_date: '2026-12-31'
+    },
+    {
+      slug: 'proj-data-ownership-framework',
+      title: 'Data Ownership in the AI Economy',
+      description: 'Developing frameworks for individual and collective data ownership as automation scales.',
+      objectives: `1. Research existing data ownership models (cooperatives, trusts, dividends)
+2. Analyze implications for post-labor economic models
+3. Develop policy recommendations
+4. Create public education materials
+5. Engage with data rights organizations`,
+      status: 'planning',
+      priority: 'medium',
+      visibility: 'public',
+      working_group_id: groupMap['wg-policy-research'],
+      start_date: '2026-04-01',
+      target_date: '2026-10-31'
+    }
+  ];
+
+  for (const project of projects) {
+    await sql`
+      INSERT INTO projects (slug, title, description, objectives, status, priority, visibility, working_group_id, start_date, target_date)
+      VALUES (${project.slug}, ${project.title}, ${project.description}, ${project.objectives}, ${project.status}, ${project.priority}, ${project.visibility}, ${project.working_group_id}, ${project.start_date}, ${project.target_date})
+      ON CONFLICT (slug) DO NOTHING
+    `;
+  }
+
+  // Get project IDs for adding tasks
+  const projectsList = await sql`SELECT id, slug FROM projects WHERE slug LIKE 'proj-%'`;
+  const projectMap = Object.fromEntries(projectsList.map(p => [p.slug, p.id]));
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TASKS - Sample tasks for demonstration
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const tasks = [
+    // Platform v2 tasks (most active project)
+    { project: 'proj-platform-v2', title: 'Design database schema for projects & tasks', status: 'done', priority: 'high' },
+    { project: 'proj-platform-v2', title: 'Create Projects API endpoint', status: 'done', priority: 'high' },
+    { project: 'proj-platform-v2', title: 'Create Tasks API endpoint', status: 'done', priority: 'high' },
+    { project: 'proj-platform-v2', title: 'Create Working Groups API endpoint', status: 'done', priority: 'high' },
+    { project: 'proj-platform-v2', title: 'Create Documents API endpoint', status: 'done', priority: 'high' },
+    { project: 'proj-platform-v2', title: 'Build Projects listing UI', status: 'done', priority: 'medium' },
+    { project: 'proj-platform-v2', title: 'Build Project detail view with tasks', status: 'done', priority: 'medium' },
+    { project: 'proj-platform-v2', title: 'Build Documents/Content management UI', status: 'done', priority: 'medium' },
+    { project: 'proj-platform-v2', title: 'Add Kanban board view for tasks', status: 'in_progress', priority: 'medium' },
+    { project: 'proj-platform-v2', title: 'Implement working group pages', status: 'todo', priority: 'medium' },
+    { project: 'proj-platform-v2', title: 'Add file upload support', status: 'todo', priority: 'low' },
+    { project: 'proj-platform-v2', title: 'Build dashboard analytics', status: 'todo', priority: 'medium' },
+    
+    // Automation Impact Framework tasks
+    { project: 'proj-automation-impact-framework', title: 'Literature review: existing impact assessment methodologies', status: 'done', priority: 'high' },
+    { project: 'proj-automation-impact-framework', title: 'Interview stakeholders on assessment needs', status: 'in_progress', priority: 'high' },
+    { project: 'proj-automation-impact-framework', title: 'Draft metric categories and definitions', status: 'in_progress', priority: 'high' },
+    { project: 'proj-automation-impact-framework', title: 'Design toolkit architecture', status: 'todo', priority: 'medium' },
+    { project: 'proj-automation-impact-framework', title: 'Identify pilot partner organizations', status: 'todo', priority: 'medium' },
+    
+    // PLE Curriculum tasks
+    { project: 'proj-ple-curriculum', title: 'Outline all 5 modules', status: 'done', priority: 'high' },
+    { project: 'proj-ple-curriculum', title: 'Write Module 1: The Automation Landscape', status: 'done', priority: 'high' },
+    { project: 'proj-ple-curriculum', title: 'Write Module 2: Economic Foundations', status: 'in_progress', priority: 'high' },
+    { project: 'proj-ple-curriculum', title: 'Write Module 3: Policy Toolkit', status: 'todo', priority: 'medium' },
+    { project: 'proj-ple-curriculum', title: 'Create discussion guides', status: 'todo', priority: 'low' },
+    
+    // AI Governance tasks
+    { project: 'proj-aligned-ai-governance', title: 'Map existing AI governance frameworks', status: 'done', priority: 'high' },
+    { project: 'proj-aligned-ai-governance', title: 'Identify gaps for economic applications', status: 'in_progress', priority: 'high' },
+    { project: 'proj-aligned-ai-governance', title: 'Draft Heuristic Imperative audit criteria', status: 'todo', priority: 'high' },
+    { project: 'proj-aligned-ai-governance', title: 'Develop implementation guidelines', status: 'todo', priority: 'medium' }
+  ];
+
+  for (const task of tasks) {
+    const projectId = projectMap[task.project];
+    if (projectId) {
+      await sql`
+        INSERT INTO tasks (project_id, title, status, priority)
+        VALUES (${projectId}, ${task.title}, ${task.status}, ${task.priority})
+      `;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MILESTONES - Key deliverables
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const milestones = [
+    { project: 'proj-platform-v2', title: 'MVP: Projects & Tasks Live', target_date: '2026-02-20', status: 'completed' },
+    { project: 'proj-platform-v2', title: 'Documents & Content Management', target_date: '2026-02-28', status: 'pending' },
+    { project: 'proj-platform-v2', title: 'Full Working Groups Implementation', target_date: '2026-03-15', status: 'pending' },
+    
+    { project: 'proj-automation-impact-framework', title: 'Methodology Paper Published', target_date: '2026-04-15', status: 'pending' },
+    { project: 'proj-automation-impact-framework', title: 'Toolkit Beta Release', target_date: '2026-05-30', status: 'pending' },
+    { project: 'proj-automation-impact-framework', title: 'Pilot Complete with Partners', target_date: '2026-06-30', status: 'pending' },
+    
+    { project: 'proj-ple-curriculum', title: 'All Modules Written', target_date: '2026-05-31', status: 'pending' },
+    { project: 'proj-ple-curriculum', title: 'Video Companions Complete', target_date: '2026-07-31', status: 'pending' },
+    { project: 'proj-ple-curriculum', title: 'Public Release', target_date: '2026-08-31', status: 'pending' },
+    
+    { project: 'proj-ubi-pilot-design', title: 'Methodology Finalized', target_date: '2026-06-30', status: 'pending' },
+    { project: 'proj-ubi-pilot-design', title: 'Partner MOUs Signed', target_date: '2026-09-30', status: 'pending' },
+    { project: 'proj-ubi-pilot-design', title: 'Funding Secured', target_date: '2026-12-31', status: 'pending' }
+  ];
+
+  for (const milestone of milestones) {
+    const projectId = projectMap[milestone.project];
+    if (projectId) {
+      await sql`
+        INSERT INTO milestones (project_id, title, target_date, status)
+        VALUES (${projectId}, ${milestone.title}, ${milestone.target_date}, ${milestone.status})
+      `;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DOCUMENTS - Initial content
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const documents = [
+    {
+      slug: 'doc-getting-started',
+      title: 'Getting Started with Post-Labor Economics',
+      document_type: 'guide',
+      status: 'published',
+      visibility: 'public',
+      content: `# Getting Started with Post-Labor Economics
+
+Welcome to the Post-Labor Economics platform! This guide will help you understand what we're building and how you can contribute.
+
+## What is Post-Labor Economics?
+
+Post-Labor Economics (PLE) is a framework for thinking about economic systems in a world where automation and AI increasingly perform work traditionally done by humans. Rather than seeing this as a crisis to be feared, we approach it as an opportunity to reimagine prosperity.
+
+## Our Core Principles
+
+1. **Liberation over Displacement**: We focus on freeing humans from drudgery, not simply managing job loss
+2. **Prosperity Beyond Work**: Identity and meaning need not be tied to labor
+3. **Structured Optimism**: Evidence-based hope, rigorous analysis, practical action
+
+## The Heuristic Imperatives
+
+Our ethical framework is grounded in three Heuristic Imperatives:
+
+- **Reduce Suffering**: Minimize harm in all its forms
+- **Increase Prosperity**: Expand flourishing for all beings
+- **Increase Understanding**: Grow knowledge and wisdom
+
+## How to Contribute
+
+1. **Join discussions**: Share your perspectives and learn from others
+2. **Submit proposals**: Have an idea? Put it forward for community deliberation
+3. **Join a working group**: Get hands-on with ongoing projects
+4. **Create content**: Help build our knowledge base
+
+## Next Steps
+
+- Explore the [Architecture](/architecture.html) to understand our strategic framework
+- Read about [THE PRIME](/prime.html) alignment framework
+- Browse active [Projects](/projects.html) and find one that interests you
+
+Welcome to the movement for prosperity beyond work!`
+    },
+    {
+      slug: 'doc-contributing-guide',
+      title: 'Contributing to PLE Projects',
+      document_type: 'guide',
+      status: 'published',
+      visibility: 'public',
+      content: `# Contributing to PLE Projects
+
+This guide explains how to effectively contribute to projects on the Post-Labor Economics platform.
+
+## Finding a Project
+
+Browse the [Projects](/projects.html) page to see active initiatives. Each project shows:
+- Current status (planning, active, completed)
+- Progress on tasks
+- Working group ownership
+- How to join
+
+## Joining a Project
+
+1. Navigate to the project page
+2. Click "Join Project" to become a contributor
+3. Review the project objectives and current tasks
+4. Introduce yourself in the project's discussion thread
+
+## Working on Tasks
+
+Tasks are the atomic units of work within projects. Each task has:
+- A clear title and description
+- Priority level (urgent, high, medium, low)
+- Status (todo, in progress, review, done)
+- Optional assignee
+
+### Best Practices
+
+- Only assign yourself to tasks you can commit to completing
+- Update task status as you progress
+- If blocked, communicate early
+- Document your work for others
+
+## Creating New Tasks
+
+If you identify work that needs doing:
+1. Check it doesn't duplicate an existing task
+2. Create a clear, actionable title
+3. Add description if context is needed
+4. Set appropriate priority
+
+## Working Groups
+
+Working groups are the teams behind projects. Each group has:
+- A specific mission and focus area
+- Regular coordination practices
+- Membership with different roles (lead, contributor, observer)
+
+Join a working group to be part of ongoing coordination, not just individual projects.
+
+## Questions?
+
+Post in [Discussions](/discussions.html) or reach out to project leads directly.`
+    },
+    {
+      slug: 'doc-heuristic-imperatives-primer',
+      title: 'The Heuristic Imperatives: A Primer',
+      document_type: 'article',
+      status: 'published',
+      visibility: 'public',
+      content: `# The Heuristic Imperatives: A Primer
+
+The Heuristic Imperatives form the ethical foundation of our work in post-labor economics. This primer introduces the three imperatives and their application.
+
+## Origin
+
+The Heuristic Imperatives were developed by David Shapiro as part of the GATO (Global Alignment Taxonomy Omnibus) Framework. They represent an attempt to codify values that could guide both human and artificial intelligence toward beneficial outcomes.
+
+## The Three Imperatives
+
+### 1. Reduce Suffering in the Universe
+
+This imperative calls us to minimize harm across all scales—from individual pain to systemic oppression. It includes:
+- Physical suffering (hunger, disease, violence)
+- Psychological suffering (anxiety, despair, loneliness)
+- Structural suffering (poverty, discrimination, exclusion)
+
+In post-labor economics, this means designing transitions that protect those displaced by automation, ensuring basic needs are met, and creating psychological support systems for identity transition.
+
+### 2. Increase Prosperity in the Universe
+
+Prosperity is more than material wealth—it encompasses flourishing in all dimensions:
+- Material abundance (basic needs, security, opportunity)
+- Social connection (community, belonging, love)
+- Self-actualization (purpose, growth, creativity)
+
+In our context, this means designing economic systems that distribute the gains from automation broadly, create new forms of meaningful activity, and expand what's possible for human lives.
+
+### 3. Increase Understanding in the Universe
+
+Understanding includes both knowledge and wisdom:
+- Scientific knowledge (how things work)
+- Practical wisdom (how to live well)
+- Collective intelligence (how to coordinate)
+
+For post-labor economics, this means conducting rigorous research, learning from pilots and experiments, sharing knowledge openly, and building collective capacity for navigating uncertainty.
+
+## Applying the Imperatives
+
+When facing a decision or designing a policy, ask:
+1. Does this reduce suffering? For whom?
+2. Does this increase prosperity? How broadly?
+3. Does this increase understanding? What do we learn?
+
+The imperatives often align, but can also tension. Navigation requires wisdom and ongoing dialogue.
+
+## Further Reading
+
+- Explore [THE PRIME](/prime.html) for the complete philosophical framework
+- See the [GATO Framework](/gato.html) for implementation guidance`
+    }
+  ];
+
+  for (const doc of documents) {
+    await sql`
+      INSERT INTO documents (slug, title, document_type, status, visibility, content)
+      VALUES (${doc.slug}, ${doc.title}, ${doc.document_type}, ${doc.status}, ${doc.visibility}, ${doc.content})
+      ON CONFLICT (slug) DO NOTHING
+    `;
+  }
+
+  return jsonResponse({
+    success: true,
+    seeded: {
+      workingGroups: workingGroups.length,
+      projects: projects.length,
+      tasks: tasks.length,
+      milestones: milestones.length,
+      documents: documents.length
     }
   });
 }

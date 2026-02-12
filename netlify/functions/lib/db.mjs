@@ -147,6 +147,147 @@ async function runMigrations() {
     user_agent TEXT
   )`;
 
+  // Working Groups - teams that own projects
+  await sql`CREATE TABLE IF NOT EXISTS working_groups (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(200) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    mission TEXT,
+    status VARCHAR(50) DEFAULT 'active',
+    visibility VARCHAR(50) DEFAULT 'public',
+    created_by UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    metadata JSONB DEFAULT '{}'
+  )`;
+
+  // Working Group Members
+  await sql`CREATE TABLE IF NOT EXISTS working_group_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    group_id UUID REFERENCES working_groups(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    role VARCHAR(50) DEFAULT 'member',
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(group_id, user_id)
+  )`;
+
+  // Projects - first-class work containers
+  await sql`CREATE TABLE IF NOT EXISTS projects (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(200) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT,
+    objectives TEXT,
+    status VARCHAR(50) DEFAULT 'planning',
+    priority VARCHAR(50) DEFAULT 'medium',
+    visibility VARCHAR(50) DEFAULT 'internal',
+    working_group_id UUID REFERENCES working_groups(id),
+    proposal_id UUID REFERENCES proposals(id),
+    lead_id UUID REFERENCES users(id),
+    start_date DATE,
+    target_date DATE,
+    completed_at TIMESTAMP,
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    metadata JSONB DEFAULT '{}'
+  )`;
+
+  // Project Members
+  await sql`CREATE TABLE IF NOT EXISTS project_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    role VARCHAR(50) DEFAULT 'contributor',
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(project_id, user_id)
+  )`;
+
+  // Tasks - work items within projects
+  await sql`CREATE TABLE IF NOT EXISTS tasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    parent_id UUID REFERENCES tasks(id),
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) DEFAULT 'todo',
+    priority VARCHAR(50) DEFAULT 'medium',
+    assignee_id UUID REFERENCES users(id),
+    reporter_id UUID REFERENCES users(id),
+    due_date DATE,
+    estimated_hours DECIMAL(6,2),
+    actual_hours DECIMAL(6,2),
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP,
+    metadata JSONB DEFAULT '{}'
+  )`;
+
+  // Milestones - project checkpoints
+  await sql`CREATE TABLE IF NOT EXISTS milestones (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    target_date DATE,
+    status VARCHAR(50) DEFAULT 'pending',
+    sort_order INTEGER DEFAULT 0,
+    completed_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`;
+
+  // Documents - content management
+  await sql`CREATE TABLE IF NOT EXISTS documents (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(200) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    content TEXT,
+    document_type VARCHAR(50) DEFAULT 'page',
+    status VARCHAR(50) DEFAULT 'draft',
+    visibility VARCHAR(50) DEFAULT 'internal',
+    project_id UUID REFERENCES projects(id),
+    working_group_id UUID REFERENCES working_groups(id),
+    author_id UUID REFERENCES users(id),
+    parent_id UUID REFERENCES documents(id),
+    version INTEGER DEFAULT 1,
+    published_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    metadata JSONB DEFAULT '{}'
+  )`;
+
+  // Document Versions - track changes
+  await sql`CREATE TABLE IF NOT EXISTS document_versions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    document_id UUID REFERENCES documents(id) ON DELETE CASCADE,
+    content TEXT,
+    version INTEGER NOT NULL,
+    change_summary VARCHAR(500),
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`;
+
+  // Tags - flexible categorization
+  await sql`CREATE TABLE IF NOT EXISTS tags (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    color VARCHAR(20) DEFAULT '#6B7280',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`;
+
+  // Entity Tags - polymorphic tagging
+  await sql`CREATE TABLE IF NOT EXISTS entity_tags (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tag_id UUID REFERENCES tags(id) ON DELETE CASCADE,
+    entity_type VARCHAR(50) NOT NULL,
+    entity_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(tag_id, entity_type, entity_id)
+  )`;
+
   // Seed architecture data
   await seedArchitecture();
 }

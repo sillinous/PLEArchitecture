@@ -342,6 +342,82 @@ if (document.readyState === 'loading') {
   initPage();
 }
 
+// ============================================
+// Simplified exports for new pages
+// ============================================
+
+// Generic API call function
+export async function api(endpoint, options = {}) {
+  return apiRequest(endpoint, options);
+}
+
+// Get current user from memory/storage
+export function getUser() {
+  if (currentUser) return currentUser;
+  
+  // Try to parse from storage if available
+  const stored = localStorage.getItem('ple_user');
+  if (stored) {
+    try {
+      currentUser = JSON.parse(stored);
+      return currentUser;
+    } catch (e) {}
+  }
+  return null;
+}
+
+// Setup auth UI on page load
+export async function setupAuth() {
+  const loginBtn = document.getElementById('login-btn');
+  const registerBtn = document.getElementById('register-btn');
+  const userMenu = document.getElementById('user-menu');
+  const userName = document.getElementById('user-name');
+  const logoutBtn = document.getElementById('logout-btn');
+  
+  // Check for existing session
+  if (authToken) {
+    try {
+      const data = await apiRequest('/auth?action=me');
+      currentUser = data.user;
+      localStorage.setItem('ple_user', JSON.stringify(data.user));
+    } catch (e) {
+      // Token invalid
+      authToken = null;
+      localStorage.removeItem('ple_token');
+      localStorage.removeItem('ple_user');
+    }
+  }
+  
+  if (currentUser) {
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (registerBtn) registerBtn.style.display = 'none';
+    if (userMenu) userMenu.style.display = 'flex';
+    if (userName) userName.textContent = currentUser.displayName || currentUser.email;
+  } else {
+    if (loginBtn) loginBtn.style.display = '';
+    if (registerBtn) registerBtn.style.display = '';
+    if (userMenu) userMenu.style.display = 'none';
+  }
+  
+  // Setup logout handler
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      await auth.logout();
+      localStorage.removeItem('ple_user');
+      window.location.href = 'index.html';
+    });
+  }
+}
+
+// Require auth - redirect if not logged in
+export function requireAuth() {
+  if (!authToken) {
+    window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname);
+    return false;
+  }
+  return true;
+}
+
 // Export everything as default for convenience
 export default {
   auth,
@@ -354,5 +430,9 @@ export default {
   escapeHtml,
   showToast,
   initPage,
-  updateAuthUI
+  updateAuthUI,
+  api,
+  getUser,
+  setupAuth,
+  requireAuth
 };

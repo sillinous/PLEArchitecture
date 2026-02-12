@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="proposals.html">Proposals</a>
+        <a href="discussions.html">Discussions</a>
+        <a href="documents.html">Documents</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm" id="login-btn">Sign In</a>
+        <a href="register.html" class="btn btn-primary btn-sm" id="register-btn">Join</a>
+        <div class="user-menu" id="user-menu" style="display: none;">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container">
+      <div class="page-header">
+        <div class="page-header-content">
+          <h1>Projects</h1>
+          <p class="page-subtitle">Active initiatives building toward prosperity beyond work</p>
+        </div>
+        <div class="page-actions" id="auth-actions" style="display: none;">
+          <a href="project-create.html" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            New Project
+          </a>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label>Status</label>
+          <select id="filter-status" class="form-select">
+            <option value="">All Statuses</option>
+            <option value="planning">Planning</option>
+            <option value="active">Active</option>
+            <option value="on-hold">On Hold</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Priority</label>
+          <select id="filter-priority" class="form-select">
+            <option value="">All Priorities</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+        <div class="filter-group filter-search">
+          <input type="text" id="filter-search" class="form-input" placeholder="Search projects...">
+        </div>
+      </div>
+
+      <!-- Project Stats -->
+      <div class="stats-bar" id="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value" id="stat-total">-</span>
+          <span class="stat-label">Total Projects</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-active">-</span>
+          <span class="stat-label">Active</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-completed">-</span>
+          <span class="stat-label">Completed</span>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projects-grid" style="display: none;"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">📋</div>
+        <h3>No Projects Yet</h3>
+        <p>Be the first to start a project and help build the post-labor future.</p>
+        <a href="project-create.html" class="btn btn-primary">Create First Project</a>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .filter-group label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .filter-search {
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .filter-search .form-input {
+      width: 100%;
+    }
+    
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      border: 1px solid var(--color-border);
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-horizon);
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .project-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+    
+    .project-card:hover {
+      border-color: var(--color-horizon);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .project-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.3;
+    }
+    
+    .project-title a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    .project-title a:hover {
+      color: var(--color-horizon);
+    }
+    
+    .project-badges {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .badge-status {
+      background: var(--color-gray-200);
+      color: var(--color-gray-700);
+    }
+    
+    .badge-status.planning { background: #E0E7FF; color: #3730A3; }
+    .badge-status.active { background: #D1FAE5; color: #065F46; }
+    .badge-status.on-hold { background: #FEF3C7; color: #92400E; }
+    .badge-status.completed { background: #DBEAFE; color: #1E40AF; }
+    
+    .badge-priority.urgent { background: #FEE2E2; color: #991B1B; }
+    .badge-priority.high { background: #FFEDD5; color: #9A3412; }
+    .badge-priority.medium { background: #FEF9C3; color: #854D0E; }
+    .badge-priority.low { background: #F3F4F6; color: #4B5563; }
+    
+    .project-desc {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .project-progress {
+      margin-bottom: 1rem;
+    }
+    
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .progress-label {
+      color: var(--color-text-secondary);
+    }
+    
+    .progress-value {
+      font-weight: 600;
+      color: var(--color-horizon);
+    }
+    
+    .progress-bar {
+      height: 6px;
+      background: var(--color-gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: var(--color-horizon);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .project-lead {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+    
+    .lead-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--color-horizon);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    
+    .project-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .project-stats span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .filter-bar {
+        flex-direction: column;
+      }
+      
+      .filter-group {
+        width: 100%;
+      }
+      
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-bar {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { api, getUser, setupAuth } from './src/scripts/api.js';
+    
+    let allProjects = [];
+    
+    async function loadProjects() {
+      const loading = document.getElementById('loading');
+      const grid = document.getElementById('projects-grid');
+      const empty = document.getElementById('empty-state');
+      
+      try {
+        const data = await api('/api/projects');
+        allProjects = data.projects || [];
+        
+        updateStats(allProjects);
+        renderProjects(allProjects);
+        
+        loading.style.display = 'none';
+        
+        if (allProjects.length === 0) {
+          empty.style.display = 'block';
+        } else {
+          grid.style.display = 'grid';
+        }
+      } catch (err) {
+        loading.innerHTML = '<p class="error">Failed to load projects</p>';
+      }
+    }
+    
+    function updateStats(projects) {
+      document.getElementById('stat-total').textContent = projects.length;
+      document.getElementById('stat-active').textContent = projects.filter(p => p.status === 'active').length;
+      document.getElementById('stat-completed').textContent = projects.filter(p => p.status === 'completed').length;
+    }
+    
+    function renderProjects(projects) {
+      const grid = document.getElementById('projects-grid');
+      const empty = document.getElementById('empty-state');
+      
+      if (projects.length === 0) {
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      grid.style.display = 'grid';
+      
+      grid.innerHTML = projects.map(p => `
+        <div class="project-card">
+          <div class="project-header">
+            <h3 class="project-title">
+              <a href="project-view.html?id=${p.id}">${escapeHtml(p.title)}</a>
+            </h3>
+            <div class="project-badges">
+              <span class="badge badge-status ${p.status}">${p.status}</span>
+              ${p.priority !== 'medium' ? `<span class="badge badge-priority ${p.priority}">${p.priority}</span>` : ''}
+            </div>
+          </div>
+          
+          ${p.description ? `<p class="project-desc">${escapeHtml(p.description)}</p>` : ''}
+          
+          <div class="project-progress">
+            <div class="progress-header">
+              <span class="progress-label">${p.completedTaskCount} of ${p.taskCount} tasks</span>
+              <span class="progress-value">${p.progress}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${p.progress}%"></div>
+            </div>
+          </div>
+          
+          <div class="project-meta">
+            <div class="project-lead">
+              ${p.lead ? `
+                <div class="lead-avatar">${p.lead.name?.charAt(0) || '?'}</div>
+                <span>${escapeHtml(p.lead.name)}</span>
+              ` : '<span class="text-muted">No lead assigned</span>'}
+            </div>
+            <div class="project-stats">
+              <span>👥 ${p.memberCount}</span>
+              <span>✓ ${p.taskCount}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function filterProjects() {
+      const status = document.getElementById('filter-status').value;
+      const priority = document.getElementById('filter-priority').value;
+      const search = document.getElementById('filter-search').value.toLowerCase();
+      
+      let filtered = allProjects;
+      
+      if (status) filtered = filtered.filter(p => p.status === status);
+      if (priority) filtered = filtered.filter(p => p.priority === priority);
+      if (search) filtered = filtered.filter(p => 
+        p.title.toLowerCase().includes(search) || 
+        p.description?.toLowerCase().includes(search)
+      );
+      
+      renderProjects(filtered);
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Setup
+    document.getElementById('filter-status').addEventListener('change', filterProjects);
+    document.getElementById('filter-priority').addEventListener('change', filterProjects);
+    document.getElementById('filter-search').addEventListener('input', filterProjects);
+    
+    setupAuth();
+    
+    const user = getUser();
+    if (user) {
+      document.getElementById('auth-actions').style.display = 'flex';
+    }
+    
+    loadProjects();
+  </script>
+</body>
+</html>
