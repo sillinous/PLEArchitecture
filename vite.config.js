@@ -19,6 +19,7 @@ export default defineConfig({
         discussions: 'discussions.html',
         architecture: 'architecture.html',
         gato: 'gato.html',
+        prime: 'prime.html',
       }
     }
   }
