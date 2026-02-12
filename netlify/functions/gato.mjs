@@ -15,13 +15,13 @@ export default async (req, context) => {
         return await getPRIME(sql);
       }
       if (action === 'seed-community') {
-      return await seedCommunityContent(sql);
-    }
+        return await seedCommunityContent(sql);
+      }
       if (action === 'seed-projects') {
         return await seedProjectsAndGroups(sql);
       }
-    
-    return await getGATOFramework(sql);
+      
+      return await getGATOFramework(sql);
     }
     
     return jsonResponse({ error: 'Method not allowed' }, 405);
