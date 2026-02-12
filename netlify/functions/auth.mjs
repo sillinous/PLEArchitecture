@@ -30,7 +30,12 @@ export default async (req, context) => {
     return jsonResponse({ error: 'Invalid action' }, 400);
   } catch (error) {
     console.error('Auth error:', error);
-    return jsonResponse({ error: 'Internal server error' }, 500);
+    // Include error details in response for debugging
+    return jsonResponse({ 
+      error: 'Internal server error',
+      details: error.message,
+      stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
+    }, 500);
   }
 };
 

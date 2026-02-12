@@ -4,26 +4,27 @@
  */
 
 import { neon } from '@netlify/neon';
-import { getStore } from '@netlify/blobs';
 
 const sql = neon();
 
-// Migration status tracking
+// Migration status tracking (per-instance, runs once per cold start)
 let migrationChecked = false;
 
 /**
  * Ensure database is initialized before any query
- * Uses Netlify Blobs to track migration status across deploys
+ * Runs idempotent migrations on cold start
  */
 export async function ensureDatabase() {
   if (migrationChecked) return;
   
   try {
-    // Check if migrations have run using Blobs
-    const store = getStore('ple-system');
-    const status = await store.get('db-initialized', { type: 'json' }).catch(() => null);
+    // Quick check - if users table exists, we're good
+    const check = await sql`SELECT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_name = 'users'
+    )`;
     
-    if (status?.initialized) {
+    if (check[0]?.exists) {
       migrationChecked = true;
       return;
     }
@@ -32,18 +33,13 @@ export async function ensureDatabase() {
     console.log('🚀 Running database initialization...');
     await runMigrations();
     
-    // Mark as initialized
-    await store.setJSON('db-initialized', { 
-      initialized: true, 
-      timestamp: new Date().toISOString() 
-    });
-    
     migrationChecked = true;
     console.log('✅ Database initialized successfully');
   } catch (error) {
     console.error('Database initialization error:', error);
-    // Don't block on migration errors - tables might already exist
+    // Still mark as checked to avoid repeated attempts on error
     migrationChecked = true;
+    throw error;
   }
 }
 
