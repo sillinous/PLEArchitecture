@@ -26,36 +26,35 @@ export default async (req, context) => {
     return jsonResponse({ error: 'Method not allowed' }, 405);
   } catch (error) {
     console.error('Voting API error:', error);
-    return jsonResponse({ error: 'Internal server error' }, 500);
+    return jsonResponse({ error: 'Internal server error', details: error.message }, 500);
   }
 };
 
 async function getVotes(sql, proposalId, user) {
-  const counts = await sql(`
+  const counts = await sql`
     SELECT 
       COUNT(*) FILTER (WHERE vote_type = 'approve') as approve_count,
       COUNT(*) FILTER (WHERE vote_type = 'reject') as reject_count,
       COUNT(*) FILTER (WHERE vote_type = 'abstain') as abstain_count
-    FROM votes WHERE proposal_id = $1
-  `, [proposalId]);
+    FROM votes WHERE proposal_id = ${proposalId}
+  `;
   
   let userVote = null;
   if (user) {
-    const votes = await sql(
-      'SELECT vote_type, comment FROM votes WHERE proposal_id = $1 AND user_id = $2',
-      [proposalId, user.id]
-    );
+    const votes = await sql`
+      SELECT vote_type, comment FROM votes WHERE proposal_id = ${proposalId} AND user_id = ${user.id}
+    `;
     if (votes.length > 0) {
       userVote = { type: votes[0].vote_type, comment: votes[0].comment };
     }
   }
   
-  const recentVotes = await sql(`
+  const recentVotes = await sql`
     SELECT v.vote_type, v.comment, v.created_at, u.display_name as user_name, u.avatar_url as user_avatar
     FROM votes v JOIN users u ON v.user_id = u.id
-    WHERE v.proposal_id = $1 AND v.comment IS NOT NULL AND v.comment != ''
+    WHERE v.proposal_id = ${proposalId} AND v.comment IS NOT NULL AND v.comment != ''
     ORDER BY v.created_at DESC LIMIT 10
-  `, [proposalId]);
+  `;
   
   return jsonResponse({
     counts: {
@@ -83,15 +82,18 @@ async function castVote(sql, body, user) {
     return jsonResponse({ error: 'Invalid vote type' }, 400);
   }
   
-  const proposals = await sql('SELECT id, status FROM proposals WHERE id = $1', [proposalId]);
+  const proposals = await sql`SELECT id, status FROM proposals WHERE id = ${proposalId}`;
   if (proposals.length === 0) return jsonResponse({ error: 'Proposal not found' }, 404);
   
-  await sql(`
+  const id = uuidv4();
+  const commentVal = comment || null;
+  
+  await sql`
     INSERT INTO votes (id, proposal_id, user_id, vote_type, comment)
-    VALUES ($1, $2, $3, $4, $5)
+    VALUES (${id}, ${proposalId}, ${user.id}, ${voteType}, ${commentVal})
     ON CONFLICT (proposal_id, user_id) 
-    DO UPDATE SET vote_type = $4, comment = $5, created_at = CURRENT_TIMESTAMP
-  `, [uuidv4(), proposalId, user.id, voteType, comment || null]);
+    DO UPDATE SET vote_type = ${voteType}, comment = ${commentVal}, created_at = CURRENT_TIMESTAMP
+  `;
   
   await logActivity(user.id, 'vote_cast', 'proposal', proposalId, { voteType });
   
@@ -101,7 +103,7 @@ async function castVote(sql, body, user) {
 async function removeVote(sql, proposalId, user) {
   if (!proposalId) return jsonResponse({ error: 'Proposal ID required' }, 400);
   
-  await sql('DELETE FROM votes WHERE proposal_id = $1 AND user_id = $2', [proposalId, user.id]);
+  await sql`DELETE FROM votes WHERE proposal_id = ${proposalId} AND user_id = ${user.id}`;
   await logActivity(user.id, 'vote_removed', 'proposal', proposalId);
   
   return jsonResponse({ success: true });

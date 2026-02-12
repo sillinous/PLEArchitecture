@@ -30,11 +30,9 @@ export default async (req, context) => {
     return jsonResponse({ error: 'Invalid action' }, 400);
   } catch (error) {
     console.error('Auth error:', error);
-    // Include error details in response for debugging
     return jsonResponse({ 
       error: 'Internal server error',
-      details: error.message,
-      stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
+      details: error.message
     }, 500);
   }
 };
@@ -48,25 +46,25 @@ async function handleRegister(sql, { email, password, displayName }) {
     return jsonResponse({ error: 'Password must be at least 8 characters' }, 400);
   }
   
-  const existing = await sql('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);
+  const emailLower = email.toLowerCase();
+  const existing = await sql`SELECT id FROM users WHERE email = ${emailLower}`;
   if (existing.length > 0) {
     return jsonResponse({ error: 'Email already registered' }, 409);
   }
   
   const passwordHash = await bcrypt.hash(password, 12);
   const userId = uuidv4();
+  const role = 'member';
   
-  await sql(
-    `INSERT INTO users (id, email, password_hash, display_name, role) VALUES ($1, $2, $3, $4, $5)`,
-    [userId, email.toLowerCase(), passwordHash, displayName, 'member']
-  );
+  await sql`INSERT INTO users (id, email, password_hash, display_name, role) 
+            VALUES (${userId}, ${emailLower}, ${passwordHash}, ${displayName}, ${role})`;
   
   const session = await createSession(sql, userId);
   await logActivity(userId, 'user_registered', 'user', userId);
   
   return jsonResponse({
     success: true,
-    user: { id: userId, email: email.toLowerCase(), displayName, role: 'member' },
+    user: { id: userId, email: emailLower, displayName, role: 'member' },
     token: session.token
   }, 201);
 }
@@ -76,10 +74,11 @@ async function handleLogin(sql, { email, password }) {
     return jsonResponse({ error: 'Email and password are required' }, 400);
   }
   
-  const users = await sql(
-    'SELECT id, email, password_hash, display_name, role, is_active FROM users WHERE email = $1',
-    [email.toLowerCase()]
-  );
+  const emailLower = email.toLowerCase();
+  const users = await sql`
+    SELECT id, email, password_hash, display_name, role, is_active 
+    FROM users WHERE email = ${emailLower}
+  `;
   
   if (users.length === 0) {
     return jsonResponse({ error: 'Invalid email or password' }, 401);
@@ -96,7 +95,7 @@ async function handleLogin(sql, { email, password }) {
     return jsonResponse({ error: 'Invalid email or password' }, 401);
   }
   
-  await sql('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [user.id]);
+  await sql`UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ${user.id}`;
   
   const session = await createSession(sql, user.id);
   await logActivity(user.id, 'user_login', 'user', user.id);
@@ -113,7 +112,7 @@ async function handleLogout(sql, req) {
   if (authHeader?.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
     const tokenHash = await hashToken(token);
-    await sql('DELETE FROM sessions WHERE token_hash = $1', [tokenHash]);
+    await sql`DELETE FROM sessions WHERE token_hash = ${tokenHash}`;
   }
   return jsonResponse({ success: true });
 }
@@ -127,11 +126,11 @@ async function handleGetCurrentUser(sql, req) {
   const token = authHeader.slice(7);
   const tokenHash = await hashToken(token);
   
-  const sessions = await sql(`
+  const sessions = await sql`
     SELECT u.id, u.email, u.display_name, u.role, u.avatar_url, u.bio, u.created_at
     FROM sessions s JOIN users u ON s.user_id = u.id
-    WHERE s.token_hash = $1 AND s.expires_at > CURRENT_TIMESTAMP AND u.is_active = true
-  `, [tokenHash]);
+    WHERE s.token_hash = ${tokenHash} AND s.expires_at > CURRENT_TIMESTAMP AND u.is_active = true
+  `;
   
   if (sessions.length === 0) {
     return jsonResponse({ error: 'Session expired or invalid' }, 401);
@@ -154,12 +153,10 @@ async function handleGetCurrentUser(sql, req) {
 async function createSession(sql, userId) {
   const token = uuidv4() + '-' + uuidv4();
   const tokenHash = await hashToken(token);
-  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
   
-  await sql(
-    `INSERT INTO sessions (user_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
-    [userId, tokenHash, expiresAt.toISOString()]
-  );
+  await sql`INSERT INTO sessions (user_id, token_hash, expires_at) 
+            VALUES (${userId}, ${tokenHash}, ${expiresAt})`;
   
   return { token, expiresAt };
 }

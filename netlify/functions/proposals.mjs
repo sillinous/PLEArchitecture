@@ -28,41 +28,35 @@ export default async (req, context) => {
     return jsonResponse({ error: 'Method not allowed' }, 405);
   } catch (error) {
     console.error('Proposals API error:', error);
-    return jsonResponse({ error: 'Internal server error' }, 500);
+    return jsonResponse({ error: 'Internal server error', details: error.message }, 500);
   }
 };
 
 async function listProposals(sql, params) {
-  const status = params.get('status');
-  const type = params.get('type');
+  const status = params.get('status') || null;
+  const type = params.get('type') || null;
   const limit = Math.min(parseInt(params.get('limit') || '20'), 100);
   const offset = parseInt(params.get('offset') || '0');
   
-  let query = `
+  // Use conditional filtering with COALESCE/NULL checks
+  const proposals = await sql`
     SELECT p.*, u.display_name as author_name, u.avatar_url as author_avatar,
            (SELECT COUNT(*) FROM votes WHERE proposal_id = p.id AND vote_type = 'approve') as approve_count,
            (SELECT COUNT(*) FROM votes WHERE proposal_id = p.id AND vote_type = 'reject') as reject_count,
            (SELECT COUNT(*) FROM discussions WHERE proposal_id = p.id) as comment_count
-    FROM proposals p LEFT JOIN users u ON p.author_id = u.id WHERE 1=1
+    FROM proposals p 
+    LEFT JOIN users u ON p.author_id = u.id 
+    WHERE (${status}::text IS NULL OR p.status = ${status})
+      AND (${type}::text IS NULL OR p.proposal_type = ${type})
+    ORDER BY p.created_at DESC 
+    LIMIT ${limit} OFFSET ${offset}
   `;
-  const queryParams = [];
-  let i = 1;
   
-  if (status) { query += ` AND p.status = $${i++}`; queryParams.push(status); }
-  if (type) { query += ` AND p.proposal_type = $${i++}`; queryParams.push(type); }
-  
-  query += ` ORDER BY p.created_at DESC LIMIT $${i++} OFFSET $${i++}`;
-  queryParams.push(limit, offset);
-  
-  const proposals = await sql(query, queryParams);
-  
-  let countQuery = 'SELECT COUNT(*) as total FROM proposals WHERE 1=1';
-  const countParams = [];
-  let j = 1;
-  if (status) { countQuery += ` AND status = $${j++}`; countParams.push(status); }
-  if (type) { countQuery += ` AND proposal_type = $${j++}`; countParams.push(type); }
-  
-  const countResult = await sql(countQuery, countParams);
+  const countResult = await sql`
+    SELECT COUNT(*) as total FROM proposals 
+    WHERE (${status}::text IS NULL OR status = ${status})
+      AND (${type}::text IS NULL OR proposal_type = ${type})
+  `;
   
   return jsonResponse({
     proposals: proposals.map(formatProposal),
@@ -72,7 +66,7 @@ async function listProposals(sql, params) {
 }
 
 async function getProposal(sql, id) {
-  const proposals = await sql(`
+  const proposals = await sql`
     SELECT p.*, u.display_name as author_name, u.avatar_url as author_avatar,
            ae.title as element_title, ae.code as element_code,
            (SELECT COUNT(*) FROM votes WHERE proposal_id = p.id AND vote_type = 'approve') as approve_count,
@@ -80,16 +74,16 @@ async function getProposal(sql, id) {
     FROM proposals p
     LEFT JOIN users u ON p.author_id = u.id
     LEFT JOIN architecture_elements ae ON p.element_id = ae.id
-    WHERE p.id = $1
-  `, [id]);
+    WHERE p.id = ${id}
+  `;
   
   if (proposals.length === 0) return jsonResponse({ error: 'Proposal not found' }, 404);
   
-  const comments = await sql(`
+  const comments = await sql`
     SELECT d.*, u.display_name as author_name, u.avatar_url as author_avatar
     FROM discussions d LEFT JOIN users u ON d.author_id = u.id
-    WHERE d.proposal_id = $1 ORDER BY d.created_at ASC
-  `, [id]);
+    WHERE d.proposal_id = ${id} ORDER BY d.created_at ASC
+  `;
   
   return jsonResponse({
     proposal: formatProposal(proposals[0]),
@@ -109,10 +103,13 @@ async function createProposal(sql, body, user) {
   }
   
   const id = uuidv4();
-  await sql(`
+  const status = 'draft';
+  const elemId = elementId || null;
+  
+  await sql`
     INSERT INTO proposals (id, title, content, proposal_type, author_id, element_id, status)
-    VALUES ($1, $2, $3, $4, $5, $6, 'draft')
-  `, [id, title, content, proposalType, user.id, elementId || null]);
+    VALUES (${id}, ${title}, ${content}, ${proposalType}, ${user.id}, ${elemId}, ${status})
+  `;
   
   await logActivity(user.id, 'proposal_created', 'proposal', id, { title, proposalType });
   
@@ -123,24 +120,24 @@ async function updateProposal(sql, body, user) {
   const { id, title, content, status } = body;
   if (!id) return jsonResponse({ error: 'Proposal ID is required' }, 400);
   
-  const proposals = await sql('SELECT author_id FROM proposals WHERE id = $1', [id]);
+  const proposals = await sql`SELECT author_id FROM proposals WHERE id = ${id}`;
   if (proposals.length === 0) return jsonResponse({ error: 'Proposal not found' }, 404);
   if (proposals[0].author_id !== user.id && user.role !== 'admin') {
     return jsonResponse({ error: 'Not authorized' }, 403);
   }
   
-  const updates = [], params = [];
-  let i = 1;
-  if (title) { updates.push(`title = $${i++}`); params.push(title); }
-  if (content) { updates.push(`content = $${i++}`); params.push(content); }
-  if (status && user.role === 'admin') { updates.push(`status = $${i++}`); params.push(status); }
+  // Update with COALESCE to keep existing values if not provided
+  const newStatus = (status && user.role === 'admin') ? status : null;
   
-  if (updates.length === 0) return jsonResponse({ error: 'No fields to update' }, 400);
+  await sql`
+    UPDATE proposals SET 
+      title = COALESCE(${title || null}, title),
+      content = COALESCE(${content || null}, content),
+      status = COALESCE(${newStatus}, status),
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = ${id}
+  `;
   
-  updates.push('updated_at = CURRENT_TIMESTAMP');
-  params.push(id);
-  
-  await sql(`UPDATE proposals SET ${updates.join(', ')} WHERE id = $${i}`, params);
   await logActivity(user.id, 'proposal_updated', 'proposal', id);
   
   return jsonResponse({ success: true });
@@ -149,13 +146,13 @@ async function updateProposal(sql, body, user) {
 async function deleteProposal(sql, id, user) {
   if (!id) return jsonResponse({ error: 'Proposal ID is required' }, 400);
   
-  const proposals = await sql('SELECT author_id FROM proposals WHERE id = $1', [id]);
+  const proposals = await sql`SELECT author_id FROM proposals WHERE id = ${id}`;
   if (proposals.length === 0) return jsonResponse({ error: 'Proposal not found' }, 404);
   if (proposals[0].author_id !== user.id && user.role !== 'admin') {
     return jsonResponse({ error: 'Not authorized' }, 403);
   }
   
-  await sql('DELETE FROM proposals WHERE id = $1', [id]);
+  await sql`DELETE FROM proposals WHERE id = ${id}`;
   await logActivity(user.id, 'proposal_deleted', 'proposal', id);
   
   return jsonResponse({ success: true });

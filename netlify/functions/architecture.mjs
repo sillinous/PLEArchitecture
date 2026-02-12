@@ -17,36 +17,27 @@ export default async (req, context) => {
     return await listElements(sql, url.searchParams);
   } catch (error) {
     console.error('Architecture API error:', error);
-    return jsonResponse({ error: 'Internal server error' }, 500);
+    return jsonResponse({ error: 'Internal server error', details: error.message }, 500);
   }
 };
 
 async function listElements(sql, params) {
-  const type = params.get('type');
+  const type = params.get('type') || null;
   const status = params.get('status') || 'active';
-  const search = params.get('search');
+  const search = params.get('search') || null;
+  const searchPattern = search ? `%${search}%` : null;
   
-  let query = `
+  const elements = await sql`
     SELECT ae.*, u.display_name as created_by_name,
            (SELECT COUNT(*) FROM element_relationships WHERE source_id = ae.id) as relationship_count,
            (SELECT COUNT(*) FROM proposals WHERE element_id = ae.id) as proposal_count
     FROM architecture_elements ae
     LEFT JOIN users u ON ae.created_by = u.id
-    WHERE 1=1
+    WHERE (${type}::text IS NULL OR ae.element_type = ${type})
+      AND ae.status = ${status}
+      AND (${searchPattern}::text IS NULL OR ae.title ILIKE ${searchPattern} OR ae.description ILIKE ${searchPattern} OR ae.code ILIKE ${searchPattern})
+    ORDER BY ae.element_type, ae.code
   `;
-  const params_ = [];
-  let i = 1;
-  
-  if (type) { query += ` AND ae.element_type = $${i++}`; params_.push(type); }
-  if (status) { query += ` AND ae.status = $${i++}`; params_.push(status); }
-  if (search) {
-    query += ` AND (ae.title ILIKE $${i} OR ae.description ILIKE $${i} OR ae.code ILIKE $${i})`;
-    params_.push(`%${search}%`);
-  }
-  
-  query += ` ORDER BY ae.element_type, ae.code`;
-  
-  const elements = await sql(query, params_);
   
   const grouped = { goals: [], strategies: [], capabilities: [], principles: [] };
   elements.forEach(el => {
@@ -61,30 +52,30 @@ async function listElements(sql, params) {
 }
 
 async function getElement(sql, id) {
-  const elements = await sql(`
+  const elements = await sql`
     SELECT ae.*, u.display_name as created_by_name
     FROM architecture_elements ae LEFT JOIN users u ON ae.created_by = u.id
-    WHERE ae.id = $1
-  `, [id]);
+    WHERE ae.id = ${id}
+  `;
   
   if (elements.length === 0) return jsonResponse({ error: 'Element not found' }, 404);
   
-  const relationships = await sql(`
+  const relationships = await sql`
     SELECT er.*, ae.title as target_title, ae.code as target_code, ae.element_type as target_type
     FROM element_relationships er
     JOIN architecture_elements ae ON er.target_id = ae.id
-    WHERE er.source_id = $1
+    WHERE er.source_id = ${id}
     UNION
     SELECT er.*, ae.title as target_title, ae.code as target_code, ae.element_type as target_type
     FROM element_relationships er
     JOIN architecture_elements ae ON er.source_id = ae.id
-    WHERE er.target_id = $1
-  `, [id]);
+    WHERE er.target_id = ${id}
+  `;
   
-  const proposals = await sql(`
+  const proposals = await sql`
     SELECT id, title, status, proposal_type, created_at
-    FROM proposals WHERE element_id = $1 ORDER BY created_at DESC LIMIT 10
-  `, [id]);
+    FROM proposals WHERE element_id = ${id} ORDER BY created_at DESC LIMIT 10
+  `;
   
   return jsonResponse({
     element: formatElement(elements[0]),
@@ -99,7 +90,8 @@ async function getElement(sql, id) {
 }
 
 async function getElementByCode(sql, code) {
-  const elements = await sql(`SELECT id FROM architecture_elements WHERE code = $1`, [code.toUpperCase()]);
+  const codeUpper = code.toUpperCase();
+  const elements = await sql`SELECT id FROM architecture_elements WHERE code = ${codeUpper}`;
   if (elements.length === 0) return jsonResponse({ error: 'Element not found' }, 404);
   return getElement(sql, elements[0].id);
 }

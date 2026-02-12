@@ -12,24 +12,17 @@ export default async (req, context) => {
     
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 100);
     const offset = parseInt(url.searchParams.get('offset') || '0');
-    const userId = url.searchParams.get('userId');
-    const entityType = url.searchParams.get('entityType');
+    const userId = url.searchParams.get('userId') || null;
+    const entityType = url.searchParams.get('entityType') || null;
     
-    let query = `
+    const activities = await sql`
       SELECT a.*, u.display_name as user_name, u.avatar_url as user_avatar
       FROM activity_log a LEFT JOIN users u ON a.user_id = u.id
-      WHERE 1=1
+      WHERE (${userId}::uuid IS NULL OR a.user_id = ${userId}::uuid)
+        AND (${entityType}::text IS NULL OR a.entity_type = ${entityType})
+      ORDER BY a.created_at DESC 
+      LIMIT ${limit} OFFSET ${offset}
     `;
-    const params = [];
-    let i = 1;
-    
-    if (userId) { query += ` AND a.user_id = $${i++}`; params.push(userId); }
-    if (entityType) { query += ` AND a.entity_type = $${i++}`; params.push(entityType); }
-    
-    query += ` ORDER BY a.created_at DESC LIMIT $${i++} OFFSET $${i++}`;
-    params.push(limit, offset);
-    
-    const activities = await sql(query, params);
     
     return jsonResponse({
       activities: activities.map(a => ({
@@ -46,7 +39,7 @@ export default async (req, context) => {
     });
   } catch (error) {
     console.error('Activity API error:', error);
-    return jsonResponse({ error: 'Internal server error' }, 500);
+    return jsonResponse({ error: 'Internal server error', details: error.message }, 500);
   }
 };
 
