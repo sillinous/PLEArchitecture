@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
   functions = "netlify/functions"
 
@@ -7,19 +7,6 @@
   command = "npm run dev"
   targetPort = 5173
   autoLaunch = false
-
-# Redirects for SPA-style navigation
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-# Environment variables (set in Netlify UI for production)
-[context.production.environment]
-  NODE_ENV = "production"
-
-[context.deploy-preview.environment]
-  NODE_ENV = "preview"
 
 # Headers for security
 [[headers]]
@@ -33,3 +20,10 @@
 [functions]
   node_bundler = "esbuild"
   included_files = ["netlify/functions/**"]
+
+# Environment variables
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "preview"

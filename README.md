@@ -2,160 +2,121 @@
 
 **Prosperity Beyond Work** — Building frameworks for a world where human dignity and economic security exist independent of labor markets.
 
-## 🚀 Quick Start
+## 🚀 Zero-Config Deployment
 
-### Prerequisites
-- Node.js 18+
-- Netlify CLI (`npm install -g netlify-cli`)
-- A Netlify account
+This platform is designed to deploy automatically with no manual configuration required.
 
-### Local Development
+### Option 1: Deploy via Netlify UI (Easiest)
 
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
+1. Push this code to a GitHub repository
+2. Go to [app.netlify.com](https://app.netlify.com)
+3. Click **"Add new site"** → **"Import an existing project"**
+4. Connect your GitHub repo
+5. Click **"Deploy"**
 
-2. **Login to Netlify**
-   ```bash
-   netlify login
-   ```
+That's it! Netlify will:
+- ✅ Install dependencies
+- ✅ Build the frontend
+- ✅ Deploy serverless functions
+- ✅ Auto-provision PostgreSQL database
+- ✅ Run database migrations on first API call
 
-3. **Link or create a site**
-   ```bash
-   netlify init
-   ```
+### Option 2: Deploy via CLI
 
-4. **Run database migrations**
-   ```bash
-   npm run db:migrate
-   ```
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
 
-5. **Start development server**
-   ```bash
-   netlify dev
-   ```
+# Login to Netlify
+netlify login
 
-   The app will be available at `http://localhost:8888`
+# Deploy (creates new site automatically)
+netlify deploy --prod
+```
+
+### Option 3: Drag & Drop
+
+1. Run `npm install && npm run build` locally
+2. Go to [app.netlify.com/drop](https://app.netlify.com/drop)
+3. Drag the `dist` folder to deploy
+
+> **Note:** Drag & drop only deploys static files. For full functionality with database, use Options 1 or 2.
+
+## ✨ Features
+
+- **User Authentication** - Register, login, secure sessions
+- **Architecture Framework** - Goals, strategies, capabilities, principles
+- **Proposal System** - Create, vote, discuss governance proposals
+- **Voting** - Approve, reject, or abstain on proposals
+- **Discussions** - Threaded comments and conversations
+- **Activity Feed** - Track all platform activity
+
+## 🗃️ Database
+
+The database is automatically provisioned and initialized:
+
+- **Netlify DB** (PostgreSQL via Neon) - auto-provisioned
+- **Migrations** - run automatically on first API call
+- **Seed Data** - 33 architecture elements pre-loaded
+
+No database setup required!
 
 ## 📁 Project Structure
 
 ```
 ple-app/
-├── index.html              # Homepage
-├── login.html              # Login page
-├── register.html           # Registration page
-├── dashboard.html          # User dashboard
-├── proposals.html          # Proposals list
-├── proposal-create.html    # Create new proposal
-├── proposal-view.html      # View proposal details
-├── architecture.html       # Architecture explorer
-├── discussions.html        # Community discussions
-├── about.html              # About page
+├── *.html                      # Frontend pages (10 pages)
 ├── netlify/
-│   └── functions/          # Serverless API functions
-│       ├── auth.mjs        # Authentication endpoints
-│       ├── proposals.mjs   # Proposals CRUD
-│       ├── architecture.mjs # Architecture elements
-│       ├── votes.mjs       # Voting system
-│       ├── discussions.mjs # Discussions/comments
-│       └── activity.mjs    # Activity feed
-├── scripts/
-│   └── migrate.js          # Database migration script
+│   └── functions/              # Serverless API
+│       ├── lib/db.mjs          # Database module (auto-migration)
+│       ├── auth.mjs            # Authentication
+│       ├── proposals.mjs       # Proposals CRUD
+│       ├── architecture.mjs    # Architecture elements
+│       ├── votes.mjs           # Voting system
+│       ├── discussions.mjs     # Comments/discussions
+│       └── activity.mjs        # Activity feed
 ├── src/
-│   ├── scripts/
-│   │   └── api.js          # Client-side API module
-│   └── styles/
-│       ├── brand.css       # Brand design system
-│       └── app.css         # Application styles
-├── netlify.toml            # Netlify configuration
-├── vite.config.js          # Vite bundler config
-└── package.json
+│   ├── scripts/api.js          # Frontend API client
+│   └── styles/                 # CSS design system
+├── netlify.toml                # Netlify configuration
+├── package.json
+└── vite.config.js
 ```
 
-## 🔧 Tech Stack
+## 🔧 Local Development
 
-- **Frontend**: Vanilla JS + Vite (static HTML pages)
-- **Backend**: Netlify Functions (serverless)
-- **Database**: Netlify DB (PostgreSQL via Neon)
-- **Styling**: Custom CSS with design tokens
-- **Icons**: Lucide Icons
+```bash
+# Install dependencies
+npm install
 
-## 📡 API Endpoints
+# Start dev server (includes local database emulation)
+netlify dev
+```
 
-All API endpoints are available under `/api/`:
+The app will be available at `http://localhost:8888`
+
+## 🌐 API Endpoints
 
 | Endpoint | Methods | Description |
 |----------|---------|-------------|
-| `/api/auth` | POST, GET | Authentication (login, register, logout, me) |
-| `/api/proposals` | GET, POST, PUT, DELETE | Proposals CRUD |
+| `/api/auth` | POST, GET | Authentication |
+| `/api/proposals` | GET, POST, PUT, DELETE | Proposals |
 | `/api/architecture` | GET | Architecture elements |
-| `/api/votes` | GET, POST, DELETE | Voting on proposals |
-| `/api/discussions` | GET, POST, PUT, DELETE | Discussions/comments |
+| `/api/votes` | GET, POST, DELETE | Voting |
+| `/api/discussions` | GET, POST, PUT, DELETE | Discussions |
 | `/api/activity` | GET | Activity feed |
 
-## 🗃️ Database Schema
+## 🎨 Design System
 
-The platform uses PostgreSQL with the following main tables:
+The platform uses the **Structured Optimism** brand identity:
 
-- `users` - User accounts and profiles
-- `sessions` - Authentication sessions
-- `architecture_elements` - Goals, strategies, capabilities, principles
-- `element_relationships` - Relationships between elements
-- `proposals` - Governance proposals
-- `votes` - Votes on proposals
-- `discussions` - Comments and discussions
-- `content` - Articles, research, media
-- `activity_log` - Platform activity tracking
-
-## 🚢 Deployment
-
-### Deploy to Netlify
-
-1. **Push to GitHub**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin <your-repo-url>
-   git push -u origin main
-   ```
-
-2. **Connect to Netlify**
-   - Go to [Netlify](https://app.netlify.com)
-   - Click "Add new site" → "Import an existing project"
-   - Connect your GitHub repository
-   - Build settings will be auto-detected from `netlify.toml`
-
-3. **Database Setup**
-   - Netlify DB is automatically provisioned on first deploy
-   - Run migrations via the Netlify CLI or add to build command
-
-### Environment Variables
-
-No environment variables are required for basic setup. Netlify DB connection is handled automatically.
-
-Optional variables:
-- `JWT_SECRET` - Custom JWT secret (auto-generated if not set)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- **Primary**: Horizon (#1B4D3E) - Deep forest green
+- **Accent**: Dawn (#F4A261) - Warm amber
+- **Typography**: Fraunces (display) + Inter (body)
 
 ## 📜 License
 
 Open source under the MIT License.
-
-## 🔗 Links
-
-- [Website](https://postlaboreconomics.org)
-- [Discord](https://discord.gg/postlabor)
-- [Newsletter](https://daveshap.substack.com)
-- [GitHub](https://github.com/daveshap)
 
 ---
 
