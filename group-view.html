@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working Group | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="groups.html" class="active">Groups</a>
+        <a href="projects.html">Projects</a>
+        <a href="documents.html">Content</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm" id="login-btn">Sign In</a>
+        <div class="user-menu" id="user-menu" style="display: none;">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container">
+      <!-- Loading -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Group Content -->
+      <div id="group-content" style="display: none;">
+        <div class="group-header-section">
+          <a href="groups.html" class="back-link">← All Groups</a>
+          
+          <div class="group-title-row">
+            <div class="group-icon-large" id="group-icon">👥</div>
+            <div class="group-title-content">
+              <div class="group-title-with-status">
+                <h1 id="group-name"></h1>
+                <span class="group-status" id="group-status"></span>
+              </div>
+              <p class="group-mission" id="group-mission"></p>
+            </div>
+            <div class="group-actions" id="group-actions"></div>
+          </div>
+          
+          <p id="group-description" class="group-description-full"></p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="group-stats-bar">
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+              <span class="stat-value" id="member-count">0</span>
+              <span class="stat-label">Members</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div class="stat-info">
+              <span class="stat-value" id="project-count">0</span>
+              <span class="stat-label">Projects</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📄</div>
+            <div class="stat-info">
+              <span class="stat-value" id="document-count">0</span>
+              <span class="stat-label">Documents</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="group-tabs">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="projects">Projects</button>
+          <button class="tab-btn" data-tab="documents">Documents</button>
+          <button class="tab-btn" data-tab="members">Members</button>
+        </div>
+
+        <!-- Tab Content: Overview -->
+        <div class="tab-content active" id="tab-overview">
+          <div class="overview-grid">
+            <div class="overview-section">
+              <h2>Active Projects</h2>
+              <div id="overview-projects" class="overview-list"></div>
+            </div>
+            <div class="overview-section">
+              <h2>Recent Documents</h2>
+              <div id="overview-documents" class="overview-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content: Projects -->
+        <div class="tab-content" id="tab-projects">
+          <div class="tab-header">
+            <h2>Group Projects</h2>
+            <a href="project-create.html" class="btn btn-primary btn-sm" id="new-project-btn" style="display: none;">+ New Project</a>
+          </div>
+          <div id="projects-list" class="projects-list"></div>
+          <div id="projects-empty" class="empty-state-small" style="display: none;">
+            <p>No projects yet. Start a project to begin tracking work.</p>
+          </div>
+        </div>
+
+        <!-- Tab Content: Documents -->
+        <div class="tab-content" id="tab-documents">
+          <div class="tab-header">
+            <h2>Group Documents</h2>
+            <a href="documents.html" class="btn btn-primary btn-sm" id="new-doc-btn" style="display: none;">+ New Document</a>
+          </div>
+          <div id="documents-list" class="documents-list"></div>
+          <div id="documents-empty" class="empty-state-small" style="display: none;">
+            <p>No documents yet. Create documents to build your knowledge base.</p>
+          </div>
+        </div>
+
+        <!-- Tab Content: Members -->
+        <div class="tab-content" id="tab-members">
+          <div class="tab-header">
+            <h2>Team Members</h2>
+          </div>
+          <div id="members-grid" class="members-grid"></div>
+          
+          <div class="join-section" id="join-section" style="display: none;">
+            <div class="join-card">
+              <h3>Join This Group</h3>
+              <p>Contribute to the group's mission and collaborate with fellow members.</p>
+              <button class="btn btn-primary" id="join-btn">Join Working Group</button>
+            </div>
+          </div>
+          
+          <div class="leave-section" id="leave-section" style="display: none;">
+            <button class="btn btn-ghost btn-sm" id="leave-btn">Leave Group</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .group-header-section {
+      margin-bottom: 2rem;
+    }
+    
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .back-link:hover {
+      color: var(--color-horizon);
+    }
+    
+    .group-title-row {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .group-icon-large {
+      width: 72px;
+      height: 72px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--color-horizon) 0%, var(--color-horizon-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      flex-shrink: 0;
+    }
+    
+    .group-title-content {
+      flex: 1;
+    }
+    
+    .group-title-with-status {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .group-title-with-status h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    
+    .group-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .group-status.active {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    
+    .group-mission {
+      font-style: italic;
+      color: var(--color-text-secondary);
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    
+    .group-description-full {
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      max-width: 800px;
+    }
+    
+    .group-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .group-stats-bar {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      flex: 1;
+    }
+    
+    .stat-icon {
+      font-size: 1.5rem;
+    }
+    
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-horizon);
+      line-height: 1;
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .group-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 2rem;
+    }
+    
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      transition: all 0.2s;
+    }
+    
+    .tab-btn:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .tab-btn.active {
+      color: var(--color-horizon);
+      border-bottom-color: var(--color-horizon);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .tab-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .tab-header h2 {
+      margin: 0;
+    }
+    
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    
+    .overview-section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--color-text-primary);
+    }
+    
+    .overview-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .overview-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .overview-item:hover {
+      border-color: var(--color-horizon);
+      transform: translateX(4px);
+    }
+    
+    .overview-item-title {
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+    
+    .overview-item-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .projects-list, .documents-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+    
+    .project-card, .document-card {
+      padding: 1.25rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      transition: all 0.2s;
+    }
+    
+    .project-card:hover, .document-card:hover {
+      border-color: var(--color-horizon);
+    }
+    
+    .project-card h3, .document-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+    }
+    
+    .project-card h3 a, .document-card h3 a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    .project-card h3 a:hover, .document-card h3 a:hover {
+      color: var(--color-horizon);
+    }
+    
+    .project-meta, .document-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .badge {
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .badge.active { background: #D1FAE5; color: #065F46; }
+    .badge.planning { background: #E0E7FF; color: #3730A3; }
+    .badge.draft { background: #FEF3C7; color: #92400E; }
+    .badge.published { background: #DBEAFE; color: #1E40AF; }
+    
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    
+    .member-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+    }
+    
+    .member-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--color-horizon);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    
+    .member-info h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
+    
+    .member-role {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+      text-transform: capitalize;
+    }
+    
+    .member-role.lead {
+      color: var(--color-horizon);
+      font-weight: 500;
+    }
+    
+    .join-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+    
+    .join-card {
+      max-width: 400px;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--color-horizon-light) 0%, var(--color-bg-secondary) 100%);
+      border: 1px solid var(--color-horizon);
+      border-radius: 1rem;
+      text-align: center;
+    }
+    
+    .join-card h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--color-horizon);
+    }
+    
+    .join-card p {
+      margin: 0 0 1.5rem 0;
+      color: var(--color-text-secondary);
+    }
+    
+    .leave-section {
+      margin-top: 2rem;
+      text-align: right;
+    }
+    
+    .empty-state-small {
+      padding: 2rem;
+      text-align: center;
+      color: var(--color-text-secondary);
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+    }
+    
+    @media (max-width: 768px) {
+      .group-title-row {
+        flex-direction: column;
+      }
+      
+      .group-stats-bar {
+        flex-direction: column;
+      }
+      
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { api, getUser, setupAuth } from './src/scripts/api.js';
+    
+    const user = getUser();
+    const urlParams = new URLSearchParams(window.location.search);
+    const groupId = urlParams.get('id');
+    
+    let groupData = null;
+    let isMember = false;
+    let memberRole = null;
+    
+    async function loadGroup() {
+      if (!groupId) {
+        window.location.href = 'groups.html';
+        return;
+      }
+      
+      const loading = document.getElementById('loading');
+      const content = document.getElementById('group-content');
+      
+      try {
+        const data = await api(`/api/working-groups?id=${groupId}`);
+        groupData = data;
+        isMember = data.isMember;
+        memberRole = data.memberRole;
+        
+        renderGroup(data);
+        
+        loading.style.display = 'none';
+        content.style.display = 'block';
+      } catch (err) {
+        loading.innerHTML = '<p class="error">Failed to load working group</p>';
+      }
+    }
+    
+    function renderGroup(data) {
+      const { group, members, projects, documents } = data;
+      
+      // Header
+      document.getElementById('group-icon').textContent = getGroupIcon(group.name);
+      document.getElementById('group-name').textContent = group.name;
+      document.getElementById('group-status').textContent = group.status;
+      document.getElementById('group-status').className = `group-status ${group.status}`;
+      document.getElementById('group-mission').textContent = group.mission ? `"${group.mission}"` : '';
+      document.getElementById('group-description').textContent = group.description || '';
+      
+      document.title = `${group.name} | Post-Labor Economics`;
+      
+      // Stats
+      document.getElementById('member-count').textContent = members.length;
+      document.getElementById('project-count').textContent = projects.length;
+      document.getElementById('document-count').textContent = documents.length;
+      
+      // Overview
+      renderOverview(projects, documents);
+      
+      // Projects
+      renderProjects(projects);
+      
+      // Documents
+      renderDocuments(documents);
+      
+      // Members
+      renderMembers(members);
+      
+      // Actions based on auth
+      if (user) {
+        document.getElementById('new-project-btn').style.display = 'inline-flex';
+        document.getElementById('new-doc-btn').style.display = 'inline-flex';
+        
+        if (isMember) {
+          if (memberRole !== 'lead') {
+            document.getElementById('leave-section').style.display = 'block';
+          }
+        } else {
+          document.getElementById('join-section').style.display = 'block';
+        }
+      }
+    }
+    
+    function renderOverview(projects, documents) {
+      const projectsList = document.getElementById('overview-projects');
+      const docsList = document.getElementById('overview-documents');
+      
+      if (projects.length === 0) {
+        projectsList.innerHTML = '<p class="empty-text">No active projects</p>';
+      } else {
+        projectsList.innerHTML = projects.slice(0, 5).map(p => `
+          <a href="project-view.html?id=${p.id}" class="overview-item">
+            <span class="overview-item-title">${escapeHtml(p.title)}</span>
+            <span class="overview-item-meta">${p.progress}% complete</span>
+          </a>
+        `).join('');
+      }
+      
+      if (documents.length === 0) {
+        docsList.innerHTML = '<p class="empty-text">No documents yet</p>';
+      } else {
+        docsList.innerHTML = documents.slice(0, 5).map(d => `
+          <a href="#" class="overview-item" onclick="viewDocument('${d.id}'); return false;">
+            <span class="overview-item-title">${escapeHtml(d.title)}</span>
+            <span class="overview-item-meta">${d.type}</span>
+          </a>
+        `).join('');
+      }
+    }
+    
+    function renderProjects(projects) {
+      const list = document.getElementById('projects-list');
+      const empty = document.getElementById('projects-empty');
+      
+      if (projects.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      list.innerHTML = projects.map(p => `
+        <div class="project-card">
+          <h3><a href="project-view.html?id=${p.id}">${escapeHtml(p.title)}</a></h3>
+          <div class="project-meta">
+            <span class="badge ${p.status}">${p.status}</span>
+            <span>${p.taskCount} tasks · ${p.progress}% done</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderDocuments(documents) {
+      const list = document.getElementById('documents-list');
+      const empty = document.getElementById('documents-empty');
+      
+      if (documents.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      list.innerHTML = documents.map(d => `
+        <div class="document-card">
+          <h3><a href="#" onclick="viewDocument('${d.id}'); return false;">${escapeHtml(d.title)}</a></h3>
+          <div class="document-meta">
+            <span class="badge ${d.status}">${d.status}</span>
+            <span>${d.type}</span>
+            <span>by ${d.author || 'Unknown'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderMembers(members) {
+      const grid = document.getElementById('members-grid');
+      
+      grid.innerHTML = members.map(m => `
+        <div class="member-card">
+          <div class="member-avatar">${m.name?.charAt(0) || '?'}</div>
+          <div class="member-info">
+            <h4>${escapeHtml(m.name)}</h4>
+            <span class="member-role ${m.role}">${m.role}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function getGroupIcon(name) {
+      const icons = ['🔬', '📚', '🎯', '💡', '🌍', '⚙️', '📊', '🤝'];
+      const hash = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+      return icons[hash % icons.length];
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    window.viewDocument = async (id) => {
+      // Simple redirect for now - could open modal
+      alert('Document viewing coming soon!');
+    };
+    
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+      });
+    });
+    
+    // Join/Leave handlers
+    document.getElementById('join-btn')?.addEventListener('click', async () => {
+      try {
+        await api(`/api/working-groups?id=${groupId}&action=join`, { method: 'POST' });
+        window.location.reload();
+      } catch (err) {
+        alert('Failed to join group: ' + err.message);
+      }
+    });
+    
+    document.getElementById('leave-btn')?.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to leave this group?')) return;
+      
+      try {
+        await api(`/api/working-groups?id=${groupId}&action=leave`, { method: 'POST' });
+        window.location.reload();
+      } catch (err) {
+        alert('Failed to leave group: ' + err.message);
+      }
+    });
+    
+    // Setup
+    setupAuth();
+    loadGroup();
+  </script>
+</body>
+</html>

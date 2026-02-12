@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Working Groups | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="groups.html" class="active">Groups</a>
+        <a href="projects.html">Projects</a>
+        <a href="documents.html">Content</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm" id="login-btn">Sign In</a>
+        <a href="register.html" class="btn btn-primary btn-sm" id="register-btn">Join</a>
+        <div class="user-menu" id="user-menu" style="display: none;">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container">
+      <div class="page-header">
+        <div class="page-header-content">
+          <h1>Working Groups</h1>
+          <p class="page-subtitle">Self-organizing teams driving the post-labor transition</p>
+        </div>
+        <div class="page-actions" id="auth-actions" style="display: none;">
+          <button class="btn btn-primary" id="new-group-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Create Group
+          </button>
+        </div>
+      </div>
+
+      <!-- How Groups Work -->
+      <div class="info-banner">
+        <div class="info-icon">👥</div>
+        <div class="info-content">
+          <h3>How Working Groups Operate</h3>
+          <p>Working Groups are self-organizing teams that own projects, create content, and drive initiatives. Each group has a clear mission, manages its own membership, and operates with autonomy under PLE's federated governance model.</p>
+        </div>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value" id="stat-total">-</span>
+          <span class="stat-label">Total Groups</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-members">-</span>
+          <span class="stat-label">Total Members</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="stat-projects">-</span>
+          <span class="stat-label">Active Projects</span>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+      </div>
+
+      <!-- Groups Grid -->
+      <div class="groups-grid" id="groups-grid" style="display: none;"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">👥</div>
+        <h3>No Working Groups Yet</h3>
+        <p>Be the first to create a working group and start organizing around shared goals.</p>
+        <button class="btn btn-primary" id="empty-new-btn">Create First Group</button>
+      </div>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div class="modal" id="group-modal" style="display: none;">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Create Working Group</h3>
+          <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <form id="group-form">
+          <div class="form-group">
+            <label class="form-label required">Group Name</label>
+            <input type="text" id="group-name" class="form-input" placeholder="e.g., Policy Research Team" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Mission Statement</label>
+            <textarea id="group-mission" class="form-textarea" rows="3" placeholder="What is this group's purpose?"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="group-description" class="form-textarea" rows="4" placeholder="Describe the group's focus, goals, and how members can contribute..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Visibility</label>
+            <select id="group-visibility" class="form-select">
+              <option value="public">Public - Anyone can see and join</option>
+              <option value="private">Private - Invite only</option>
+            </select>
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Group</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .info-banner {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, var(--color-horizon-light) 0%, var(--color-bg-secondary) 100%);
+      border: 1px solid var(--color-horizon);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .info-icon {
+      font-size: 2.5rem;
+      flex-shrink: 0;
+    }
+    
+    .info-content h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--color-horizon);
+    }
+    
+    .info-content p {
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 1rem 1.5rem;
+      background: var(--color-bg-secondary);
+      border-radius: 0.75rem;
+      border: 1px solid var(--color-border);
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-horizon);
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .group-card {
+      background: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.2s;
+    }
+    
+    .group-card:hover {
+      border-color: var(--color-horizon);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .group-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color-horizon) 0%, var(--color-horizon-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+    }
+    
+    .group-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+    
+    .group-status.active {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+    
+    .group-status.forming {
+      background: #E0E7FF;
+      color: #3730A3;
+    }
+    
+    .group-status.inactive {
+      background: #F3F4F6;
+      color: #4B5563;
+    }
+    
+    .group-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .group-title a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    .group-title a:hover {
+      color: var(--color-horizon);
+    }
+    
+    .group-mission {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      font-style: italic;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    
+    .group-description {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .group-stats {
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.85rem;
+    }
+    
+    .group-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .group-stat strong {
+      color: var(--color-text-primary);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .empty-state p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .info-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .groups-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+
+  <script type="module">
+    import { api, getUser, setupAuth } from './src/scripts/api.js';
+    
+    const user = getUser();
+    let allGroups = [];
+    
+    async function loadGroups() {
+      const loading = document.getElementById('loading');
+      const grid = document.getElementById('groups-grid');
+      const empty = document.getElementById('empty-state');
+      
+      try {
+        const data = await api('/api/working-groups');
+        allGroups = data.groups || [];
+        
+        updateStats(allGroups);
+        
+        loading.style.display = 'none';
+        
+        if (allGroups.length === 0) {
+          empty.style.display = 'block';
+        } else {
+          grid.style.display = 'grid';
+          renderGroups(allGroups);
+        }
+      } catch (err) {
+        loading.innerHTML = '<p class="error">Failed to load working groups</p>';
+      }
+    }
+    
+    function updateStats(groups) {
+      document.getElementById('stat-total').textContent = groups.length;
+      document.getElementById('stat-members').textContent = groups.reduce((sum, g) => sum + (g.memberCount || 0), 0);
+      document.getElementById('stat-projects').textContent = groups.reduce((sum, g) => sum + (g.projectCount || 0), 0);
+    }
+    
+    function renderGroups(groups) {
+      const grid = document.getElementById('groups-grid');
+      
+      grid.innerHTML = groups.map(g => `
+        <div class="group-card">
+          <div class="group-header">
+            <div class="group-icon">${getGroupIcon(g.name)}</div>
+            <span class="group-status ${g.status}">${g.status}</span>
+          </div>
+          
+          <h3 class="group-title">
+            <a href="group-view.html?id=${g.id}">${escapeHtml(g.name)}</a>
+          </h3>
+          
+          ${g.mission ? `<p class="group-mission">"${escapeHtml(g.mission)}"</p>` : ''}
+          ${g.description ? `<p class="group-description">${escapeHtml(g.description)}</p>` : ''}
+          
+          <div class="group-stats">
+            <div class="group-stat">
+              <span>👥</span>
+              <strong>${g.memberCount}</strong> members
+            </div>
+            <div class="group-stat">
+              <span>📋</span>
+              <strong>${g.projectCount}</strong> projects
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function getGroupIcon(name) {
+      const icons = ['🔬', '📚', '🎯', '💡', '🌍', '⚙️', '📊', '🤝'];
+      const hash = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+      return icons[hash % icons.length];
+    }
+    
+    async function createGroup(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('group-name').value;
+      const mission = document.getElementById('group-mission').value;
+      const description = document.getElementById('group-description').value;
+      const visibility = document.getElementById('group-visibility').value;
+      
+      if (!name) {
+        alert('Group name is required');
+        return;
+      }
+      
+      try {
+        const result = await api('/api/working-groups', {
+          method: 'POST',
+          body: JSON.stringify({ name, mission, description, visibility })
+        });
+        
+        if (result.success) {
+          window.location.href = `group-view.html?id=${result.id}`;
+        }
+      } catch (err) {
+        alert('Failed to create group: ' + err.message);
+      }
+    }
+    
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // Modal handlers
+    const modal = document.getElementById('group-modal');
+    
+    document.getElementById('new-group-btn')?.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+    
+    document.getElementById('empty-new-btn')?.addEventListener('click', () => {
+      if (user) {
+        modal.style.display = 'flex';
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+    
+    document.getElementById('modal-close')?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    document.getElementById('cancel-btn')?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    document.querySelector('.modal-backdrop')?.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    document.getElementById('group-form')?.addEventListener('submit', createGroup);
+    
+    // Setup
+    setupAuth();
+    
+    if (user) {
+      document.getElementById('auth-actions').style.display = 'flex';
+    }
+    
+    loadGroups();
+  </script>
+</body>
+</html>
