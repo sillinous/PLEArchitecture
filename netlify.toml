@@ -8,6 +8,32 @@
   targetPort = 5173
   autoLaunch = false
 
+# API Redirects - Route API calls to functions
+[[redirects]]
+  from = "/api/working-groups"
+  to = "/.netlify/functions/working-groups"
+  status = 200
+
+[[redirects]]
+  from = "/api/projects"
+  to = "/.netlify/functions/projects"
+  status = 200
+
+[[redirects]]
+  from = "/api/tasks"
+  to = "/.netlify/functions/tasks"
+  status = 200
+
+[[redirects]]
+  from = "/api/milestones"
+  to = "/.netlify/functions/milestones"
+  status = 200
+
+[[redirects]]
+  from = "/api/documents"
+  to = "/.netlify/functions/documents"
+  status = 200
+
 # Headers for security
 [[headers]]
   for = "/*"
