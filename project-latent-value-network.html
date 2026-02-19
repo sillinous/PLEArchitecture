@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latent Value Network | Post-Labor Economics</title>
+  <link rel="stylesheet" href="./src/styles/brand.css">
+  <link rel="stylesheet" href="./src/styles/app.css">
+  <style>
+    /* ─── LVN Project Page Specific Styles ─── */
+
+    .lvn-hero {
+      background: linear-gradient(135deg, var(--color-horizon) 0%, #2D5016 50%, var(--color-midnight) 100%);
+      color: white;
+      padding: 3.5rem 0 2.5rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lvn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .lvn-hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .lvn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+      transition: color 0.2s;
+    }
+    .lvn-back:hover { color: white; }
+
+    .lvn-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .lvn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .badge-proposed { background: rgba(244,162,97,0.25); color: #F4A261; border: 1px solid rgba(244,162,97,0.4); }
+    .badge-research  { background: rgba(107,154,196,0.2); color: #6B9AC4; border: 1px solid rgba(107,154,196,0.35); }
+    .badge-framework { background: rgba(74,124,111,0.25); color: #7ecfc0; border: 1px solid rgba(74,124,111,0.4); }
+    .badge-github    { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2); }
+
+    .lvn-hero h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      margin: 0 0 0.75rem 0;
+      color: white;
+      line-height: 1.15;
+    }
+
+    .lvn-hero-tagline {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 640px;
+      margin: 0 0 2rem 0;
+      line-height: 1.6;
+    }
+
+    .lvn-stats-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .lvn-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    .lvn-stat-value {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--color-dawn);
+    }
+
+    .lvn-stat-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Layout ─── */
+    .lvn-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .lvn-grid { grid-template-columns: 1fr; }
+      .lvn-sidebar { order: -1; }
+    }
+
+    /* ─── Sections ─── */
+    .lvn-section {
+      background: var(--color-parchment);
+      border: 1px solid var(--color-mist);
+      border-radius: 0.875rem;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .lvn-section h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--color-horizon);
+      margin: 0 0 1.25rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lvn-section h2 .section-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--color-horizon);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .lvn-section p {
+      color: var(--color-midnight-light);
+      line-height: 1.7;
+      margin: 0 0 0.875rem 0;
+    }
+
+    .lvn-section p:last-child { margin-bottom: 0; }
+
+    /* ─── Network Map ─── */
+    .lvn-network {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .lvn-network { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .lvn-node {
+      background: white;
+      border: 1px solid var(--color-mist);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .lvn-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(27,77,62,0.12);
+    }
+
+    .lvn-node-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.375rem;
+    }
+
+    .lvn-node-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-horizon);
+      margin-bottom: 0.25rem;
+    }
+
+    .lvn-node-desc {
+      font-size: 0.7rem;
+      color: var(--color-stone);
+      line-height: 1.4;
+    }
+
+    /* ─── Key Questions / Discussion ─── */
+    .discussion-item {
+      background: white;
+      border: 1px solid var(--color-mist);
+      border-left: 3px solid var(--color-dawn);
+      border-radius: 0 0.625rem 0.625rem 0;
+      padding: 1rem 1.125rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: border-left-color 0.2s, box-shadow 0.2s;
+    }
+
+    .discussion-item:hover {
+      border-left-color: var(--color-horizon);
+      box-shadow: 0 2px 8px rgba(27,77,62,0.08);
+    }
+
+    .discussion-q {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--color-midnight);
+      margin-bottom: 0.3rem;
+    }
+
+    .discussion-hint {
+      font-size: 0.8rem;
+      color: var(--color-stone);
+    }
+
+    /* ─── PLE Architecture Connections ─── */
+    .connection-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .connection-table th {
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      background: rgba(27,77,62,0.06);
+      color: var(--color-horizon);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .connection-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--color-mist);
+      color: var(--color-midnight-light);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .connection-table tr:last-child td { border-bottom: none; }
+
+    .connection-table .layer-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      background: rgba(27,77,62,0.08);
+      color: var(--color-horizon);
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+      margin-bottom: 0.25rem;
+    }
+
+    /* ─── Research Threads ─── */
+    .research-thread {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--color-mist);
+      align-items: flex-start;
+    }
+
+    .research-thread:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .thread-status {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--color-mist);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.2s;
+    }
+
+    .thread-status.open { border-color: var(--color-dawn); }
+
+    .thread-title {
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--color-midnight);
+      margin-bottom: 0.2rem;
+    }
+
+    .thread-desc {
+      font-size: 0.78rem;
+      color: var(--color-stone);
+    }
+
+    /* ─── Sidebar ─── */
+    .sidebar-card {
+      background: var(--color-parchment);
+      border: 1px solid var(--color-mist);
+      border-radius: 0.875rem;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sidebar-card h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-horizon);
+      margin: 0 0 1rem 0;
+    }
+
+    .sidebar-meta-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--color-mist);
+      font-size: 0.82rem;
+      gap: 0.5rem;
+    }
+
+    .sidebar-meta-item:last-child { border-bottom: none; }
+
+    .sidebar-meta-label { color: var(--color-stone); flex-shrink: 0; }
+    .sidebar-meta-value { color: var(--color-midnight); font-weight: 500; text-align: right; }
+
+    .sidebar-cta {
+      background: var(--color-horizon);
+      color: white;
+      border: none;
+      border-radius: 0.625rem;
+      padding: 0.75rem 1rem;
+      width: 100%;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 0.625rem;
+      transition: background 0.2s;
+      text-align: center;
+      display: block;
+      text-decoration: none;
+    }
+
+    .sidebar-cta:hover { background: var(--color-horizon-light); color: white; }
+
+    .sidebar-cta-secondary {
+      background: white;
+      color: var(--color-horizon);
+      border: 1.5px solid var(--color-horizon);
+    }
+
+    .sidebar-cta-secondary:hover { background: rgba(27,77,62,0.04); }
+
+    /* ─── Origin Banner ─── */
+    .origin-banner {
+      background: linear-gradient(135deg, rgba(27,77,62,0.06), rgba(244,162,97,0.06));
+      border: 1px solid rgba(27,77,62,0.15);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      display: flex;
+      gap: 0.875rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .origin-banner-icon { font-size: 1.375rem; flex-shrink: 0; }
+
+    .origin-banner-text { font-size: 0.82rem; color: var(--color-midnight-light); line-height: 1.5; }
+
+    .origin-banner-text strong { color: var(--color-horizon); }
+
+    /* ─── The Core Argument ─── */
+    .core-argument {
+      background: var(--color-midnight);
+      color: rgba(255,255,255,0.85);
+      border-radius: 0.875rem;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .core-argument::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      left: 1.25rem;
+      font-size: 8rem;
+      font-family: 'Fraunces', Georgia, serif;
+      color: rgba(244,162,97,0.15);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .core-argument p {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.85);
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .core-argument-source {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.75rem;
+      position: relative;
+      z-index: 1;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <span class="logo-symbol">L/0</span>
+        <span class="logo-text">Post-Labor Economics</span>
+      </a>
+      <nav class="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="groups.html">Groups</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="documents.html">Content</a>
+        <a href="gato.html">GATO</a>
+        <a href="prime.html">PRIME</a>
+      </nav>
+      <div class="header-actions">
+        <a href="login.html" class="btn btn-secondary btn-sm" id="login-btn">Sign In</a>
+        <div class="user-menu" id="user-menu" style="display: none;">
+          <span id="user-name"></span>
+          <button class="btn btn-ghost btn-sm" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="lvn-hero">
+    <div class="container">
+      <a href="projects.html" class="lvn-back">← All Projects</a>
+
+      <div class="lvn-meta-row">
+        <span class="lvn-badge badge-proposed">● Proposed</span>
+        <span class="lvn-badge badge-research">Research</span>
+        <span class="lvn-badge badge-framework">Framework</span>
+        <a href="https://github.com/sillinous/PLEArchitecture/issues/1" target="_blank" class="lvn-badge badge-github">GitHub #1</a>
+      </div>
+
+      <h1>Latent Value Network</h1>
+      <p class="lvn-hero-tagline">
+        A framework for mapping, understanding, and surfacing the vast substrate of human value 
+        that markets have never learned to measure — and that becomes foundational in a post-labor economy.
+      </p>
+
+      <div class="lvn-stats-row">
+        <div class="lvn-stat">
+          <span class="lvn-stat-value">6</span>
+          <span class="lvn-stat-label">Research Threads</span>
+        </div>
+        <div class="lvn-stat">
+          <span class="lvn-stat-value">5</span>
+          <span class="lvn-stat-label">PLE Connections</span>
+        </div>
+        <div class="lvn-stat">
+          <span class="lvn-stat-value">7</span>
+          <span class="lvn-stat-label">Open Questions</span>
+        </div>
+        <div class="lvn-stat">
+          <span class="lvn-stat-value">L2–L3</span>
+          <span class="lvn-stat-label">Prosperity Layers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-content">
+    <div class="container">
+
+      <!-- Origin Banner -->
+      <div class="origin-banner">
+        <div class="origin-banner-icon">🤝</div>
+        <div class="origin-banner-text">
+          <strong>Research Origin:</strong> This project was developed through research conversations between Travis Sillio and Claude (Anthropic) via claude.ai, and formalized here on GitHub. It represents an emergent PLE framework concept co-developed through extended dialogue on post-labor economic theory.
+          <a href="https://github.com/sillinous/PLEArchitecture/issues/1" target="_blank" style="color: var(--color-horizon); font-weight: 600; margin-left: 0.25rem;">View on GitHub →</a>
+        </div>
+      </div>
+
+      <div class="lvn-grid">
+        <!-- Main Content -->
+        <div class="lvn-main">
+
+          <!-- Core Argument -->
+          <div class="core-argument">
+            <p>
+              GDP counts the nurse who provides care but not the parent who does the same. 
+              It counts the therapist but not the friend. It prices the consultant but not the volunteer 
+              who solves the same problem. The invisible substrate of human activity — care, community, 
+              creativity, knowledge transfer, social cohesion — is not peripheral to the economy. 
+              It is foundational. And in a post-labor world, it becomes everything.
+            </p>
+            <div class="core-argument-source">— Core Argument, Latent Value Network</div>
+          </div>
+
+          <!-- The Problem -->
+          <div class="lvn-section">
+            <h2>
+              <span class="section-icon">⚡</span>
+              The Problem
+            </h2>
+            <p>
+              The formal economy captures only a fraction of the value humans create. The rest — the care, 
+              mentorship, community organizing, ecological stewardship, knowledge sharing, mutual aid, 
+              and creative contribution — remains <strong>latent</strong>: present, real, and essential, 
+              but unmeasured, uncompensated, and therefore vulnerable.
+            </p>
+            <p>
+              This invisibility is not accidental. It reflects systematic market failures (public goods, 
+              externalities), measurement failures (GDP was designed to count transactions, not welfare), 
+              power asymmetries (care work has historically been performed by those with least market 
+              leverage), and cultural blind spots (laborism treats only paid work as real work).
+            </p>
+            <p>
+              In a labor-based economy, this invisibility is painful but survivable — formal wages provide 
+              a separate income stream. In a post-labor economy, when automation eliminates wage income, 
+              the question of how we recognize and sustain latent value becomes existential. <strong>We cannot 
+              build prosperity beyond work if we cannot see the work that has always been beyond markets.</strong>
+            </p>
+          </div>
+
+          <!-- The LVN Map -->
+          <div class="lvn-section">
+            <h2>
+              <span class="section-icon">🗺</span>
+              Six Categories of Latent Value
+            </h2>
+            <p>Preliminary taxonomy of value types currently invisible to formal economic measurement:</p>
+
+            <div class="lvn-network">
+              <div class="lvn-node">
+                <div class="lvn-node-icon">🤱</div>
+                <div class="lvn-node-name">Care Value</div>
+                <div class="lvn-node-desc">Child-rearing, elder care, disability support, emotional labor</div>
+              </div>
+              <div class="lvn-node">
+                <div class="lvn-node-icon">🌐</div>
+                <div class="lvn-node-name">Knowledge Commons</div>
+                <div class="lvn-node-desc">Open source, Wikipedia, open research, informal teaching</div>
+              </div>
+              <div class="lvn-node">
+                <div class="lvn-node-icon">🤝</div>
+                <div class="lvn-node-name">Social Infrastructure</div>
+                <div class="lvn-node-desc">Trust networks, community organizing, conflict mediation</div>
+              </div>
+              <div class="lvn-node">
+                <div class="lvn-node-icon">🌱</div>
+                <div class="lvn-node-name">Ecological Stewardship</div>
+                <div class="lvn-node-desc">Land tending, biodiversity maintenance, climate resilience</div>
+              </div>
+              <div class="lvn-node">
+                <div class="lvn-node-icon">🎨</div>
+                <div class="lvn-node-name">Creative Culture</div>
+                <div class="lvn-node-desc">Art, music, storytelling that builds collective meaning</div>
+              </div>
+              <div class="lvn-node">
+                <div class="lvn-node-icon">⚡</div>
+                <div class="lvn-node-name">Civic Participation</div>
+                <div class="lvn-node-desc">Voting, volunteering, local governance, watchdog activity</div>
+              </div>
+            </div>
+
+            <p style="font-size: 0.82rem; color: var(--color-stone); margin-top: 0.5rem;">
+              ↑ Taxonomy is preliminary. A key research thread is developing a rigorous, defensible classification system.
+            </p>
+          </div>
+
+          <!-- PLE Architecture Connections -->
+          <div class="lvn-section">
+            <h2>
+              <span class="section-icon">🏛</span>
+              PLE Architecture Connections
+            </h2>
+            <p>The LVN framework intersects with multiple layers of the PLE pyramids:</p>
+
+            <table class="connection-table">
+              <thead>
+                <tr>
+                  <th>PLE Framework</th>
+                  <th>LVN Connection</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="layer-tag">Prosperity L2</span><br>
+                    Public Assets (Sovereign Wealth)
+                  </td>
+                  <td>Latent value as a form of social wealth that public institutions should steward and fund. The LVN becomes a ledger for what sovereign wealth should invest in.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="layer-tag">Prosperity L3</span><br>
+                    Collective Private (Co-ops, DAOs)
+                  </td>
+                  <td>Cooperatives and DAOs are early, partial LVN recognition mechanisms — they distribute returns to contributors beyond market transactions. LVN extends this logic.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="layer-tag">Power L3</span><br>
+                    Radical Transparency
+                  </td>
+                  <td>Making latent value flows visible is a precondition for democratic decisions about how to sustain them. Open data on care work, ecological health, and social capital.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="layer-tag">PRIME</span><br>
+                    Policy Evaluation Framework
+                  </td>
+                  <td>LVN provides a new evaluation dimension: does this policy recognize or suppress latent value? A proposal that boosts GDP but destroys care networks may score poorly on LVN.</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="layer-tag">Core Concept</span><br>
+                    Laborism Critique
+                  </td>
+                  <td>Laborism is precisely the ideology that rendered LVN invisible — by treating only paid, formal work as real work. Surfacing latent value is the economic complement to dismantling laborism.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Discussion -->
+          <div class="lvn-section">
+            <h2>
+              <span class="section-icon">💬</span>
+              Discussion: Open Questions
+            </h2>
+            <p>
+              The LVN concept risks being everything and therefore nothing. Rigorous scoping is essential.
+              These are the questions that most need community input:
+            </p>
+
+            <div class="discussion-item">
+              <div class="discussion-q">How should "latent" be defined — unmeasured, uncompensated, or unrecognized?</div>
+              <div class="discussion-hint">These are meaningfully different. Open source work is measurable but often uncompensated. Ecological value may be both — but for different reasons.</div>
+            </div>
+
+            <div class="discussion-item">
+              <div class="discussion-q">What distinguishes LVN from existing frameworks — Putnam's social capital, Folbre's care economy, Ostrom's commons?</div>
+              <div class="discussion-hint">The LVN synthesizes these traditions, but needs to articulate what's new. Otherwise it's just relabeling.</div>
+            </div>
+
+            <div class="discussion-item">
+              <div class="discussion-q">How do we prevent "latent value recognition" from becoming surveillance capitalism?</div>
+              <div class="discussion-hint">Any mechanism to measure and compensate latent value risks requiring surveillance of intimate human activities. What are the hard limits?</div>
+            </div>
+
+            <div class="discussion-item">
+              <div class="discussion-q">Is the relationship between UBI and LVN bidirectional?</div>
+              <div class="discussion-hint">UBI may liberate people to contribute to LVN (no survival pressure). But does LVN contribution become a moral expectation that undermines the unconditional nature of UBI?</div>
+            </div>
+
+            <div class="discussion-item">
+              <div class="discussion-q">Can ecological value be part of LVN, or is it a separate category requiring different mechanisms?</div>
+              <div class="discussion-hint">Ecosystem services are latent in the economic sense, but they're produced by nature, not human networks. Does the "network" framing hold?</div>
+            </div>
+
+            <div class="discussion-item">
+              <div class="discussion-q">What does a "Value Commons" look like as an ownership model for latent value?</div>
+              <div class="discussion-hint">Neither public property (state-owned) nor private (individually-owned). Something like a commons governed by contributors. How would this be structured?</div>
+            </div>
+
+            <div class="discussion-item">
+              <div class="discussion-q">What is the most important thing this framework needs to get right?</div>
+              <div class="discussion-hint">Open synthesis question. All perspectives welcome.</div>
+            </div>
+
+            <div style="margin-top: 1.25rem; padding: 1rem; background: rgba(27,77,62,0.06); border-radius: 0.625rem; font-size: 0.82rem; color: var(--color-stone);">
+              💬 Join the discussion on <a href="https://github.com/sillinous/PLEArchitecture/issues/1" target="_blank" style="color: var(--color-horizon); font-weight: 600;">GitHub Issue #1</a> or in the PLE community.
+            </div>
+          </div>
+
+          <!-- Research Threads -->
+          <div class="lvn-section">
+            <h2>
+              <span class="section-icon">🔬</span>
+              Research Threads
+            </h2>
+
+            <div class="research-thread">
+              <div class="thread-status open"></div>
+              <div>
+                <div class="thread-title">Literature Review: Care Economy, Social Capital, Commons, Gift Economy</div>
+                <div class="thread-desc">Map the existing academic landscape. Key authors: Folbre, Putnam, Ostrom, Mauss, Illich. Identify what LVN adds vs. reframes.</div>
+              </div>
+            </div>
+
+            <div class="research-thread">
+              <div class="thread-status open"></div>
+              <div>
+                <div class="thread-title">Map Existing Partial Solutions</div>
+                <div class="thread-desc">Wikipedia, open source, timebanks, mutual aid networks, community land trusts. What mechanisms worked? What failed and why?</div>
+              </div>
+            </div>
+
+            <div class="research-thread">
+              <div class="thread-status open"></div>
+              <div>
+                <div class="thread-title">Develop Rigorous Latent Value Taxonomy</div>
+                <div class="thread-desc">Define and classify categories. Establish criteria for inclusion. Distinguish from adjacent concepts.</div>
+              </div>
+            </div>
+
+            <div class="research-thread">
+              <div class="thread-status open"></div>
+              <div>
+                <div class="thread-title">Model UBI → LVN Contribution → Collective Prosperity</div>
+                <div class="thread-desc">Build a conceptual (and eventually quantitative) model of how basic income enables latent value contribution, which feeds back into collective wealth.</div>
+              </div>
+            </div>
+
+            <div class="research-thread">
+              <div class="thread-status open"></div>
+              <div>
+                <div class="thread-title">Design Pilot Measurement Methodology</div>
+                <div class="thread-desc">How would a community actually measure its latent value? What indicators? What data sources? Privacy constraints?</div>
+              </div>
+            </div>
+
+            <div class="research-thread">
+              <div class="thread-status open"></div>
+              <div>
+                <div class="thread-title">Integrate with PRIME Framework</div>
+                <div class="thread-desc">Add LVN as an evaluation dimension to the PRIME policy assessment tool. What does it look like to score a proposal on latent value impact?</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="lvn-sidebar">
+
+          <div class="sidebar-card">
+            <h3>Project Details</h3>
+            <div class="sidebar-meta-item">
+              <span class="sidebar-meta-label">Status</span>
+              <span class="sidebar-meta-value" style="color: var(--color-dawn);">Proposed</span>
+            </div>
+            <div class="sidebar-meta-item">
+              <span class="sidebar-meta-label">Priority</span>
+              <span class="sidebar-meta-value">High</span>
+            </div>
+            <div class="sidebar-meta-item">
+              <span class="sidebar-meta-label">Category</span>
+              <span class="sidebar-meta-value">Economic Framework</span>
+            </div>
+            <div class="sidebar-meta-item">
+              <span class="sidebar-meta-label">Phase</span>
+              <span class="sidebar-meta-value">Conceptual Development</span>
+            </div>
+            <div class="sidebar-meta-item">
+              <span class="sidebar-meta-label">Proposed</span>
+              <span class="sidebar-meta-value">Feb 2026</span>
+            </div>
+            <div class="sidebar-meta-item">
+              <span class="sidebar-meta-label">GitHub</span>
+              <span class="sidebar-meta-value"><a href="https://github.com/sillinous/PLEArchitecture/issues/1" target="_blank" style="color: var(--color-horizon);">Issue #1</a></span>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Participate</h3>
+            <a href="https://github.com/sillinous/PLEArchitecture/issues/1" target="_blank" class="sidebar-cta">
+              💬 Join Discussion on GitHub
+            </a>
+            <a href="discussions.html" class="sidebar-cta sidebar-cta-secondary">
+              View All Discussions
+            </a>
+          </div>
+
+          <div class="sidebar-card">
+            <h3>Related Concepts</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <a href="architecture.html" style="font-size: 0.82rem; color: var(--color-horizon); text-decoration: none; padding: 0.375rem 0; border-bottom: 1px solid var(--color-mist); display: block;">
+                → Pyramid of Prosperity
+              </a>
+              <a href="architecture.html" style="font-size: 0.82rem; color: var(--color-horizon); text-decoration: none; padding: 0.375rem 0; border-bottom: 1px solid var(--color-mist); display: block;">
+                → Pyramid of Power
+              </a>
+              <a href="prime.html" style="font-size: 0.82rem; color: var(--color-horizon); text-decoration: none; padding: 0.375rem 0; border-bottom: 1px solid var(--color-mist); display: block;">
+                → PRIME Framework
+              </a>
+              <a href="concepts.html" style="font-size: 0.82rem; color: var(--color-horizon); text-decoration: none; padding: 0.375rem 0; display: block;">
+                → Laborism
+              </a>
+            </div>
+          </div>
+
+          <div class="sidebar-card" style="background: var(--color-midnight); border-color: rgba(255,255,255,0.08);">
+            <h3 style="color: rgba(255,255,255,0.85);">Research Lineage</h3>
+            <p style="font-size: 0.78rem; color: rgba(255,255,255,0.5); line-height: 1.6; margin: 0;">
+              Feminist economics (Folbre), social capital theory (Putnam), commons governance (Ostrom), 
+              gift economy (Mauss), convivial tools (Illich), degrowth economics, solidarity economy movement.
+            </p>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Post-Labor Economics · <a href="https://github.com/sillinous/PLEArchitecture" target="_blank">GitHub</a></p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { setupAuth } from './src/scripts/api.js';
+    setupAuth();
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
