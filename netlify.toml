@@ -10,6 +10,11 @@
 
 # API Redirects - Route API calls to functions
 [[redirects]]
+  from = "/api/concepts"
+  to = "/.netlify/functions/concepts"
+  status = 200
+
+[[redirects]]
   from = "/api/working-groups"
   to = "/.netlify/functions/working-groups"
   status = 200
