@@ -1031,57 +1031,150 @@
 
   <script>
     // ─────────────────────────────────────────────
-    // STATE
+    // EMBEDDED STATIC DATA (full dataset — no API required)
+    // API optionally refreshes this when deployed to Netlify
     // ─────────────────────────────────────────────
 
-    const state = {
-      frameworks: [],
-      concepts: [],
-      tensions: [],
-      evidence: [],
-      sources: [],
-      loaded: false
+    const STATIC = {
+      frameworks: [
+        { id: 'fw-l0',   code: 'FW-L0',   title: 'L/0 Thesis (Labor Zero)',      summary: 'The foundational claim that obligatory human labor is ending — not that humans will stop doing things, but that economic compulsion to work will dissolve as AI and automation perform most productive work.',                                         scope: 'descriptive', completeness: 'complete', layer_count: 0,
+          elements: [] },
+        { id: 'fw-pros', code: 'FW-PROS', title: 'Pyramid of Prosperity',        summary: 'Five-layer architecture for distributing income and wealth to households after labor ceases to be the primary distribution mechanism. Layers are ordered by universality — lower layers cover everyone, higher layers are more differentiated.', scope: 'normative',   completeness: 'complete', layer_count: 5,
+          elements: [
+            { layer_number:1, title:'Layer 1 — Universals',                    element_role:'Income and services guaranteed to all',                   description:'The unconditional floor — UBI, Universal Healthcare, Universal Basic Services. Not means-tested, not conditional on work. The foundation of post-labor prosperity.' },
+            { layer_number:2, title:'Layer 2 — Collectively Owned Public Assets', element_role:'Returns on public ownership distributed to all',        description:'Returns from assets owned in common — sovereign wealth funds, resource royalties, public infrastructure. Real examples: Norway GPF, Alaska Permanent Fund.' },
+            { layer_number:3, title:'Layer 3 — Collectively Owned Private Assets', element_role:'Cooperative and collective ownership income',          description:'Returns distributed to workers and communities rather than external investors. Cooperatives, ESOPs, DAOs, data cooperatives. Mondragon as proof of scale.' },
+            { layer_number:4, title:'Layer 4 — Individual Private Assets',     element_role:'Personal capital returns',                                description:'Returns on personally owned assets — investment portfolios, Baby Bonds, home equity. Present in every economy; democratized through earlier layers.' },
+            { layer_number:5, title:'Layer 5 — Meaningful Work Income',        element_role:'Voluntary, meaning-driven labor income',                  description:'Wages for work chosen for meaning, not compulsion — care professions, creative work, craft, research. Top of the pyramid, not the base.' }
+          ]},
+        { id: 'fw-pow',  code: 'FW-POW',  title: 'Pyramid of Power',            summary: 'Five-layer architecture for maintaining democratic leverage and civic participation after labor power (strikes, collective bargaining) sunsets. Each layer is a different substrate of power.',                                                    scope: 'normative',   completeness: 'complete', layer_count: 5,
+          elements: [
+            { layer_number:1, title:'Layer 1 — Immutable Civic Bedrock',       element_role:'Incorruptible identity and property foundation',           description:'Tamper-proof identity, property records, legal rights. Democratic power begins with certainty about who exists and what is theirs.' },
+            { layer_number:2, title:'Layer 2 — Open Payment Rails',            element_role:'Universal financial access and interoperability',          description:'Universal, interoperable, affordable financial infrastructure. India UPI, Brazil Pix as real examples. When anyone can transact with anyone, participation becomes a right.' },
+            { layer_number:3, title:'Layer 3 — Radical Transparency',          element_role:'Visibility into how power is actually exercised',          description:'Open procurement, auditable algorithms, transparent budgets, accessible data. Citizens cannot govern what they cannot see.' },
+            { layer_number:4, title:'Layer 4 — Direct Democracy',              element_role:'Direct citizen participation in consequential decisions',   description:'Participatory budgeting, liquid democracy, referenda, DAOs. Porto Alegre (1989) as proof of concept at city scale.' },
+            { layer_number:5, title:'Layer 5 — Meta-Governance',               element_role:'Governance of governance systems themselves',              description:'The rules for changing the rules — constitutional design for the post-labor era. Who governs the AI systems? Who can modify the payment rails?' }
+          ]},
+        { id: 'fw-gato', code: 'FW-GATO', title: 'GATO Framework',              summary: 'Global Automated Trade Organization — proposed international governance architecture to manage AI and automation at planetary scale, analogous to WTO for trade but designed for the post-labor era.',                                               scope: 'analytical',  completeness: 'draft',    layer_count: 0,
+          elements: [] },
+        { id: 'fw-prime',code: 'FW-PRIME',title: 'PRIME Framework',             summary: 'A rubric for evaluating post-labor policy proposals across five dimensions: Practicality, Rights, Implementation, Monitoring, and Equity. Provides structured assessment beyond single-axis analysis.',                                               scope: 'evaluative',  completeness: 'complete', layer_count: 5,
+          elements: [
+            { layer_number:1, title:'P — Practicality',  element_role:'Feasibility and real-world implementation assessment',   description:'Can this actually be implemented? Accounts for political feasibility, administrative capacity, behavioral economics, and path dependencies.' },
+            { layer_number:2, title:'R — Rights',        element_role:'Rights impacts and human dignity assessment',            description:'Does this proposal respect and expand fundamental rights? Does it create new rights or responsibilities? Who is left out?' },
+            { layer_number:3, title:'I — Implementation',element_role:'Implementation path and institutional requirements',    description:'What institutions, processes, and capabilities are required? What is the transition path? What fails first?' },
+            { layer_number:4, title:'M — Monitoring',    element_role:'Measurement, evaluation, and feedback loop design',     description:'How will we know if this works? What are the leading indicators, failure modes? What data must be collected?' },
+            { layer_number:5, title:'E — Equity',        element_role:'Distributional impact and justice assessment',          description:'Who benefits, and by how much? Who bears costs? Does this narrow or widen gaps across race, gender, geography, age, and class?' }
+          ]},
+        { id: 'fw-lvn',  code: 'FW-LVN',  title: 'Latent Value Network',        summary: 'Framework for mapping, understanding, and surfacing the vast substrate of human value that markets have never learned to measure — care, knowledge commons, social infrastructure, ecological stewardship, creative culture, and civic participation.', scope: 'analytical',  completeness: 'draft',    layer_count: 6,
+          elements: [
+            { layer_number:1, title:'Category 1 — Care Value',              element_role:'Human biological and emotional sustenance',    description:'Childrearing, elder care, disability support, emotional labor, and the work of sustaining human beings through vulnerability.' },
+            { layer_number:2, title:'Category 2 — Knowledge Commons',       element_role:'Shared knowledge infrastructure',              description:'Open source, Wikipedia, academic preprints, informal teaching, and every act of sharing knowledge beyond market transactions.' },
+            { layer_number:3, title:'Category 3 — Social Infrastructure',   element_role:'Social cohesion and community maintenance',    description:'Trust networks, community organizing, conflict mediation, social norms maintenance, and the invisible work of keeping communities functional.' },
+            { layer_number:4, title:'Category 4 — Ecological Stewardship',  element_role:'Ecological health and commons stewardship',    description:'Land tending, biodiversity maintenance, watershed protection, climate resilience work, and management of commons under threat.' },
+            { layer_number:5, title:'Category 5 — Creative Culture',        element_role:'Meaning-making and cultural reproduction',     description:'Art, music, storytelling, ritual, and cultural production that builds collective meaning, identity, and shared imaginative life.' },
+            { layer_number:6, title:'Category 6 — Civic Participation',     element_role:'Democratic and civic value creation',          description:'Voting, volunteering, local governance, watchdog journalism, whistleblowing, protest, and every act of democratic self-governance beyond formal employment.' }
+          ]}
+      ],
+      concepts: [
+        // Phenomena
+        { id:'c-l0',   code:'CON-L0',   title:'L/0 (Labor Zero)',           concept_type:'phenomenon', domain:'economic',      maturity:'established', confidence:'supported',  is_core_ple:true,  origin_tradition:'David Shapiro / PLE Movement',             summary:'The thesis that obligatory human labor is ending. The "/" evokes division by zero — an operation that breaks mathematics, just as zero labor breaks conventional economics. Not about banning work, but ending coercion.' },
+        { id:'c-lab',  code:'CON-LAB',  title:'Laborism',                  concept_type:'phenomenon', domain:'philosophical', maturity:'established', confidence:'consensus',  is_core_ple:true,  origin_tradition:'Cultural criticism',                        summary:'The invisible ideology that work is morally necessary — that people should work regardless of whether their work is needed. Spans left (dignity of work) and right (no free lunch). The primary cultural obstacle to post-labor economics.' },
+        { id:'c-taum', code:'CON-TAUM', title:'Technological Unemployment', concept_type:'phenomenon', domain:'economic',      maturity:'established', confidence:'consensus',  is_core_ple:true,  origin_tradition:'John Maynard Keynes (1930)',                 summary:'Job losses caused by technological advancement that outpaces new role creation. Distinguished from cyclical unemployment by its structural, permanent character. The empirical driver behind PLE.' },
+        { id:'c-prec', code:'CON-PREC', title:'Precariat',                  concept_type:'phenomenon', domain:'social',        maturity:'established', confidence:'supported',  is_core_ple:true,  origin_tradition:'Guy Standing',                              summary:'A growing social class defined by precarious work, temporary contracts, and lack of employment benefits. The transitional condition between full employment and post-labor.' },
+        { id:'c-care', code:'CON-CARE', title:'Care Economy',               concept_type:'phenomenon', domain:'economic',      maturity:'established', confidence:'supported',  is_core_ple:true,  origin_tradition:'Nancy Folbre, feminist economics',           summary:'The vast, unpaid economy of care work — childcare, eldercare, sick care, emotional labor — performed primarily by women. Invisible to GDP, foundational to everything GDP does measure.' },
+        { id:'c-lval', code:'CON-LVAL', title:'Latent Value',               concept_type:'phenomenon', domain:'economic',      maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'PLE / LVN framework',                       summary:'Economic and social value that exists and is real but is not measured, priced, or compensated by formal markets. The substrate of human flourishing that economies fail to account for.' },
+        { id:'c-wlth', code:'CON-WLTH', title:'Wealth Concentration',       concept_type:'phenomenon', domain:'economic',      maturity:'established', confidence:'consensus',  is_core_ple:true,  origin_tradition:'Thomas Piketty',                            summary:'The accelerating concentration of capital ownership in fewer hands as returns to capital outpace returns to labor (r > g). The distributional crisis that post-labor economics must solve.' },
+        { id:'c-algp', code:'CON-ALGP', title:'Algorithmic Power',          concept_type:'phenomenon', domain:'political',     maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'PLE Movement',                              summary:'The emerging form of power exercised through control of AI systems, data, and algorithmic infrastructure. Must replace traditional labor power (strikes, collective bargaining) in the post-labor era.' },
+        // Mechanisms
+        { id:'c-coop', code:'CON-COOP', title:'Cooperative Ownership',      concept_type:'mechanism',  domain:'economic',      maturity:'canonical',   confidence:'consensus',  is_core_ple:true,  origin_tradition:'Rochdale Principles (1844)',                 summary:'Enterprise owned by those who do the work (workers) or use the services (consumers). Distributes returns to labor and community rather than external capital. Mondragon at 80,000 members shows scale.' },
+        { id:'c-dao',  code:'CON-DAO',  title:'Decentralized Autonomous Organization', concept_type:'mechanism', domain:'technical', maturity:'developing', confidence:'contested', is_core_ple:true, origin_tradition:'Ethereum community',                         summary:'Governance and ownership structure implemented in code — rules enforced by smart contracts rather than legal institutions. An emerging mechanism for commons governance and collective ownership at scale.' },
+        { id:'c-lvt',  code:'CON-LVT',  title:'Land Value Tax',             concept_type:'mechanism',  domain:'economic',      maturity:'established', confidence:'contested',  is_core_ple:true,  origin_tradition:'Henry George (1879)',                        summary:'A tax on the unimproved value of land (not structures), discouraging speculation while funding public goods. Aligns incentives for productive land use and community investment.' },
+        { id:'c-dtax', code:'CON-DTAX', title:'Data Dividend / Data Tax',   concept_type:'mechanism',  domain:'economic',      maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'Jaron Lanier / Andrew Yang',                 summary:'Mechanisms to compensate individuals for the value of their data contributions to AI systems, or to tax extractive data collection. A form of latent value recognition for the digital economy.' },
+        { id:'c-tbke', code:'CON-TBKE', title:'Timebank',                   concept_type:'mechanism',  domain:'social',        maturity:'developing',  confidence:'supported',  is_core_ple:true,  origin_tradition:'Edgar Cahn / Time Dollars',                 summary:'Community exchange where time is the currency — one hour of any service equals one credit. Surfaces and compensates latent value without markets, while building social infrastructure.' },
+        { id:'c-cbdc', code:'CON-CBDC', title:'Central Bank Digital Currency', concept_type:'mechanism', domain:'technical',   maturity:'developing',  confidence:'contested',  is_core_ple:false, origin_tradition:'Central banking research',                  summary:'Digital sovereign currency issued by a central bank. Has potential to implement open payment rails directly, bypassing private banking infrastructure.' },
+        // Proposals
+        { id:'c-ubi',  code:'CON-UBI',  title:'Universal Basic Income',     concept_type:'proposal',   domain:'economic',      maturity:'canonical',   confidence:'contested',  is_core_ple:true,  origin_tradition:'Thomas Paine / Milton Friedman / many',     summary:'Unconditional, regular cash payment to every adult citizen, regardless of work status, income, or behavior. The most discussed post-labor income proposal. Addresses Prosperity Layer 1.' },
+        { id:'c-uhc',  code:'CON-UHC',  title:'Universal Healthcare',       concept_type:'proposal',   domain:'economic',      maturity:'canonical',   confidence:'supported',  is_core_ple:true,  origin_tradition:'Beveridge Report (1942)',                    summary:'Healthcare as a universal right, funded collectively. Part of Prosperity Layer 1 universals. Decouples healthcare from labor market participation.' },
+        { id:'c-swf',  code:'CON-SWF',  title:'Sovereign Wealth Fund',      concept_type:'proposal',   domain:'economic',      maturity:'established', confidence:'supported',  is_core_ple:true,  origin_tradition:'Kuwait Investment Authority (1953)',         summary:'State-owned investment fund returning dividends to citizens. Prosperity Layer 2 mechanism. Transforms common ownership of natural resources into universal income streams.' },
+        { id:'c-rtax', code:'CON-RTAX', title:'Robot Tax / Automation Tax', concept_type:'proposal',   domain:'economic',      maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'Bill Gates / IMF researchers',              summary:'A tax on automation deployment to fund transition programs, UBI, or sovereign wealth funds. Aligns incentives by making the entity that displaces workers contribute to their support.' },
+        { id:'c-prtb', code:'CON-PRTB', title:'Participatory Budgeting',    concept_type:'proposal',   domain:'political',     maturity:'established', confidence:'supported',  is_core_ple:true,  origin_tradition:'Porto Alegre, Brazil (1989)',                summary:'Democratic process where community members directly decide how to allocate a portion of a public budget. Power Layer 4 mechanism. Proven in hundreds of cities since 1989.' },
+        { id:'c-liq',  code:'CON-LIQ',  title:'Liquid Democracy',           concept_type:'proposal',   domain:'political',     maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'Computer science / Delegative democracy',    summary:'Hybrid of direct and representative democracy — citizens can vote directly or delegate their votes to trusted proxies who can further re-delegate. Power Layer 4 mechanism.' },
+        { id:'c-bbnd', code:'CON-BBND', title:'Baby Bonds',                 concept_type:'proposal',   domain:'economic',      maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'William Darity / Darrick Hamilton',          summary:'Universal endowment given to every newborn, invested and accessible at adulthood. Creates a universal foundation of private capital (Prosperity Layer 4) regardless of family wealth.' },
+        // Critiques
+        { id:'c-antl', code:'CON-ANTL', title:'Anti-Laborism',              concept_type:'critique',   domain:'philosophical', maturity:'developing',  confidence:'contested',  is_core_ple:true,  origin_tradition:'PLE Movement',                              summary:'The normative claim that laborism — the ideology that work is morally necessary — is wrong, harmful, and should be dismantled. The ideological foundation of the PLE movement.' },
+        { id:'c-dgro', code:'CON-DGRO', title:'Degrowth',                   concept_type:'critique',   domain:'ecological',    maturity:'developing',  confidence:'contested',  is_core_ple:false, origin_tradition:'Serge Latouche / Herman Daly',              summary:'The proposal that wealthy economies should deliberately shrink rather than endlessly grow, prioritizing wellbeing over GDP. Intersects with PLE without fully aligning.' },
+        // Syntheses
+        { id:'c-lvnx', code:'CON-LVNX', title:'Latent Value Network',       concept_type:'synthesis',  domain:'economic',      maturity:'embryonic',   confidence:'speculative',is_core_ple:true,  origin_tradition:'Travis Sillio / Claude / PLE',              summary:'A synthetic framework for mapping, understanding, and surfacing the vast substrate of human value that markets fail to measure — care, knowledge commons, social infrastructure, ecological stewardship, creative culture, and civic participation.' },
+        { id:'c-soec', code:'CON-SOEC', title:'Solidarity Economy',         concept_type:'synthesis',  domain:'economic',      maturity:'established', confidence:'supported',  is_core_ple:true,  origin_tradition:'Latin American social movements',            summary:'Economic ecosystem grounded in cooperation, mutual aid, democratic governance, and social purpose. Includes cooperatives, credit unions, timebanks, mutual aid networks.' },
+        { id:'c-dnut', code:'CON-DNUT', title:'Doughnut Economics',         concept_type:'synthesis',  domain:'ecological',    maturity:'established', confidence:'supported',  is_core_ple:false, origin_tradition:'Kate Raworth (2017)',                        summary:'Replaces GDP growth as the goal with a "safe and just space for humanity" — above a social foundation, within ecological ceilings. Complements PLE by providing the ecological and wellbeing frame.' },
+        { id:'c-plat', code:'CON-PLAT', title:'Platform Cooperativism',     concept_type:'synthesis',  domain:'technical',     maturity:'developing',  confidence:'supported',  is_core_ple:true,  origin_tradition:'Trebor Scholz / Nathan Schneider',           summary:'Application of cooperative ownership models to digital platforms — apps, marketplaces, and networks owned by their workers and users. Combines digital scale with cooperative governance.' }
+      ],
+      tensions: [
+        { id:'t-001', code:'TEN-001', title:'UBI Conditionality vs. Unconditional Dignity',        tension_type:'normative',       severity:'fundamental', resolution_status:'unresolved', description:'If UBI becomes the foundation of income, will society develop informal expectations that recipients should contribute to the Latent Value Network — effectively re-conditioning what was supposed to be unconditional? This undermines the rights-basis of UBI.' },
+        { id:'t-002', code:'TEN-002', title:'Automation Speed vs. Institutional Adaptation',       tension_type:'empirical',       severity:'fundamental', resolution_status:'unresolved', description:'Automation may displace workers faster than institutions can adapt — creating a gap where old systems have broken down but new systems are not yet operational. This is the most dangerous transition risk.' },
+        { id:'t-003', code:'TEN-003', title:'Data Dividends vs. Surveillance Architecture',        tension_type:'normative',       severity:'fundamental', resolution_status:'unresolved', description:'Compensating people for data contribution requires measuring what they contribute — which requires surveillance of intimate behaviors. Any LVN or data dividend mechanism risks creating a measurement apparatus more dangerous than the problem it solves.' },
+        { id:'t-004', code:'TEN-004', title:'Collective Ownership vs. Individual Liberty',         tension_type:'normative',       severity:'significant', resolution_status:'unresolved', description:'Expanding cooperatives, commons, and collective governance inevitably constrains individual property rights and economic autonomy. How much collective governance is compatible with a free society?' },
+        { id:'t-005', code:'TEN-005', title:'Ecological Value vs. Human Network Framing',          tension_type:'empirical',       severity:'significant', resolution_status:'unresolved', description:'The LVN uses a "network" metaphor implying human agency. But ecological value (clean air, biodiversity) is produced by nature, not human actors. Does including it stretch the concept beyond coherence?' },
+        { id:'t-006', code:'TEN-006', title:'Global Solutions vs. Nation-State Sovereignty',       tension_type:'political',       severity:'fundamental', resolution_status:'unresolved', description:'Post-labor economics requires global coordination (GATO, cross-border wealth redistribution, AI governance) that nation-states are constitutionally and politically unable to deliver. The scale of the problem exceeds existing institutional authority.' },
+        { id:'t-007', code:'TEN-007', title:'Laborism as Identity vs. Liberation from Obligation', tension_type:'normative',       severity:'significant', resolution_status:'unresolved', description:'Many people find genuine meaning and identity in their work. Dismantling laborism as an ideology risks delegitimizing authentic vocational identity, not just coerced labor. How do we liberate without erasing?' },
+        { id:'t-008', code:'TEN-008', title:'Robot Tax Revenue vs. Innovation Incentives',         tension_type:'empirical',       severity:'significant', resolution_status:'unresolved', description:'Taxing automation raises revenue for transition programs but may slow the automation that eventually creates post-labor abundance. The optimal timing and rate is deeply contested.' }
+      ],
+      evidence: [
+        { id:'e-001', code:'EV-001', title:'Alaska Permanent Fund Dividend',          evidence_type:'case_study', quality:'longitudinal', location:'Alaska, USA',          time_period:'1982–present', description:'Annual dividend paid to all Alaska residents from oil revenues invested in the Permanent Fund. ~$1,000-2,000/year since 1982. The most successful real-world model of Prosperity Layer 2.' },
+        { id:'e-002', code:'EV-002', title:'Finland UBI Experiment',                  evidence_type:'case_study', quality:'longitudinal', location:'Finland',              time_period:'2017-2018',    description:'Government-run RCT giving 2,000 unemployed Finns €560/month unconditionally for 2 years. Found improved wellbeing, trust, and slight employment increases vs. control group.' },
+        { id:'e-003', code:'EV-003', title:'Mondragon Corporation',                   evidence_type:'case_study', quality:'longitudinal', location:'Basque Country, Spain', time_period:'1956–present', description:'A federation of 80+ worker cooperatives employing ~80,000 people. The most scaled cooperative enterprise in the world. Demonstrates Prosperity Layer 3 at industrial scale.' },
+        { id:'e-004', code:'EV-004', title:'Kenya GiveDirectly Cash Transfer Study',  evidence_type:'research',   quality:'longitudinal', location:'Kenya',                 time_period:'2011–present', description:'Long-running RCT of unconditional cash transfers in rural Kenya. Found sustained positive effects on consumption, assets, and psychological wellbeing with no evidence of harmful spending.' },
+        { id:'e-005', code:'EV-005', title:'Porto Alegre Participatory Budgeting',    evidence_type:'case_study', quality:'longitudinal', location:'Porto Alegre, Brazil',  time_period:'1989–2004',    description:'Pioneering participatory budgeting implementation. Citizens directly allocated portions of the city budget. Dramatically improved infrastructure in poorer neighborhoods.' },
+        { id:'e-006', code:'EV-006', title:'Stockton SEED Guaranteed Income Pilot',  evidence_type:'case_study', quality:'pilot',        location:'Stockton, California',  time_period:'2019-2021',    description:'$500/month to 125 low-income residents for 24 months. Full-time employment increased, mental health improved, recipients invested in education and family.' },
+        { id:'e-007', code:'EV-007', title:'Wikipedia Knowledge Commons',             evidence_type:'case_study', quality:'longitudinal', location:'Global',               time_period:'2001–present', description:'Millions of volunteers maintaining 60+ million articles in 300+ languages. Demonstrates non-market contribution can sustain public goods at massive scale.' },
+        { id:'e-008', code:'EV-008', title:'India UPI Payment Rail',                  evidence_type:'case_study', quality:'longitudinal', location:'India',                time_period:'2016–present', description:'Unified Payments Interface processed $1.7 trillion in transactions in 2023 — open, interoperable, real-time payment infrastructure bringing financial access to hundreds of millions.' },
+        { id:'e-009', code:'EV-009', title:'Piketty r > g Analysis',                  evidence_type:'research',   quality:'meta_analysis',location:'Global (historical)',   time_period:'1700–2012',    description:'Thomas Piketty's analysis in Capital in the 21st Century demonstrating that returns on capital historically exceed economic growth, leading to increasing wealth concentration without policy correction.' }
+      ],
+      sources: []
     };
 
     // ─────────────────────────────────────────────
-    // API
+    // STATE — initialized from embedded data
     // ─────────────────────────────────────────────
 
-    async function apiFetch(resource, params = {}) {
-      // Use URLSearchParams on its own — avoids new URL() failing on file:// (null origin)
-      const qs = new URLSearchParams({ resource, ...params }).toString();
-      const res = await fetch(`/api/concepts?${qs}`);
-      if (!res.ok) throw new Error(`API error: ${res.status}`);
-      return res.json();
+    const state = {
+      frameworks: STATIC.frameworks,
+      concepts:   STATIC.concepts,
+      tensions:   STATIC.tensions,
+      evidence:   STATIC.evidence,
+      sources:    STATIC.sources,
+      loaded:     true
+    };
+
+    // ─────────────────────────────────────────────
+    // API — optionally refreshes from Netlify DB
+    // ─────────────────────────────────────────────
+
+    async function tryApiRefresh() {
+      // Only attempt on real HTTP origins (Netlify deployment), never on file:// or preview sandboxes
+      // Only attempt on Netlify deployments — skip everywhere else (file://, preview sandboxes, localhost)
+      const h = location.hostname;
+      if (!h || h === 'localhost' || h === '127.0.0.1' || !location.href.startsWith('http')) return;
+      if (!h.includes('.netlify.app') && !h.includes('.app') && !h.includes('.io') && !h.includes('.com')) return;
+      try {
+        const qs = new URLSearchParams({ resource: 'frameworks' }).toString();
+        const res = await fetch(`/api/concepts?${qs}`, { signal: AbortSignal.timeout(3000) });
+        if (!res.ok) return; // silently skip — static data already rendered
+        const data = await res.json();
+        if (data.frameworks && data.frameworks.length) {
+          state.frameworks = data.frameworks;
+          renderAll();
+        }
+      } catch { /* network unavailable — static data is sufficient */ }
     }
 
     // ─────────────────────────────────────────────
-    // LOAD ALL DATA
+    // LOAD — render immediately from static, refresh from API if possible
     // ─────────────────────────────────────────────
 
-    async function loadAll() {
-      try {
-        const [fwData, conData, tenData, evData, srcData] = await Promise.all([
-          apiFetch('frameworks'),
-          apiFetch('concepts', { limit: 100 }),
-          apiFetch('tensions'),
-          apiFetch('evidence'),
-          apiFetch('sources')
-        ]);
-
-        state.frameworks = fwData.frameworks || [];
-        state.concepts = conData.concepts || [];
-        state.tensions = tenData.tensions || [];
-        state.evidence = evData.evidence || [];
-        state.sources = srcData.sources || [];
-        state.loaded = true;
-
-        renderAll();
-      } catch (e) {
-        console.error('Load error:', e);
-        // Show static fallback if API not available
-        renderStaticFallback();
-      }
+    function loadAll() {
+      renderAll();
+      tryApiRefresh(); // fire-and-forget
     }
 
     function renderAll() {
@@ -1202,22 +1295,13 @@
       window.lucide.createIcons();
     }
 
-    async function showFrameworkDetail(id) {
+    function showFrameworkDetail(id) {
       const fw = state.frameworks.find(f => f.id === id);
       if (!fw) return;
-
-      let elementsHtml = '<div class="loading-state"><div class="spinner"></div> Loading elements…</div>';
+      // Use embedded elements from static data — no API call needed
+      const elements = fw.elements || [];
+      const elementsHtml = renderFrameworkElements(fw, elements);
       showDetail(renderFrameworkShell(fw, elementsHtml));
-
-      try {
-        const data = await apiFetch('frameworks', { id });
-        const elements = (data.elements || []).sort((a, b) => (a.layer_number || 0) - (b.layer_number || 0));
-        elementsHtml = renderFrameworkElements(fw, elements);
-        document.getElementById('fw-elements-container').innerHTML = elementsHtml;
-        window.lucide.createIcons();
-      } catch (e) {
-        document.getElementById('fw-elements-container').innerHTML = '<p style="color:var(--stn);font-size:0.8rem;padding:1rem 0">Could not load elements — API may be initializing.</p>';
-      }
     }
 
     function renderFrameworkShell(fw, elementsContent) {
@@ -1267,22 +1351,14 @@
       </div>`;
     }
 
-    async function showConceptDetail(id) {
+    function showConceptDetail(id) {
       const c = state.concepts.find(x => x.id === id);
       if (!c) return;
-      showDetail(renderConceptShell(c));
-
-      try {
-        const data = await apiFetch('concepts', { id });
-        const concept = data.concept || c;
-        const relations = data.relations || [];
-        const evidence = data.evidence || [];
-        const tensions = data.tensions || [];
-        document.getElementById('concept-detail-extra').innerHTML = renderConceptExtra(relations, evidence, tensions);
-        window.lucide.createIcons();
-      } catch (e) {
-        document.getElementById('concept-detail-extra').innerHTML = '<p style="color:var(--stn);font-size:0.8rem;padding:1rem 0">Could not load relationships — API may be initializing.</p>';
-      }
+      // Render with embedded data — relations/evidence come from static dataset
+      const html = renderConceptShell(c);
+      showDetail(html);
+      // Extra section: no relations in static data, show placeholder gracefully
+      document.getElementById('concept-detail-extra').innerHTML = renderConceptExtra([], [], []);
     }
 
     function renderConceptShell(c) {
@@ -1468,44 +1544,6 @@
       showDetail(html);
     }
 
-    // ─────────────────────────────────────────────
-    // STATIC FALLBACK (if API not available)
-    // ─────────────────────────────────────────────
-
-    function renderStaticFallback() {
-      document.getElementById('stat-frameworks').textContent = '6';
-      document.getElementById('stat-concepts').textContent = '27';
-      document.getElementById('stat-tensions').textContent = '8';
-      document.getElementById('stat-evidence').textContent = '9';
-
-      const staticFw = [
-        { id: '1', code: 'FW-L0', title: 'L/0 Thesis', summary: 'The foundational claim that obligatory human labor is ending.', scope: 'descriptive', completeness: 'complete', layer_count: 0 },
-        { id: '2', code: 'FW-PROS', title: 'Pyramid of Prosperity', summary: 'Five-layer income distribution architecture for the post-labor era.', scope: 'normative', completeness: 'complete', layer_count: 5 },
-        { id: '3', code: 'FW-POW', title: 'Pyramid of Power', summary: 'Five-layer democratic infrastructure for the post-labor era.', scope: 'normative', completeness: 'complete', layer_count: 5 },
-        { id: '4', code: 'FW-GATO', title: 'GATO Framework', summary: 'Global Automated Trade Organization governance model.', scope: 'analytical', completeness: 'draft', layer_count: 0 },
-        { id: '5', code: 'FW-PRIME', title: 'PRIME Framework', summary: 'Policy evaluation rubric: Practicality, Rights, Implementation, Monitoring, Equity.', scope: 'evaluative', completeness: 'complete', layer_count: 5 },
-        { id: '6', code: 'FW-LVN', title: 'Latent Value Network', summary: 'Framework for surfacing unmeasured human value contributions.', scope: 'analytical', completeness: 'draft', layer_count: 6 }
-      ];
-      state.frameworks = staticFw;
-      renderFwOverview();
-
-      document.getElementById('fw-count').textContent = '6';
-      document.getElementById('phen-count').textContent = '—';
-      document.getElementById('mech-count').textContent = '—';
-      document.getElementById('prop-count').textContent = '—';
-      document.getElementById('crit-count').textContent = '—';
-      document.getElementById('ten-count').textContent = '—';
-
-      document.getElementById('nav-frameworks').innerHTML = staticFw.map(fw => `
-        <div class="nav-item" onclick="alert('Deploy to Netlify to enable full database connectivity.')">
-          <div class="nav-item-dot" style="background:var(--hz)"></div>
-          <div>
-            <div class="nav-item-title">${fw.title}</div>
-            <div class="nav-item-meta">${fw.code}</div>
-          </div>
-        </div>
-      `).join('');
-    }
 
     // ─────────────────────────────────────────────
     // SIDEBAR TOGGLES
