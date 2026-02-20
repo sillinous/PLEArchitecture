@@ -1048,10 +1048,9 @@
     // ─────────────────────────────────────────────
 
     async function apiFetch(resource, params = {}) {
-      const url = new URL('/api/concepts', location.origin);
-      url.searchParams.set('resource', resource);
-      Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-      const res = await fetch(url);
+      // Use URLSearchParams on its own — avoids new URL() failing on file:// (null origin)
+      const qs = new URLSearchParams({ resource, ...params }).toString();
+      const res = await fetch(`/api/concepts?${qs}`);
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       return res.json();
     }
