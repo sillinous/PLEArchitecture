@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
   <style>
     /* ─── RESET & BASE ────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -843,6 +844,151 @@
     @media (max-width: 768px) {
       .nav-sidebar { display: none; }
     }
+
+    /* ─── GRAPH PANEL ─────────────────────────────────────── */
+    .graph-panel {
+      display: none;
+      flex: 1;
+      position: relative;
+      background: var(--mid);
+      overflow: hidden;
+    }
+    .graph-panel.visible { display: flex; flex-direction: column; }
+
+    .graph-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-wrap: wrap;
+      z-index: 10;
+    }
+
+    .graph-toolbar-title {
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      color: var(--dn);
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+
+    .graph-filter-btn {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--mono);
+    }
+    .graph-filter-btn:hover { border-color: rgba(255,255,255,0.4); color: white; }
+    .graph-filter-btn.active { background: var(--hz); border-color: var(--hz); color: white; }
+
+    .graph-close-btn {
+      margin-left: auto;
+      font-size: 0.72rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .graph-close-btn:hover { color: white; border-color: rgba(255,255,255,0.4); }
+
+    #graph-svg {
+      flex: 1;
+      width: 100%;
+    }
+
+    .graph-legend {
+      position: absolute;
+      bottom: 1rem;
+      left: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+      pointer-events: none;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--mono);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-line {
+      width: 20px;
+      height: 2px;
+      flex-shrink: 0;
+    }
+
+    .graph-tooltip {
+      position: fixed;
+      background: rgba(13,27,42,0.95);
+      border: 1px solid rgba(244,162,97,0.3);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.72rem;
+      color: white;
+      pointer-events: none;
+      z-index: 1000;
+      max-width: 220px;
+      display: none;
+    }
+
+    .graph-tooltip-title {
+      font-family: var(--serif);
+      font-size: 0.8rem;
+      color: var(--dn);
+      margin-bottom: 0.2rem;
+    }
+
+    .graph-tooltip-type {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Graph button in overview */
+    .graph-launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(244,162,97,0.12);
+      border: 1px solid rgba(244,162,97,0.3);
+      border-radius: 6px;
+      color: var(--dn);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 1rem;
+      font-family: var(--sans);
+    }
+    .graph-launch-btn:hover {
+      background: rgba(244,162,97,0.2);
+      border-color: rgba(244,162,97,0.6);
+    }
+
   </style>
 </head>
 <body>
@@ -852,15 +998,15 @@
       <span class="logo-symbol">L/0</span>
       <span class="logo-text">Post-Labor Economics</span>
     </a>
-    <nav class="nav-menu">
-      <a href="index.html">Home</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="metamodel.html" class="active">Metamodel</a>
-      <a href="projects.html">Projects</a>
-      <a href="proposals.html">Proposals</a>
-      <a href="gato.html">GATO</a>
-      <a href="prime.html">PRIME</a>
-    </nav>
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="metamodel.html" class="nav-link">Metamodel</a>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="proposals.html" class="nav-link">Proposals</a>
+        <a href="projects.html" class="nav-link">Projects</a>
+        <a href="gato.html" class="nav-link">GATO</a>
+        <a href="prime.html" class="nav-link">PRIME</a>
+      </nav>
     <div class="header-right">
       <a href="login.html" id="login-btn" style="font-size:0.8rem; color:rgba(255,255,255,0.6); text-decoration:none;">Sign In</a>
     </div>
@@ -962,6 +1108,9 @@
             <div><div class="hero-stat-val" id="stat-tensions">—</div><div class="hero-stat-lbl">Tensions</div></div>
             <div><div class="hero-stat-val" id="stat-evidence">—</div><div class="hero-stat-lbl">Evidence Sources</div></div>
           </div>
+          <button class="graph-launch-btn" onclick="showGraph()">
+            ⬡ Explore Relationship Graph
+          </button>
         </div>
 
         <!-- Four Layers -->
@@ -1027,6 +1176,34 @@
         <div id="detail-content"></div>
       </div>
     </div>
+
+      <!-- Graph Panel -->
+      <div class="graph-panel" id="graph-panel">
+        <div class="graph-toolbar">
+          <span class="graph-toolbar-title">Knowledge Graph</span>
+          <button class="graph-filter-btn active" data-rel-filter="all">All Relations</button>
+          <button class="graph-filter-btn" data-rel-filter="enables">enables</button>
+          <button class="graph-filter-btn" data-rel-filter="conflicts_with">conflicts</button>
+          <button class="graph-filter-btn" data-rel-filter="instantiates">instantiates</button>
+          <button class="graph-filter-btn" data-rel-filter="addresses">addresses</button>
+          <button class="graph-filter-btn" data-rel-filter="part_of">part of</button>
+          <button class="graph-close-btn" onclick="closeGraph()">✕ Close</button>
+        </div>
+        <svg id="graph-svg"></svg>
+        <div class="graph-legend" id="graph-legend">
+          <div class="legend-row"><div class="legend-dot" style="background:#e07b4f"></div>phenomenon</div>
+          <div class="legend-row"><div class="legend-dot" style="background:#1B4D3E"></div>proposal</div>
+          <div class="legend-row"><div class="legend-dot" style="background:#4a7c6f"></div>mechanism</div>
+          <div class="legend-row"><div class="legend-dot" style="background:#5b4a8a"></div>synthesis</div>
+          <div class="legend-row"><div class="legend-dot" style="background:#8b3a3a"></div>critique</div>
+          <div class="legend-row"><div class="legend-dot" style="background:#F4A261;border-radius:3px"></div>framework</div>
+        </div>
+      </div>
+      <div class="graph-tooltip" id="graph-tooltip">
+        <div class="graph-tooltip-title" id="tt-title"></div>
+        <div class="graph-tooltip-type" id="tt-type"></div>
+      </div>
+
   </div>
 
   <script>
@@ -1130,7 +1307,57 @@
         { id:'e-008', code:'EV-008', title:'India UPI Payment Rail',                  evidence_type:'case_study', quality:'longitudinal', location:'India',                time_period:'2016–present', description:'Unified Payments Interface processed $1.7 trillion in transactions in 2023 — open, interoperable, real-time payment infrastructure bringing financial access to hundreds of millions.' },
         { id:'e-009', code:'EV-009', title:'Piketty r > g Analysis',                  evidence_type:'research',   quality:'meta_analysis',location:'Global (historical)',   time_period:'1700–2012',    description:'Thomas Piketty's analysis in Capital in the 21st Century demonstrating that returns on capital historically exceed economic growth, leading to increasing wealth concentration without policy correction.' }
       ],
-      sources: []
+      sources: [],
+      relations: [
+        // Core causal chain: L/0 → distributional response
+        { source:'c-l0',   target:'c-taum',  type:'enables',       weight:0.95 },
+        { source:'c-taum', target:'c-ubi',   type:'addresses',     weight:0.9  },
+        { source:'c-taum', target:'c-rtax',  type:'addresses',     weight:0.85 },
+        { source:'c-taum', target:'c-prec',  type:'enables',       weight:0.9  },
+        { source:'c-lab',  target:'c-l0',    type:'conflicts_with',weight:0.95 },
+        { source:'c-antl', target:'c-lab',   type:'challenges',    weight:0.95 },
+        { source:'c-wlth', target:'c-ubi',   type:'addresses',     weight:0.85 },
+        { source:'c-wlth', target:'c-lvt',   type:'addresses',     weight:0.8  },
+        // Prosperity layers
+        { source:'c-ubi',  target:'fw-pros', type:'instantiates',  weight:0.95 },
+        { source:'c-uhc',  target:'fw-pros', type:'instantiates',  weight:0.9  },
+        { source:'c-swf',  target:'fw-pros', type:'instantiates',  weight:0.9  },
+        { source:'c-coop', target:'fw-pros', type:'instantiates',  weight:0.9  },
+        { source:'c-bbnd', target:'fw-pros', type:'instantiates',  weight:0.85 },
+        { source:'c-rtax', target:'c-swf',   type:'enables',       weight:0.8  },
+        { source:'c-rtax', target:'c-ubi',   type:'enables',       weight:0.75 },
+        // Power pyramid
+        { source:'c-cbdc', target:'fw-pow',  type:'instantiates',  weight:0.8  },
+        { source:'c-prtb', target:'fw-pow',  type:'instantiates',  weight:0.9  },
+        { source:'c-liq',  target:'fw-pow',  type:'instantiates',  weight:0.85 },
+        { source:'c-algp', target:'fw-pow',  type:'addresses',     weight:0.9  },
+        // LVN
+        { source:'c-lvnx', target:'fw-lvn',  type:'instantiates',  weight:0.95 },
+        { source:'c-care', target:'c-lvnx',  type:'part_of',       weight:0.95 },
+        { source:'c-lval', target:'c-lvnx',  type:'part_of',       weight:0.9  },
+        { source:'c-tbke', target:'c-lvnx',  type:'instantiates',  weight:0.8  },
+        { source:'c-dtax', target:'c-lval',  type:'addresses',     weight:0.75 },
+        { source:'c-ubi',  target:'c-lvnx',  type:'enables',       weight:0.85 },
+        // Institutional evolution
+        { source:'c-coop', target:'c-soec',  type:'evolved_from',  weight:0.85 },
+        { source:'c-dao',  target:'c-coop',  type:'evolved_from',  weight:0.8  },
+        { source:'c-plat', target:'c-coop',  type:'synthesizes',   weight:0.85 },
+        { source:'c-plat', target:'c-soec',  type:'synthesizes',   weight:0.8  },
+        { source:'c-dnut', target:'c-dgro',  type:'synthesizes',   weight:0.8  },
+        // Critiques and tensions
+        { source:'c-dgro', target:'c-rtax',  type:'conflicts_with',weight:0.65 },
+        { source:'c-dtax', target:'c-lval',  type:'conflicts_with',weight:0.8  },
+        // PRIME
+        { source:'fw-prime',target:'c-ubi',  type:'embodies',      weight:0.85 },
+        { source:'fw-prime',target:'c-rtax', type:'embodies',      weight:0.8  },
+        // Framework inter-dependencies
+        { source:'fw-l0',  target:'fw-pros', type:'enables',       weight:0.95 },
+        { source:'fw-l0',  target:'fw-pow',  type:'enables',       weight:0.9  },
+        { source:'fw-pros',target:'fw-pow',  type:'requires',      weight:0.85 },
+        { source:'fw-lvn', target:'fw-pros', type:'addresses',     weight:0.85 },
+        { source:'fw-prime',target:'fw-pros',type:'embodies',      weight:0.8  },
+        { source:'fw-gato',target:'fw-pow',  type:'instantiates',  weight:0.85 },
+      ]
     };
 
     // ─────────────────────────────────────────────
@@ -1544,6 +1771,288 @@
       showDetail(html);
     }
 
+
+
+    // ─────────────────────────────────────────────
+    // RELATIONSHIP GRAPH (D3 force-directed)
+    // ─────────────────────────────────────────────
+
+    const NODE_COLORS = {
+      phenomenon: '#e07b4f',
+      proposal:   '#1B4D3E',
+      mechanism:  '#4a7c6f',
+      synthesis:  '#5b4a8a',
+      critique:   '#8b3a3a',
+      framework:  '#F4A261',
+    };
+
+    const EDGE_COLORS = {
+      enables:       '#2D6A54',
+      requires:      '#4a7c6f',
+      conflicts_with:'#c0392b',
+      addresses:     '#457B9D',
+      instantiates:  '#F4A261',
+      part_of:       '#6C757D',
+      evolved_from:  '#8b7355',
+      synthesizes:   '#5b4a8a',
+      challenges:    '#8b3a3a',
+      embodies:      '#1B4D3E',
+    };
+
+    const EDGE_DASH = {
+      requires:      '6,3',
+      part_of:       '4,4',
+      evolved_from:  '8,3',
+      challenges:    '4,2',
+      conflicts_with:'3,3',
+    };
+
+    let graphSim = null;
+    let activeRelFilter = 'all';
+
+    function buildGraphData(relFilter) {
+      // Build nodes: all concepts + frameworks
+      const nodeMap = {};
+
+      state.concepts.forEach(c => {
+        nodeMap[c.id] = {
+          id:    c.id,
+          label: c.title,
+          code:  c.code,
+          type:  c.concept_type,
+          color: NODE_COLORS[c.concept_type] || '#6C757D',
+          r:     c.is_core_ple ? 9 : 6,
+          data:  c,
+          kind:  'concept'
+        };
+      });
+
+      state.frameworks.forEach(fw => {
+        nodeMap[fw.id] = {
+          id:    fw.id,
+          label: fw.title,
+          code:  fw.code,
+          type:  'framework',
+          color: NODE_COLORS.framework,
+          r:     12,
+          data:  fw,
+          kind:  'framework'
+        };
+      });
+
+      const rels = STATIC.relations || [];
+      const filteredRels = relFilter === 'all' ? rels : rels.filter(r => r.type === relFilter);
+
+      const usedIds = new Set();
+      filteredRels.forEach(r => { usedIds.add(r.source); usedIds.add(r.target); });
+
+      // Only show nodes that appear in filtered relations
+      const nodes = Object.values(nodeMap).filter(n =>
+        relFilter === 'all' || usedIds.has(n.id)
+      );
+
+      const edges = filteredRels
+        .filter(r => nodeMap[r.source] && nodeMap[r.target])
+        .map(r => ({
+          source: r.source,
+          target: r.target,
+          type:   r.type,
+          weight: r.weight || 0.7,
+          color:  EDGE_COLORS[r.type] || '#6C757D',
+          dash:   EDGE_DASH[r.type] || null,
+        }));
+
+      return { nodes, edges };
+    }
+
+    function showGraph() {
+      // Hide other panels
+      document.getElementById('overview-panel').style.display = 'none';
+      document.getElementById('detail-panel').classList.remove('visible');
+      document.getElementById('graph-panel').classList.add('visible');
+      renderGraph(activeRelFilter);
+    }
+
+    function closeGraph() {
+      document.getElementById('graph-panel').classList.remove('visible');
+      document.getElementById('overview-panel').style.display = '';
+    }
+
+    function renderGraph(relFilter) {
+      activeRelFilter = relFilter;
+      const svg = d3.select('#graph-svg');
+      svg.selectAll('*').remove();
+
+      const svgEl = document.getElementById('graph-svg');
+      const W = svgEl.clientWidth  || 900;
+      const H = svgEl.clientHeight || 600;
+
+      const { nodes, edges } = buildGraphData(relFilter);
+
+      // Markers (arrowheads) per relation type
+      const defs = svg.append('defs');
+      const markerTypes = [...new Set(edges.map(e => e.type))];
+      markerTypes.forEach(type => {
+        const color = EDGE_COLORS[type] || '#6C757D';
+        defs.append('marker')
+          .attr('id', `arrow-${type}`)
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 22)
+          .attr('refY', 0)
+          .attr('markerWidth', 6)
+          .attr('markerHeight', 6)
+          .attr('orient', 'auto')
+          .append('path')
+          .attr('d', 'M0,-5L10,0L0,5')
+          .attr('fill', color);
+      });
+
+      const g = svg.append('g');
+
+      // Zoom
+      svg.call(
+        d3.zoom()
+          .scaleExtent([0.2, 4])
+          .on('zoom', e => g.attr('transform', e.transform))
+      );
+
+      // Edges
+      const link = g.append('g').selectAll('line')
+        .data(edges)
+        .join('line')
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', d => 1 + d.weight)
+        .attr('stroke-opacity', 0.6)
+        .attr('stroke-dasharray', d => d.dash || null)
+        .attr('marker-end', d => `url(#arrow-${d.type})`);
+
+      // Edge labels (show on hover via JS, hidden by default)
+      const linkLabel = g.append('g').selectAll('text')
+        .data(edges)
+        .join('text')
+        .attr('font-size', '8px')
+        .attr('font-family', "'DM Mono', monospace")
+        .attr('fill', d => d.color)
+        .attr('opacity', 0)
+        .attr('text-anchor', 'middle')
+        .text(d => d.type.replace(/_/g, ' '));
+
+      // Nodes
+      const node = g.append('g').selectAll('g')
+        .data(nodes, d => d.id)
+        .join('g')
+        .attr('cursor', 'pointer')
+        .call(
+          d3.drag()
+            .on('start', (e, d) => { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+            .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y; })
+            .on('end',   (e, d) => { if (!e.active) sim.alphaTarget(0); d.fx = null; d.fy = null; })
+        )
+        .on('click', (e, d) => {
+          e.stopPropagation();
+          if (d.kind === 'framework') showFrameworkDetail(d.id);
+          else showConceptDetail(d.id);
+          // Close graph, show detail
+          document.getElementById('graph-panel').classList.remove('visible');
+          document.getElementById('detail-panel').classList.add('visible');
+        })
+        .on('mouseover', (e, d) => {
+          // Highlight connected edges
+          link.attr('stroke-opacity', l =>
+            l.source.id === d.id || l.target.id === d.id ? 1 : 0.08
+          );
+          linkLabel.attr('opacity', l =>
+            l.source.id === d.id || l.target.id === d.id ? 1 : 0
+          );
+          node.attr('opacity', n => {
+            if (n.id === d.id) return 1;
+            const connected = edges.some(l =>
+              (l.source.id === d.id && l.target.id === n.id) ||
+              (l.target.id === d.id && l.source.id === n.id)
+            );
+            return connected ? 1 : 0.25;
+          });
+          // Tooltip
+          const tt = document.getElementById('graph-tooltip');
+          document.getElementById('tt-title').textContent = d.label;
+          document.getElementById('tt-type').textContent  = d.type;
+          tt.style.display = 'block';
+          tt.style.left = (e.clientX + 12) + 'px';
+          tt.style.top  = (e.clientY - 8) + 'px';
+        })
+        .on('mousemove', e => {
+          document.getElementById('graph-tooltip').style.left = (e.clientX + 12) + 'px';
+          document.getElementById('graph-tooltip').style.top  = (e.clientY - 8) + 'px';
+        })
+        .on('mouseout', () => {
+          link.attr('stroke-opacity', 0.6);
+          linkLabel.attr('opacity', 0);
+          node.attr('opacity', 1);
+          document.getElementById('graph-tooltip').style.display = 'none';
+        });
+
+      // Node circles (frameworks are rounded squares via clip)
+      node.append('circle')
+        .attr('r', d => d.r)
+        .attr('fill', d => d.color)
+        .attr('fill-opacity', d => d.kind === 'framework' ? 0.9 : 0.85)
+        .attr('stroke', d => d.kind === 'framework' ? '#F4A261' : 'rgba(255,255,255,0.2)')
+        .attr('stroke-width', d => d.kind === 'framework' ? 2 : 1);
+
+      // Node labels
+      node.append('text')
+        .attr('dy', d => d.r + 11)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', d => d.kind === 'framework' ? '9px' : '8px')
+        .attr('font-family', "'DM Mono', monospace")
+        .attr('font-weight', d => d.kind === 'framework' ? '600' : '400')
+        .attr('fill', 'rgba(255,255,255,0.75)')
+        .attr('pointer-events', 'none')
+        .text(d => d.code);
+
+      // Force simulation
+      const sim = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(edges)
+          .id(d => d.id)
+          .distance(d => {
+            const base = { enables:100, instantiates:80, part_of:60, requires:110, addresses:120, conflicts_with:130, synthesizes:90, evolved_from:95 };
+            return (base[d.type] || 100) / (d.weight || 0.7);
+          })
+          .strength(0.4)
+        )
+        .force('charge', d3.forceManyBody().strength(-250).distanceMax(400))
+        .force('center',  d3.forceCenter(W / 2, H / 2))
+        .force('collide', d3.forceCollide().radius(d => d.r + 18))
+        .on('tick', () => {
+          link
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y);
+
+          linkLabel
+            .attr('x', d => (d.source.x + d.target.x) / 2)
+            .attr('y', d => (d.source.y + d.target.y) / 2);
+
+          node.attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+
+      graphSim = sim;
+    }
+
+    // Filter buttons
+    document.querySelectorAll('[data-rel-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-rel-filter]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderGraph(btn.dataset.relFilter);
+      });
+    });
+
+    // Dismiss tooltip on svg click
+    document.getElementById('graph-svg').addEventListener('click', () => {
+      document.getElementById('graph-tooltip').style.display = 'none';
+    });
 
     // ─────────────────────────────────────────────
     // SIDEBAR TOGGLES
