@@ -10,6 +10,11 @@
 
 # API Redirects - Route API calls to functions
 [[redirects]]
+  from = "/api/prime-evaluations"
+  to = "/.netlify/functions/prime-evaluations"
+  status = 200
+
+[[redirects]]
   from = "/api/concepts"
   to = "/.netlify/functions/concepts"
   status = 200

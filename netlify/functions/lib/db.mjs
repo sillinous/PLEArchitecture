@@ -43,6 +43,42 @@ export async function ensureDatabase() {
 }
 
 async function runMigrations() {
+  // ── PRIME Evaluations — structured policy assessment on proposals ──
+  await sql`CREATE TABLE IF NOT EXISTS prime_evaluations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    proposal_id UUID REFERENCES proposals(id) ON DELETE CASCADE,
+    evaluator_id UUID REFERENCES users(id),
+    practicality_score   INTEGER CHECK (practicality_score   BETWEEN 1 AND 5),
+    rights_score         INTEGER CHECK (rights_score         BETWEEN 1 AND 5),
+    implementation_score INTEGER CHECK (implementation_score BETWEEN 1 AND 5),
+    monitoring_score     INTEGER CHECK (monitoring_score     BETWEEN 1 AND 5),
+    equity_score         INTEGER CHECK (equity_score         BETWEEN 1 AND 5),
+    practicality_notes   TEXT,
+    rights_notes         TEXT,
+    implementation_notes TEXT,
+    monitoring_notes     TEXT,
+    equity_notes         TEXT,
+    total_score DECIMAL(4,2) GENERATED ALWAYS AS (
+      (practicality_score + rights_score + implementation_score + monitoring_score + equity_score)::decimal / 5
+    ) STORED,
+    status VARCHAR(30) DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(proposal_id, evaluator_id)
+  )`;
+
+  // ── Concept Tags — link proposals/projects to metamodel concepts ──
+  await sql`CREATE TABLE IF NOT EXISTS concept_tags (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    concept_id UUID REFERENCES concepts(id) ON DELETE CASCADE,
+    entity_type VARCHAR(50) NOT NULL,
+    entity_id UUID NOT NULL,
+    tag_role VARCHAR(50) DEFAULT 'addresses',
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(concept_id, entity_type, entity_id)
+  )`;
+
   // ── Run v2.0 metamodel migration if needed ──
   await runMetamodelMigration();
 
@@ -703,6 +739,143 @@ async function seedMetamodel() {
               ON CONFLICT (code) DO NOTHING`;
   }
 
+  // ── CONCEPT RELATIONS — the knowledge graph ──
+  // Lookup concept IDs by code for relation seeding
+  const conceptRows = await sql`SELECT id, code FROM concepts WHERE code LIKE 'CON-%'`;
+  const cid = {};
+  for (const r of conceptRows) cid[r.code] = r.id;
+
+  const frameworkRows = await sql`SELECT id, code FROM frameworks WHERE code LIKE 'FW-%'`;
+  const fid = {};
+  for (const r of frameworkRows) fid[r.code] = r.id;
+
+  // Helper to insert a relation safely
+  const rel = async (srcType, srcCode, relType, tgtType, tgtCode, desc, weight = 0.8) => {
+    const srcId = srcType === 'concept' ? cid[srcCode] : fid[srcCode];
+    const tgtId = tgtType === 'concept' ? cid[tgtCode] : fid[tgtCode];
+    if (!srcId || !tgtId) return; // skip if either concept not found
+    const w = String(weight);
+    await sql`INSERT INTO concept_relations 
+              (source_type, source_id, relation_type, target_type, target_id, description, weight)
+              VALUES (${srcType}, ${srcId}, ${relType}, ${tgtType}, ${tgtId}, ${desc}, ${w}::decimal)
+              ON CONFLICT (source_type, source_id, relation_type, target_type, target_id) DO NOTHING`;
+  };
+
+  // ── Core causal chain: L/0 → distributional response ──
+  await rel('concept','CON-L0',   'enables',       'concept','CON-TAUM', 'Labor Zero thesis explains and anticipates technological unemployment', 0.95);
+  await rel('concept','CON-TAUM', 'addresses',     'concept','CON-UBI',  'Technological unemployment is the primary empirical driver for UBI advocacy', 0.9);
+  await rel('concept','CON-TAUM', 'addresses',     'concept','CON-RTAX', 'Automation tax is a direct policy response to technological displacement', 0.85);
+  await rel('concept','CON-TAUM', 'enables',       'concept','CON-PREC', 'Technological unemployment manufactures the precariat as a social class', 0.9);
+  await rel('concept','CON-LAB',  'conflicts_with','concept','CON-L0',   'Laborism — the moral imperative to work — is the ideological obstacle L/0 must overcome', 0.95);
+  await rel('concept','CON-ANTL', 'challenges',    'concept','CON-LAB',  'Anti-laborism is the explicit normative critique of laborism ideology', 0.95);
+  await rel('concept','CON-WLTH', 'addresses',     'concept','CON-UBI',  'Wealth concentration creates the distributional case for universal transfers', 0.85);
+  await rel('concept','CON-WLTH', 'addresses',     'concept','CON-LVT',  'Land value tax directly targets one of the most concentrated forms of wealth', 0.8);
+
+  // ── Prosperity layers: how proposals map to the pyramid ──
+  await rel('concept','CON-UBI',  'instantiates',  'framework','FW-PROS', 'UBI is the canonical implementation of Prosperity Layer 1 (Universals)', 0.95);
+  await rel('concept','CON-UHC',  'instantiates',  'framework','FW-PROS', 'Universal Healthcare is the second pillar of Prosperity Layer 1', 0.9);
+  await rel('concept','CON-SWF',  'instantiates',  'framework','FW-PROS', 'Sovereign Wealth Funds are the primary mechanism for Prosperity Layer 2', 0.9);
+  await rel('concept','CON-COOP', 'instantiates',  'framework','FW-PROS', 'Cooperative ownership is the organizational form for Prosperity Layer 3', 0.9);
+  await rel('concept','CON-BBND', 'instantiates',  'framework','FW-PROS', 'Baby Bonds create the universal private asset base of Prosperity Layer 4', 0.85);
+  await rel('concept','CON-RTAX', 'enables',       'concept', 'CON-SWF', 'Robot tax revenue can fund sovereign wealth funds — automation finances its own distribution', 0.8);
+  await rel('concept','CON-RTAX', 'enables',       'concept', 'CON-UBI', 'Automation tax is a proposed revenue mechanism for UBI funding', 0.75);
+
+  // ── Power pyramid: how democratic mechanisms map to layers ──
+  await rel('concept','CON-CBDC', 'instantiates',  'framework','FW-POW',  'CBDCs are the technical substrate for Power Layer 2 (Open Payment Rails)', 0.8);
+  await rel('concept','CON-PRTB', 'instantiates',  'framework','FW-POW',  'Participatory Budgeting is a canonical Power Layer 4 mechanism', 0.9);
+  await rel('concept','CON-LIQ',  'instantiates',  'framework','FW-POW',  'Liquid Democracy implements Power Layer 4 at digital scale', 0.85);
+  await rel('concept','CON-ALGP', 'addresses',     'framework','FW-POW',  'Algorithmic power is the new form of power that the Pyramid of Power must govern', 0.9);
+
+  // ── LVN: concepts that constitute and support the framework ──
+  await rel('concept','CON-LVNX', 'instantiates',  'framework','FW-LVN',  'LVN concept is the theoretical foundation of the LVN framework', 0.95);
+  await rel('concept','CON-CARE', 'part_of',       'concept', 'CON-LVNX', 'Care Economy is the largest and most documented LVN category', 0.95);
+  await rel('concept','CON-LVAL', 'part_of',       'concept', 'CON-LVNX', 'Latent Value is the overarching concept the LVN operationalizes', 0.9);
+  await rel('concept','CON-TBKE', 'instantiates',  'concept', 'CON-LVNX', 'Timebanks are an early, working LVN recognition mechanism', 0.8);
+  await rel('concept','CON-DTAX', 'addresses',     'concept', 'CON-LVAL', 'Data dividends are an attempt to compensate one form of latent digital value', 0.75);
+  await rel('concept','CON-UBI',  'enables',       'concept', 'CON-LVNX', 'UBI income floor enables people to contribute latent value without survival pressure', 0.85);
+
+  // ── Institutional evolution chains ──
+  await rel('concept','CON-COOP', 'evolved_from',  'concept', 'CON-SOEC', 'Cooperatives are the organizational expression of solidarity economy principles', 0.85);
+  await rel('concept','CON-DAO',  'evolved_from',  'concept', 'CON-COOP', 'DAOs are the digital-native evolution of cooperative governance models', 0.8);
+  await rel('concept','CON-PLAT', 'synthesizes',   'concept', 'CON-COOP', 'Platform cooperativism synthesizes cooperative ownership with digital platform scale', 0.85);
+  await rel('concept','CON-PLAT', 'synthesizes',   'concept', 'CON-SOEC', 'Platform cooperativism applies solidarity economy principles to the digital economy', 0.8);
+  await rel('concept','CON-DNUT', 'synthesizes',   'concept', 'CON-DGRO', 'Doughnut Economics synthesizes degrowth concerns with a positive social foundation frame', 0.8);
+
+  // ── Critiques and tensions ──
+  await rel('concept','CON-DGRO', 'conflicts_with','concept', 'CON-RTAX', 'Degrowth challenges automation tax framing — if we want less production, why tax it to fund more?', 0.65);
+  await rel('concept','CON-PCAP', 'challenges',    'concept', 'CON-COOP', 'Post-capitalism argues cooperatives reform capitalism without transcending its logic', 0.6);
+  await rel('concept','CON-DTAX', 'conflicts_with','concept', 'CON-LVAL', 'Data dividend measurement risks surveilling the latent value it aims to compensate', 0.8);
+  await rel('concept','CON-LVT',  'conflicts_with','concept', 'CON-BBND', 'Both address wealth inequality but target different assets — land vs. financial capital', 0.5);
+
+  // ── PRIME framework: how proposals should be evaluated ──
+  await rel('framework','FW-PRIME', 'embodies',    'concept', 'CON-UBI',  'PRIME was partly designed to evaluate UBI-class proposals rigorously', 0.85);
+  await rel('framework','FW-PRIME', 'embodies',    'concept', 'CON-RTAX', 'Robot tax requires all five PRIME dimensions: political feasibility, rights, implementation, monitoring, distributional equity', 0.8);
+
+  // ── Framework inter-dependencies ──
+  await rel('framework','FW-L0',   'enables',      'framework','FW-PROS', 'L/0 creates the distributional problem that the Pyramid of Prosperity solves', 0.95);
+  await rel('framework','FW-L0',   'enables',      'framework','FW-POW',  'L/0 destroys labor-based power, requiring the Pyramid of Power as replacement', 0.9);
+  await rel('framework','FW-PROS', 'requires',     'framework','FW-POW',  'Income distribution without democratic power becomes charity rather than rights', 0.85);
+  await rel('framework','FW-LVN',  'addresses',    'framework','FW-PROS', 'LVN identifies the value flows that Prosperity Layer 2-3 should recognize and fund', 0.85);
+  await rel('framework','FW-PRIME','embodies',     'framework','FW-PROS', 'PRIME evaluates whether proposals genuinely advance all five prosperity layers', 0.8);
+  await rel('framework','FW-GATO', 'instantiates', 'framework','FW-POW',  'GATO is the international institutional design for Power Layer 5 (meta-governance)', 0.85);
+
+  console.log('✅ Concept relations seeded');
+
+  // ── EVIDENCE LINKS — connect evidence to the concepts it supports ──
+  const evRows = await sql`SELECT id, code FROM evidence_sources WHERE code LIKE 'EV-%'`;
+  const eid = {};
+  for (const r of evRows) eid[r.code] = r.id;
+
+  const evlink = async (evCode, conCode, linkType, notes) => {
+    const evId = eid[evCode];
+    const conId = cid[conCode];
+    if (!evId || !conId) return;
+    await sql`INSERT INTO evidence_links (evidence_id, concept_id, link_type, notes)
+              VALUES (${evId}, ${conId}, ${linkType}, ${notes})
+              ON CONFLICT (evidence_id, concept_id, link_type) DO NOTHING`;
+  };
+
+  // Alaska PFD supports UBI, SWF, Prosperity Layer 2
+  await evlink('EV-001','CON-UBI',  'supports',    'Alaska PFD pays every resident unconditionally — the closest real-world UBI analog at state scale');
+  await evlink('EV-001','CON-SWF',  'supports',    'The Alaska Permanent Fund is the most successful sovereign wealth fund with direct citizen dividend distribution');
+  await evlink('EV-001','CON-WLTH', 'supports',    'Demonstrates resource wealth can be collectively owned and distributed rather than captured by capital');
+
+  // Finland UBI trial
+  await evlink('EV-002','CON-UBI',  'supports',    'RCT evidence that unconditional cash transfers improve wellbeing and marginally increase employment');
+  await evlink('EV-002','CON-LAB',  'challenges',  'Recipients did not reduce work effort — challenges laborist assumption that unconditional income creates idleness');
+
+  // Mondragon
+  await evlink('EV-003','CON-COOP', 'supports',    'Mondragon at 80,000 members is the strongest existence proof that cooperative enterprise scales industrially');
+  await evlink('EV-003','CON-SOEC', 'supports',    'Mondragon demonstrates solidarity economy principles operating at scale across a regional economy');
+  await evlink('EV-003','CON-PLAT', 'supports',    'Mondragon proves collective ownership can achieve industrial complexity — the precondition for platform cooperativism');
+
+  // GiveDirectly Kenya
+  await evlink('EV-004','CON-UBI',  'supports',    'Longitudinal RCT evidence that unconditional cash transfers produce durable positive outcomes across multiple dimensions');
+  await evlink('EV-004','CON-LAB',  'challenges',  'No evidence that unconditional transfers produce laziness — recipients invested in productive assets');
+
+  // Porto Alegre participatory budgeting
+  await evlink('EV-005','CON-PRTB', 'supports',    'Porto Alegre is the canonical proof of concept that direct budget participation produces better distributional outcomes');
+  await evlink('EV-005','CON-LIQ',  'illustrates', 'Participatory budgeting demonstrates appetite for direct democratic participation beyond representative voting');
+
+  // Stockton SEED
+  await evlink('EV-006','CON-UBI',  'supports',    'Stockton pilot showed employment increased (not decreased) with guaranteed income — pilot-scale evidence');
+  await evlink('EV-006','CON-CARE', 'supports',    'Recipients invested in care (childcare, healthcare) — evidence that cash enables latent value contribution');
+
+  // Wikipedia
+  await evlink('EV-007','CON-LVNX', 'supports',    'Wikipedia is the largest existence proof that non-market, non-compensated contribution sustains a massive public good');
+  await evlink('EV-007','CON-LVAL', 'supports',    'Wikipedia demonstrates the scale of latent value contribution that operates entirely outside market pricing');
+  await evlink('EV-007','CON-CARE', 'illustrates', 'The knowledge commons is maintained through the same logic as care work — contribution without direct compensation');
+
+  // India UPI
+  await evlink('EV-008','CON-CBDC', 'supports',    'UPI demonstrates that open, interoperable payment infrastructure dramatically expands financial inclusion');
+  await evlink('EV-008','CON-ALGP', 'illustrates', 'UPI shows how technical infrastructure design choices (open vs. proprietary) determine power distribution');
+
+  // Piketty r > g
+  await evlink('EV-009','CON-WLTH', 'supports',    'r > g analysis provides the most rigorous empirical foundation for why wealth concentration is a structural tendency, not an accident');
+  await evlink('EV-009','CON-LVT',  'supports',    'Capital concentration dynamics underlie the case for wealth-targeted policy instruments like land value tax');
+  await evlink('EV-009','CON-SWF',  'supports',    'Piketty\'s data implies collective capital ownership (SWFs) is necessary to counter private capital accumulation');
+
+  console.log('✅ Evidence links seeded');
   console.log('✅ v2.0 PLE metamodel seeded');
 }
 

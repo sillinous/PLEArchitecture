@@ -4,34 +4,107 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>View Proposal | Post-Labor Economics</title>
-  
   <link rel="icon" type="image/svg+xml" href="ple-logo.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="src/styles/brand.css">
   <link rel="stylesheet" href="src/styles/app.css">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .prime-section {
+      margin-top: 2.5rem;
+      background: #fff;
+      border: 1px solid #E9ECEF;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+    .prime-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      background: linear-gradient(135deg, #1B4D3E 0%, #143B30 100%);
+      gap: 1rem;
+    }
+    .prime-header-left { display: flex; align-items: center; gap: 0.75rem; }
+    .prime-logo { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: #F4A261; }
+    .prime-header-title { color: white; font-size: 0.875rem; font-weight: 600; }
+    .prime-header-sub { color: rgba(255,255,255,0.55); font-size: 0.72rem; margin-top: 0.1rem; }
+    .prime-agg-score { text-align: right; }
+    .prime-agg-val { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: #F4A261; line-height: 1; }
+    .prime-agg-lbl { font-size: 0.65rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.06em; }
+    .prime-dims { display: grid; grid-template-columns: repeat(5, 1fr); border-bottom: 1px solid #E9ECEF; }
+    @media (max-width: 640px) { .prime-dims { grid-template-columns: 1fr 1fr; } }
+    .prime-dim { padding: 1rem; border-right: 1px solid #E9ECEF; }
+    .prime-dim:last-child { border-right: none; }
+    .prime-dim-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6C757D; margin-bottom: 0.375rem; display: flex; align-items: center; gap: 0.375rem; }
+    .prime-dim-initial { width: 18px; height: 18px; border-radius: 50%; background: #1B4D3E; color: white; font-size: 0.6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .prime-dim-score { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 700; color: #1B4D3E; line-height: 1; margin-bottom: 0.375rem; }
+    .prime-dim-score.empty { color: #D1D5DB; font-size: 1.25rem; }
+    .prime-dim-bar-track { height: 4px; background: #E9ECEF; border-radius: 2px; overflow: hidden; }
+    .prime-dim-bar-fill { height: 100%; background: #1B4D3E; border-radius: 2px; transition: width 0.6s ease; }
+    .prime-dim-count { font-size: 0.65rem; color: #9CA3AF; margin-top: 0.25rem; }
+    .prime-evaluations-body { padding: 1.25rem 1.5rem; }
+    .prime-tabs { display: flex; gap: 0.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid #E9ECEF; }
+    .prime-tab { font-size: 0.8rem; font-weight: 500; padding: 0.5rem 0.875rem; border: none; background: none; color: #6C757D; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+    .prime-tab:hover { color: #1B4D3E; }
+    .prime-tab.active { color: #1B4D3E; border-bottom-color: #1B4D3E; font-weight: 600; }
+    .prime-tab-content { display: none; }
+    .prime-tab-content.visible { display: block; }
+    .prime-form { max-width: 680px; }
+    .prime-dim-input { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 0.625rem; padding: 1rem; margin-bottom: 1rem; transition: border-color 0.15s; }
+    .prime-dim-input:focus-within { border-color: #1B4D3E; }
+    .prime-dim-input-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .prime-dim-input-name { font-weight: 600; font-size: 0.875rem; color: #1B4D3E; }
+    .prime-dim-input-desc { font-size: 0.75rem; color: #6C757D; line-height: 1.5; margin-bottom: 0.625rem; }
+    .star-rating { display: flex; gap: 0.25rem; margin-bottom: 0.5rem; }
+    .star-btn { width: 32px; height: 32px; border: none; background: none; cursor: pointer; font-size: 1.25rem; color: #D1D5DB; transition: color 0.1s, transform 0.1s; padding: 0; line-height: 1; }
+    .star-btn:hover, .star-btn.active { color: #F4A261; transform: scale(1.15); }
+    .prime-notes-input { width: 100%; border: 1px solid #E5E7EB; border-radius: 0.375rem; padding: 0.5rem 0.625rem; font-size: 0.8rem; color: #374151; background: white; resize: vertical; min-height: 55px; font-family: inherit; transition: border-color 0.15s; }
+    .prime-notes-input:focus { outline: none; border-color: #1B4D3E; }
+    .prime-notes-input::placeholder { color: #9CA3AF; }
+    .prime-form-actions { display: flex; gap: 0.75rem; align-items: center; margin-top: 1.25rem; }
+    .btn-prime-save { background: #1B4D3E; color: white; border: none; border-radius: 0.5rem; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .btn-prime-save:hover { background: #2D6A54; }
+    .btn-prime-save:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-prime-draft { background: transparent; color: #6C757D; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+    .btn-prime-draft:hover { border-color: #1B4D3E; color: #1B4D3E; }
+    .evaluation-card { border: 1px solid #E9ECEF; border-radius: 0.625rem; padding: 1rem; margin-bottom: 0.75rem; }
+    .eval-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .eval-card-meta { display: flex; align-items: center; gap: 0.5rem; }
+    .eval-avatar { width: 28px; height: 28px; background: #1B4D3E; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; }
+    .eval-name { font-size: 0.85rem; font-weight: 600; color: #1F2937; }
+    .eval-date { font-size: 0.72rem; color: #9CA3AF; }
+    .eval-total { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: #1B4D3E; }
+    .eval-dim-scores { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .eval-dim-chip { font-size: 0.7rem; padding: 0.2rem 0.5rem; background: #F3F4F6; border-radius: 4px; color: #374151; font-family: 'DM Mono', monospace; }
+    .eval-dim-chip strong { color: #1B4D3E; }
+    .eval-notes-toggle { font-size: 0.72rem; color: #1B4D3E; cursor: pointer; background: none; border: none; padding: 0; text-decoration: underline; }
+    .eval-notes-body { display: none; margin-top: 0.75rem; border-top: 1px solid #F3F4F6; padding-top: 0.75rem; }
+    .eval-notes-body.open { display: block; }
+    .eval-note-row { display: grid; grid-template-columns: 90px 1fr; gap: 0.5rem; margin-bottom: 0.375rem; font-size: 0.78rem; }
+    .eval-note-label { color: #6C757D; font-weight: 600; }
+    .eval-note-text { color: #374151; line-height: 1.5; }
+    .prime-empty { text-align: center; padding: 2rem; color: #9CA3AF; font-size: 0.875rem; }
+    .prime-login-nudge { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 0.5rem; padding: 0.875rem 1rem; font-size: 0.82rem; color: #166534; margin-bottom: 1rem; }
+    .prime-login-nudge a { color: #1B4D3E; font-weight: 600; }
+  </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="header-container">
       <a href="index.html" class="logo">
         <span class="logo-symbol">L/0</span>
         <span class="logo-text">Post-Labor Economics</span>
       </a>
-      
-            <nav class="nav-menu">
+      <nav class="nav-menu">
         <a href="index.html" class="nav-link">Home</a>
         <a href="architecture.html" class="nav-link">Architecture</a>
-        <a href="groups.html" class="nav-link">Groups</a>
+        <a href="metamodel.html" class="nav-link">Metamodel</a>
+        <a href="proposals.html" class="nav-link active">Proposals</a>
         <a href="projects.html" class="nav-link">Projects</a>
-        <a href="documents.html" class="nav-link">Content</a>
         <a href="gato.html" class="nav-link">GATO</a>
         <a href="prime.html" class="nav-link">PRIME</a>
       </nav>
-      
       <div class="header-actions">
         <a href="login.html" class="btn btn-ghost" data-auth="logged-out">Sign In</a>
         <a href="dashboard.html" class="btn btn-primary" data-auth="logged-in" style="display:none">Dashboard</a>
@@ -42,73 +115,86 @@
   <main class="main-content">
     <div class="container" style="max-width: 900px;">
       <a href="proposals.html" class="btn btn-ghost btn-sm" style="margin-bottom: 1rem;">
-        <i data-lucide="arrow-left"></i>
-        Back to Proposals
+        <i data-lucide="arrow-left"></i> Back to Proposals
       </a>
 
-      <!-- Proposal Content -->
       <div id="proposal-content">
-        <div class="loading">
-          <div class="loading-spinner"></div>
-        </div>
+        <div class="loading"><div class="loading-spinner"></div></div>
       </div>
 
-      <!-- Voting Section -->
       <div class="vote-section" id="vote-section" style="display: none;">
         <h3 class="vote-title">Cast Your Vote</h3>
         <div class="vote-buttons" data-auth="logged-in" style="display: none;">
-          <button class="vote-btn approve" data-vote="approve">
-            <i data-lucide="thumbs-up"></i>
-            Approve
-          </button>
-          <button class="vote-btn reject" data-vote="reject">
-            <i data-lucide="thumbs-down"></i>
-            Reject
-          </button>
-          <button class="vote-btn abstain" data-vote="abstain">
-            <i data-lucide="minus"></i>
-            Abstain
-          </button>
+          <button class="vote-btn approve" data-vote="approve"><i data-lucide="thumbs-up"></i> Approve</button>
+          <button class="vote-btn reject" data-vote="reject"><i data-lucide="thumbs-down"></i> Reject</button>
+          <button class="vote-btn abstain" data-vote="abstain"><i data-lucide="minus"></i> Abstain</button>
         </div>
         <p data-auth="logged-out" style="color: var(--color-text-muted);">
           <a href="login.html">Sign in</a> to vote on this proposal.
         </p>
         <div class="vote-results" id="vote-results">
-          <div class="vote-result approve">
-            <div class="vote-result-value" id="approve-count">0</div>
-            <div class="vote-result-label">Approve</div>
+          <div class="vote-result approve"><div class="vote-result-value" id="approve-count">0</div><div class="vote-result-label">Approve</div></div>
+          <div class="vote-result reject"><div class="vote-result-value" id="reject-count">0</div><div class="vote-result-label">Reject</div></div>
+          <div class="vote-result abstain"><div class="vote-result-value" id="abstain-count">0</div><div class="vote-result-label">Abstain</div></div>
+        </div>
+      </div>
+
+      <!-- PRIME EVALUATION -->
+      <div class="prime-section" id="prime-section" style="display:none">
+        <div class="prime-header">
+          <div class="prime-header-left">
+            <div class="prime-logo">PRIME</div>
+            <div>
+              <div class="prime-header-title">Policy Evaluation</div>
+              <div class="prime-header-sub">Practicality · Rights · Implementation · Monitoring · Equity</div>
+            </div>
           </div>
-          <div class="vote-result reject">
-            <div class="vote-result-value" id="reject-count">0</div>
-            <div class="vote-result-label">Reject</div>
+          <div class="prime-agg-score" id="prime-agg-score" style="display:none">
+            <div class="prime-agg-val" id="prime-overall-val">—</div>
+            <div class="prime-agg-lbl">Community Score / 5</div>
           </div>
-          <div class="vote-result abstain">
-            <div class="vote-result-value" id="abstain-count">0</div>
-            <div class="vote-result-label">Abstain</div>
+        </div>
+
+        <div class="prime-dims" id="prime-dims"></div>
+
+        <div class="prime-evaluations-body">
+          <div class="prime-tabs">
+            <button class="prime-tab active" data-tab="community">Community Evaluations</button>
+            <button class="prime-tab" data-tab="mine">Your Evaluation</button>
+          </div>
+
+          <div class="prime-tab-content visible" id="prime-tab-community">
+            <div id="prime-evaluations-list"><div class="prime-empty">Loading evaluations…</div></div>
+          </div>
+
+          <div class="prime-tab-content" id="prime-tab-mine">
+            <div id="prime-login-notice" class="prime-login-nudge" style="display:none">
+              <a href="login.html">Sign in</a> to submit a PRIME evaluation and contribute to community assessment.
+            </div>
+            <div id="prime-form-container" style="display:none">
+              <div id="prime-dim-inputs"></div>
+              <div class="prime-form-actions">
+                <button type="button" class="btn-prime-save" id="prime-submit-btn">Submit Evaluation</button>
+                <button type="button" class="btn-prime-draft" id="prime-draft-btn">Save Draft</button>
+                <span id="prime-save-status" style="font-size:0.78rem;color:#6C757D"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Comments Section -->
+      <!-- COMMENTS -->
       <div style="margin-top: 2rem;">
         <h3 class="subsection-title">Discussion</h3>
-        
-        <!-- Comment Form -->
         <div class="comment-form" data-auth="logged-in" style="display: none;">
-          <textarea id="comment-input" class="form-textarea" rows="3" 
-                    placeholder="Share your thoughts on this proposal..."></textarea>
-          <button class="btn btn-primary btn-sm" id="submit-comment" style="margin-top: 0.5rem;">
-            Post Comment
-          </button>
+          <textarea id="comment-input" class="form-textarea" rows="3" placeholder="Share your thoughts…"></textarea>
+          <button class="btn btn-primary btn-sm" id="submit-comment" style="margin-top: 0.5rem;">Post Comment</button>
         </div>
         <p data-auth="logged-out" style="color: var(--color-text-muted); margin-bottom: 1.5rem;">
           <a href="login.html">Sign in</a> to join the discussion.
         </p>
-
         <div class="comment-list" id="comments-list">
-          <div class="loading">
-            <div class="loading-spinner"></div>
-          </div>
+          <div class="loading"><div class="loading-spinner"></div></div>
         </div>
       </div>
     </div>
@@ -116,63 +202,52 @@
 
   <script type="module">
     import { auth, proposals, votes, discussions, formatDate, initPage, updateAuthUI, showToast } from './src/scripts/api.js';
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const proposalId = urlParams.get('id');
-    
-    if (!proposalId) {
-      window.location.href = 'proposals.html';
-    }
-    
-    let currentProposal = null;
-    
-    // Load proposal
+
+    const proposalId = new URLSearchParams(window.location.search).get('id');
+    if (!proposalId) window.location.href = 'proposals.html';
+
+    const PRIME_DIMS = [
+      { key: 'practicality',   label: 'Practicality',   initial: 'P', desc: 'Can this actually be implemented? Political feasibility, administrative capacity, path dependencies.' },
+      { key: 'rights',         label: 'Rights',         initial: 'R', desc: 'Does this respect and expand fundamental rights? Who is left out?' },
+      { key: 'implementation', label: 'Implementation', initial: 'I', desc: 'What institutions are required? What is the transition path? What fails first?' },
+      { key: 'monitoring',     label: 'Monitoring',     initial: 'M', desc: 'How will we know if this works? Leading indicators and failure modes.' },
+      { key: 'equity',         label: 'Equity',         initial: 'E', desc: 'Who benefits? Who bears costs? Distributional impact across race, gender, geography, and class.' },
+    ];
+
+    const formState = { scores: {}, notes: {} };
+
+    // ── LOAD ──────────────────────────────────────────────────
+
     async function loadProposal() {
       try {
         const data = await proposals.get(proposalId);
-        currentProposal = data.proposal;
-        
-        const container = document.getElementById('proposal-content');
-        container.innerHTML = `
-          <div class="proposal-card" style="border: none; padding: 0; background: transparent;">
-            <div class="proposal-card-header" style="margin-bottom: 1rem;">
-              <span class="proposal-type-badge ${currentProposal.proposalType}">${formatType(currentProposal.proposalType)}</span>
-              <span class="proposal-status-badge" style="background: var(--color-bg-secondary); padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem;">
-                ${currentProposal.status}
-              </span>
+        const p = data.proposal;
+
+        document.getElementById('proposal-content').innerHTML = `
+          <div class="proposal-card" style="border:none;padding:0;background:transparent;">
+            <div class="proposal-card-header" style="margin-bottom:1rem;">
+              <span class="proposal-type-badge ${p.proposalType}">${fmt(p.proposalType)}</span>
+              <span class="proposal-status-badge" style="background:var(--color-bg-secondary);padding:0.25rem 0.75rem;border-radius:1rem;font-size:0.75rem;">${p.status}</span>
             </div>
-            <h1 style="font-size: 2rem; margin-bottom: 1rem;">${currentProposal.title}</h1>
-            <div class="proposal-meta" style="margin-bottom: 1.5rem;">
-              <span class="proposal-meta-item">
-                <i data-lucide="user"></i>
-                ${currentProposal.author?.name || 'Anonymous'}
-              </span>
-              <span class="proposal-meta-item">
-                <i data-lucide="clock"></i>
-                ${formatDate(currentProposal.createdAt)}
-              </span>
-              ${currentProposal.element ? `
-                <span class="proposal-meta-item">
-                  <i data-lucide="git-branch"></i>
-                  ${currentProposal.element.code}: ${currentProposal.element.title}
-                </span>
-              ` : ''}
+            <h1 style="font-size:2rem;margin-bottom:1rem;">${p.title}</h1>
+            <div class="proposal-meta" style="margin-bottom:1.5rem;">
+              <span class="proposal-meta-item"><i data-lucide="user"></i>${p.author?.name||'Anonymous'}</span>
+              <span class="proposal-meta-item"><i data-lucide="clock"></i>${formatDate(p.createdAt)}</span>
+              ${p.element ? `<span class="proposal-meta-item"><i data-lucide="git-branch"></i>${p.element.code}: ${p.element.title}</span>` : ''}
             </div>
-            <div style="line-height: 1.8; color: var(--color-text-secondary); white-space: pre-wrap;">
-              ${escapeHtml(currentProposal.content)}
-            </div>
+            <div style="line-height:1.8;color:var(--color-text-secondary);white-space:pre-wrap;">${esc(p.content)}</div>
           </div>
         `;
-        
-        document.title = `${currentProposal.title} | Post-Labor Economics`;
+
+        document.title = `${p.title} | Post-Labor Economics`;
         document.getElementById('vote-section').style.display = 'block';
-        
-        // Load votes
+        document.getElementById('prime-section').style.display = 'block';
+
         loadVotes();
-        
-        // Load comments
         renderComments(data.comments);
-        
+        renderPrimeDimBars(null);
+        renderPrimeForm();
+        loadPrimeEvaluations();
         lucide.createIcons();
       } catch (e) {
         document.getElementById('proposal-content').innerHTML = `
@@ -181,126 +256,231 @@
             <h4 class="empty-state-title">Proposal Not Found</h4>
             <p class="empty-state-description">This proposal may have been deleted or doesn't exist.</p>
             <a href="proposals.html" class="btn btn-primary">View All Proposals</a>
-          </div>
-        `;
+          </div>`;
         lucide.createIcons();
       }
     }
-    
-    // Load votes
+
+    // ── VOTES ─────────────────────────────────────────────────
+
     async function loadVotes() {
       try {
         const data = await votes.get(proposalId);
-        
         document.getElementById('approve-count').textContent = data.counts.approve;
-        document.getElementById('reject-count').textContent = data.counts.reject;
+        document.getElementById('reject-count').textContent  = data.counts.reject;
         document.getElementById('abstain-count').textContent = data.counts.abstain;
-        
-        // Highlight user's current vote
         if (data.userVote) {
-          document.querySelectorAll('.vote-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.vote === data.userVote.type);
-          });
+          document.querySelectorAll('.vote-btn').forEach(b => b.classList.toggle('active', b.dataset.vote === data.userVote.type));
         }
-      } catch (e) {
-        console.error('Failed to load votes:', e);
-      }
+      } catch (e) { console.error('Vote load error:', e); }
     }
-    
-    // Vote handlers
+
     document.querySelectorAll('.vote-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!auth.isLoggedIn()) {
-          window.location.href = `login.html?redirect=proposal-view.html?id=${proposalId}`;
-          return;
-        }
-        
+        if (!auth.isLoggedIn()) { window.location.href = `login.html?redirect=proposal-view.html?id=${proposalId}`; return; }
         try {
-          const voteType = btn.dataset.vote;
-          const data = await votes.cast(proposalId, voteType);
-          
-          document.getElementById('approve-count').textContent = data.counts.approve;
-          document.getElementById('reject-count').textContent = data.counts.reject;
-          document.getElementById('abstain-count').textContent = data.counts.abstain;
-          
-          document.querySelectorAll('.vote-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.vote === voteType);
-          });
-          
+          const d = await votes.cast(proposalId, btn.dataset.vote);
+          document.getElementById('approve-count').textContent = d.counts.approve;
+          document.getElementById('reject-count').textContent  = d.counts.reject;
+          document.getElementById('abstain-count').textContent = d.counts.abstain;
+          document.querySelectorAll('.vote-btn').forEach(b => b.classList.toggle('active', b.dataset.vote === btn.dataset.vote));
           showToast('Vote recorded!', 'success');
-        } catch (e) {
-          showToast(e.message || 'Failed to vote', 'error');
-        }
+        } catch (e) { showToast(e.message||'Failed to vote', 'error'); }
       });
     });
-    
-    // Render comments
-    function renderComments(comments) {
-      const container = document.getElementById('comments-list');
-      
-      if (!comments || comments.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <p>No comments yet. Be the first to share your thoughts!</p>
-          </div>
-        `;
-        return;
-      }
-      
-      container.innerHTML = comments.map(c => `
-        <div class="comment-item">
-          <div class="comment-avatar">${getInitials(c.author?.name)}</div>
-          <div class="comment-content">
-            <div class="comment-header">
-              <span class="comment-author">${c.author?.name || 'Anonymous'}</span>
-              <span class="comment-time">${formatDate(c.createdAt)}</span>
+
+    // ── PRIME: BARS ───────────────────────────────────────────
+
+    function renderPrimeDimBars(agg) {
+      document.getElementById('prime-dims').innerHTML = PRIME_DIMS.map(dim => {
+        const d = agg?.dimensions?.[dim.key];
+        const score = d?.mean || null;
+        const count = d?.count || 0;
+        const pct   = score ? ((score-1)/4)*100 : 0;
+        return `
+          <div class="prime-dim">
+            <div class="prime-dim-label"><div class="prime-dim-initial">${dim.initial}</div>${dim.label}</div>
+            <div class="prime-dim-score ${score?'':'empty'}">${score ? score.toFixed(1) : '—'}</div>
+            <div class="prime-dim-bar-track"><div class="prime-dim-bar-fill" style="width:${pct}%"></div></div>
+            <div class="prime-dim-count">${count} eval${count!==1?'s':''}</div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── PRIME: LOAD COMMUNITY ─────────────────────────────────
+
+    async function loadPrimeEvaluations() {
+      try {
+        const res = await fetch(`/api/prime-evaluations?${new URLSearchParams({proposalId})}`);
+        if (!res.ok) { renderPrimeEmpty(); return; }
+        const data = await res.json();
+
+        if (data.aggregate) {
+          renderPrimeDimBars(data.aggregate);
+          if (data.aggregate.overall_mean) {
+            document.getElementById('prime-overall-val').textContent = data.aggregate.overall_mean.toFixed(1);
+            document.getElementById('prime-agg-score').style.display = 'block';
+          }
+        }
+
+        if (data.myEvaluation) populateForm(data.myEvaluation);
+        renderEvalCards(data.evaluations || []);
+      } catch (e) { renderPrimeEmpty(); }
+    }
+
+    function renderPrimeEmpty() {
+      document.getElementById('prime-evaluations-list').innerHTML =
+        '<div class="prime-empty">No PRIME evaluations yet — be the first to assess this proposal.</div>';
+    }
+
+    function renderEvalCards(evals) {
+      if (!evals.length) { renderPrimeEmpty(); return; }
+      document.getElementById('prime-evaluations-list').innerHTML = evals.map(ev => {
+        const total = parseFloat(ev.total_score||0);
+        const hasNotes = PRIME_DIMS.some(d => ev[`${d.key}_notes`]);
+        return `
+          <div class="evaluation-card">
+            <div class="eval-card-header">
+              <div class="eval-card-meta">
+                <div class="eval-avatar">${ini(ev.evaluator_name)}</div>
+                <div><div class="eval-name">${ev.evaluator_name||'Anonymous'}</div><div class="eval-date">${formatDate(ev.created_at)}</div></div>
+              </div>
+              ${total ? `<div class="eval-total">${total.toFixed(1)}<span style="font-size:0.75rem;color:#9CA3AF">/5</span></div>` : ''}
             </div>
-            <div class="comment-body">${escapeHtml(c.content)}</div>
+            <div class="eval-dim-scores">
+              ${PRIME_DIMS.map(d => `<span class="eval-dim-chip"><strong>${d.initial}</strong> ${ev[d.key+'_score']||'—'}</span>`).join('')}
+            </div>
+            ${hasNotes ? `
+              <button class="eval-notes-toggle" onclick="var nb=this.nextElementSibling;nb.classList.toggle('open');this.textContent=nb.classList.contains('open')?'Hide notes':'Show notes'">Show notes</button>
+              <div class="eval-notes-body">
+                ${PRIME_DIMS.filter(d=>ev[d.key+'_notes']).map(d=>`
+                  <div class="eval-note-row"><span class="eval-note-label">${d.label}</span><span class="eval-note-text">${esc(ev[d.key+'_notes'])}</span></div>
+                `).join('')}
+              </div>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    // ── PRIME: FORM ───────────────────────────────────────────
+
+    function renderPrimeForm() {
+      const loggedIn = auth.isLoggedIn();
+      document.getElementById('prime-login-notice').style.display = loggedIn ? 'none' : '';
+      document.getElementById('prime-form-container').style.display = loggedIn ? '' : 'none';
+      if (!loggedIn) return;
+
+      document.getElementById('prime-dim-inputs').innerHTML = PRIME_DIMS.map(dim => `
+        <div class="prime-dim-input">
+          <div class="prime-dim-input-header">
+            <div class="prime-dim-initial">${dim.initial}</div>
+            <span class="prime-dim-input-name">${dim.label}</span>
           </div>
+          <div class="prime-dim-input-desc">${dim.desc}</div>
+          <div class="star-rating" data-dim="${dim.key}">
+            ${[1,2,3,4,5].map(v=>`<button type="button" class="star-btn" data-val="${v}" data-dim="${dim.key}" title="${v}/5">★</button>`).join('')}
+          </div>
+          <textarea class="prime-notes-input" data-dim-notes="${dim.key}" placeholder="Optional notes…" rows="2"></textarea>
         </div>
       `).join('');
+
+      document.querySelectorAll('.star-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = parseInt(btn.dataset.val);
+          const dim = btn.dataset.dim;
+          formState.scores[dim] = formState.scores[dim] === val ? null : val;
+          document.querySelectorAll(`.star-btn[data-dim="${dim}"]`).forEach(b =>
+            b.classList.toggle('active', parseInt(b.dataset.val) <= (formState.scores[dim]||0))
+          );
+        });
+      });
+
+      document.querySelectorAll('[data-dim-notes]').forEach(ta => {
+        ta.addEventListener('input', () => { formState.notes[ta.dataset.dimNotes] = ta.value; });
+      });
     }
-    
-    // Submit comment
+
+    function populateForm(ev) {
+      PRIME_DIMS.forEach(d => {
+        const s = ev[d.key+'_score'], n = ev[d.key+'_notes']||'';
+        if (s) {
+          formState.scores[d.key] = s;
+          document.querySelectorAll(`.star-btn[data-dim="${d.key}"]`).forEach(b =>
+            b.classList.toggle('active', parseInt(b.dataset.val) <= s)
+          );
+        }
+        if (n) { formState.notes[d.key] = n; const ta = document.querySelector(`[data-dim-notes="${d.key}"]`); if(ta) ta.value = n; }
+      });
+    }
+
+    async function submitPRIME(status) {
+      const hasScore = Object.values(formState.scores).some(s=>s);
+      if (status==='submitted' && !hasScore) { showToast('Score at least one dimension before submitting','error'); return; }
+      const btn = document.getElementById('prime-submit-btn');
+      const statusEl = document.getElementById('prime-save-status');
+      btn.disabled = true; statusEl.textContent = 'Saving…';
+      try {
+        const res = await fetch('/api/prime-evaluations', {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${auth.getToken()}` },
+          body: JSON.stringify({ proposalId, status, scores: formState.scores, notes: formState.notes })
+        });
+        if (!res.ok) throw new Error('Save failed');
+        statusEl.textContent = status==='submitted' ? '✓ Submitted' : '✓ Saved draft';
+        if (status==='submitted') showToast('PRIME evaluation submitted!','success');
+        loadPrimeEvaluations();
+      } catch(e) { statusEl.textContent = 'Error — try again'; showToast('Failed to save','error'); }
+      finally { btn.disabled = false; }
+    }
+
+    document.getElementById('prime-submit-btn').addEventListener('click', () => submitPRIME('submitted'));
+    document.getElementById('prime-draft-btn').addEventListener('click',  () => submitPRIME('draft'));
+
+    // ── PRIME TABS ────────────────────────────────────────────
+
+    document.querySelectorAll('.prime-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.prime-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.prime-tab-content').forEach(c => c.classList.remove('visible'));
+        tab.classList.add('active');
+        document.getElementById(`prime-tab-${tab.dataset.tab}`).classList.add('visible');
+      });
+    });
+
+    // ── COMMENTS ──────────────────────────────────────────────
+
+    function renderComments(comments) {
+      const c = document.getElementById('comments-list');
+      if (!comments?.length) { c.innerHTML = '<div class="empty-state"><p>No comments yet.</p></div>'; return; }
+      c.innerHTML = comments.map(cm=>`
+        <div class="comment-item">
+          <div class="comment-avatar">${ini(cm.author?.name)}</div>
+          <div class="comment-content">
+            <div class="comment-header"><span class="comment-author">${cm.author?.name||'Anonymous'}</span><span class="comment-time">${formatDate(cm.createdAt)}</span></div>
+            <div class="comment-body">${esc(cm.content)}</div>
+          </div>
+        </div>`).join('');
+    }
+
     document.getElementById('submit-comment').addEventListener('click', async () => {
       const input = document.getElementById('comment-input');
       const content = input.value.trim();
-      
       if (!content) return;
-      
       try {
-        await discussions.create({
-          content,
-          proposalId
-        });
-        
+        await discussions.create({ content, proposalId });
         input.value = '';
         showToast('Comment posted!', 'success');
-        
-        // Reload proposal to get updated comments
         loadProposal();
-      } catch (e) {
-        showToast(e.message || 'Failed to post comment', 'error');
-      }
+      } catch(e) { showToast(e.message||'Failed', 'error'); }
     });
-    
-    // Helpers
-    function formatType(type) {
-      return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
-    
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-    
-    function getInitials(name) {
-      if (!name) return '?';
-      return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-    }
-    
-    // Initialize
+
+    // ── HELPERS ───────────────────────────────────────────────
+
+    function fmt(t)   { return t.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase()); }
+    function esc(t)   { const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+    function ini(n)   { if(!n) return '?'; return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+
+    // ── INIT ──────────────────────────────────────────────────
+
     await initPage();
     updateAuthUI();
     loadProposal();
